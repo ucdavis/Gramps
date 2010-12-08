@@ -54,7 +54,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Domain\CallForProposal.cs" />
+    <Compile Include="Domain\Comment.cs" />
+    <Compile Include="Domain\Editor.cs" />
+    <Compile Include="Domain\EmailsForCall.cs" />
+    <Compile Include="Domain\EmailTemplate.cs" />
+    <Compile Include="Domain\Proposal.cs" />
+    <Compile Include="Domain\Question.cs" />
+    <Compile Include="Domain\QuestionAnswer.cs" />
+    <Compile Include="Domain\QuestionOption.cs" />
+    <Compile Include="Domain\QuestionType.cs" />
     <Compile Include="Domain\Template.cs" />
+    <Compile Include="Domain\vUsers.cs" />
+    <Compile Include="Domain\Validator.cs" />
     <Compile Include="Mappings\TemplateMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
