@@ -2,8 +2,10 @@
 using System.Web.Routing;
 using Castle.Windsor;
 using Gramps.Controllers;
+using Gramps.Core.Mappings;
 using Microsoft.Practices.ServiceLocation;
 using MvcContrib.Castle;
+using UCDArch.Data.NHibernate;
 using UCDArch.Web.IoC;
 using UCDArch.Web.ModelBinder;
 using UCDArch.Web.Validator;
@@ -29,6 +31,8 @@ namespace Gramps
             ModelBinders.Binders.DefaultBinder = new UCDArchModelBinder();
 
             IWindsorContainer container = InitializeServiceLocator();
+
+            NHibernateSessionConfiguration.Mappings.UseFluentMappings(typeof(TemplateMap).Assembly);
         }
 
         private static IWindsorContainer InitializeServiceLocator()
