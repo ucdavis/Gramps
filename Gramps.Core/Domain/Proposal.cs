@@ -70,7 +70,7 @@ namespace Gramps.Core.Domain
 
             References(x => x.CallForProposal);
             HasMany(x => x.Comments);
-            HasMany(x => x.Answers)
+            HasMany(x => x.Answers);
         }
     }
 }
