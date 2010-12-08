@@ -112,41 +112,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CodeTemplates\AddController\Controller.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Controller.tt</DependentUpon>
-    </Compile>
-    <Compile Include="CodeTemplates\AddView\UCDDelete.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>UCDDelete.tt</DependentUpon>
-    </Compile>
-    <Compile Include="CodeTemplates\AddView\UCDDetails.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>UCDDetails.tt</DependentUpon>
-    </Compile>
-    <Compile Include="CodeTemplates\AddView\UCDEmpty.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>UCDEmpty.tt</DependentUpon>
-    </Compile>
-    <Compile Include="CodeTemplates\AddView\UCDList.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>UCDList.tt</DependentUpon>
-    </Compile>
-    <Compile Include="CodeTemplates\AddView\UCDListExtended.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>UCDListExtended.tt</DependentUpon>
-    </Compile>
-    <Compile Include="CodeTemplates\AddView\UCDModify.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>UCDModify.tt</DependentUpon>
-    </Compile>
     <Compile Include="ComponentRegistrar.asax.cs" />
     <Compile Include="Controllers\ApplicationController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
