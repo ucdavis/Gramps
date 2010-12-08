@@ -2,7 +2,7 @@
 using System.Web.Routing;
 using Castle.Windsor;
 using Gramps.Controllers;
-using Gramps.Core.Mappings;
+using Gramps.Core.Domain;
 using Microsoft.Practices.ServiceLocation;
 using MvcContrib.Castle;
 using UCDArch.Data.NHibernate;

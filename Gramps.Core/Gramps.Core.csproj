@@ -67,7 +67,6 @@
     <Compile Include="Domain\Template.cs" />
     <Compile Include="Domain\vUsers.cs" />
     <Compile Include="Domain\Validator.cs" />
-    <Compile Include="Mappings\TemplateMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
