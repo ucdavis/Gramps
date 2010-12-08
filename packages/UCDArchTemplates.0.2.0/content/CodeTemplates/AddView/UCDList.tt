@@ -1,9 +1,13 @@
 <#@ template language="C#" HostSpecific="True" #>
+<#@ assembly name="System.Data.Entity" #>
+<#@ assembly name="System.Data.Linq" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.Reflection" #>
+<#@ import namespace="System.Data.Objects.DataClasses" #>
+<#@ import namespace="System.Data.Linq.Mapping" #>
 <#
 MvcTextTemplateHost mvcHost = (MvcTextTemplateHost)(Host);
-string mvcViewDataTypeGenericString = (!String.IsNullOrEmpty(mvcHost.ViewDataTypeName)) ? "<" + mvcHost.ViewDataTypeName + ">" : String.Empty;
+string mvcViewDataTypeGenericString = (!String.IsNullOrEmpty(mvcHost.ViewDataTypeName)) ? "<IEnumerable<" + mvcHost.ViewDataTypeName + ">>" : String.Empty;
 int CPHCounter = 1;
 bool isFramework4 = (mvcHost.FrameworkVersion >= new System.Version(4, 0));
 string nugget, htmlEncodeBegin, htmlEncodeEnd;
@@ -68,39 +72,26 @@ if(!String.IsNullOrEmpty(mvcViewDataTypeGenericString)) {
 	Dictionary<string, string> properties = new Dictionary<string, string>();
 	FilterProperties(mvcHost.ViewDataType, properties);
 #>
-	<%= Html.ClientSideValidation<#= mvcViewDataTypeGenericString #>() %>
 
-    <% using (Html.BeginForm()) {%>
-        <%= Html.AntiForgeryToken() %>
-        <%<#= nugget #> Html.ValidationSummary(true) %>
+<p>
+    <%<#= nugget #> Html.ActionLink("Create New", "Create") %>
+</p>
 
-        <fieldset>
-            <legend>Fields</legend>
-            
-<#
-	foreach(KeyValuePair<string, string> property in properties) {
-#>
-            <div class="editor-label">
-                <%<#= nugget #> Html.LabelFor(model => model.<#= property.Key #>) %>
-            </div>
-            <div class="editor-field">
-                <%<#= nugget #> Html.TextBoxFor(model => model.<#= property.Key #>) %>
-                <%<#= nugget #> Html.ValidationMessageFor(model => model.<#= property.Key #>) %>
-            </div>
-            
-<#
-	}
-#>
-            <p>
-                <input type="submit" value="<#= mvcHost.ViewName #>" />
-            </p>
-        </fieldset>
-
-    <% } %>
-
-    <div>
-        <%<#= nugget #> Html.ActionLink("Back to List", "Index") %>
-    </div>
+<% Html.Grid(Model) 
+            .Name("List")
+            .PrefixUrlParameters(false) //True if >0 sortable/pageable grids
+            .Columns(col => {
+            col.Add(x => {%>
+				<%<#= nugget #> Html.ActionLink("Edit", "Edit", new { id = x.Id }) %>           
+				<%});
+			<#	foreach(KeyValuePair<string, string> property in properties) { #>
+            col.Add(x => x.<#= property.Key #>);
+            <# } #>
+            })
+            //.Pageable()
+            //.Sortable()
+            .Render(); 
+        %>
 
 <#
 }
@@ -154,14 +145,14 @@ public void FilterProperties(Type type, Dictionary<string, string> properties) {
 			
 			if (pi.Name == "Id") continue;
 			
-			if (IsBindableType(currentPropertyType) && pi.CanWrite)
+			if (IsBindableType(currentPropertyType) && pi.CanRead)
 			{				
 				if(currentPropertyType.Equals(typeof(double)) || currentPropertyType.Equals(typeof(decimal))) {
-					properties.Add(pi.Name, "String.Format(\"{0:F}\", Model." + pi.Name + ")");
+					properties.Add(pi.Name, "String.Format(\"{0:F}\", item." + pi.Name + ")");
 				} else if(currentPropertyType.Equals(typeof(DateTime))) {
-					properties.Add(pi.Name, "String.Format(\"{0:g}\", Model." + pi.Name + ")");
+					properties.Add(pi.Name, "String.Format(\"{0:g}\", item." + pi.Name + ")");
 				} else {
-					properties.Add(pi.Name, "Model." + pi.Name);
+					properties.Add(pi.Name, "item." + pi.Name);
 				}
 			}
 		}
@@ -178,5 +169,35 @@ public bool IsBindableType(Type type)
 	}
 
 	return isBindable;
+}
+
+public static List<string> GetEntityKeyProperties(Type type)
+{
+	List<string> keyProperties = new List<string>();
+
+	PropertyInfo[] properties = type.GetProperties();
+
+	foreach (PropertyInfo pi in properties)
+	{
+		System.Object[] attributes = pi.GetCustomAttributes(true);
+
+		foreach (object attribute in attributes)
+		{
+			if (attribute is EdmScalarPropertyAttribute)
+			{
+				if ((attribute as EdmScalarPropertyAttribute).EntityKeyProperty == true)
+				{
+					keyProperties.Add(pi.Name);
+				}
+			} else if(attribute is ColumnAttribute) {
+				if ((attribute as ColumnAttribute).IsPrimaryKey == true)
+				{
+					keyProperties.Add(pi.Name);
+				}
+			}
+		}
+	}
+
+	return keyProperties;
 }
 #>
