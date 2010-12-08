@@ -17,6 +17,7 @@ namespace Gramps.Core.Domain
         {
             Options = new List<QuestionOption>();
             Validators = new List<Validator>();
+            //Answers = new List<QuestionAnswer>();
         }
         #endregion Constructor
 
@@ -33,9 +34,11 @@ namespace Gramps.Core.Domain
         public virtual CallForProposal CallForProposal { get; set; }
 
         [NotNull]
-        public virtual ICollection<QuestionOption> Options { get; set; }
+        public virtual IList<QuestionOption> Options { get; set; }
         [NotNull]
-        public virtual ICollection<Validator> Validators { get; set; }
+        public virtual IList<Validator> Validators { get; set; }
+
+        //public virtual IList<QuestionAnswer> Answers { get; set; } //We only care about it from the proposal 
 
         #endregion Mapped Fields
 
@@ -70,8 +73,7 @@ namespace Gramps.Core.Domain
 
             HasMany(x => x.Options);
             HasManyToMany(x => x.Validators).Table("QuestionXValidator").Cascade.SaveUpdate();
-
-
+            //HasMany(x => x.Answers);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using FluentNHibernate.Mapping;
 using NHibernate.Validator.Constraints;
 using UCDArch.Core.DomainModel;
@@ -19,6 +20,8 @@ namespace Gramps.Core.Domain
         {
             Guid = Guid.NewGuid();
             CreatedDate = DateTime.Now;
+            Comments = new List<Comment>();
+            Answers = new List<QuestionAnswer>();
         }
 
         #endregion Constructor
@@ -43,6 +46,8 @@ namespace Gramps.Core.Domain
         public virtual DateTime CreatedDate { get; set; }
         public virtual DateTime? SubmittedDate { get; set; }
         public virtual DateTime? NotifiedDate { get; set; }
+        public virtual IList<Comment> Comments { get; set; }
+        public virtual IList<QuestionAnswer> Answers { get; set; }
 
         #endregion Mapped Fields
     }
@@ -64,6 +69,8 @@ namespace Gramps.Core.Domain
             Map(x => x.NotifiedDate);
 
             References(x => x.CallForProposal);
+            HasMany(x => x.Comments);
+            HasMany(x => x.Answers)
         }
     }
 }

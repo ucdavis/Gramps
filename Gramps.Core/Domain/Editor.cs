@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using FluentNHibernate.Mapping;
 using NHibernate.Validator.Constraints;
 using UCDArch.Core.DomainModel;
@@ -10,13 +11,14 @@ namespace Gramps.Core.Domain
         #region Constructor
         public Editor()
         {
-
+            SetDefaults();
         }
 
         public void SetDefaults()
         {
             IsOwner = false;
             ReviewerId = Guid.NewGuid();
+            Comments = new List<Comment>();
         }
 
         #endregion Constructor
@@ -35,6 +37,8 @@ namespace Gramps.Core.Domain
         public virtual CallForProposal CallForProposal { get; set; }
         public virtual vUser User { get; set; }
 
+        public virtual IList<Comment> Comments { get; set; }
+ 
         #endregion Mapped Fields
 
         #region Validation Fields
@@ -67,6 +71,7 @@ namespace Gramps.Core.Domain
             References(x => x.Template);
             References(x => x.CallForProposal);
             References(x => x.User);
+            HasMany(x => x.Comments);
         }
     }
 }

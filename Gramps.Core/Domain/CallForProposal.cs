@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using FluentNHibernate.Mapping;
 using NHibernate.Validator.Constraints;
 using UCDArch.Core.DomainModel;
@@ -19,6 +20,11 @@ namespace Gramps.Core.Domain
         {
             IsActive = false;
             CreatedDate = DateTime.Now;
+            Emails = new List<EmailsForCall>();
+            EmailTemplates = new List<EmailTemplate>();
+            Editors = new List<Editor>();
+            Questions = new List<Question>();
+            Proposals = new List<Proposal>();
         }
 
         #endregion Constructor
@@ -32,10 +38,14 @@ namespace Gramps.Core.Domain
         public virtual DateTime CreatedDate { get; set; }
         [NotNull]
         public virtual DateTime EndDate { get; set; }
-
         public virtual DateTime? CallsSentDate { get; set; }
-
         public virtual Template TemplateGeneratedFrom { get; set; }
+
+        public virtual IList<EmailsForCall> Emails { get; set; }
+        public virtual IList<EmailTemplate> EmailTemplates { get; set; }
+        public virtual IList<Editor> Editors { get; set; }
+        public virtual IList<Question> Questions { get; set; }
+        public virtual IList<Proposal> Proposals { get; set; }
         #endregion Mapped Fields
     }
 
@@ -49,6 +59,11 @@ namespace Gramps.Core.Domain
             Map(x => x.EndDate);
             Map(x => x.CallsSentDate);
             References(x => x.TemplateGeneratedFrom);
+            HasMany(x => x.Emails);
+            HasMany(x => x.EmailTemplates);
+            HasMany(x => x.Editors);
+            HasMany(x => x.Questions);
+            HasMany(x => x.Proposals);
         }
     }
 }
