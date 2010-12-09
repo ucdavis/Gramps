@@ -12,9 +12,19 @@ namespace Gramps.Core.Domain
     public class EmailsForCall : DomainObject
     {
         #region Constructor
+        public EmailsForCall(string emailAddres)
+        {
+            SetDefaults();
+            Email = emailAddres;
+        }
         public EmailsForCall()
         {
+            SetDefaults();
+        }
 
+        protected void SetDefaults()
+        {
+            HasBeenEmailed = false;
         }
 
         #endregion Constructor
@@ -28,6 +38,9 @@ namespace Gramps.Core.Domain
 
         public virtual Template Template { get; set; }
         public virtual CallForProposal CallForProposal { get; set; }
+
+        public virtual bool HasBeenEmailed { get; set; }
+        public virtual DateTime? EmailedOnDate { get; set; }
 
         #endregion Mapped Fields
 
@@ -56,6 +69,8 @@ namespace Gramps.Core.Domain
             Table("Emails");
             Id(x => x.Id);
             Map(x => x.Email);
+            Map(x => x.HasBeenEmailed);
+            Map(x => x.EmailedOnDate);
             References(x => x.Template);
             References(x => x.CallForProposal);
         }

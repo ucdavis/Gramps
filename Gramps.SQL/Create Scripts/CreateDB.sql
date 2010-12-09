@@ -1,6 +1,5 @@
 ﻿USE [Gramps]
 GO
-/****** Object:  Table [dbo].[QuestionTypes]    Script Date: 12/08/2010 14:28:54 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -20,7 +19,6 @@ CREATE TABLE [dbo].[QuestionTypes](
 GO
 SET ANSI_PADDING OFF
 GO
-/****** Object:  Table [dbo].[Validators]    Script Date: 12/08/2010 14:28:54 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -41,7 +39,6 @@ CREATE TABLE [dbo].[Validators](
 GO
 SET ANSI_PADDING OFF
 GO
-/****** Object:  Table [dbo].[Templates]    Script Date: 12/08/2010 14:28:54 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -60,7 +57,6 @@ CREATE TABLE [dbo].[Templates](
 GO
 SET ANSI_PADDING OFF
 GO
-/****** Object:  View [dbo].[vUsers]    Script Date: 12/08/2010 14:28:54 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -182,7 +178,6 @@ End
 GO
 EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPaneCount', @value=1 , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'vUsers'
 GO
-/****** Object:  Table [dbo].[CallForProposals]    Script Date: 12/08/2010 14:28:54 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -205,7 +200,6 @@ CREATE TABLE [dbo].[CallForProposals](
 GO
 SET ANSI_PADDING OFF
 GO
-/****** Object:  Table [dbo].[Proposals]    Script Date: 12/08/2010 14:28:54 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -234,7 +228,6 @@ CREATE TABLE [dbo].[Proposals](
 GO
 SET ANSI_PADDING OFF
 GO
-/****** Object:  Table [dbo].[EmailTemplates]    Script Date: 12/08/2010 14:28:54 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -255,7 +248,6 @@ CREATE TABLE [dbo].[EmailTemplates](
 GO
 SET ANSI_PADDING OFF
 GO
-/****** Object:  Table [dbo].[Emails]    Script Date: 12/08/2010 14:28:54 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -267,6 +259,8 @@ CREATE TABLE [dbo].[Emails](
 	[Email] [varchar](100) NOT NULL,
 	[TemplateId] [int] NULL,
 	[CallForProposalId] [int] NULL,
+	[HasBeenEmailed] [bit] NOT NULL,
+	[EmailedOnDate] [datetime] NULL,
  CONSTRAINT [PK_Emails] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
@@ -275,7 +269,6 @@ CREATE TABLE [dbo].[Emails](
 GO
 SET ANSI_PADDING OFF
 GO
-/****** Object:  Table [dbo].[Editors]    Script Date: 12/08/2010 14:28:54 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -299,7 +292,6 @@ CREATE TABLE [dbo].[Editors](
 GO
 SET ANSI_PADDING OFF
 GO
-/****** Object:  Table [dbo].[Questions]    Script Date: 12/08/2010 14:28:54 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -321,7 +313,6 @@ CREATE TABLE [dbo].[Questions](
 GO
 SET ANSI_PADDING OFF
 GO
-/****** Object:  Table [dbo].[QuestionXValidator]    Script Date: 12/08/2010 14:28:54 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -336,7 +327,6 @@ CREATE TABLE [dbo].[QuestionXValidator](
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[QuestionOptions]    Script Date: 12/08/2010 14:28:54 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -355,7 +345,6 @@ CREATE TABLE [dbo].[QuestionOptions](
 GO
 SET ANSI_PADDING OFF
 GO
-/****** Object:  Table [dbo].[Answers]    Script Date: 12/08/2010 14:28:54 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -375,7 +364,6 @@ CREATE TABLE [dbo].[Answers](
 GO
 SET ANSI_PADDING OFF
 GO
-/****** Object:  Table [dbo].[Comments]    Script Date: 12/08/2010 14:28:54 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -396,22 +384,20 @@ CREATE TABLE [dbo].[Comments](
 GO
 SET ANSI_PADDING OFF
 GO
-/****** Object:  Default [DF_Templates_IsActive]    Script Date: 12/08/2010 14:28:54 ******/
+ALTER TABLE [dbo].[Emails] ADD  CONSTRAINT [DF_Emails_HasBeenCalled]  DEFAULT ((0)) FOR [HasBeenEmailed]
+GO
 ALTER TABLE [dbo].[Templates] ADD  CONSTRAINT [DF_Templates_IsActive]  DEFAULT ((1)) FOR [IsActive]
 GO
-/****** Object:  ForeignKey [FK_Answers_Proposals]    Script Date: 12/08/2010 14:28:54 ******/
 ALTER TABLE [dbo].[Answers]  WITH CHECK ADD  CONSTRAINT [FK_Answers_Proposals] FOREIGN KEY([ProposalId])
 REFERENCES [dbo].[Proposals] ([id])
 GO
 ALTER TABLE [dbo].[Answers] CHECK CONSTRAINT [FK_Answers_Proposals]
 GO
-/****** Object:  ForeignKey [FK_Answers_Questions]    Script Date: 12/08/2010 14:28:54 ******/
 ALTER TABLE [dbo].[Answers]  WITH CHECK ADD  CONSTRAINT [FK_Answers_Questions] FOREIGN KEY([QuestionId])
 REFERENCES [dbo].[Questions] ([id])
 GO
 ALTER TABLE [dbo].[Answers] CHECK CONSTRAINT [FK_Answers_Questions]
 GO
-/****** Object:  ForeignKey [FK_CallForProposals_Templates]    Script Date: 12/08/2010 14:28:54 ******/
 ALTER TABLE [dbo].[CallForProposals]  WITH CHECK ADD  CONSTRAINT [FK_CallForProposals_Templates] FOREIGN KEY([TemplateId])
 REFERENCES [dbo].[Templates] ([id])
 GO
@@ -419,91 +405,76 @@ ALTER TABLE [dbo].[CallForProposals] CHECK CONSTRAINT [FK_CallForProposals_Templ
 GO
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Used as a Lookup' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'CallForProposals', @level2type=N'CONSTRAINT',@level2name=N'FK_CallForProposals_Templates'
 GO
-/****** Object:  ForeignKey [FK_Comments_Editors]    Script Date: 12/08/2010 14:28:54 ******/
 ALTER TABLE [dbo].[Comments]  WITH CHECK ADD  CONSTRAINT [FK_Comments_Editors] FOREIGN KEY([EditorId])
 REFERENCES [dbo].[Editors] ([id])
 GO
 ALTER TABLE [dbo].[Comments] CHECK CONSTRAINT [FK_Comments_Editors]
 GO
-/****** Object:  ForeignKey [FK_Comments_Proposals]    Script Date: 12/08/2010 14:28:54 ******/
 ALTER TABLE [dbo].[Comments]  WITH CHECK ADD  CONSTRAINT [FK_Comments_Proposals] FOREIGN KEY([ProposalId])
 REFERENCES [dbo].[Proposals] ([id])
 GO
 ALTER TABLE [dbo].[Comments] CHECK CONSTRAINT [FK_Comments_Proposals]
 GO
-/****** Object:  ForeignKey [FK_Editors_CallForProposals]    Script Date: 12/08/2010 14:28:54 ******/
 ALTER TABLE [dbo].[Editors]  WITH CHECK ADD  CONSTRAINT [FK_Editors_CallForProposals] FOREIGN KEY([CallForProposalId])
 REFERENCES [dbo].[CallForProposals] ([id])
 GO
 ALTER TABLE [dbo].[Editors] CHECK CONSTRAINT [FK_Editors_CallForProposals]
 GO
-/****** Object:  ForeignKey [FK_Editors_Templates]    Script Date: 12/08/2010 14:28:54 ******/
 ALTER TABLE [dbo].[Editors]  WITH CHECK ADD  CONSTRAINT [FK_Editors_Templates] FOREIGN KEY([TemplateId])
 REFERENCES [dbo].[Templates] ([id])
 GO
 ALTER TABLE [dbo].[Editors] CHECK CONSTRAINT [FK_Editors_Templates]
 GO
-/****** Object:  ForeignKey [FK_Emails_CallForProposals]    Script Date: 12/08/2010 14:28:54 ******/
 ALTER TABLE [dbo].[Emails]  WITH CHECK ADD  CONSTRAINT [FK_Emails_CallForProposals] FOREIGN KEY([CallForProposalId])
 REFERENCES [dbo].[CallForProposals] ([id])
 GO
 ALTER TABLE [dbo].[Emails] CHECK CONSTRAINT [FK_Emails_CallForProposals]
 GO
-/****** Object:  ForeignKey [FK_Emails_Templates]    Script Date: 12/08/2010 14:28:54 ******/
 ALTER TABLE [dbo].[Emails]  WITH CHECK ADD  CONSTRAINT [FK_Emails_Templates] FOREIGN KEY([TemplateId])
 REFERENCES [dbo].[Templates] ([id])
 GO
 ALTER TABLE [dbo].[Emails] CHECK CONSTRAINT [FK_Emails_Templates]
 GO
-/****** Object:  ForeignKey [FK_EmailTemplates_CallForProposals]    Script Date: 12/08/2010 14:28:54 ******/
 ALTER TABLE [dbo].[EmailTemplates]  WITH CHECK ADD  CONSTRAINT [FK_EmailTemplates_CallForProposals] FOREIGN KEY([CallForProposalId])
 REFERENCES [dbo].[CallForProposals] ([id])
 GO
 ALTER TABLE [dbo].[EmailTemplates] CHECK CONSTRAINT [FK_EmailTemplates_CallForProposals]
 GO
-/****** Object:  ForeignKey [FK_EmailTemplates_Templates]    Script Date: 12/08/2010 14:28:54 ******/
 ALTER TABLE [dbo].[EmailTemplates]  WITH CHECK ADD  CONSTRAINT [FK_EmailTemplates_Templates] FOREIGN KEY([TemplateId])
 REFERENCES [dbo].[Templates] ([id])
 GO
 ALTER TABLE [dbo].[EmailTemplates] CHECK CONSTRAINT [FK_EmailTemplates_Templates]
 GO
-/****** Object:  ForeignKey [FK_Proposals_CallForProposals]    Script Date: 12/08/2010 14:28:54 ******/
 ALTER TABLE [dbo].[Proposals]  WITH CHECK ADD  CONSTRAINT [FK_Proposals_CallForProposals] FOREIGN KEY([CallForProposalId])
 REFERENCES [dbo].[CallForProposals] ([id])
 GO
 ALTER TABLE [dbo].[Proposals] CHECK CONSTRAINT [FK_Proposals_CallForProposals]
 GO
-/****** Object:  ForeignKey [FK_QuestionOptions_Questions]    Script Date: 12/08/2010 14:28:54 ******/
 ALTER TABLE [dbo].[QuestionOptions]  WITH CHECK ADD  CONSTRAINT [FK_QuestionOptions_Questions] FOREIGN KEY([QuestionId])
 REFERENCES [dbo].[Questions] ([id])
 GO
 ALTER TABLE [dbo].[QuestionOptions] CHECK CONSTRAINT [FK_QuestionOptions_Questions]
 GO
-/****** Object:  ForeignKey [FK_Questions_CallForProposals]    Script Date: 12/08/2010 14:28:54 ******/
 ALTER TABLE [dbo].[Questions]  WITH CHECK ADD  CONSTRAINT [FK_Questions_CallForProposals] FOREIGN KEY([CallForProposalId])
 REFERENCES [dbo].[CallForProposals] ([id])
 GO
 ALTER TABLE [dbo].[Questions] CHECK CONSTRAINT [FK_Questions_CallForProposals]
 GO
-/****** Object:  ForeignKey [FK_Questions_QuestionTypes]    Script Date: 12/08/2010 14:28:54 ******/
 ALTER TABLE [dbo].[Questions]  WITH CHECK ADD  CONSTRAINT [FK_Questions_QuestionTypes] FOREIGN KEY([QuestionTypeId])
 REFERENCES [dbo].[QuestionTypes] ([id])
 GO
 ALTER TABLE [dbo].[Questions] CHECK CONSTRAINT [FK_Questions_QuestionTypes]
 GO
-/****** Object:  ForeignKey [FK_Questions_Templates]    Script Date: 12/08/2010 14:28:54 ******/
 ALTER TABLE [dbo].[Questions]  WITH CHECK ADD  CONSTRAINT [FK_Questions_Templates] FOREIGN KEY([TemplateId])
 REFERENCES [dbo].[Templates] ([id])
 GO
 ALTER TABLE [dbo].[Questions] CHECK CONSTRAINT [FK_Questions_Templates]
 GO
-/****** Object:  ForeignKey [FK_QuestionXValidator_Questions]    Script Date: 12/08/2010 14:28:54 ******/
 ALTER TABLE [dbo].[QuestionXValidator]  WITH CHECK ADD  CONSTRAINT [FK_QuestionXValidator_Questions] FOREIGN KEY([QuestionId])
 REFERENCES [dbo].[Questions] ([id])
 GO
 ALTER TABLE [dbo].[QuestionXValidator] CHECK CONSTRAINT [FK_QuestionXValidator_Questions]
 GO
-/****** Object:  ForeignKey [FK_QuestionXValidator_Validators]    Script Date: 12/08/2010 14:28:54 ******/
 ALTER TABLE [dbo].[QuestionXValidator]  WITH CHECK ADD  CONSTRAINT [FK_QuestionXValidator_Validators] FOREIGN KEY([ValidatorId])
 REFERENCES [dbo].[Validators] ([id])
 GO

@@ -10,6 +10,11 @@ namespace Gramps.Core.Domain
     public class CallForProposal : DomainObject
     {
         #region Constructor
+        public CallForProposal(string name)
+        {
+            SetDefaults();
+            Name = name;
+        }
 
         public CallForProposal()
         {
@@ -18,7 +23,7 @@ namespace Gramps.Core.Domain
 
         protected void SetDefaults()
         {
-            IsActive = false;
+            IsActive = true;
             CreatedDate = DateTime.Now;
             Emails = new List<EmailsForCall>();
             EmailTemplates = new List<EmailTemplate>();
@@ -34,19 +39,48 @@ namespace Gramps.Core.Domain
         [Length(100)]
         public virtual string Name { get; set; }
         public virtual bool IsActive { get; set; }
+
         [NotNull]
         public virtual DateTime CreatedDate { get; set; }
+        
         [NotNull]
         public virtual DateTime EndDate { get; set; }
         public virtual DateTime? CallsSentDate { get; set; }
         public virtual Template TemplateGeneratedFrom { get; set; }
-
+        
+        [NotNull]
         public virtual IList<EmailsForCall> Emails { get; set; }
+        
+        [NotNull]
         public virtual IList<EmailTemplate> EmailTemplates { get; set; }
+        
+        [NotNull]
         public virtual IList<Editor> Editors { get; set; }
+        
+        [NotNull]
         public virtual IList<Question> Questions { get; set; }
+        
+        [NotNull]
         public virtual IList<Proposal> Proposals { get; set; }
         #endregion Mapped Fields
+
+        #region Methods
+
+        public virtual void AddEmailForCall(string email)
+        {
+            var emailForCall = new EmailsForCall(email);
+            emailForCall.CallForProposal = this;
+            Emails.Add(emailForCall);
+        }
+        public virtual void RemoveEmailForCall(EmailsForCall emailsForCall)
+        {
+            if (Emails != null && Emails.Contains(emailsForCall) && !emailsForCall.HasBeenEmailed)
+            {
+                Emails.Remove(emailsForCall);
+            }
+        }
+
+        #endregion Methods
     }
 
     public class CallForProposalMap : ClassMap<CallForProposal>
@@ -60,7 +94,7 @@ namespace Gramps.Core.Domain
             Map(x => x.EndDate);
             Map(x => x.CallsSentDate);
             References(x => x.TemplateGeneratedFrom);
-            HasMany(x => x.Emails);
+            HasMany(x => x.Emails).Inverse().Cascade.AllDeleteOrphan();
             HasMany(x => x.EmailTemplates);
             HasMany(x => x.Editors);
             HasMany(x => x.Questions);
