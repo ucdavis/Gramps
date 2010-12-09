@@ -10,6 +10,16 @@ namespace Gramps.Core.Domain
     public class CallForProposal : DomainObject
     {
         #region Constructor
+        public CallForProposal(Template template)
+        {            
+            SetDefaults();
+            TemplateGeneratedFrom = template;
+            foreach (var emailsForCall in template.Emails)
+            {
+                AddEmailForCall(emailsForCall.Email);
+            }
+            //TODO: Go throught the template and populate the call for proposal
+        }
         public CallForProposal(string name)
         {
             SetDefaults();
@@ -70,6 +80,10 @@ namespace Gramps.Core.Domain
         {
             var emailForCall = new EmailsForCall(email);
             emailForCall.CallForProposal = this;
+            //if (emailForCall.IsValid())
+            //{ 
+            //    Emails.Add(emailForCall);
+            //}
             Emails.Add(emailForCall);
         }
         public virtual void RemoveEmailForCall(EmailsForCall emailsForCall)
@@ -81,6 +95,30 @@ namespace Gramps.Core.Domain
         }
 
         #endregion Methods
+
+        #region ValidationOnlyFields
+
+        [AssertTrue(Message = "One or more invalid emails for call detected")]
+        private bool EmailsForCallList
+        {
+            get
+            {
+                if (Emails != null)
+                {
+                    foreach (var emailsForCall in Emails)
+                    {
+                        if (!emailsForCall.IsValid())
+                        {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+        }
+
+        #endregion ValidationOnlyFields
+
     }
 
     public class CallForProposalMap : ClassMap<CallForProposal>

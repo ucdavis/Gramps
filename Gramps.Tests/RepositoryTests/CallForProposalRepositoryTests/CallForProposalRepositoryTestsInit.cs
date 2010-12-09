@@ -112,8 +112,13 @@ namespace Gramps.Tests.RepositoryTests.CallForProposalRepositoryTests
         {
             #region Arrange
             var expectedFields = new List<NameAndType>();
+            
             expectedFields.Add(new NameAndType("CallsSentDate", "System.DateTime", new List<string>()));
             expectedFields.Add(new NameAndType("CreatedDate", "System.DateTime", new List<string>()));
+            expectedFields.Add(new NameAndType("Emails", "System.Collections.Generic.IList`1[Gramps.Core.Domain.EmailsForCall]", new List<string>
+            {
+                ""
+            }));
             expectedFields.Add(new NameAndType("EndDate", "System.DateTime", new List<string>()));
             expectedFields.Add(new NameAndType("Id", "System.Int32", new List<string>
             {
