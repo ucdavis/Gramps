@@ -66,7 +66,7 @@ namespace Gramps.Core.Domain
         {
             Id(x => x.Id);
             Map(x => x.Name);
-            Map(x => x.Order).Column("[Order]");
+            Map(x => x.Order).Column("`Order`");
 
             References(x => x.QuestionType);
             References(x => x.Template);
