@@ -26,6 +26,7 @@ namespace Gramps.Core.Domain
         public QuestionAnswerMap()
         {
             Table("Answers");
+            Id(x => x.Id);
             Map(x => x.Answer);
             References(x => x.Proposal);
             References(x => x.Question);

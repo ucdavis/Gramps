@@ -18,6 +18,7 @@ namespace Gramps.Core.Domain
     {
         public QuestionOptionMap()
         {
+            Id(x => x.Id);
             Map(x => x.Name);
             References(x => x.Question);
         }

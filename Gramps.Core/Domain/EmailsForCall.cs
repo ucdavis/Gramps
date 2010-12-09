@@ -54,6 +54,7 @@ namespace Gramps.Core.Domain
         public EmailsForCallMap()
         {
             Table("Emails");
+            Id(x => x.Id);
             Map(x => x.Email);
             References(x => x.Template);
             References(x => x.CallForProposal);

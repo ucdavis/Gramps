@@ -13,7 +13,7 @@ namespace Gramps.Core.Domain
             SetDefaults();
         }
 
-        public void SetDefaults()
+        protected void SetDefaults()
         {
             CreatedDate = DateTime.Now;
         }
@@ -36,6 +36,7 @@ namespace Gramps.Core.Domain
     {
         public CommentMap()
         {
+            Id(x => x.Id);
             Map(x => x.Text);
             Map(x => x.CreatedDate);
             References(x => x.Proposal);

@@ -18,7 +18,7 @@ namespace Gramps.Core.Domain
         {
             SetDefaults();
         }
-        public void SetDefaults()
+        protected void SetDefaults()
         {
             IsActive = true;
             Emails = new List<EmailsForCall>();
@@ -48,6 +48,7 @@ namespace Gramps.Core.Domain
     {
         public TemplateMap()
         {
+            Id(x => x.Id);
             Map(x => x.Name);
             Map(x => x.IsActive);
 

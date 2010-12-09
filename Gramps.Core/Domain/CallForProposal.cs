@@ -16,7 +16,7 @@ namespace Gramps.Core.Domain
             SetDefaults();
         }
 
-        public void SetDefaults()
+        protected void SetDefaults()
         {
             IsActive = false;
             CreatedDate = DateTime.Now;
@@ -53,6 +53,7 @@ namespace Gramps.Core.Domain
     {
         public CallForProposalMap()
         {
+            Id(x => x.Id);
             Map(x => x.Name);
             Map(x => x.IsActive);
             Map(x => x.CreatedDate);

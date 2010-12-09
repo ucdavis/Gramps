@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Gramps.Core.Domain;
 
 namespace Gramps.Tests.Core.Helpers
 {
@@ -20,6 +21,16 @@ namespace Gramps.Tests.Core.Helpers
         }
 
         #endregion Helper Extension
+
+        public static CallForProposal CallForProposal(int? counter, bool populateAllFields = false)
+        {
+            var rtValue = new CallForProposal();
+            rtValue.Name = "Name" + counter.Extra();
+            rtValue.EndDate = DateTime.Now.Date.AddDays(30);
+            rtValue.IsActive = true;
+
+            return rtValue;
+        }
 
         //public static Unit Unit(int? counter, bool populateAllFields = false)
         //{

@@ -16,7 +16,7 @@ namespace Gramps.Core.Domain
         }
 
 
-        public void SetDefaults()
+        protected void SetDefaults()
         {
             Guid = Guid.NewGuid();
             CreatedDate = DateTime.Now;
@@ -56,6 +56,7 @@ namespace Gramps.Core.Domain
     {
         public ProposalMap()
         {
+            Id(x => x.Id);
             Map(x => x.Guid);
             Map(x => x.Email);
             Map(x => x.IsApproved);

@@ -13,7 +13,7 @@ namespace Gramps.Core.Domain
         {
             SetDefaults();
         }
-        public void SetDefaults()
+        protected void SetDefaults()
         {
             Options = new List<QuestionOption>();
             Validators = new List<Validator>();
@@ -64,8 +64,9 @@ namespace Gramps.Core.Domain
     {
         public QuestionMap()
         {
+            Id(x => x.Id);
             Map(x => x.Name);
-            Map(x => x.Order);
+            Map(x => x.Order).Column("[Order]");
 
             References(x => x.QuestionType);
             References(x => x.Template);

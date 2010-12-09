@@ -25,6 +25,7 @@ namespace Gramps.Core.Domain
         public QuestionTypeMap()
         {
             ReadOnly();
+            Id(x => x.Id);
             Map(x => x.Name);
             Map(x => x.HasOptions);
             Map(x => x.ExtendedProperty);

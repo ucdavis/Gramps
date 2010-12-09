@@ -23,6 +23,7 @@ namespace Gramps.Core.Domain
     {
         public ValidatorMap()
         {
+            Id(x => x.Id);
             Map(x => x.Name);
             Map(x => x.Class);
             Map(x => x.RegEx);

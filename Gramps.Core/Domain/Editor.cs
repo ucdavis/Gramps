@@ -14,7 +14,7 @@ namespace Gramps.Core.Domain
             SetDefaults();
         }
 
-        public void SetDefaults()
+        protected void SetDefaults()
         {
             IsOwner = false;
             ReviewerId = Guid.NewGuid();
@@ -63,6 +63,7 @@ namespace Gramps.Core.Domain
     {
         public EditorMap()
         {
+            Id(x => x.Id);
             Map(x => x.IsOwner);
             Map(x => x.ReviewerEmail);
             Map(x => x.ReviewerName);

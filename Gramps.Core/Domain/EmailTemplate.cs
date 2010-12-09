@@ -47,6 +47,7 @@ namespace Gramps.Core.Domain
     {
         public EmailTemplateMap()
         {
+            Id(x => x.Id);
             Map(x => x.TemplateType);
             Map(x => x.Text);
             References(x => x.Template);
