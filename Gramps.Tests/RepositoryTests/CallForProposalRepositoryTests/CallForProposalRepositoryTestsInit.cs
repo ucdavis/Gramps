@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Gramps.Core.Domain;
@@ -7,26 +6,25 @@ using Gramps.Tests.Core;
 using Gramps.Tests.Core.Extensions;
 using Gramps.Tests.Core.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using FluentNHibernate.Testing;
 using UCDArch.Core.PersistanceSupport;
 using UCDArch.Data.NHibernate;
 using UCDArch.Testing.Extensions;
 
-namespace Gramps.Tests.RepositoryTests
+namespace Gramps.Tests.RepositoryTests.CallForProposalRepositoryTests
 {
     /// <summary>
     /// Entity Name:		CallForProposal
     /// LookupFieldName:	Name yrjuy
     /// </summary>
     [TestClass]
-    public class CallForProposalRepositoryTests : AbstractRepositoryTests<CallForProposal, int, CallForProposalMap>
+    public partial class CallForProposalRepositoryTests : AbstractRepositoryTests<CallForProposal, int, CallForProposalMap>
     {
         /// <summary>
         /// Gets or sets the CallForProposal repository.
         /// </summary>
         /// <value>The CallForProposal repository.</value>
         public IRepository<CallForProposal> CallForProposalRepository { get; set; }
-		
+        
         #region Init and Overrides
 
         /// <summary>
@@ -103,11 +101,6 @@ namespace Gramps.Tests.RepositoryTests
 
         #endregion Init and Overrides	
         
-        
-        
-        
-        
-        
         #region Reflection of Database.
 
         /// <summary>
@@ -119,13 +112,21 @@ namespace Gramps.Tests.RepositoryTests
         {
             #region Arrange
             var expectedFields = new List<NameAndType>();
-
+            expectedFields.Add(new NameAndType("CallsSentDate", "System.DateTime", new List<string>()));
+            expectedFields.Add(new NameAndType("CreatedDate", "System.DateTime", new List<string>()));
+            expectedFields.Add(new NameAndType("EndDate", "System.DateTime", new List<string>()));
             expectedFields.Add(new NameAndType("Id", "System.Int32", new List<string>
             {
                 "[Newtonsoft.Json.JsonPropertyAttribute()]", 
                 "[System.Xml.Serialization.XmlIgnoreAttribute()]"
             }));
-
+            expectedFields.Add(new NameAndType("IsActive", "System.Boolean", new List<string>()));
+            expectedFields.Add(new NameAndType("Name", "System.String", new List<string>
+            {
+                 "[NHibernate.Validator.Constraints.LengthAttribute((Int32)100)]", 
+                 "[UCDArch.Core.NHibernateValidator.Extensions.RequiredAttribute()]"
+            }));
+            expectedFields.Add(new NameAndType("TemplateGeneratedFrom", "", new List<string>()));
             #endregion Arrange
 
             AttributeAndFieldValidation.ValidateFieldsAndAttributes(expectedFields, typeof(CallForProposal));

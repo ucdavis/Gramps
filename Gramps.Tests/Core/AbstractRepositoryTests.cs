@@ -453,15 +453,13 @@ namespace Gramps.Tests.Core
 
 
 
-        //protected void LoadUsers(int entriesToAdd)
-        //{
-        //    for (int i = 0; i < entriesToAdd; i++)
-        //    {
-        //        var validEntity = CreateValidEntities.User(i + 1);
-        //        Repository.OfType<User>().EnsurePersistent(validEntity);
-        //    }
-        //}
-
-    
+        protected void LoadTemplates(int entriesToAdd)
+        {
+            for (int i = 0; i < entriesToAdd; i++)
+            {
+                var validEntity = CreateValidEntities.Template(i + 1);
+                Repository.OfType<Template>().EnsurePersistent(validEntity);
+            }
+        }
     }
 }

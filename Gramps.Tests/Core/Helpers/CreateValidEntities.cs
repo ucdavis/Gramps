@@ -32,6 +32,15 @@ namespace Gramps.Tests.Core.Helpers
             return rtValue;
         }
 
+        public static Template Template(int? counter)
+        {
+            var rtValue = new Template();
+            rtValue.Name = "Name" + counter.Extra();
+            rtValue.IsActive = true;
+
+            return rtValue;
+        }
+
         //public static Unit Unit(int? counter, bool populateAllFields = false)
         //{
         //    var rtValue = new Unit();
