@@ -98,6 +98,9 @@
     <Compile Include="RepositoryTests\CallForProposalRepositoryTests\CallForProposalRepositoryTestsPart02.cs" />
     <Compile Include="RepositoryTests\CallForProposalRepositoryTests\CallForProposalRepositoryTestsPart03.cs" />
     <Compile Include="RepositoryTests\CallForProposalRepositoryTests\CallForProposalRepositoryTestsPart04.cs" />
+    <Compile Include="RepositoryTests\CallForProposalRepositoryTests\CallForProposalRepositoryTestsPart05.cs" />
+    <Compile Include="RepositoryTests\CallForProposalRepositoryTests\CallForProposalRepositoryTestsPart06.cs" />
+    <Compile Include="RepositoryTests\CallForProposalRepositoryTests\CallForProposalRepositoryTestsPart07.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />

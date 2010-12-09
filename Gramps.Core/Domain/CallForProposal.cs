@@ -18,6 +18,10 @@ namespace Gramps.Core.Domain
             {
                 AddEmailForCall(emailsForCall.Email);
             }
+            foreach (var emailTemplate in template.EmailTemplates)
+            {
+                AddEmailTemplate(emailTemplate);
+            }
             //TODO: Go throught the template and populate the call for proposal
         }
         public CallForProposal(string name)
@@ -94,6 +98,13 @@ namespace Gramps.Core.Domain
             }
         }
 
+        public virtual void AddEmailTemplate(EmailTemplate emailTemplate)
+        {
+            emailTemplate.CallForProposal = this;
+            emailTemplate.Template = null;
+            EmailTemplates.Add(emailTemplate);
+        }
+
         #endregion Methods
 
         #region ValidationOnlyFields
@@ -103,11 +114,30 @@ namespace Gramps.Core.Domain
         {
             get
             {
-                if (Emails != null)
+                if (Emails != null && IsActive)
                 {
                     foreach (var emailsForCall in Emails)
                     {
                         if (!emailsForCall.IsValid())
+                        {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+        }
+
+        [AssertTrue(Message = "One or more invalid email templates detected")]
+        private bool EmailTemplatesList
+        {
+            get
+            {
+                if (EmailTemplates != null && IsActive)
+                {
+                    foreach (var emailTemplates in EmailTemplates)
+                    {
+                        if (!emailTemplates.IsValid())
                         {
                             return false;
                         }
@@ -133,7 +163,7 @@ namespace Gramps.Core.Domain
             Map(x => x.CallsSentDate);
             References(x => x.TemplateGeneratedFrom);
             HasMany(x => x.Emails).Inverse().Cascade.AllDeleteOrphan();
-            HasMany(x => x.EmailTemplates);
+            HasMany(x => x.EmailTemplates).Inverse().Cascade.SaveUpdate();
             HasMany(x => x.Editors);
             HasMany(x => x.Questions);
             HasMany(x => x.Proposals);

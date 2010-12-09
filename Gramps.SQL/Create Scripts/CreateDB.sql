@@ -240,6 +240,7 @@ CREATE TABLE [dbo].[EmailTemplates](
 	[Text] [varchar](max) NULL,
 	[TemplateId] [int] NULL,
 	[CallForProposalId] [int] NULL,
+	[Subject] [varchar](100) NOT NULL,
  CONSTRAINT [PK_EmailTemplates] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC

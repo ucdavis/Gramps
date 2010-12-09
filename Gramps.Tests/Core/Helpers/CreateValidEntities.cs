@@ -41,6 +41,19 @@ namespace Gramps.Tests.Core.Helpers
             return rtValue;
         }
 
+        public static EmailTemplate EmailTemplate(int? counter, bool populateAllFields = false)
+        {
+            var rtValue = new EmailTemplate();
+            rtValue.Subject = "Subject" + counter.Extra();
+            if(populateAllFields)
+            {
+                rtValue.Text = "Text" + counter.Extra();
+                rtValue.TemplateType = "Type" + counter.Extra();
+            }
+
+            return rtValue;
+        }
+
         //public static Unit Unit(int? counter, bool populateAllFields = false)
         //{
         //    var rtValue = new Unit();
