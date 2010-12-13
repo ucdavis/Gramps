@@ -11,30 +11,51 @@ namespace Gramps.Core.Domain
     public class CallForProposal : DomainObject
     {
         #region Constructor
-        public CallForProposal(Template template)
+        public CallForProposal(Template template, User user)
         {            
             SetDefaults();
             TemplateGeneratedFrom = template;
+
+            #region Added Emails to send out call for proposals to
             foreach (var emailsForCall in template.Emails)
             {
                 AddEmailForCall(emailsForCall.Email); //Emails to send out call for proposals to.
             }
+            #endregion Added Emails to send out call for proposals to
+
+            #region Copy/Add Required Email templates
             var requiredEmailTemmplates = RequiredEmailTemplates.GetRequiredEmailTemplates();
             foreach (var emailTemplate in template.EmailTemplates)
             {
-               if(requiredEmailTemmplates.ContainsKey(emailTemplate.TemplateType))
-               {
-                   AddEmailTemplate(emailTemplate);
-                   requiredEmailTemmplates[emailTemplate.TemplateType] = true;
-               }
+                if (requiredEmailTemmplates.ContainsKey(emailTemplate.TemplateType))
+                {
+                    AddEmailTemplate(emailTemplate);
+                    requiredEmailTemmplates[emailTemplate.TemplateType] = true;
+                }
             }
             foreach (var requiredEmailTemmplate in requiredEmailTemmplates)
             {
                 if (requiredEmailTemmplate.Value == false)
                 {
-                    AddEmailTemplate(new EmailTemplate(){TemplateType = requiredEmailTemmplate.Key});
+                    AddEmailTemplate(new EmailTemplate() { TemplateType = requiredEmailTemmplate.Key });
                 }
             }
+            #endregion Copy/Add Required Email templates
+
+            #region Copy/Add Editors
+            var owner = new Editor();
+            owner.IsOwner = true;
+            owner.User = user;
+            AddEditor(owner);
+            foreach (var editor in template.Editors)
+            {
+                if (!editor.IsOwner)
+                {
+                    AddEditor(editor);
+                }
+            }
+            #endregion Copy/Add Editors
+            
             //TODO: Go throught the template and populate the call for proposal
         }
         public CallForProposal(string name)
@@ -81,7 +102,7 @@ namespace Gramps.Core.Domain
         [NotNull]
         public virtual IList<EmailTemplate> EmailTemplates { get; set; }
         
-        [NotNull]
+        [NotNull]        
         public virtual IList<Editor> Editors { get; set; }
         
         [NotNull]
@@ -113,9 +134,37 @@ namespace Gramps.Core.Domain
 
         public virtual void AddEmailTemplate(EmailTemplate emailTemplate)
         {
-            emailTemplate.CallForProposal = this;
-            emailTemplate.Template = null;
-            EmailTemplates.Add(emailTemplate);
+            var newEmailTemplate = new EmailTemplate();
+            newEmailTemplate.CallForProposal = this;
+            newEmailTemplate.Template = null;
+            newEmailTemplate.Subject = emailTemplate.Subject;
+            newEmailTemplate.TemplateType = emailTemplate.TemplateType;
+            newEmailTemplate.Text = emailTemplate.Text;
+
+            EmailTemplates.Add(newEmailTemplate);
+        }
+
+        public virtual void AddEditor(Editor editor)
+        {
+            var newEditor = new Editor();
+            newEditor.CallForProposal = this;
+            //newEditor.Comments = 
+            newEditor.IsOwner = editor.IsOwner;
+            newEditor.ReviewerEmail = editor.ReviewerEmail;
+            //newEditor.ReviewerId = new Guid(); //Should be done in constructor
+            newEditor.ReviewerName = editor.ReviewerName;
+            newEditor.Template = null;
+            newEditor.User = editor.User;
+            
+            Editors.Add(newEditor);
+        }
+
+        public virtual void RemoveEditor(Editor editor)
+        {
+            if (Editors != null && Editors.Contains(editor) && !editor.IsOwner)
+            {
+                Editors.Remove(editor);
+            }
         }
 
         #endregion Methods
@@ -160,6 +209,45 @@ namespace Gramps.Core.Domain
             }
         }
 
+        [AssertTrue(Message = "One or more invalid editors or reviewers detected")]
+        private bool EditorsList
+        {
+            get
+            {
+                if (Editors != null && IsActive)
+                {
+                    foreach (var editor in Editors)
+                    {
+                        if (!editor.IsValid())
+                        {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+        }
+
+        [AssertTrue(Message = "Owner is required")]
+        private bool Owner
+        {
+            get
+            {
+                if (Editors == null)
+                {
+                    return true; //Other check gets this.
+                }
+                foreach (var editor in Editors)
+                {
+                    if (editor.IsOwner)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
+
         #endregion ValidationOnlyFields
 
     }
@@ -177,7 +265,7 @@ namespace Gramps.Core.Domain
             References(x => x.TemplateGeneratedFrom);
             HasMany(x => x.Emails).Inverse().Cascade.AllDeleteOrphan();
             HasMany(x => x.EmailTemplates).Inverse().Cascade.AllDeleteOrphan();
-            HasMany(x => x.Editors);
+            HasMany(x => x.Editors).Inverse().Cascade.AllDeleteOrphan();
             HasMany(x => x.Questions);
             HasMany(x => x.Proposals);
         }

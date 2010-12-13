@@ -24,6 +24,8 @@ namespace Gramps.Tests.RepositoryTests.CallForProposalRepositoryTests
         /// </summary>
         /// <value>The CallForProposal repository.</value>
         public IRepository<CallForProposal> CallForProposalRepository { get; set; }
+
+        public IRepository<User> UserRepository { get; set; }
         
         #region Init and Overrides
 
@@ -33,6 +35,7 @@ namespace Gramps.Tests.RepositoryTests.CallForProposalRepositoryTests
         public CallForProposalRepositoryTests()
         {
             CallForProposalRepository = new Repository<CallForProposal>();
+            UserRepository = new Repository<User>();
         }
 
         /// <summary>
@@ -42,7 +45,13 @@ namespace Gramps.Tests.RepositoryTests.CallForProposalRepositoryTests
         /// <returns>A valid entity of type T</returns>
         protected override CallForProposal GetValid(int? counter)
         {
-            return CreateValidEntities.CallForProposal(counter);
+            var rtValue = CreateValidEntities.CallForProposal(counter);
+            var editor = new Editor();
+            editor.User = UserRepository.GetNullableById(2);
+            editor.IsOwner = true;
+            rtValue.AddEditor(editor);
+
+            return rtValue;
         }
 
         /// <summary>
@@ -94,7 +103,10 @@ namespace Gramps.Tests.RepositoryTests.CallForProposalRepositoryTests
         /// </summary>
         protected override void LoadData()
         {
-            CallForProposalRepository.DbContext.BeginTransaction();
+            UserRepository.DbContext.BeginTransaction();
+            LoadUsers(3);
+            UserRepository.DbContext.CommitTransaction();
+            CallForProposalRepository.DbContext.BeginTransaction();            
             LoadRecords(5);
             CallForProposalRepository.DbContext.CommitTransaction();
         }
@@ -115,7 +127,15 @@ namespace Gramps.Tests.RepositoryTests.CallForProposalRepositoryTests
             
             expectedFields.Add(new NameAndType("CallsSentDate", "System.DateTime", new List<string>()));
             expectedFields.Add(new NameAndType("CreatedDate", "System.DateTime", new List<string>()));
+            expectedFields.Add(new NameAndType("Editors", "System.Collections.Generic.IList`1[Gramps.Core.Domain.Editor]", new List<string>
+            {
+                ""
+            }));
             expectedFields.Add(new NameAndType("Emails", "System.Collections.Generic.IList`1[Gramps.Core.Domain.EmailsForCall]", new List<string>
+            {
+                ""
+            }));
+            expectedFields.Add(new NameAndType("EmailTemplates", "System.Collections.Generic.IList`1[Gramps.Core.Domain.EmailTemplate]", new List<string>
             {
                 ""
             }));

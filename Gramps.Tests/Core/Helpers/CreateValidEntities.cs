@@ -54,6 +54,25 @@ namespace Gramps.Tests.Core.Helpers
             return rtValue;
         }
 
+        public static User User(int? counter)
+        {
+            var rtValue = new User();
+            rtValue.LoginId = "LoginId" + counter.Extra();
+            rtValue.Email = "test" + counter.Extra() + "@testy.com";            
+
+            return rtValue;
+        }
+
+        public static Editor Editor(int? counter)
+        {
+            var rtValue = new Editor();
+            rtValue.IsOwner = false;
+            rtValue.ReviewerName = "ReviewerName" + counter.Extra();
+            rtValue.ReviewerEmail = "test" + counter.Extra() + "@testy.com"; 
+
+            return rtValue;
+        }
+
         //public static Unit Unit(int? counter, bool populateAllFields = false)
         //{
         //    var rtValue = new Unit();

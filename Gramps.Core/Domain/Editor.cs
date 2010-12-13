@@ -56,6 +56,32 @@ namespace Gramps.Core.Domain
             }
         }
 
+        [AssertTrue(Message = "Reviewer must have a unique identifier")]
+        private bool ReviewerIdentifier
+        {
+            get
+            {
+                if (User == null && (ReviewerId == null || ReviewerId == Guid.Empty))
+                {
+                    return false;
+                }
+                return true;
+            }
+        }
+
+        [AssertTrue(Message = "Reviewer must have an email")]
+        private bool ReviewerEmailRequired
+        {
+            get
+            {
+                if (User == null && string.IsNullOrWhiteSpace(ReviewerEmail))
+                {
+                    return false;
+                }
+                return true;
+            }
+        }
+
         #endregion Validation Fields
     }
 
