@@ -229,21 +229,65 @@ namespace Gramps.Tests.RepositoryTests.CallForProposalRepositoryTests
 
 
         [TestMethod]
-        public void TestCascadeDeleteDoesNotSave()
+        public void TestEmailTemplateCascadesDelete1()
         {
             #region Arrange
+            var emailTemplateRepository = new Repository<EmailTemplate>();
+            var emailTemplateCount = emailTemplateRepository.Queryable.Count();
+            var record = GetValid(99);
+            record.EmailTemplates = new List<EmailTemplate>();
+            record.AddEmailTemplate(CreateValidEntities.EmailTemplate(1));
+            record.AddEmailTemplate(CreateValidEntities.EmailTemplate(2));
+            record.AddEmailTemplate(CreateValidEntities.EmailTemplate(3));
+            CallForProposalRepository.DbContext.BeginTransaction();
+            CallForProposalRepository.EnsurePersistent(record);
+            CallForProposalRepository.DbContext.CommitChanges();
+            #endregion Arrange
 
-            Assert.Inconclusive("Need to write this test.");
+            #region Act
+            record.EmailTemplates.RemoveAt(1);
+            CallForProposalRepository.DbContext.BeginTransaction();
+            CallForProposalRepository.EnsurePersistent(record);
+            CallForProposalRepository.DbContext.CommitChanges();
+            #endregion Act
 
+            #region Assert
+            Assert.IsFalse(record.IsTransient());
+            Assert.IsTrue(record.IsValid());
+            Assert.IsNotNull(record.EmailTemplates);
+            Assert.AreEqual(2, record.EmailTemplates.Count);
+            Assert.AreEqual(2 + emailTemplateCount, emailTemplateRepository.Queryable.Count());
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestEmailTemplateCascadesDelete2()
+        {
+            #region Arrange
+            var emailTemplateRepository = new Repository<EmailTemplate>();
+            var emailTemplateCount = emailTemplateRepository.Queryable.Count();
+            var record = GetValid(99);
+            record.EmailTemplates = new List<EmailTemplate>();
+            record.AddEmailTemplate(CreateValidEntities.EmailTemplate(1));
+            record.AddEmailTemplate(CreateValidEntities.EmailTemplate(2));
+            record.AddEmailTemplate(CreateValidEntities.EmailTemplate(3));
+            CallForProposalRepository.DbContext.BeginTransaction();
+            CallForProposalRepository.EnsurePersistent(record);
+            CallForProposalRepository.DbContext.CommitChanges();
+            var saveId = record.Id;
             #endregion Arrange
 
             #region Act
 
+            CallForProposalRepository.DbContext.BeginTransaction();
+            CallForProposalRepository.Remove(record);
+            CallForProposalRepository.DbContext.CommitChanges();
             #endregion Act
 
             #region Assert
-
-            #endregion Assert		
+            Assert.IsNull(CallForProposalRepository.GetNullableById(saveId));
+            Assert.AreEqual(emailTemplateCount, emailTemplateRepository.Queryable.Count());
+            #endregion Assert
         }
 
         #endregion Cascade Tests

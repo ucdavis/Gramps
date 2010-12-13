@@ -4,7 +4,7 @@ using UCDArch.Core.DomainModel;
 namespace Gramps.Core.Domain
 {
 // ReSharper disable InconsistentNaming
-    public class vUser : DomainObject
+    public class User : DomainObject
 // ReSharper restore InconsistentNaming
     {
         public virtual string LoginId { get; set; }
@@ -19,10 +19,10 @@ namespace Gramps.Core.Domain
     }
 
 // ReSharper disable InconsistentNaming
-    public class vUserMap : ClassMap<vUser>
+    public class UserMap : ClassMap<User>
 // ReSharper restore InconsistentNaming
     {
-        public vUserMap()
+        public UserMap()
         {
             Table("vUsers");
             ReadOnly();

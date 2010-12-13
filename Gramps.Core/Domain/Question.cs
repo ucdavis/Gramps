@@ -73,7 +73,8 @@ namespace Gramps.Core.Domain
             References(x => x.CallForProposal);
 
             HasMany(x => x.Options);
-            HasManyToMany(x => x.Validators).Table("QuestionXValidator").Cascade.SaveUpdate();
+            //HasManyToMany(x => x.Validators).Table("QuestionXValidator").Cascade.SaveUpdate();
+            HasManyToMany(x => x.Validators).Cascade.SaveUpdate();
             //HasMany(x => x.Answers);
         }
     }

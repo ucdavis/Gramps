@@ -35,7 +35,7 @@ namespace Gramps.Core.Domain
 
         public virtual Template Template { get; set; }
         public virtual CallForProposal CallForProposal { get; set; }
-        public virtual vUser User { get; set; }
+        public virtual User User { get; set; }
 
         public virtual IList<Comment> Comments { get; set; }
  

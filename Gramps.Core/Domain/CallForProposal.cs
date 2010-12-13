@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using FluentNHibernate.Mapping;
+using Gramps.Core.Helpers;
 using NHibernate.Validator.Constraints;
 using UCDArch.Core.DomainModel;
 using UCDArch.Core.NHibernateValidator.Extensions;
@@ -16,11 +17,23 @@ namespace Gramps.Core.Domain
             TemplateGeneratedFrom = template;
             foreach (var emailsForCall in template.Emails)
             {
-                AddEmailForCall(emailsForCall.Email);
+                AddEmailForCall(emailsForCall.Email); //Emails to send out call for proposals to.
             }
+            var requiredEmailTemmplates = RequiredEmailTemplates.GetRequiredEmailTemplates();
             foreach (var emailTemplate in template.EmailTemplates)
             {
-                AddEmailTemplate(emailTemplate);
+               if(requiredEmailTemmplates.ContainsKey(emailTemplate.TemplateType))
+               {
+                   AddEmailTemplate(emailTemplate);
+                   requiredEmailTemmplates[emailTemplate.TemplateType] = true;
+               }
+            }
+            foreach (var requiredEmailTemmplate in requiredEmailTemmplates)
+            {
+                if (requiredEmailTemmplate.Value == false)
+                {
+                    AddEmailTemplate(new EmailTemplate(){TemplateType = requiredEmailTemmplate.Key});
+                }
             }
             //TODO: Go throught the template and populate the call for proposal
         }
@@ -163,7 +176,7 @@ namespace Gramps.Core.Domain
             Map(x => x.CallsSentDate);
             References(x => x.TemplateGeneratedFrom);
             HasMany(x => x.Emails).Inverse().Cascade.AllDeleteOrphan();
-            HasMany(x => x.EmailTemplates).Inverse().Cascade.SaveUpdate();
+            HasMany(x => x.EmailTemplates).Inverse().Cascade.AllDeleteOrphan();
             HasMany(x => x.Editors);
             HasMany(x => x.Questions);
             HasMany(x => x.Proposals);

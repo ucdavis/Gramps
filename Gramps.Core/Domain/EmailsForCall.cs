@@ -17,7 +17,7 @@ namespace Gramps.Core.Domain
             SetDefaults();
             Email = emailAddres;
         }
-        public EmailsForCall()
+        protected EmailsForCall()
         {
             SetDefaults();
         }
