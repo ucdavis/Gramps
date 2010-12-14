@@ -151,6 +151,10 @@ namespace Gramps.Tests.RepositoryTests.CallForProposalRepositoryTests
                  "[NHibernate.Validator.Constraints.LengthAttribute((Int32)100)]", 
                  "[UCDArch.Core.NHibernateValidator.Extensions.RequiredAttribute()]"
             }));
+            expectedFields.Add(new NameAndType("Questions", "System.Collections.Generic.IList`1[Gramps.Core.Domain.Question]", new List<string>
+            {
+                ""
+            }));
             expectedFields.Add(new NameAndType("TemplateGeneratedFrom", "", new List<string>()));
             #endregion Arrange
 

@@ -167,6 +167,41 @@ namespace Gramps.Core.Domain
             }
         }
 
+        public virtual void AddQuestion(Question question)
+        {
+            var newQuestion = new Question();
+            newQuestion.CallForProposal = this;
+            newQuestion.QuestionType = question.QuestionType;
+            newQuestion.Name = question.Name;
+            newQuestion.Order = question.Order;
+            newQuestion.Template = null;
+            if (question.Options != null)
+            {
+                foreach (var questionOption in question.Options)
+                {
+                    newQuestion.AddQuestionOption(questionOption);
+                }
+            }
+            if (question.Validators != null)
+            {
+                foreach (var validator in question.Validators)
+                {
+                    newQuestion.Addvalidators(validator);
+                }
+            }
+
+            Questions.Add(newQuestion);
+        }
+
+        public virtual void RemoveQuestion(Question question)
+        {
+            if (Questions != null && Questions.Contains(question))
+            {
+                //What happens if there is an answer?
+                Questions.Remove(question);
+            }
+        }
+
         #endregion Methods
 
         #region ValidationOnlyFields
@@ -228,6 +263,25 @@ namespace Gramps.Core.Domain
             }
         }
 
+        [AssertTrue(Message = "One or more invalid questions detected")]
+        private bool QuestionsList
+        {
+            get
+            {
+                if (Questions != null && IsActive)
+                {
+                    foreach (var question in Questions)
+                    {
+                        if (!question.IsValid())
+                        {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+        }
+
         [AssertTrue(Message = "Owner is required")]
         private bool Owner
         {
@@ -266,7 +320,7 @@ namespace Gramps.Core.Domain
             HasMany(x => x.Emails).Inverse().Cascade.AllDeleteOrphan();
             HasMany(x => x.EmailTemplates).Inverse().Cascade.AllDeleteOrphan();
             HasMany(x => x.Editors).Inverse().Cascade.AllDeleteOrphan();
-            HasMany(x => x.Questions);
+            HasMany(x => x.Questions).Inverse().Cascade.AllDeleteOrphan();
             HasMany(x => x.Proposals);
         }
     }

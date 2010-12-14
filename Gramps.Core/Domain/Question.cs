@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using FluentNHibernate.Mapping;
 using NHibernate.Validator.Constraints;
 using UCDArch.Core.DomainModel;
@@ -58,6 +59,22 @@ namespace Gramps.Core.Domain
         }
 
         #endregion Validation Fields
+
+        #region Methods
+        public virtual void AddQuestionOption(QuestionOption questionOption)
+        {
+            var newQuestionOption = new QuestionOption();
+            newQuestionOption.Question = this;
+            newQuestionOption.Name = questionOption.Name;
+            Options.Add(newQuestionOption);
+        }
+
+        #endregion Methods
+
+        public virtual void Addvalidators(Validator validator)
+        {
+            Validators.Add(validator);
+        }
     }
 
     public class QuestionMap : ClassMap<Question>
@@ -72,9 +89,9 @@ namespace Gramps.Core.Domain
             References(x => x.Template);
             References(x => x.CallForProposal);
 
-            HasMany(x => x.Options);
+            HasMany(x => x.Options).Inverse().Cascade.AllDeleteOrphan();
             //HasManyToMany(x => x.Validators).Table("QuestionXValidator").Cascade.SaveUpdate();
-            HasManyToMany(x => x.Validators).Cascade.SaveUpdate();
+            HasManyToMany(x => x.Validators).Cascade.None();
             //HasMany(x => x.Answers);
         }
     }
