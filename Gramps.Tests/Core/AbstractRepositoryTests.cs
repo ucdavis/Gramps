@@ -567,5 +567,15 @@ namespace Gramps.Tests.Core
             validator.ErrorMessage = "{0} is not a valid zip code.";
             Repository.OfType<Validator>().EnsurePersistent(validator);
         }
+
+        protected void LoadCallForProposals(int entriesToAdd)
+        {
+            for (int i = 0; i < entriesToAdd; i++)
+            {
+                var validEntity = CreateValidEntities.CallForProposal(i + 1);
+                validEntity.AddEditor(new Editor(Repository.OfType<User>().Queryable.Where(a => a.Id == 3).Single(), true));
+                Repository.OfType<CallForProposal>().EnsurePersistent(validEntity);
+            }
+        }
     }
 }

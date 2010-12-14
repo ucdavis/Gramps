@@ -10,10 +10,10 @@ namespace Gramps.Core.Domain
         #region Constructor
         public Comment(Proposal proposal, Editor editor, string text)
         {
+            SetDefaults();
             Proposal = proposal;
             Editor = editor;
             Text = text;
-            SetDefaults();
         }
 
         public Comment()

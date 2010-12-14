@@ -9,6 +9,18 @@ namespace Gramps.Core.Domain
     public class Editor : DomainObject
     {
         #region Constructor
+        public Editor(User user, bool isOwner)
+        {
+            SetDefaults();
+            IsOwner = isOwner;
+            User = user;
+        }
+        public Editor(string email)
+        {
+            SetDefaults();
+            ReviewerEmail = email;
+        }
+
         public Editor()
         {
             SetDefaults();
