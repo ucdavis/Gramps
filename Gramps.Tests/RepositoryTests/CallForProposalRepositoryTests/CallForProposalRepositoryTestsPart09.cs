@@ -4,14 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentNHibernate.Testing;
 using Gramps.Core.Domain;
-using Gramps.Tests.Core;
-using Gramps.Tests.Core.Extensions;
 using Gramps.Tests.Core.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using UCDArch.Core.PersistanceSupport;
 using UCDArch.Data.NHibernate;
 using UCDArch.Testing;
-using UCDArch.Testing.Extensions;
 
 
 namespace Gramps.Tests.RepositoryTests.CallForProposalRepositoryTests
@@ -173,7 +169,14 @@ namespace Gramps.Tests.RepositoryTests.CallForProposalRepositoryTests
 
         public class CallForProposalEqualityComparer : IEqualityComparer
         {
-            public bool Equals(object x, object y)
+            /// <summary>
+            /// Determines whether the specified objects are equal.
+            /// </summary>
+            /// <returns>
+            /// true if the specified objects are equal; otherwise, false.
+            /// </returns>
+            /// <param name="x">The first object to compare.</param><param name="y">The second object to compare.</param><exception cref="T:System.ArgumentException"><paramref name="x"/> and <paramref name="y"/> are of different types and neither one can handle comparisons with the other.</exception>
+            bool IEqualityComparer.Equals(object x, object y)
             {
                 if (x == null || y == null)
                 {
