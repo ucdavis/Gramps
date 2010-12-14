@@ -55,8 +55,7 @@ namespace Gramps.Core.Domain
                 }
             }
             #endregion Copy/Add Editors
-            
-            //TODO: Go throught the template and populate the call for proposal
+                      
         }
         public CallForProposal(string name)
         {

@@ -8,6 +8,14 @@ namespace Gramps.Core.Domain
     public class Comment : DomainObject
     {
         #region Constructor
+        public Comment(Proposal proposal, Editor editor, string text)
+        {
+            Proposal = proposal;
+            Editor = editor;
+            Text = text;
+            SetDefaults();
+        }
+
         public Comment()
         {
             SetDefaults();

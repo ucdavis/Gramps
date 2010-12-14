@@ -14,6 +14,27 @@ namespace Gramps.Tests.RepositoryTests.CallForProposalRepositoryTests
 {
     public partial class CallForProposalRepositoryTests
     {
+        #region Constructor Tests
+
+        [TestMethod]
+        public void TestToDoConstructorTests()
+        {
+            #region Arrange
+            Assert.Inconclusive("Once Template tests are done, add the constructor tests for Call For Proposals");
+            
+
+            #endregion Arrange
+
+            #region Act
+
+            #endregion Act
+
+            #region Assert
+
+            #endregion Assert		
+        }
+        #endregion Constructor Tests
+
         #region Fluent Mapping Tests
         [TestMethod]
         public void TestCanCorrectlyMapTicket1()

@@ -81,6 +81,14 @@ namespace Gramps.Tests.Core.Helpers
             return rtValue;
         }
 
+        public static Comment Comment(int? counter)
+        {
+            var rtValue = new Comment();
+            rtValue.Text = "Text" + counter.Extra();
+            
+            return rtValue;
+        }
+
         //public static Unit Unit(int? counter, bool populateAllFields = false)
         //{
         //    var rtValue = new Unit();
