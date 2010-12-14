@@ -124,22 +124,40 @@ namespace Gramps.Tests.RepositoryTests.CallForProposalRepositoryTests
         {
             #region Arrange
             var expectedFields = new List<NameAndType>();
-            
-            expectedFields.Add(new NameAndType("CallsSentDate", "System.DateTime", new List<string>()));
-            expectedFields.Add(new NameAndType("CreatedDate", "System.DateTime", new List<string>()));
+
+            expectedFields.Add(new NameAndType("CallsSentDate", "System.Nullable`1[System.DateTime]", new List<string>()));
+            expectedFields.Add(new NameAndType("CreatedDate", "System.DateTime", new List<string>
+            {
+                "[NHibernate.Validator.Constraints.NotNullAttribute()]"
+            }));
             expectedFields.Add(new NameAndType("Editors", "System.Collections.Generic.IList`1[Gramps.Core.Domain.Editor]", new List<string>
             {
-                ""
+                "[NHibernate.Validator.Constraints.NotNullAttribute()]"
+            }));
+            expectedFields.Add(new NameAndType("EditorsList", "System.Boolean", new List<string>
+            {
+                "[NHibernate.Validator.Constraints.AssertTrueAttribute(Message = \"One or more invalid editors or reviewers detected\")]"
             }));
             expectedFields.Add(new NameAndType("Emails", "System.Collections.Generic.IList`1[Gramps.Core.Domain.EmailsForCall]", new List<string>
             {
-                ""
+                "[NHibernate.Validator.Constraints.NotNullAttribute()]"
+            }));
+            expectedFields.Add(new NameAndType("EmailsForCallList", "System.Boolean", new List<string>
+            {
+                "[NHibernate.Validator.Constraints.AssertTrueAttribute(Message = \"One or more invalid emails for call detected\")]"
             }));
             expectedFields.Add(new NameAndType("EmailTemplates", "System.Collections.Generic.IList`1[Gramps.Core.Domain.EmailTemplate]", new List<string>
             {
-                ""
+                "[NHibernate.Validator.Constraints.NotNullAttribute()]"
             }));
-            expectedFields.Add(new NameAndType("EndDate", "System.DateTime", new List<string>()));
+            expectedFields.Add(new NameAndType("EmailTemplatesList", "System.Boolean", new List<string>
+            {
+                "[NHibernate.Validator.Constraints.AssertTrueAttribute(Message = \"One or more invalid email templates detected\")]"
+            }));
+            expectedFields.Add(new NameAndType("EndDate", "System.DateTime", new List<string>
+            {
+                "[NHibernate.Validator.Constraints.NotNullAttribute()]"
+            }));
             expectedFields.Add(new NameAndType("Id", "System.Int32", new List<string>
             {
                 "[Newtonsoft.Json.JsonPropertyAttribute()]", 
@@ -151,11 +169,23 @@ namespace Gramps.Tests.RepositoryTests.CallForProposalRepositoryTests
                  "[NHibernate.Validator.Constraints.LengthAttribute((Int32)100)]", 
                  "[UCDArch.Core.NHibernateValidator.Extensions.RequiredAttribute()]"
             }));
+            expectedFields.Add(new NameAndType("Owner", "System.Boolean", new List<string>
+            {
+                 "[NHibernate.Validator.Constraints.AssertTrueAttribute(Message = \"Owner is required\")]"
+            }));
+            expectedFields.Add(new NameAndType("Proposals", "System.Collections.Generic.IList`1[Gramps.Core.Domain.Proposal]", new List<string>
+            {
+                "[NHibernate.Validator.Constraints.NotNullAttribute()]"
+            }));
             expectedFields.Add(new NameAndType("Questions", "System.Collections.Generic.IList`1[Gramps.Core.Domain.Question]", new List<string>
             {
-                ""
+                "[NHibernate.Validator.Constraints.NotNullAttribute()]"
             }));
-            expectedFields.Add(new NameAndType("TemplateGeneratedFrom", "", new List<string>()));
+            expectedFields.Add(new NameAndType("QuestionsList", "System.Boolean", new List<string>
+            {
+                 "[NHibernate.Validator.Constraints.AssertTrueAttribute(Message = \"One or more invalid questions detected\")]"
+            }));
+            expectedFields.Add(new NameAndType("TemplateGeneratedFrom", "Gramps.Core.Domain.Template", new List<string>()));
             #endregion Arrange
 
             AttributeAndFieldValidation.ValidateFieldsAndAttributes(expectedFields, typeof(CallForProposal));

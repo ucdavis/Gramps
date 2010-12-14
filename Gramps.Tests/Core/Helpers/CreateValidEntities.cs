@@ -73,6 +73,14 @@ namespace Gramps.Tests.Core.Helpers
             return rtValue;
         }
 
+        public static Proposal Proposal(int? counter)
+        {
+            var rtValue = new Proposal();
+            rtValue.Email = "Email" + counter.Extra() + "@testy.com";
+
+            return rtValue;
+        }
+
         //public static Unit Unit(int? counter, bool populateAllFields = false)
         //{
         //    var rtValue = new Unit();

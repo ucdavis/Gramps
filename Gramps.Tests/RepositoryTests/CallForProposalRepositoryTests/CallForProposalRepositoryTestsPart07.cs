@@ -2,11 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Gramps.Core.Domain;
-using Gramps.Tests.Core;
-using Gramps.Tests.Core.Extensions;
-using Gramps.Tests.Core.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using UCDArch.Core.PersistanceSupport;
 using UCDArch.Data.NHibernate;
 using UCDArch.Testing.Extensions;
 
@@ -153,9 +149,9 @@ namespace Gramps.Tests.RepositoryTests.CallForProposalRepositoryTests
             question.QuestionType = questionTypeRepository.Queryable.Where(a => a.Name == "Radio Buttons").Single();
             question.Name = "Who Me?";
             question.Order = 1;
-            question.AddQuestionOption(new QuestionOption() {Name = "Blue"});
-            question.AddQuestionOption(new QuestionOption() { Name = "Green" });
-            question.AddQuestionOption(new QuestionOption() { Name = "Yellow" });
+            question.AddQuestionOption(new QuestionOption {Name = "Blue"});
+            question.AddQuestionOption(new QuestionOption { Name = "Green" });
+            question.AddQuestionOption(new QuestionOption { Name = "Yellow" });
             record.AddQuestion(question);
             #endregion Arrange
 
@@ -190,9 +186,9 @@ namespace Gramps.Tests.RepositoryTests.CallForProposalRepositoryTests
             question.QuestionType = questionTypeRepository.Queryable.Where(a => a.Name == "Radio Buttons").Single();
             question.Name = "Who Me?";
             question.Order = 1;
-            question.AddQuestionOption(new QuestionOption() { Name = "Blue" });
-            question.AddQuestionOption(new QuestionOption() { Name = "Green" });
-            question.AddQuestionOption(new QuestionOption() { Name = "Yellow" });
+            question.AddQuestionOption(new QuestionOption { Name = "Blue" });
+            question.AddQuestionOption(new QuestionOption { Name = "Green" });
+            question.AddQuestionOption(new QuestionOption { Name = "Yellow" });
             question.Addvalidators(validatorRepository.Queryable.Where(a => a.Name == "Required").Single());
             record.AddQuestion(question);
 
@@ -273,9 +269,9 @@ namespace Gramps.Tests.RepositoryTests.CallForProposalRepositoryTests
             question.QuestionType = questionTypeRepository.Queryable.Where(a => a.Name == "Radio Buttons").Single();
             question.Name = "Who Me?";
             question.Order = 1;
-            question.AddQuestionOption(new QuestionOption() { Name = "Blue" });
-            question.AddQuestionOption(new QuestionOption() { Name = "Green" });
-            question.AddQuestionOption(new QuestionOption() { Name = "Yellow" });
+            question.AddQuestionOption(new QuestionOption { Name = "Blue" });
+            question.AddQuestionOption(new QuestionOption { Name = "Green" });
+            question.AddQuestionOption(new QuestionOption { Name = "Yellow" });
             question.Addvalidators(validatorRepository.Queryable.Where(a => a.Name == "Required").Single());
             record.AddQuestion(question);
 
@@ -330,9 +326,9 @@ namespace Gramps.Tests.RepositoryTests.CallForProposalRepositoryTests
             question.QuestionType = questionTypeRepository.Queryable.Where(a => a.Name == "Radio Buttons").Single();
             question.Name = "Who Me?";
             question.Order = 1;
-            question.AddQuestionOption(new QuestionOption() { Name = "Blue" });
-            question.AddQuestionOption(new QuestionOption() { Name = "Green" });
-            question.AddQuestionOption(new QuestionOption() { Name = "Yellow" });
+            question.AddQuestionOption(new QuestionOption { Name = "Blue" });
+            question.AddQuestionOption(new QuestionOption { Name = "Green" });
+            question.AddQuestionOption(new QuestionOption { Name = "Yellow" });
             question.Addvalidators(validatorRepository.Queryable.Where(a => a.Name == "Required").Single());
             record.AddQuestion(question);
 
@@ -413,9 +409,9 @@ namespace Gramps.Tests.RepositoryTests.CallForProposalRepositoryTests
             question.QuestionType = questionTypeRepository.Queryable.Where(a => a.Name == "Radio Buttons").Single();
             question.Name = "Who Me?";
             question.Order = 1;
-            question.AddQuestionOption(new QuestionOption() { Name = "Blue" });
-            question.AddQuestionOption(new QuestionOption() { Name = "Green" });
-            question.AddQuestionOption(new QuestionOption() { Name = "Yellow" });
+            question.AddQuestionOption(new QuestionOption { Name = "Blue" });
+            question.AddQuestionOption(new QuestionOption { Name = "Green" });
+            question.AddQuestionOption(new QuestionOption { Name = "Yellow" });
             question.Addvalidators(validatorRepository.Queryable.Where(a => a.Name == "Required").Single());
             record.AddQuestion(question);
 

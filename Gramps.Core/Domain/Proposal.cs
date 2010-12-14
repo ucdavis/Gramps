@@ -69,7 +69,7 @@ namespace Gramps.Core.Domain
             Map(x => x.SubmittedDate);
             Map(x => x.NotifiedDate);
 
-            References(x => x.CallForProposal);
+            References(x => x.CallForProposal).Not.Nullable();
             HasMany(x => x.Comments);
             HasMany(x => x.Answers);
         }

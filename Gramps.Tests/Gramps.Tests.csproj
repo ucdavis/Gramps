@@ -102,6 +102,7 @@
     <Compile Include="RepositoryTests\CallForProposalRepositoryTests\CallForProposalRepositoryTestsPart06.cs" />
     <Compile Include="RepositoryTests\CallForProposalRepositoryTests\CallForProposalRepositoryTestsPart07.cs" />
     <Compile Include="RepositoryTests\CallForProposalRepositoryTests\CallForProposalRepositoryTestsPart08.cs" />
+    <Compile Include="RepositoryTests\CallForProposalRepositoryTests\CallForProposalRepositoryTestsPart09.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />
