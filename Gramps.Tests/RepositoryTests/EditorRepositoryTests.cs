@@ -10,6 +10,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using FluentNHibernate.Testing;
 using UCDArch.Core.PersistanceSupport;
 using UCDArch.Data.NHibernate;
+using UCDArch.Testing;
 using UCDArch.Testing.Extensions;
 
 namespace Gramps.Tests.RepositoryTests
@@ -911,28 +912,529 @@ namespace Gramps.Tests.RepositoryTests
         #endregion Cascade Tests
         #endregion CallForProposals Tests
 
+        #region User Tests
+
+        #region Invalid Tests
+        /// <summary>
+        /// Tests the User with A value of new User() does not save.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(NHibernate.TransientObjectException))]
+        public void TestUserWithAValueOfNewDoesNotSave()
+        {
+            Editor editor = null;
+            try
+            {
+                #region Arrange
+                editor = GetValid(9);
+                editor.User = CreateValidEntities.User(9);
+                #endregion Arrange
+
+                #region Act
+                EditorRepository.DbContext.BeginTransaction();
+                EditorRepository.EnsurePersistent(editor);
+                EditorRepository.DbContext.CommitTransaction();
+                #endregion Act
+            }
+            catch (Exception ex)
+            {
+                Assert.IsNotNull(editor);
+                Assert.IsNotNull(ex);
+                Assert.AreEqual("object references an unsaved transient instance - save the transient instance before flushing. Type: Gramps.Core.Domain.User, Entity: Gramps.Core.Domain.User", ex.Message);
+                throw;
+            }	
+        }
+        #endregion Invalid Tests
+
+        #region Valid Tests
 
         [TestMethod]
-        public void TestUserTests()
+        public void TestUserWithNullValueSavesIfReviewerIsSet()
         {
             #region Arrange
+            var record = GetValid(9);
+            record.User = null;
+            #endregion Arrange
 
-            Assert.Inconclusive("Write the user tests and others");
+            #region Act
+            EditorRepository.DbContext.BeginTransaction();
+            EditorRepository.EnsurePersistent(record);
+            EditorRepository.DbContext.CommitTransaction();
+            #endregion Act
+
+            #region Assert
+            Assert.IsFalse(record.IsTransient());
+            Assert.IsTrue(record.IsValid());
+            #endregion Assert		
+        }
+
+
+        [TestMethod]
+        public void TestUserWithExistingValueSaves()
+        {
+            #region Arrange
+            var record = GetValid(9);
+            record.User = Repository.OfType<User>().GetNullableById(1);
+            #endregion Arrange
+
+            #region Act
+            EditorRepository.DbContext.BeginTransaction();
+            EditorRepository.EnsurePersistent(record);
+            EditorRepository.DbContext.CommitTransaction();
+            #endregion Act
+
+            #region Assert
+            Assert.IsFalse(record.IsTransient());
+            Assert.IsTrue(record.IsValid());
+            #endregion Assert		
+        }
+        #endregion Valid Tests
+
+        #region Cascade Tests
+
+        [TestMethod]
+        public void TestDeleteEditorDoesNotCascadeToUser()
+        {
+            #region Arrange
+            var record = GetValid(9);
+            record.User = Repository.OfType<User>().GetNullableById(1);
+            EditorRepository.DbContext.BeginTransaction();
+            EditorRepository.EnsurePersistent(record);
+            EditorRepository.DbContext.CommitTransaction();
+            Assert.IsNotNull(record.User);
+            var saveId = record.Id;
+            #endregion Arrange
+
+            #region Act
+            EditorRepository.DbContext.BeginTransaction();
+            EditorRepository.Remove(record);
+            EditorRepository.DbContext.CommitTransaction();
+            #endregion Act
+
+            #region Assert
+            Assert.IsNotNull(Repository.OfType<User>().GetNullableById(1));
+            Assert.IsNull(EditorRepository.GetNullableById(saveId));
+            #endregion Assert		
+        }
+        #endregion Cascade Tests
+        #endregion User Tests
+
+        #region Comments Tests
+        #region Invalid Tests
+        /// <summary>
+        /// Tests the Comments with A value of null does not save.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(ApplicationException))]
+        public void TestCommentsWithAValueOfNullDoesNotSave()
+        {
+            Editor editor = null;
+            try
+            {
+                #region Arrange
+                editor = GetValid(9);
+                editor.Comments = null;
+                #endregion Arrange
+
+                #region Act
+                EditorRepository.DbContext.BeginTransaction();
+                EditorRepository.EnsurePersistent(editor);
+                EditorRepository.DbContext.CommitTransaction();
+                #endregion Act
+            }
+            catch (Exception)
+            {
+                Assert.IsNotNull(editor);
+                Assert.AreEqual(editor.Comments, null);
+                var results = editor.ValidationResults().AsMessageList();
+                results.AssertErrorsAre("Comments: may not be null");
+                Assert.IsTrue(editor.IsTransient());
+                Assert.IsFalse(editor.IsValid());
+                throw;
+            }	
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(NHibernate.TransientObjectException))]
+        public void TestCommentsWithANewValueDoesNotSave()
+        {
+            Editor editor = null;
+            try
+            {
+                #region Arrange
+                editor = GetValid(9);
+                editor.Comments.Add(CreateValidEntities.Comment(9));
+                #endregion Arrange
+
+                #region Act
+                EditorRepository.DbContext.BeginTransaction();
+                EditorRepository.EnsurePersistent(editor);
+                EditorRepository.DbContext.CommitTransaction();
+                #endregion Act
+            }
+            catch (Exception ex)
+            {
+                Assert.IsNotNull(editor);
+                Assert.IsNotNull(ex);
+                Assert.AreEqual("object references an unsaved transient instance - save the transient instance before flushing. Type: Gramps.Core.Domain.Comment, Entity: Gramps.Core.Domain.Comment", ex.Message);
+                throw;
+            }
+        }
+        #endregion Invalid Tests
+        #region Valid Tests
+
+        [TestMethod]
+        public void TestCommentsWithEmptyListSaves()
+        {
+            #region Arrange
+            var record = GetValid(9);
+            record.Comments = new List<Comment>();
+            #endregion Arrange
+
+            #region Act
+            EditorRepository.DbContext.BeginTransaction();
+            EditorRepository.EnsurePersistent(record);
+            EditorRepository.DbContext.CommitTransaction();
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual(0, record.Comments.Count);
+            Assert.IsFalse(record.IsTransient());
+            Assert.IsTrue(record.IsValid());
+            #endregion Assert			
+        }
+
+
+        [TestMethod]
+        public void TestCommentsWithPopulatedValuesSaves()
+        {
+            #region Arrange
+            var record = EditorRepository.GetNullableById(1);
+            Assert.IsNotNull(record);
+            
+            var proposals = new List<Proposal>();
+            proposals.Add(CreateValidEntities.Proposal(1));
+            proposals.Add(CreateValidEntities.Proposal(2));
+            proposals.Add(CreateValidEntities.Proposal(3));
+            
+            Repository.OfType<Proposal>().DbContext.BeginTransaction();
+            foreach (var proposal in proposals)
+            {
+                proposal.CallForProposal = Repository.OfType<CallForProposal>().GetNullableById(1);
+                Repository.OfType<Proposal>().EnsurePersistent(proposal);
+            }
+            Repository.OfType<Proposal>().DbContext.CommitTransaction();
+
+            var comments = new List<Comment>();
+            comments.Add(CreateValidEntities.Comment(1));
+            comments.Add(CreateValidEntities.Comment(2));
+            comments.Add(CreateValidEntities.Comment(3));
+            Repository.OfType<Comment>().DbContext.BeginTransaction();
+            for (int i = 0; i < 3; i++)
+            {
+                comments[i].Proposal = proposals[i];
+                comments[i].Editor = record;
+                Repository.OfType<Comment>().EnsurePersistent(comments[i]);
+                record.Comments.Add(comments[i]);
+            }
+            Repository.OfType<Comment>().DbContext.CommitTransaction();
+
+            Assert.AreEqual(3, record.Comments.Count);
+            #endregion Arrange
+
+            #region Act
+            EditorRepository.DbContext.BeginTransaction();
+            EditorRepository.EnsurePersistent(record);
+            EditorRepository.DbContext.CommitTransaction();
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual(3, record.Comments.Count);
+            Assert.IsFalse(record.IsTransient());
+            Assert.IsTrue(record.IsValid());
+            #endregion Assert		
+        }
+
+
+        [TestMethod]
+        public void TestCanGetRelatedComments()
+        {
+            #region Arrange
+            var record = EditorRepository.GetNullableById(1);
+            Assert.IsNotNull(record);
+
+            var proposals = new List<Proposal>();
+            proposals.Add(CreateValidEntities.Proposal(1));
+            proposals.Add(CreateValidEntities.Proposal(2));
+            proposals.Add(CreateValidEntities.Proposal(3));
+
+            Repository.OfType<Proposal>().DbContext.BeginTransaction();
+            foreach (var proposal in proposals)
+            {
+                proposal.CallForProposal = Repository.OfType<CallForProposal>().GetNullableById(1);
+                Repository.OfType<Proposal>().EnsurePersistent(proposal);
+            }
+            Repository.OfType<Proposal>().DbContext.CommitTransaction();
+
+            var comments = new List<Comment>();
+            comments.Add(CreateValidEntities.Comment(1));
+            comments.Add(CreateValidEntities.Comment(2));
+            comments.Add(CreateValidEntities.Comment(3));
+            comments.Add(CreateValidEntities.Comment(4));
+            Repository.OfType<Comment>().DbContext.BeginTransaction();
+            for (int i = 0; i < 4; i++)
+            {
+                if (i == 3)
+                {
+                    comments[i].Proposal = proposals[1];
+                    comments[i].Editor = EditorRepository.GetNullableById(2);
+                }
+                else
+                {
+                    comments[i].Proposal = proposals[i];
+                    comments[i].Editor = record;
+                }
+                Repository.OfType<Comment>().EnsurePersistent(comments[i]);
+                record.Comments.Add(comments[i]);
+            }
+            Repository.OfType<Comment>().DbContext.CommitTransaction();
+            NHibernateSessionManager.Instance.GetSession().Evict(comments[0]);
+            NHibernateSessionManager.Instance.GetSession().Evict(comments[1]);
+            NHibernateSessionManager.Instance.GetSession().Evict(comments[2]);
+            NHibernateSessionManager.Instance.GetSession().Evict(comments[3]);
+            NHibernateSessionManager.Instance.GetSession().Evict(record);
 
             #endregion Arrange
 
             #region Act
-
+            var record2 = EditorRepository.GetNullableById(1);
             #endregion Act
 
             #region Assert
-
+            Assert.AreEqual(4, Repository.OfType<Comment>().Queryable.Count());
+            Assert.AreEqual(3, record2.Comments.Count);
             #endregion Assert		
         }
+
+        #endregion Valid Tests
+        #region Cascade Tests
+
+        [TestMethod]
+        [ExpectedException(typeof(NHibernate.Exceptions.GenericADOException))]
+        public void TestDeleteEditorWithCommentsDoesNotSaveOrCascade()
+        {
+            Editor record = null;
+            #region Arrange
+            try
+            {               
+                record = EditorRepository.GetNullableById(3);
+                Assert.IsNotNull(record);
+
+                var proposals = new List<Proposal>();
+                proposals.Add(CreateValidEntities.Proposal(1));
+                proposals.Add(CreateValidEntities.Proposal(2));
+                proposals.Add(CreateValidEntities.Proposal(3));
+
+                Repository.OfType<Proposal>().DbContext.BeginTransaction();
+                foreach (var proposal in proposals)
+                {
+                    proposal.CallForProposal = Repository.OfType<CallForProposal>().GetNullableById(1);
+                    Repository.OfType<Proposal>().EnsurePersistent(proposal);
+                }
+                Repository.OfType<Proposal>().DbContext.CommitTransaction();
+
+                var comments = new List<Comment>();
+                comments.Add(CreateValidEntities.Comment(1));
+                comments.Add(CreateValidEntities.Comment(2));
+                comments.Add(CreateValidEntities.Comment(3));
+                comments.Add(CreateValidEntities.Comment(4));
+                Repository.OfType<Comment>().DbContext.BeginTransaction();
+                for (int i = 0; i < 4; i++)
+                {
+                    if (i == 3)
+                    {
+                        comments[i].Proposal = proposals[1];
+                        comments[i].Editor = EditorRepository.GetNullableById(1);
+                    }
+                    else
+                    {
+                        comments[i].Proposal = proposals[i];
+                        comments[i].Editor = record;
+                    }
+                    Repository.OfType<Comment>().EnsurePersistent(comments[i]);
+                    record.Comments.Add(comments[i]);
+                }
+                Repository.OfType<Comment>().DbContext.CommitTransaction();
+              
+            }
+            catch (Exception)
+            {
+                
+                Assert.Fail("An exception happened while setting up the data");
+            }
+            #endregion Arrange
+
+            try
+            {
+                #region Arrange
+                NHibernateSessionManager.Instance.GetSession().Evict(record);  
+                record = EditorRepository.GetNullableById(3);
+                #endregion Arrange
+
+                #region Act
+                EditorRepository.DbContext.BeginTransaction();
+                EditorRepository.Remove(record);
+                EditorRepository.DbContext.CommitTransaction();
+                #endregion Act
+            }
+            catch (Exception ex)
+            {
+                Assert.IsNotNull(ex);
+                Assert.AreEqual("could not delete collection: [Gramps.Core.Domain.Editor.Comments#3][SQL: UPDATE Comments SET EditorID = null WHERE EditorID = @p0]", ex.Message);
+                throw;
+            }	
+        }
         
-        //Field Tests
-        //Constructor Tests
-        //Fluent Mapping Tests
+        #endregion Cascade Tests
+        #endregion Comments Tests
+
+        #region Fluent Mapping Tests
+        [TestMethod]
+        public void TestCanCorrectlyMapEditor1()
+        {
+            #region Arrange
+            var id = EditorRepository.Queryable.Max(x => x.Id) + 1;
+            var session = NHibernateSessionManager.Instance.GetSession();
+            #endregion Arrange
+
+            #region Act/Assert
+            new PersistenceSpecification<Editor>(session)
+                .CheckProperty(c => c.Id, id)
+
+                .CheckProperty(c => c.IsOwner, true)
+                .CheckProperty(c => c.ReviewerEmail, "test@testy.com")
+                .CheckProperty(c => c.ReviewerId, Guid.NewGuid())
+                .CheckProperty(c => c.ReviewerName, "Name")
+                .VerifyTheMappings();
+            #endregion Act/Assert
+        }
+
+        [TestMethod]
+        public void TestCanCorrectlyMapEditor2()
+        {
+            #region Arrange
+            var id = EditorRepository.Queryable.Max(x => x.Id) + 1;
+            var session = NHibernateSessionManager.Instance.GetSession();
+            #endregion Arrange
+
+            #region Act/Assert
+            new PersistenceSpecification<Editor>(session)
+                .CheckProperty(c => c.Id, id)
+                .CheckProperty(c => c.IsOwner, false)
+                .CheckProperty(c => c.ReviewerEmail, "test@testy.com")
+                .CheckProperty(c => c.ReviewerId, Guid.NewGuid())
+                .CheckProperty(c => c.ReviewerName, "Name")
+                .VerifyTheMappings();
+            #endregion Act/Assert
+        }
+
+        [TestMethod]
+        public void TestCanCorrectlyMapEditor3()
+        {
+            #region Arrange
+            var id = EditorRepository.Queryable.Max(x => x.Id) + 1;
+            var session = NHibernateSessionManager.Instance.GetSession();
+            #endregion Arrange
+
+            #region Act/Assert
+            new PersistenceSpecification<Editor>(session)
+                .CheckProperty(c => c.Id, id)
+                .CheckProperty(c => c.IsOwner, true)
+                .CheckProperty(c => c.ReviewerEmail, "test@testy.com")
+                .CheckProperty(c => c.ReviewerId, Guid.NewGuid())
+                .CheckProperty(c => c.ReviewerName, "Name")
+                .CheckProperty(c => c.Template, null)
+                .CheckProperty(c => c.User, null)
+                .VerifyTheMappings();
+            #endregion Act/Assert
+        }
+
+        [TestMethod]
+        public void TestCanCorrectlyMapEditor4()
+        {
+            #region Arrange
+            var id = EditorRepository.Queryable.Max(x => x.Id) + 1;
+            var session = NHibernateSessionManager.Instance.GetSession();
+            var callForProposal = Repository.OfType<CallForProposal>().GetNullableById(1);
+            var template = Repository.OfType<Template>().GetNullableById(1);
+            var user = Repository.OfType<User>().GetNullableById(1);
+
+            #endregion Arrange
+
+            #region Act/Assert
+            new PersistenceSpecification<Editor>(session)
+                .CheckProperty(c => c.Id, id)
+                .CheckReference(c => c.CallForProposal, callForProposal)
+                .CheckProperty(c => c.IsOwner, true)
+                .CheckProperty(c => c.ReviewerEmail, "test@testy.com")
+                .CheckProperty(c => c.ReviewerId, Guid.NewGuid())
+                .CheckProperty(c => c.ReviewerName, "Name")
+                .CheckReference(c => c.Template, template)
+                .CheckReference(c => c.User, user)
+                .VerifyTheMappings();
+            #endregion Act/Assert
+        }
+
+        [TestMethod]
+        public void TestCanCorrectlyMapEditor5()
+        {
+            #region Arrange
+            var id = EditorRepository.Queryable.Max(x => x.Id) + 1;
+            var session = NHibernateSessionManager.Instance.GetSession();
+            var record = new Editor();
+            record.SetIdTo(id);
+
+            var proposals = new List<Proposal>();
+            proposals.Add(CreateValidEntities.Proposal(1));
+            proposals.Add(CreateValidEntities.Proposal(2));
+            proposals.Add(CreateValidEntities.Proposal(3));
+
+            Repository.OfType<Proposal>().DbContext.BeginTransaction();
+            foreach (var proposal in proposals)
+            {
+                proposal.CallForProposal = Repository.OfType<CallForProposal>().GetNullableById(1);
+                Repository.OfType<Proposal>().EnsurePersistent(proposal);
+            }
+            Repository.OfType<Proposal>().DbContext.CommitTransaction();
+
+            var comments = new List<Comment>();
+            comments.Add(CreateValidEntities.Comment(1));
+            comments.Add(CreateValidEntities.Comment(2));
+            comments.Add(CreateValidEntities.Comment(3));
+            Repository.OfType<Comment>().DbContext.BeginTransaction();
+            for (int i = 0; i < 3; i++)
+            {
+                comments[i].Proposal = proposals[i];
+                comments[i].Editor = record;
+                Repository.OfType<Comment>().EnsurePersistent(comments[i]);
+                record.Comments.Add(comments[i]);
+            }
+            Repository.OfType<Comment>().DbContext.CommitTransaction();
+            #endregion Arrange
+
+            #region Act/Assert
+            new PersistenceSpecification<Editor>(session, new EditorEqualityComparer())
+                .CheckProperty(c => c.Id, id)
+                .CheckProperty(c => c.Comments, comments)
+                .CheckProperty(c => c.IsOwner, true)
+                .CheckProperty(c => c.ReviewerEmail, "test@testy.com")
+                .CheckProperty(c => c.ReviewerId, Guid.NewGuid())
+                .CheckProperty(c => c.ReviewerName, "Name")
+                .VerifyTheMappings();
+            #endregion Act/Assert
+        }
+
+        #endregion Fluent Mapping Tests
         
         #region Reflection of Database.
 
@@ -945,24 +1447,41 @@ namespace Gramps.Tests.RepositoryTests
         {
             #region Arrange
             var expectedFields = new List<NameAndType>();
-            expectedFields.Add(new NameAndType("CallForProposal", "", new List<string>()));
+            expectedFields.Add(new NameAndType("CallForProposal", "Gramps.Core.Domain.CallForProposal", new List<string>()));
+            expectedFields.Add(new NameAndType("Comments", "System.Collections.Generic.IList`1[Gramps.Core.Domain.Comment]", new List<string>
+            {
+                "[NHibernate.Validator.Constraints.NotNullAttribute()]"
+            }));
             expectedFields.Add(new NameAndType("Id", "System.Int32", new List<string>
             {
                 "[Newtonsoft.Json.JsonPropertyAttribute()]", 
                 "[System.Xml.Serialization.XmlIgnoreAttribute()]"
             }));
             expectedFields.Add(new NameAndType("IsOwner", "System.Boolean", new List<string>()));
+            expectedFields.Add(new NameAndType("RelatedTable", "System.Boolean", new List<string>
+            {
+                "[NHibernate.Validator.Constraints.AssertTrueAttribute(Message = \"Must be related to Template or CallForProposal not both.\")]"
+            }));
             expectedFields.Add(new NameAndType("ReviewerEmail", "System.String", new List<string>
             {
-                 "[NHibernate.Validator.Constraints.LengthAttribute((Int32)100)]",
-                 ""
+                 "[NHibernate.Validator.Constraints.EmailAttribute()]",
+                 "[NHibernate.Validator.Constraints.LengthAttribute((Int32)100)]"
+            }));
+            expectedFields.Add(new NameAndType("ReviewerEmailRequired", "System.Boolean", new List<string>
+            {
+                "[NHibernate.Validator.Constraints.AssertTrueAttribute(Message = \"Reviewer must have an email\")]"
             }));
             expectedFields.Add(new NameAndType("ReviewerId", "System.Guid", new List<string>()));
+            expectedFields.Add(new NameAndType("ReviewerIdentifier", "System.Boolean", new List<string>
+            {
+                "[NHibernate.Validator.Constraints.AssertTrueAttribute(Message = \"Reviewer must have a unique identifier\")]"
+            }));
             expectedFields.Add(new NameAndType("ReviewerName", "System.String", new List<string>
             {
                  "[NHibernate.Validator.Constraints.LengthAttribute((Int32)200)]"
             }));
-            expectedFields.Add(new NameAndType("Template", "", new List<string>()));
+            expectedFields.Add(new NameAndType("Template", "Gramps.Core.Domain.Template", new List<string>()));
+            expectedFields.Add(new NameAndType("User", "Gramps.Core.Domain.User", new List<string>()));
             #endregion Arrange
 
             AttributeAndFieldValidation.ValidateFieldsAndAttributes(expectedFields, typeof(Editor));
@@ -971,6 +1490,41 @@ namespace Gramps.Tests.RepositoryTests
 
         #endregion Reflection of Database.	
 		
-		
+        public class EditorEqualityComparer : IEqualityComparer
+        {
+            /// <summary>
+            /// Determines whether the specified objects are equal.
+            /// </summary>
+            /// <returns>
+            /// true if the specified objects are equal; otherwise, false.
+            /// </returns>
+            /// <param name="x">The first object to compare.</param><param name="y">The second object to compare.</param><exception cref="T:System.ArgumentException"><paramref name="x"/> and <paramref name="y"/> are of different types and neither one can handle comparisons with the other.</exception>
+            bool IEqualityComparer.Equals(object x, object y)
+            {
+                if (x == null || y == null)
+                {
+                    return false;
+                }
+
+                if (x is IList<Comment> && y is IList<Comment>)
+                {
+                    var xVal = (IList<Comment>)x;
+                    var yVal = (IList<Comment>)y;
+                    Assert.AreEqual(xVal.Count, yVal.Count);
+                    for (int i = 0; i < xVal.Count; i++)
+                    {
+                        Assert.AreEqual(xVal[i].Text, yVal[i].Text);
+                    }
+                    return true;
+                }
+                
+                return x.Equals(y);
+            }
+
+            public int GetHashCode(object obj)
+            {
+                throw new NotImplementedException();
+            }
+        }
     }
 }

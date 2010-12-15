@@ -501,7 +501,7 @@ namespace Gramps.Tests.RepositoryTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(NHibernate.TransientObjectException))]
+        [ExpectedException(typeof(NHibernate.PropertyValueException))]
         public void TestEditorWithANewValueDoesNotSave()
         {
             Comment comment = null;
@@ -522,7 +522,7 @@ namespace Gramps.Tests.RepositoryTests
             {
                 Assert.IsNotNull(comment);
                 Assert.IsNotNull(ex);
-                Assert.AreEqual("object references an unsaved transient instance - save the transient instance before flushing. Type: Gramps.Core.Domain.Editor, Entity: Gramps.Core.Domain.Editor", ex.Message);
+                Assert.AreEqual("not-null property references a null or transient valueGramps.Core.Domain.Comment.Editor", ex.Message);
                 throw;
             }
         }
@@ -592,7 +592,7 @@ namespace Gramps.Tests.RepositoryTests
 
         #region Fluent Mapping Tests
         [TestMethod]
-        public void TestCanCorrectlyMapTicket()
+        public void TestCanCorrectlyMapComment()
         {
             #region Arrange
             var id = CommentRepository.Queryable.Max(x => x.Id) + 1;

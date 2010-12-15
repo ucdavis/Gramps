@@ -48,7 +48,7 @@ namespace Gramps.Core.Domain
             Map(x => x.Text);
             Map(x => x.CreatedDate);
             References(x => x.Proposal);
-            References(x => x.Editor);
+            References(x => x.Editor).Not.Nullable();
         }
     }
 }
