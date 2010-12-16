@@ -22,8 +22,8 @@ namespace Gramps.Core.Domain
         #endregion Constructor
 
         #region Mapped Fields
-        [Length(10)]
-        public virtual string TemplateType { get; set; } //TODO: Consider changing this to an enum that uses CustomType in the mapping
+        [NotNull(Message = "Must have email template type")]
+        public virtual EmailTemplateType? TemplateType { get; set; } 
 
         public virtual string Text { get; set; }
         [Required]
@@ -58,11 +58,22 @@ namespace Gramps.Core.Domain
         public EmailTemplateMap()
         {
             Id(x => x.Id);
-            Map(x => x.TemplateType);
+            Map(x => x.TemplateType).CustomType(typeof (NHibernate.Type.EnumStringType<EmailTemplateType>));
             Map(x => x.Text);
             Map(x => x.Subject);
             References(x => x.Template);
             References(x => x.CallForProposal);
         }
+    }
+
+    //Note, database has same values
+    public enum EmailTemplateType
+    {
+        InitialCall,
+        ReminderCallIsAboutToClose,
+        ProposalApproved,
+        ProposalDenied,
+        ProposalConfirmation,
+        ReadyForReview
     }
 }

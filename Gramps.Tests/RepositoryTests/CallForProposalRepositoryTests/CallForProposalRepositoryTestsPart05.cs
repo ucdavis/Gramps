@@ -59,7 +59,7 @@ namespace Gramps.Tests.RepositoryTests.CallForProposalRepositoryTests
                 callForProposal = GetValid(9);
                 callForProposal.EmailTemplates = new List<EmailTemplate>();
                 var invalidEmailTemplate = new EmailTemplate();
-                invalidEmailTemplate.TemplateType = "x".RepeatTimes(99);
+                invalidEmailTemplate.TemplateType = null;
                 callForProposal.AddEmailTemplate(invalidEmailTemplate);
                 #endregion Arrange
 

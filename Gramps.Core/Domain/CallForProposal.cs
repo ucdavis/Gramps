@@ -5,6 +5,7 @@ using Gramps.Core.Helpers;
 using NHibernate.Validator.Constraints;
 using UCDArch.Core.DomainModel;
 using UCDArch.Core.NHibernateValidator.Extensions;
+using UCDArch.Core.Utils;
 
 namespace Gramps.Core.Domain
 {
@@ -27,10 +28,11 @@ namespace Gramps.Core.Domain
             var requiredEmailTemmplates = RequiredEmailTemplates.GetRequiredEmailTemplates();
             foreach (var emailTemplate in template.EmailTemplates)
             {
-                if (requiredEmailTemmplates.ContainsKey(emailTemplate.TemplateType))
+                Check.Require(emailTemplate.TemplateType != null);
+                if (requiredEmailTemmplates.ContainsKey((EmailTemplateType)emailTemplate.TemplateType))
                 {
                     AddEmailTemplate(emailTemplate);
-                    requiredEmailTemmplates[emailTemplate.TemplateType] = true;
+                    requiredEmailTemmplates[(EmailTemplateType)emailTemplate.TemplateType] = true;
                 }
             }
             foreach (var requiredEmailTemmplate in requiredEmailTemmplates)

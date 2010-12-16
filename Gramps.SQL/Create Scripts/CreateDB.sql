@@ -236,7 +236,7 @@ SET ANSI_PADDING ON
 GO
 CREATE TABLE [dbo].[EmailTemplates](
 	[id] [int] IDENTITY(1,1) NOT NULL,
-	[TemplateType] [varchar](10) NULL,
+	[TemplateType] [varchar](50) NULL,
 	[Text] [varchar](max) NULL,
 	[TemplateId] [int] NULL,
 	[CallForProposalId] [int] NULL,
@@ -388,6 +388,10 @@ GO
 ALTER TABLE [dbo].[Emails] ADD  CONSTRAINT [DF_Emails_HasBeenCalled]  DEFAULT ((0)) FOR [HasBeenEmailed]
 GO
 ALTER TABLE [dbo].[Templates] ADD  CONSTRAINT [DF_Templates_IsActive]  DEFAULT ((1)) FOR [IsActive]
+GO
+ALTER TABLE [dbo].[EmailTemplates]  WITH CHECK ADD  CONSTRAINT [CK_EmailTemplates] CHECK  (([TemplateType]='ReadyForReview' OR [TemplateType]='ProposalConfirmation' OR [TemplateType]='ProposalDenied' OR [TemplateType]='ProposalApproved' OR [TemplateType]='ReminderCallIsAboutToClose' OR [TemplateType]='InitialCall'))
+GO
+ALTER TABLE [dbo].[EmailTemplates] CHECK CONSTRAINT [CK_EmailTemplates]
 GO
 ALTER TABLE [dbo].[Answers]  WITH CHECK ADD  CONSTRAINT [FK_Answers_Proposals] FOREIGN KEY([ProposalId])
 REFERENCES [dbo].[Proposals] ([id])

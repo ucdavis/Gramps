@@ -8,16 +8,16 @@ namespace Gramps.Core.Helpers
 {
     public class RequiredEmailTemplates
     {
-        public static Dictionary<string ,bool> GetRequiredEmailTemplates()
+        public static Dictionary<EmailTemplateType, bool> GetRequiredEmailTemplates()
         {
-            var emailTemplates = new Dictionary<string ,bool>
+            var emailTemplates = new Dictionary<EmailTemplateType ,bool>
                                      {
-                                         {"CAvail", false},
-                                         {"RFR", false},
-                                         {"CRemind", false},
-                                         {"Conf", false},
-                                         {"Approved", false},
-                                         {"Denied", false}
+                                         {EmailTemplateType.InitialCall, false},
+                                         {EmailTemplateType.ReadyForReview, false},
+                                         {EmailTemplateType.ReminderCallIsAboutToClose, false},
+                                         {EmailTemplateType.ProposalConfirmation, false},
+                                         {EmailTemplateType.ProposalApproved, false},
+                                         {EmailTemplateType.ProposalDenied, false}
                                      };
 
             return emailTemplates;

@@ -45,10 +45,11 @@ namespace Gramps.Tests.Core.Helpers
         {
             var rtValue = new EmailTemplate();
             rtValue.Subject = "Subject" + counter.Extra();
+            rtValue.TemplateType = EmailTemplateType.InitialCall;
             if(populateAllFields)
             {
                 rtValue.Text = "Text" + counter.Extra();
-                rtValue.TemplateType = "Type" + counter.Extra();
+                //rtValue.TemplateType = "Type" + counter.Extra();
             }
 
             return rtValue;
