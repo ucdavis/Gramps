@@ -105,6 +105,7 @@
     <Compile Include="RepositoryTests\CallForProposalRepositoryTests\CallForProposalRepositoryTestsPart09.cs" />
     <Compile Include="RepositoryTests\CommentRepositoryTests.cs" />
     <Compile Include="RepositoryTests\EditorRepositoryTests.cs" />
+    <Compile Include="RepositoryTests\EmailsForCallRepositoryTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />
