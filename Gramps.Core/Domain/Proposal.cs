@@ -20,6 +20,8 @@ namespace Gramps.Core.Domain
         {
             Guid = Guid.NewGuid();
             CreatedDate = DateTime.Now;
+            RequestedAmount = 0m;
+            ApprovedAmount = 0m;
             Comments = new List<Comment>();
             Answers = new List<QuestionAnswer>();
         }
@@ -40,8 +42,9 @@ namespace Gramps.Core.Domain
         public virtual bool IsDenied { get; set; }
         public virtual bool IsNotified { get; set; }
         public virtual bool IsSubmitted { get; set; }
-
+        [RangeDouble(Min = 0.00, Message = "Minimum amount is zero")]
         public virtual decimal RequestedAmount { get; set; }
+        [RangeDouble(Min = 0.00, Message = "Minimum amount is zero")]
         public virtual decimal ApprovedAmount { get; set; }
         public virtual DateTime CreatedDate { get; set; }
         public virtual DateTime? SubmittedDate { get; set; }
@@ -57,12 +60,12 @@ namespace Gramps.Core.Domain
         public ProposalMap()
         {
             Id(x => x.Id);
-            Map(x => x.Guid);
+            Map(x => x.Guid).Unique();
             Map(x => x.Email);
             Map(x => x.IsApproved);
             Map(x => x.IsDenied);
             Map(x => x.IsNotified);
-            Map(x => x.RequestedAmount);
+            Map(x => x.RequestedAmount).CustomSqlType("money");
             Map(x => x.ApprovedAmount);
             Map(x => x.IsSubmitted);
             Map(x => x.CreatedDate);
