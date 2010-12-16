@@ -23,7 +23,7 @@ namespace Gramps.Core.Domain
 
         #region Mapped Fields
         [Length(10)]
-        public virtual string TemplateType { get; set; }
+        public virtual string TemplateType { get; set; } //TODO: Consider changing this to an enum that uses CustomType in the mapping
 
         public virtual string Text { get; set; }
         [Required]
