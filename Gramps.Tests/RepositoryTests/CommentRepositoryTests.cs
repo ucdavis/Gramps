@@ -371,7 +371,7 @@ namespace Gramps.Tests.RepositoryTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(NHibernate.TransientObjectException))]
+        [ExpectedException(typeof(NHibernate.PropertyValueException))]
         public void TestProposalWithANewValueDoesNotSave()
         {
             Comment comment = null;
@@ -392,7 +392,7 @@ namespace Gramps.Tests.RepositoryTests
             {
                 Assert.IsNotNull(comment);
                 Assert.IsNotNull(ex);
-                Assert.AreEqual("object references an unsaved transient instance - save the transient instance before flushing. Type: Gramps.Core.Domain.Proposal, Entity: Gramps.Core.Domain.Proposal", ex.Message);
+                Assert.AreEqual("not-null property references a null or transient valueGramps.Core.Domain.Comment.Proposal", ex.Message);
                 throw;
             }
         }

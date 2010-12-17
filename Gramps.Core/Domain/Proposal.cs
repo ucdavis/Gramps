@@ -74,7 +74,7 @@ namespace Gramps.Core.Domain
 
             References(x => x.CallForProposal).Not.Nullable();
             HasMany(x => x.Comments);
-            HasMany(x => x.Answers);
+            HasMany(x => x.Answers).Cascade.AllDeleteOrphan();
         }
     }
 }

@@ -1093,6 +1093,7 @@ namespace Gramps.Tests.RepositoryTests
             #endregion Assert
         }
         #endregion SubmittedDate Tests
+
         #region NotifiedDate Tests
 
         /// <summary>
