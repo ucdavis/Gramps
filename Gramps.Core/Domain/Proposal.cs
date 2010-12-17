@@ -24,6 +24,10 @@ namespace Gramps.Core.Domain
             ApprovedAmount = 0m;
             Comments = new List<Comment>();
             Answers = new List<QuestionAnswer>();
+            IsApproved = false;
+            IsDenied = false;
+            IsNotified = false;
+            IsSubmitted = false;
         }
 
         #endregion Constructor
@@ -49,10 +53,26 @@ namespace Gramps.Core.Domain
         public virtual DateTime CreatedDate { get; set; }
         public virtual DateTime? SubmittedDate { get; set; }
         public virtual DateTime? NotifiedDate { get; set; }
+        [NotNull]
         public virtual IList<Comment> Comments { get; set; }
+        [NotNull]
         public virtual IList<QuestionAnswer> Answers { get; set; }
 
         #endregion Mapped Fields
+
+        #region Methods
+
+        public virtual void AddAnswer(Question question, string answer)
+        {
+            var questionAnswer = new QuestionAnswer();
+            questionAnswer.Proposal = this;
+            questionAnswer.Question = question;
+            questionAnswer.Answer = answer;
+            Answers.Add(questionAnswer);
+        }
+
+        #endregion Methods
+
     }
 
     public class ProposalMap : ClassMap<Proposal>

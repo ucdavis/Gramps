@@ -174,7 +174,7 @@ namespace Gramps.Core.Domain
             newQuestion.CallForProposal = this;
             newQuestion.QuestionType = question.QuestionType;
             newQuestion.Name = question.Name;
-            newQuestion.Order = question.Order;
+            newQuestion.Order = Questions.Count + 1;
             newQuestion.Template = null;
             if (question.Options != null)
             {

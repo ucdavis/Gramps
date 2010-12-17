@@ -29,7 +29,7 @@ namespace Gramps.Core.Domain
             Id(x => x.Id);
             Map(x => x.Answer);
             References(x => x.Proposal);
-            References(x => x.Question);
+            References(x => x.Question).Not.Nullable();
         }
     }
 }
