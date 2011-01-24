@@ -6,6 +6,7 @@ using UCDArch.Core.PersistanceSupport;
 using UCDArch.Web.Controller;
 using UCDArch.Web.Helpers;
 using UCDArch.Core.Utils;
+using MvcContrib;
 
 namespace Gramps.Controllers
 {
@@ -37,7 +38,7 @@ namespace Gramps.Controllers
         {
             var template = _templateRepository.GetNullableById(id);
 
-            if (template == null) return RedirectToAction("Index");
+            if (template == null) return this.RedirectToAction(a => a.Index());
 
             return View(template);
         }
@@ -68,7 +69,8 @@ namespace Gramps.Controllers
 
                 Message = "Template Created Successfully";
 
-                return RedirectToAction("Index");
+                //return RedirectToAction("Index");
+                return this.RedirectToAction(a => a.Index());
             }
             else
             {
@@ -85,7 +87,7 @@ namespace Gramps.Controllers
         {
             var template = _templateRepository.GetNullableById(id);
 
-            if (template == null) return RedirectToAction("Index");
+            if (template == null) return this.RedirectToAction(a => a.Index());
 
 			var viewModel = TemplateViewModel.Create(Repository);
 			viewModel.Template = template;
@@ -100,7 +102,7 @@ namespace Gramps.Controllers
         {
             var templateToEdit = _templateRepository.GetNullableById(id);
 
-            if (templateToEdit == null) return RedirectToAction("Index");
+            if (templateToEdit == null) return this.RedirectToAction(a => a.Index());
 
             TransferValues(template, templateToEdit);
 
@@ -112,7 +114,7 @@ namespace Gramps.Controllers
 
                 Message = "Template Edited Successfully";
 
-                return RedirectToAction("Index");
+                return this.RedirectToAction(a => a.Index());
             }
             else
             {
@@ -129,7 +131,7 @@ namespace Gramps.Controllers
         {
 			var template = _templateRepository.GetNullableById(id);
 
-            if (template == null) return RedirectToAction("Index");
+            if (template == null) return this.RedirectToAction(a => a.Index());
 
             return View(template);
         }
@@ -141,13 +143,13 @@ namespace Gramps.Controllers
         {
 			var templateToDelete = _templateRepository.GetNullableById(id);
 
-            if (templateToDelete == null) return RedirectToAction("Index");
+            if (templateToDelete == null) return this.RedirectToAction(a => a.Index());
 
             _templateRepository.Remove(templateToDelete);
 
             Message = "Template Removed Successfully";
 
-            return RedirectToAction("Index");
+            return this.RedirectToAction(a => a.Index());
         }
         
         /// <summary>

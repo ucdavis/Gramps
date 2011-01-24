@@ -11,6 +11,7 @@ using UCDArch.Core.PersistanceSupport;
 using UCDArch.Web.Controller;
 using UCDArch.Web.Helpers;
 using UCDArch.Core.Utils;
+using MvcContrib;
 
 namespace <#= mvcHost.Namespace #>
 {
@@ -44,7 +45,7 @@ if(mvcHost.AddActionMethods) {
         {
             var <#= lowerClassName #> = <#= repository #>.GetNullableById(id);
 
-            if (<#= lowerClassName #> == null) return RedirectToAction("Index");
+            if (<#= lowerClassName #> == null) return this.RedirectToAction(a => a.Index());
 
             return View(<#= lowerClassName #>);
         }
@@ -75,7 +76,7 @@ if(mvcHost.AddActionMethods) {
 
                 Message = "<#= className #> Created Successfully";
 
-                return RedirectToAction("Index");
+                return this.RedirectToAction(a => a.Index());
             }
             else
             {
@@ -92,7 +93,7 @@ if(mvcHost.AddActionMethods) {
         {
             var <#= lowerClassName #> = <#= repository #>.GetNullableById(id);
 
-            if (<#= lowerClassName #> == null) return RedirectToAction("Index");
+            if (<#= lowerClassName #> == null) return this.RedirectToAction(a => a.Index());
 
 			var viewModel = <#= className #>ViewModel.Create(Repository);
 			viewModel.<#= className #> = <#= lowerClassName #>;
@@ -107,7 +108,7 @@ if(mvcHost.AddActionMethods) {
         {
             var <#= lowerClassName #>ToEdit = <#= repository #>.GetNullableById(id);
 
-            if (<#= lowerClassName #>ToEdit == null) return RedirectToAction("Index");
+            if (<#= lowerClassName #>ToEdit == null) return this.RedirectToAction(a => a.Index());
 
             TransferValues(<#= lowerClassName #>, <#= lowerClassName #>ToEdit);
 
@@ -119,7 +120,7 @@ if(mvcHost.AddActionMethods) {
 
                 Message = "<#= className #> Edited Successfully";
 
-                return RedirectToAction("Index");
+                return this.RedirectToAction(a => a.Index());
             }
             else
             {
@@ -136,7 +137,7 @@ if(mvcHost.AddActionMethods) {
         {
 			var <#= lowerClassName #> = <#= repository #>.GetNullableById(id);
 
-            if (<#= lowerClassName #> == null) return RedirectToAction("Index");
+            if (<#= lowerClassName #> == null) return this.RedirectToAction(a => a.Index());
 
             return View(<#= lowerClassName #>);
         }
@@ -148,13 +149,13 @@ if(mvcHost.AddActionMethods) {
         {
 			var <#= lowerClassName #>ToDelete = <#= repository #>.GetNullableById(id);
 
-            if (<#= lowerClassName #>ToDelete == null) return RedirectToAction("Index");
+            if (<#= lowerClassName #>ToDelete == null) this.RedirectToAction(a => a.Index());
 
             <#= repository #>.Remove(<#= lowerClassName #>ToDelete);
 
             Message = "<#= className #> Removed Successfully";
 
-            return RedirectToAction("Index");
+            return this.RedirectToAction(a => a.Index());
         }
         
         /// <summary>
