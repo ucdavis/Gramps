@@ -105,6 +105,7 @@
     <Compile Include="RepositoryTests\CallForProposalRepositoryTests\CallForProposalRepositoryTestsPart09.cs" />
     <Compile Include="RepositoryTests\CommentRepositoryTests.cs" />
     <Compile Include="RepositoryTests\EditorRepositoryTests.cs" />
+    <Compile Include="RepositoryTests\EmailQueueRepositoryTests.cs" />
     <Compile Include="RepositoryTests\EmailsForCallRepositoryTests.cs" />
     <Compile Include="RepositoryTests\EmailTemplateRepositoryTests.cs" />
     <Compile Include="RepositoryTests\ProposalRepositoryTests.cs" />

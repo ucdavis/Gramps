@@ -6,25 +6,6 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_PADDING ON
 GO
-CREATE TABLE [dbo].[QuestionTypes](
-	[id] [int] IDENTITY(1,1) NOT NULL,
-	[Name] [varchar](50) NOT NULL,
-	[HasOptions] [bit] NOT NULL,
-	[ExtendedProperty] [bit] NULL,
- CONSTRAINT [PK_QuestionTypes] PRIMARY KEY CLUSTERED 
-(
-	[id] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-SET ANSI_PADDING OFF
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-SET ANSI_PADDING ON
-GO
 CREATE TABLE [dbo].[Validators](
 	[id] [int] IDENTITY(1,1) NOT NULL,
 	[Name] [varchar](50) NOT NULL,
@@ -50,6 +31,25 @@ CREATE TABLE [dbo].[Templates](
 	[Name] [varchar](100) NOT NULL,
 	[IsActive] [bit] NOT NULL,
  CONSTRAINT [PK_Templates] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[QuestionTypes](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [varchar](50) NOT NULL,
+	[HasOptions] [bit] NOT NULL,
+	[ExtendedProperty] [bit] NULL,
+ CONSTRAINT [PK_QuestionTypes] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
@@ -276,6 +276,29 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_PADDING ON
 GO
+CREATE TABLE [dbo].[EmailQueue](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[CallForProposalId] [int] NOT NULL,
+	[EmailAddress] [varchar](200) NOT NULL,
+	[Created] [datetime] NOT NULL,
+	[Pending] [bit] NOT NULL,
+	[SentDateTime] [datetime] NULL,
+	[Subject] [varchar](200) NOT NULL,
+	[Body] [varchar](max) NOT NULL,
+ CONSTRAINT [PK_EmailQueues] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
 CREATE TABLE [dbo].[Editors](
 	[id] [int] IDENTITY(1,1) NOT NULL,
 	[TemplateId] [int] NULL,
@@ -318,6 +341,24 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[QuestionOptions](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [varchar](200) NOT NULL,
+	[QuestionId] [int] NOT NULL,
+ CONSTRAINT [PK_QuestionOptions] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 CREATE TABLE [dbo].[QuestionXValidator](
 	[QuestionId] [int] NOT NULL,
 	[ValidatorId] [int] NOT NULL,
@@ -334,11 +375,13 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_PADDING ON
 GO
-CREATE TABLE [dbo].[QuestionOptions](
+CREATE TABLE [dbo].[Comments](
 	[id] [int] IDENTITY(1,1) NOT NULL,
-	[Name] [varchar](200) NOT NULL,
-	[QuestionId] [int] NOT NULL,
- CONSTRAINT [PK_QuestionOptions] PRIMARY KEY CLUSTERED 
+	[Text] [varchar](max) NULL,
+	[ProposalId] [int] NOT NULL,
+	[EditorId] [int] NOT NULL,
+	[CreatedDate] [datetime] NOT NULL,
+ CONSTRAINT [PK_Comments] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
@@ -365,25 +408,7 @@ CREATE TABLE [dbo].[Answers](
 GO
 SET ANSI_PADDING OFF
 GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-SET ANSI_PADDING ON
-GO
-CREATE TABLE [dbo].[Comments](
-	[id] [int] IDENTITY(1,1) NOT NULL,
-	[Text] [varchar](max) NULL,
-	[ProposalId] [int] NOT NULL,
-	[EditorId] [int] NOT NULL,
-	[CreatedDate] [datetime] NOT NULL,
- CONSTRAINT [PK_Comments] PRIMARY KEY CLUSTERED 
-(
-	[id] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-SET ANSI_PADDING OFF
+ALTER TABLE [dbo].[EmailQueue] ADD  CONSTRAINT [DF_EmailQueues_Pending]  DEFAULT ((1)) FOR [Pending]
 GO
 ALTER TABLE [dbo].[Emails] ADD  CONSTRAINT [DF_Emails_HasBeenCalled]  DEFAULT ((0)) FOR [HasBeenEmailed]
 GO
@@ -429,6 +454,11 @@ ALTER TABLE [dbo].[Editors]  WITH CHECK ADD  CONSTRAINT [FK_Editors_Templates] F
 REFERENCES [dbo].[Templates] ([id])
 GO
 ALTER TABLE [dbo].[Editors] CHECK CONSTRAINT [FK_Editors_Templates]
+GO
+ALTER TABLE [dbo].[EmailQueue]  WITH CHECK ADD  CONSTRAINT [FK_EmailQueue_CallForProposals] FOREIGN KEY([CallForProposalId])
+REFERENCES [dbo].[CallForProposals] ([id])
+GO
+ALTER TABLE [dbo].[EmailQueue] CHECK CONSTRAINT [FK_EmailQueue_CallForProposals]
 GO
 ALTER TABLE [dbo].[Emails]  WITH CHECK ADD  CONSTRAINT [FK_Emails_CallForProposals] FOREIGN KEY([CallForProposalId])
 REFERENCES [dbo].[CallForProposals] ([id])

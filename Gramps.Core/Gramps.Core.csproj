@@ -57,6 +57,7 @@
     <Compile Include="Domain\CallForProposal.cs" />
     <Compile Include="Domain\Comment.cs" />
     <Compile Include="Domain\Editor.cs" />
+    <Compile Include="Domain\EmailQueue.cs" />
     <Compile Include="Domain\EmailsForCall.cs" />
     <Compile Include="Domain\EmailTemplate.cs" />
     <Compile Include="Domain\Proposal.cs" />

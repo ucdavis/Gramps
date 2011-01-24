@@ -110,5 +110,15 @@ namespace Gramps.Tests.Core.Helpers
         //    }
         //    return rtValue;
         //}
+        public static EmailQueue EmailQueue(int? counter)
+        {
+            var rtValue = new EmailQueue();
+            rtValue.CallForProposal = new CallForProposal();
+            rtValue.Subject = "Subject" + counter.Extra();
+            rtValue.Body = "Body" + counter.Extra();
+            rtValue.EmailAddress = string.Format("some{0}@test.com", counter.Extra());
+
+            return rtValue;
+        }
     }
 }
