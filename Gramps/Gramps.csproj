@@ -112,11 +112,22 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CodeTemplates\AddView\UCDList.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UCDList.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CodeTemplates\AddView\UCDListExtended.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UCDListExtended.tt</DependentUpon>
+    </Compile>
     <Compile Include="ComponentRegistrar.asax.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ApplicationController.cs" />
     <Compile Include="Controllers\Filters\RoleFilter.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\TemplateController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -137,6 +148,8 @@
     <Content Include="Scripts\xVal.jquery.validate.js" />
     <Content Include="Views\Account\LogOn.aspx" />
     <Content Include="Views\Shared\LogOnUserControl.ascx" />
+    <Content Include="Views\Template\Create.aspx" />
+    <Content Include="Views\Template\Index.aspx" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
