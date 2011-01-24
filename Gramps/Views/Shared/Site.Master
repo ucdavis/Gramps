@@ -31,7 +31,11 @@
                 <h1>My MVC Application</h1>
             </div>
               
-            <div id="logindisplay">&nbsp;</div> 
+            <div id="logindisplay">
+                <ul>
+                    <% Html.RenderPartial("~/Views/Shared/LogOnUserControl.ascx"); %>
+                </ul>
+            </div> 
             
             <div id="menucontainer">
             

@@ -6,7 +6,8 @@
 
 <asp:Content ID="aboutContent" ContentPlaceHolderID="MainContent" runat="server">
     <h2>About</h2>
-    <p>
-        Put content here.
-    </p>
+    <ul>
+        <li>Version <%=Html.Encode(System.Reflection.Assembly.GetAssembly(ViewContext.Controller.GetType()).GetName().Version.ToString())%></li>
+        <li>Developed By The College Of Agricultural And Environmental Science Dean's Office</li>
+    </ul>
 </asp:Content>

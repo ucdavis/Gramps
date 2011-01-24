@@ -113,7 +113,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ComponentRegistrar.asax.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ApplicationController.cs" />
+    <Compile Include="Controllers\Filters\RoleFilter.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -122,10 +124,19 @@
     <Compile Include="Helpers\HtmlHelperExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RouteRegistrar.asax.cs" />
+    <Compile Include="Views\Shared\LogOnUserControl.ascx.cs">
+      <DependentUpon>LogOnUserControl.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Shared\LogOnUserControl.ascx.designer.cs">
+      <DependentUpon>LogOnUserControl.ascx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
     <Content Include="Scripts\xVal.jquery.validate.js" />
+    <Content Include="Views\Account\LogOn.aspx" />
+    <Content Include="Views\Shared\LogOnUserControl.ascx" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
