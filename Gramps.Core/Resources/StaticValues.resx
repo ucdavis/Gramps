@@ -117,19 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Tab_Details" xml:space="preserve">
-    <value>Details</value>
-  </data>
-  <data name="Tab_Editors" xml:space="preserve">
-    <value>Editors</value>
-  </data>
-  <data name="Tab_Emails" xml:space="preserve">
-    <value>Emails For Call</value>
-  </data>
-  <data name="Tab_EmailTemplates" xml:space="preserve">
-    <value>Email Templates</value>
-  </data>
-  <data name="Tab_Questions" xml:space="preserve">
-    <value>Questions</value>
-  </data>
 </root>

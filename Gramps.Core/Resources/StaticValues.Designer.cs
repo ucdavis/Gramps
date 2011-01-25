@@ -59,50 +59,5 @@ namespace Gramps.Core.Resources {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Details.
-        /// </summary>
-        public static string Tab_Details {
-            get {
-                return ResourceManager.GetString("Tab_Details", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Editors.
-        /// </summary>
-        public static string Tab_Editors {
-            get {
-                return ResourceManager.GetString("Tab_Editors", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Emails For Call.
-        /// </summary>
-        public static string Tab_Emails {
-            get {
-                return ResourceManager.GetString("Tab_Emails", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Email Templates.
-        /// </summary>
-        public static string Tab_EmailTemplates {
-            get {
-                return ResourceManager.GetString("Tab_EmailTemplates", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Questions.
-        /// </summary>
-        public static string Tab_Questions {
-            get {
-                return ResourceManager.GetString("Tab_Questions", resourceCulture);
-            }
-        }
     }
 }

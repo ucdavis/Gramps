@@ -124,6 +124,48 @@ namespace Gramps.Controllers
                 return View(viewModel);
             }
         }
+
+        public ActionResult EditEditors(int id)
+        {
+            var template = _templateRepository.GetNullableById(id);
+
+            if (template == null) return this.RedirectToAction(a => a.Index());
+
+            var viewModel = TemplateViewModel.Create(Repository);
+            viewModel.Template = template;
+
+            return View(viewModel);
+        }
+
+        //
+        // POST: /Template/Edit/5
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult EditEditors(int id, Template template)
+        {
+            var templateToEdit = _templateRepository.GetNullableById(id);
+
+            if (templateToEdit == null) return this.RedirectToAction(a => a.Index());
+
+            TransferValues(template, templateToEdit);
+
+            templateToEdit.TransferValidationMessagesTo(ModelState);
+
+            if (ModelState.IsValid)
+            {
+                _templateRepository.EnsurePersistent(templateToEdit);
+
+                Message = "Template Edited Successfully";
+
+                return this.RedirectToAction(a => a.Index());
+            }
+            else
+            {
+                var viewModel = TemplateViewModel.Create(Repository);
+                viewModel.Template = template;
+
+                return View(viewModel);
+            }
+        }
         
         //
         // GET: /Template/Delete/5 

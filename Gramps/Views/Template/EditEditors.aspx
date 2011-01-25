@@ -1,9 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<Gramps.Controllers.TemplateViewModel>" %>
-<%@ Import Namespace="Gramps.Core.Resources" %>
 <%@ Import Namespace="Gramps.Controllers" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
-	Edit
+	EditEditors
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -18,19 +17,14 @@
         <li>
             <%: Html.ActionLink<TemplateController>(a => a.EditEditors(Model.Template.Id), "Editors/Reviewers")%>
         </li>
-
     </ul>
-
-    <h2>Details</h2>
+    <h2>EditEditors</h2>
 
 	<%= Html.ClientSideValidation<Gramps.Controllers.TemplateViewModel>() %>
 
     <% using (Html.BeginForm()) {%>
         <%= Html.AntiForgeryToken() %>
         <%: Html.ValidationSummary(true) %>
-
-
-
 
         <fieldset>
             <legend>Fields</legend>

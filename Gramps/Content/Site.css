@@ -342,3 +342,12 @@ div#title
 {
     width: 6em;
 }
+
+/* ---------------- */
+/*       btn's      */
+/* ---------------- */
+.btn {position:absolute; top:40px; z-index:1;}
+.btn li {font: 16px/26px 'CicleSemi', Arial, sans-serif;letter-spacing: 0; -moz-border-radius: 5px; -webkit-border-radius: 5px; background-color:#00497b; color:#fff; border:1px solid #000; display:inline-block; margin-right:10px;}
+.btn a {color:#f0f6fa; text-decoration:none; padding:5px 10px; display:block;}
+.btn li:hover {background-color:#FFF; color:#000; border:1px solid #00497b;}
+.btn li:hover a {color:#000;}
