@@ -7,6 +7,8 @@ using UCDArch.Web.Controller;
 using UCDArch.Web.Helpers;
 using UCDArch.Core.Utils;
 using MvcContrib;
+using System.Linq.Expressions;
+using System.Linq;
 
 namespace Gramps.Controllers
 {
@@ -58,6 +60,8 @@ namespace Gramps.Controllers
         public ActionResult Create(Template template)
         {
             var templateToCreate = new Template();
+            var user = Repository.OfType<User>().Queryable.Where(a => a.LoginId == CurrentUser.Identity.Name).Single();
+            
 
             TransferValues(template, templateToCreate, false);
 
@@ -68,6 +72,10 @@ namespace Gramps.Controllers
                 _templateRepository.EnsurePersistent(templateToCreate);
 
                 Message = "Template Created Successfully";
+
+                var editor = new Editor(user, true);
+                editor.Template = templateToCreate;
+                Repository.OfType<Editor>().EnsurePersistent(editor);
 
                 //return RedirectToAction("Index");
                 return this.RedirectToAction(a => a.Index());

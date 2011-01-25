@@ -15,7 +15,7 @@
             <%: Html.ActionLink<TemplateController>(a => a.Edit(Model.Template.Id), "Details")%>
         </li>
         <li>
-            <%: Html.ActionLink<TemplateController>(a => a.EditEditors(Model.Template.Id), "Editors/Reviewers")%>
+            <%: Html.ActionLink<EditorController>(a => a.Index(Model.Template.Id, null), "Editors/Reviewers")%>
         </li>
 
     </ul>

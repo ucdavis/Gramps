@@ -130,6 +130,7 @@
     <Compile Include="ComponentRegistrar.asax.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ApplicationController.cs" />
+    <Compile Include="Controllers\EditorController.cs" />
     <Compile Include="Controllers\Filters\RoleFilter.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\TemplateController.cs" />
@@ -235,11 +236,10 @@
     <Content Include="Images\logo.jpg" />
     <Content Include="Scripts\xVal.jquery.validate.js" />
     <Content Include="Views\Account\LogOn.aspx" />
+    <Content Include="Views\Editor\Index.aspx" />
     <Content Include="Views\Shared\LogOnUserControl.ascx" />
     <Content Include="Views\Template\Create.aspx" />
     <Content Include="Views\Template\Edit.aspx" />
-    <Content Include="Views\Template\Edit2.aspx" />
-    <Content Include="Views\Template\Edit3.aspx" />
     <Content Include="Views\Template\EditEditors.aspx" />
     <Content Include="Views\Template\Index.aspx" />
     <Content Include="Web.config" />
