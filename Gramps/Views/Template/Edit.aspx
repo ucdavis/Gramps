@@ -1,5 +1,4 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<Gramps.Controllers.TemplateViewModel>" %>
-<%@ Import Namespace="Gramps.Core.Resources" %>
 <%@ Import Namespace="Gramps.Controllers" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
@@ -29,22 +28,28 @@
         <%= Html.AntiForgeryToken() %>
         <%: Html.ValidationSummary(true) %>
 
-
-
-
         <fieldset>
             <legend>Fields</legend>
-            
+            <div class="editor-label">
+                <%: Html.LabelFor(model => model.Template.Name) %>
+            </div>
+            <div class="editor-field">
+                <%: Html.TextBoxFor(model => model.Template.Name)%>
+                <%: Html.ValidationMessageFor(model => model.Template.Name)%>
+            </div>
+            <div class="editor-label">
+                <%: Html.LabelFor(model => model.Template.IsActive)%>
+            </div>
+            <div class="editor-field">
+                <%: Html.CheckBoxFor(model => model.Template.IsActive)%>
+                <%: Html.ValidationMessageFor(model => model.Template.IsActive)%>
+            </div>
             <p>
                 <input type="submit" value="Save" />
             </p>
         </fieldset>
 
     <% } %>
-
-    <div>
-        <%: Html.ActionLink("Back to List", "Index") %>
-    </div>
 
 </asp:Content>
 

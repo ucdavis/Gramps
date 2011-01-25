@@ -6,8 +6,11 @@
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <strong><%:Html.ActionLink<TemplateController>(a => a.Index(), "Template Index") %></strong>
-    <p>
-        To learn more about ASP.NET MVC visit <a href="http://asp.net/mvc" title="ASP.NET MVC Website">http://asp.net/mvc</a>.
-    </p>
+
+    <ul class="btn">
+        <li>
+            <%= Html.ActionLink<TemplateController>(a => a.Index(), "Template Index")%>
+        </li>
+
+    </ul>
 </asp:Content>

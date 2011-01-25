@@ -1,0 +1,255 @@
+/* ---------------- */
+/*    reset         */
+/* ---------------- */
+
+* {padding:0; margin:0;}
+a img {border:none;}
+
+/* ---------------- */
+/*    branding      */
+/* ---------------- */
+#portal-logo img {margin: 0px;}
+#branding {background: url(../Images/branding.jpg) repeat-x top center; height: 50px; margin: 0 auto; z-index:2; position:relative;}
+#branding span.logos {width: 937px; padding: 22px 0px 0px 30px; margin: 0px auto; display: block;}
+#branding span.ucdavis {margin-right: 5px;}
+
+/* ---------------- */
+/*    login         */
+/* ---------------- */
+#logindisplay {float:right; color:#FFF;}
+#logindisplay a {letter-spacing: 0; text-decoration:none; -moz-border-radius: 5px;
+-webkit-border-radius: 5px; background-color:#fff; padding:10px; color:#000;}
+
+/* ---------------- */
+/*    main          */
+/* ---------------- */
+.main {width:937px; margin:0 auto;}
+#searchStudent {display:inline-block; margin-bottom:1em;}
+#searchStudent form {display:inline;}
+
+/* ---------------- */
+/*    font          */
+/* ---------------- */
+
+/* 
+h1 {font: 40px/48px 'CicleSemi', Arial, sans-serif;letter-spacing: 0; text-align:center;}
+h2 {font: 30px/38px 'CicleSemi', Arial, sans-serif;letter-spacing: 0; margin:0.25em 0;}
+h3 {font: 14px/24px 'CicleSemiItalic', Arial, sans-serif;letter-spacing: 0; text-align:center; margin-top:3em;}
+body {font: 16px/26px 'CicleFina', Arial, sans-serif;}
+b, strong {font: 18px/27px 'CicleGordita', Arial, sans-serif; font-weight:normal;}
+*/
+
+
+h1 {font: 22px/32px Verdana, Arial, sans-serif; letter-spacing: 0; text-align:center;}
+h2 {font: 16px/26px Verdana, Arial, sans-serif; letter-spacing: 0; margin:0.25em 0; font-weight:bold;}
+h3 {font: 16px/26px Verdana, Arial, sans-serif; letter-spacing: 0; text-align:center; margin-top:3em;}
+body {font: 14px/14px Verdana, Arial, sans-serif;}
+b, strong {font: 14px/26px Verdana, Arial, sans-serif; font-weight:bold;}
+
+/* ---------------- */
+/*   h1 {font: 40px/48px 'CicleGordita', Arial, sans-serif;letter-spacing: 0; text-align:center;}
+p.style1 {font: 18px/27px 'CicleFina', Arial, sans-serif;}
+p.style2 {font: 18px/27px 'CicleFinaItalic', Arial, sans-serif;}
+p.style3 {font: 18px/27px 'CicleGordita', Arial, sans-serif;}
+p.style4 {font: 18px/27px 'CicleGorditaItalic', Arial, sans-serif;}
+p.style5 {font: 18px/27px 'CicleSemi', Arial, sans-serif;}
+p.style6 {font: 18px/27px 'CicleSemiItalic', Arial, sans-serif;}
+p.style7 {font: 18px/27px 'CicleShadow', Arial, sans-serif;}       */
+/* ---------------- */
+
+/* ---------------- */
+/*    content       */
+/* ---------------- */
+
+.content p {margin:.7em 0; font: 16px/26px/28px Verdana, Arial, sans-serif;}
+.content li {margin-left:2em;}
+.content h2 {font: 26px/36px Verdana, Arial, sans-serif;letter-spacing: 0; margin:0.25em 0;}
+.content em.small {font: 12px/22px Verdana, Arial, sans-serif;}
+body .content {font: 12px/22px Verdana, Arial, sans-serif;}
+.content b, .content strong {font: bold 12px/22px Verdana, Arial, sans-serif;}
+.content a:hover {color:#0054a6;}
+.content .left_col {display:inline-block; width:710px;}
+.content .right_col {float:right; width:200px; margin-left:20px}
+.content .right_col li {list-style-type:none; margin:0; padding:0; margin-bottom:1em;}
+.content .right_col li em { font-style:italic; display:block;}
+.content .right_col h3 {font:15px/25px Verdana,Arial,sans-serif; margin-top:1.2em; text-align:left; font-weight:bold;}
+.content .right_col ul {margin:0.7em 0;}
+.content #col_ft {clear:both; border-top:1px solid #0d004c; margin:1em auto; padding:0 0.5em; font-style:italic; font-size:80%;}
+.reg_btn { background-color:#0D548A; letter-spacing:1px; text-align:center; padding:0.2em; -moz-border-radius: 5px; border-radius: 5px; margin-left:330px; display:inline-block;}
+.reg_btn a {padding:1.5em 1em; color:#FFF; text-decoration:none;}
+.reg_btn a:hover {text-decoration:underline; color:#FFF;}
+.reg_btn:hover {background-color:#10619f;}
+
+
+
+/* ---------------- */
+/*  form formatting */
+/* ---------------- */
+.registration_form li{list-style:none; margin-left:1em; letter-spacing:2px; margin-top:0.25em;}
+.prefilled span {color:#333;}
+.registration_form input {}
+.registration_form li strong {width:200px; display:inline-block;}
+
+
+
+/* ---------------- */
+/*       btn's      */
+/* ---------------- */
+#back_btn a, #home_btn a, #emulate_btn a, #generic_btn a {font: 16px/26px 'CicleSemi', Arial, sans-serif;letter-spacing: 0; text-decoration:none; -moz-border-radius: 5px;
+-webkit-border-radius: 5px; background-color:#00497b; padding:5px 10px; color:#000; position:absolute; top:40px; z-index:1; color:#fff; border:1px solid #000; }
+#back_btn a, #home_btn a, #emulate_btn a, #generic_btn a {color:#fff; text-decoration:none;}
+#emulate_btn a, #generic_btn {margin-left:60px;}
+
+.btn {position:absolute; top:40px; z-index:1;}
+.btn li {font: 16px/26px 'CicleSemi', Arial, sans-serif;letter-spacing: 0; -moz-border-radius: 5px; -webkit-border-radius: 5px; background-color:#00497b; color:#fff; border:1px solid #000; display:inline-block; margin-right:10px;}
+.btn a {color:#f0f6fa; text-decoration:none; padding:5px 10px; display:block;}
+.btn li:hover {background-color:#FFF; color:#000; border:1px solid #00497b;}
+.btn li:hover a {color:#000;}
+
+
+
+.front_menu {margin:0 auto; width:910px;}
+.front_menu li a{background-color:#efefef;display:inline-block;height:150px;width:200px;margin-bottom:30px;-moz-border-radius: 10px; -webkit-border-radius: 10px; text-align:center; text-decoration:none;}
+.front_menu .left {margin-right:30px;}
+.front_menu li {list-style-type:none; margin:0; padding:0; display:inline;}
+.front_menu li a:hover{background-color:#ddd;}
+.front_menu a img {margin-top:30px;}
+.front_menu a span {margin-top:50px; display:inline-block;}
+
+
+.choose_ceremony_menu {margin:0 auto;}
+.choose_ceremony_menu li a {display:inline-block;width:400px;margin-bottom:100px;-moz-border-radius: 10px; -webkit-border-radius: 10px; text-align:center; text-decoration:none; vertical-align:middle; line-height:30px; color:#014a7f; border:1px solid #ddd}
+.choose_ceremony_menu li {list-style-type:none; margin:0 1em; padding:0; display:inline; }
+.choose_ceremony_menu li a:hover{background-color:#ddd;}
+.choose_ceremony_menu a img {margin-top:30px;}
+.choose_ceremony_menu h4 {font-size:2em; font-weight:bold;}
+.choose_ceremony_menu p {margin:0.5em 0;}
+.choose_ceremony_message {font: 20px/28px 'CicleSemi', Arial, sans-serif;letter-spacing: 0;}
+.choose_ceremony_message strong {font: 22px/30px 'CicleGordita', Arial, sans-serif; font-weight:normal;}
+
+
+#right_menu {float:right; font-size:0.9em; line-height:normal; -moz-border-radius: 5px; -webkit-border-radius: 5px; color:#fff; border:1px solid #CCC; display:inline-block; padding:1em 0.5em; margin-top:2em;}
+#fix form p {width:500px; clear:both; float:left;}
+.mceEditor {clear:both;}
+
+#template_container .template {padding:1em;}
+#template_container .template ul {padding-left:3em;}
+#template_container .template li { list-style:square;}
+
+#continue_btn { }
+#continue_btn a {line-height: 3em; font-size: 25px;vertical-align: middle;background-color:#efefef;display:inline-block;height:75px;width:200px;-moz-border-radius: 10px; -webkit-border-radius: 10px; text-align:center; text-decoration:none;}
+#continue_btn a:hover {background-color:#ddd;}
+
+
+
+/* ---------------- */
+/*       College's ID's      */
+/* ---------------- */
+#Colleges label {display:inline-block; width:550px; margin-left:5px;}
+#Colleges input {display:inline-block; margin-left:210px;}
+
+
+
+/* ------------------ */
+/* date picker */
+/* ------------------ */
+.ui-datepicker, #ui-datepicker-div
+{
+    border:1px #0D548A solid;
+    width:16em;
+    background:#f8f8f8;
+}
+#ui-datepicker-div.ui-datepicker .ui-datepicker-calendar .ui-state-default 
+{
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    border:1px #0D548A solid;
+    background:#F4FAFF;
+    color:#0D548A;
+}
+#ui-datepicker-div.ui-datepicker .ui-datepicker-calendar .ui-state-default:hover 
+{
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    border:1px #0D548A solid;
+    background:#0D548A;
+    color:#FFFFFF;
+}
+#ui-datepicker-div.ui-datepicker .ui-datepicker-header
+{
+    padding:0;
+    margin:0;
+}
+.ui-datepicker th
+{
+    padding:0;
+    margin:0;
+}
+.legaldisclaimer
+{
+    text-align:right;
+}
+
+        
+        
+#ticketCountInline
+{
+    border: 1px solid #A5B3C5;
+    width:935px;
+    top:190px;
+    z-index:100;
+    background-color:#FFFFFF;
+    color:#4C607A;
+}
+
+#ticketCountBar
+{
+    position:fixed;
+    border: 1px solid #A5B3C5;
+    width:935px;
+    top:0px;
+    z-index:100;
+    background-color:#FFFFFF;
+    color:#4C607A;
+    display:none;
+}
+#ticketCountBar br
+{
+    margin-top:140px;
+}
+
+/*-----------------*/
+/*    footer       */
+/*-----------------*/
+#footer {background-color:#0d548a; position:relative; margin-top:-100px; height:100px; border-top:1px solid #000;}
+#footer_text, #footer_text strong {font:12px/18px Verdana,Arial,sans-serif; color:#FFF;}
+#ByLine, #footer_text p {font-style:italic;}
+#footer_text {text-align:center; padding-top:1em;}
+
+.wrapper {min-height:100%; }
+.main {overflow:auto; padding-bottom:130px;}
+html, body {height:100%;}
+
+
+/* -------------- */
+/* search filters */
+/* -------------- */
+.ui-accordion-content li { list-style-type:none;}
+.ui-accordion-content li strong {width:100px; display:inline-block;}
+.ui-accordion-content li #Submit {margin:10px 0 0 3px;}
+
+
+/* ----------------- */
+/* ticketCountInline */
+/* ----------------- */
+#ticketCountInline ul li, #ticketCountBar ul li{display:inline-block; margin:5px; font:12px/18px Verdana,Arial,sans-serif;}
+#ticketCountInline ul li strong, #ticketCountBar ul li strong {font:12px/18px Verdana,Arial,sans-serif; font-weight:bold;}
+#ticketCountInline {margin-top:20px; margin-bottom:-20px;}
+#validationMessage {display:inline-block; width:700px;}
+
+
+/* ------------------- */
+/* more */
+/* ------------------- */
+div.t-grid {}
+#filter_container {margin-top: 20px;}

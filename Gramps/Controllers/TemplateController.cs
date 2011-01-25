@@ -113,13 +113,16 @@ namespace Gramps.Controllers
                 _templateRepository.EnsurePersistent(templateToEdit);
 
                 Message = "Template Edited Successfully";
-
-                return this.RedirectToAction(a => a.Index());
+                Message = "Template Edited Successfully";
+                var viewModel = TemplateViewModel.Create(Repository);
+                viewModel.Template = templateToEdit;
+                return View(viewModel);
+                //return this.RedirectToAction(a => a.Index());
             }
             else
             {
 				var viewModel = TemplateViewModel.Create(Repository);
-                viewModel.Template = template;
+                viewModel.Template = templateToEdit;
 
                 return View(viewModel);
             }
@@ -155,13 +158,15 @@ namespace Gramps.Controllers
                 _templateRepository.EnsurePersistent(templateToEdit);
 
                 Message = "Template Edited Successfully";
-
-                return this.RedirectToAction(a => a.Index());
+                var viewModel = TemplateViewModel.Create(Repository);
+                viewModel.Template = templateToEdit;
+                return View(viewModel);
+                //return this.RedirectToAction(a => a.Index());
             }
             else
             {
                 var viewModel = TemplateViewModel.Create(Repository);
-                viewModel.Template = template;
+                viewModel.Template = templateToEdit;
 
                 return View(viewModel);
             }
@@ -204,7 +209,7 @@ namespace Gramps.Controllers
             if (forEdit)
             {
                 destination.IsActive = source.IsActive;
-                throw new NotImplementedException("Need to write the copy for edit");
+                //throw new NotImplementedException("Need to write the copy for edit");
             }
         }
 
