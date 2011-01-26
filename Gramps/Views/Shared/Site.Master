@@ -1,5 +1,6 @@
 ﻿<%@ Master Language="C#" Inherits="System.Web.Mvc.ViewMasterPage" %>
 <%@ Import Namespace="Telerik.Web.Mvc.UI" %>
+<%@ Import Namespace="Gramps.Controllers" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -62,12 +63,15 @@
 </div>
 
 <div id="footer">
-    <div id="footer_text">
-        <p>Home | <br />
-            <span id="ByLine">Developed By The College Of Agricultural And Environmental Science Dean's Office</span><br />
-                Copyright The Regents of the University of California, Davis campus, 2005-10. All Rights Reserved.</p>
-        <p id="VersionNumber"></p>
-    </div>
+<div id="footer_text">
+<p><%: Html.ActionLink<HomeController>(a=>a.Index(), "Home", new {style="color:white; text-decoration:none;"}) %> | 
+<a href="https://secure.caes.ucdavis.edu/help/ticket/SubmitRedirect?appName=Gramps" style="color:white; text-decoration:none;"">Questions or Comments</a> | 
+<a href="https://secure.caes.ucdavis.edu/help/Help?appName=Gramps" style="color:white; text-decoration:none;"">FAQ</a>
+<br />
+<span id="ByLine">Developed By The College Of Agricultural And Environmental Science Dean's Office</span><br />
+Copyright The Regents of the University of California, Davis campus, 2005-10. All Rights Reserved.</p>
+<p id="VersionNumber"></p>
+</div>
 </div>
 
 
