@@ -138,7 +138,9 @@ namespace Gramps.Controllers
 
             var editorToCreate = new Editor(editor.ReviewerEmail);
 
-            TransferValues(editor, editorToCreate, template, callforProposal);
+            TransferValues(editor, editorToCreate);
+            editorToCreate.Template = template;
+            editorToCreate.CallForProposal = callforProposal;
 
             editorToCreate.TransferValidationMessagesTo(ModelState);
 
@@ -162,13 +164,22 @@ namespace Gramps.Controllers
 
         //
         // GET: /Editor/Edit/5
-        public ActionResult Edit(int id)
-        {           
+        public ActionResult EditReviewer(int id, int? templateId, int? callForProposalId)
+        {
             var editor = _editorRepository.GetNullableById(id);
 
-            //if (editor == null) return this.RedirectToAction(a => a.Index());
+            if (editor == null)
+            {
+                Message = "Reviewer not found";
+                return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
+            }
+            else if (editor.User != null)
+            {
+                Message = "Not a reviewer";
+                return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
+            }
 
-			var viewModel = EditorViewModel.Create(Repository, null, null);
+            var viewModel = EditorViewModel.Create(Repository, editor.Template, editor.CallForProposal);
 			viewModel.Editor = editor;
 
 			return View(viewModel);
@@ -177,13 +188,23 @@ namespace Gramps.Controllers
         //
         // POST: /Editor/Edit/5
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Edit(int id, Editor editor)
+        public ActionResult EditReviewer(int id, int? templateId, int? callForProposalId, Editor editor)
         {
+
             var editorToEdit = _editorRepository.GetNullableById(id);
 
-            //if (editorToEdit == null) return this.RedirectToAction(a => a.Index());
+            if (editor == null)
+            {
+                Message = "Reviewer not found";
+                return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
+            }
+            else if (editor.User != null)
+            {
+                Message = "Not a reviewer";
+                return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
+            }
 
-            TransferValues(editor, editorToEdit, null, null);
+            TransferValues(editor, editorToEdit);
 
             editorToEdit.TransferValidationMessagesTo(ModelState);
 
@@ -193,14 +214,11 @@ namespace Gramps.Controllers
 
                 Message = "Editor Edited Successfully";
 
-                //return this.RedirectToAction(a => a.Index());
-                var viewModel = EditorViewModel.Create(Repository, null, null);
-                viewModel.Editor = editor;
-                return View(viewModel);
+                return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
             }
             else
             {
-                var viewModel = EditorViewModel.Create(Repository, null, null);
+                var viewModel = EditorViewModel.Create(Repository, editorToEdit.Template, editorToEdit.CallForProposal);
                 viewModel.Editor = editor;
 
                 return View(viewModel);
@@ -232,17 +250,41 @@ namespace Gramps.Controllers
 
             return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
         }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult ResetReviewerId(int id, int? templateId, int? callForProposalId)
+        {
+            var editorToReset = _editorRepository.GetNullableById(id);
+
+            if (editorToReset == null)
+            {
+                Message = "Editor Not Found";
+                return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
+            }
+
+            if (editorToReset.User != null)
+            {
+                Message = "Can't Reset non Reviewers";
+                return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
+            }
+
+            editorToReset.ReviewerId = Guid.NewGuid();
+
+            _editorRepository.EnsurePersistent(editorToReset);
+
+            Message = "Editor Reset Successfully";
+
+            return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
+        }
         
         /// <summary>
         /// Transfer editable values from source to destination
         /// </summary>
-        private static void TransferValues(Editor source, Editor destination, Template template, CallForProposal callForProposal)
+        private static void TransferValues(Editor source, Editor destination)
         {
             destination.ReviewerEmail = source.ReviewerEmail;
             destination.ReviewerName = source.ReviewerName;
             destination.ReviewerId = source.ReviewerId;
-            destination.CallForProposal = callForProposal;
-            destination.Template = template;
         }
 
     }

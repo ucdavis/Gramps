@@ -51,11 +51,19 @@
             .Columns(col => {
             col.Template(x => {%>
                 <% if (x.User == null){%>
-				    <%:Html.ActionLink("Edit", "Edit", new {id = x.Id})%>     
+				    <%:Html.ActionLink<EditorController>(a => a.EditReviewer(x.Id, Model.TemplateId, Model.CallForProposalId), "Edit")%>     
                 <%}%>      
 				<%});
 			col.Template(x => {%>
-				<%: Html.ActionLink("Details", "Details", new { id = x.Id }) %>           
+                <% if (x.User == null){%>
+				    <% using (Html.BeginForm("ResetReviewerId", "Editor", FormMethod.Post)){ %>
+                    <%= Html.AntiForgeryToken() %>
+                    <%: Html.Hidden("id", x.Id) %>
+                    <%: Html.Hidden("TemplateId", Model.TemplateId) %>
+                    <%: Html.Hidden("CallForProposalId", Model.CallForProposalId) %>
+                    <%= Html.SubmitButton("Submit", "Reset") %>                                                                           
+                    <% } %> 
+                <%}%>        
 				<%});
 			            col.Bound(x => x.IsOwner);
                         col.Bound(x => x.ReviewerName).Title("Name");

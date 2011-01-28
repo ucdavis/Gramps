@@ -239,6 +239,7 @@
     <Content Include="Views\Account\LogOn.aspx" />
     <Content Include="Views\Editor\AddEditor.aspx" />
     <Content Include="Views\Editor\CreateReviewer.aspx" />
+    <Content Include="Views\Editor\EditReviewer.aspx" />
     <Content Include="Views\Editor\Index.aspx" />
     <Content Include="Views\Shared\LogOnUserControl.ascx" />
     <Content Include="Views\Template\Create.aspx" />
