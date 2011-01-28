@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
+using Gramps.Controllers.ViewModels;
 using Gramps.Core.Domain;
 using UCDArch.Core.PersistanceSupport;
 using UCDArch.Web.Controller;
@@ -43,11 +44,77 @@ namespace Gramps.Controllers
             return View(editor);
         }
 
+        public ActionResult AddEditor(int? templateId, int? callForProposalId)
+        {
+            Template template = null;
+            CallForProposal callforProposal= null;
+
+            if (templateId.HasValue)
+            {
+                template = Repository.OfType<Template>().GetNullableById(templateId.Value);
+            }
+            else if (callForProposalId.HasValue)
+            {
+                callforProposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId.Value);
+            }
+
+
+            var viewModel = AddEditorViewModel.Create(Repository, template, callforProposal);
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public ActionResult AddEditor(int? templateId, int? callForProposalId, int userId)
+        {
+            Template template = null;
+            CallForProposal callforProposal = null;
+
+            if (templateId.HasValue)
+            {
+                template = Repository.OfType<Template>().GetNullableById(templateId.Value);
+            }
+            else if (callForProposalId.HasValue)
+            {
+                callforProposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId.Value);
+            }
+
+            var user = Repository.OfType<User>().GetNullableById(userId);
+
+            var editor = new Editor(user, false);
+            editor.CallForProposal = callforProposal;
+            editor.Template = template;
+
+            editor.TransferValidationMessagesTo(ModelState);
+            if (editor.IsValid())
+            {
+                Repository.OfType<Editor>().EnsurePersistent(editor);
+                Message = "Editor Added";                
+            }
+            else
+            {
+                Message = "Unable to add editor";
+            }
+
+            return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
+
+        }
+
         //
         // GET: /Editor/Create
-        public ActionResult Create()
+        public ActionResult CreateReviewer(int? templateId, int? callForProposalId)
         {
-			var viewModel = EditorViewModel.Create(Repository);
+            Template template = null;
+            CallForProposal callforProposal = null;
+
+            if (templateId.HasValue)
+            {
+                template = Repository.OfType<Template>().GetNullableById(templateId.Value);
+            }
+            else if (callForProposalId.HasValue)
+            {
+                callforProposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId.Value);
+            }
+			var viewModel = EditorViewModel.Create(Repository, template, callforProposal);
             
             return View(viewModel);
         } 
@@ -55,11 +122,23 @@ namespace Gramps.Controllers
         //
         // POST: /Editor/Create
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Create(Editor editor)
+        public ActionResult CreateReviewer(int? templateId, int? callForProposalId, Editor editor)
         {
-            var editorToCreate = new Editor();
+            Template template = null;
+            CallForProposal callforProposal = null;
 
-            TransferValues(editor, editorToCreate);
+            if (templateId.HasValue)
+            {
+                template = Repository.OfType<Template>().GetNullableById(templateId.Value);
+            }
+            else if (callForProposalId.HasValue)
+            {
+                callforProposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId.Value);
+            }
+
+            var editorToCreate = new Editor(editor.ReviewerEmail);
+
+            TransferValues(editor, editorToCreate, template, callforProposal);
 
             editorToCreate.TransferValidationMessagesTo(ModelState);
 
@@ -67,14 +146,15 @@ namespace Gramps.Controllers
             {
                 _editorRepository.EnsurePersistent(editorToCreate);
 
-                Message = "Editor Created Successfully";
+                Message = "Reviewer Created Successfully";
 
-                return this.RedirectToAction(a => a.Index(null, null));
+                return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
             }
             else
             {
-				var viewModel = EditorViewModel.Create(Repository);
-                viewModel.Editor = editor;
+
+                var viewModel = EditorViewModel.Create(Repository, template, callforProposal);
+                viewModel.Editor = editorToCreate;
 
                 return View(viewModel);
             }
@@ -83,12 +163,12 @@ namespace Gramps.Controllers
         //
         // GET: /Editor/Edit/5
         public ActionResult Edit(int id)
-        {
+        {           
             var editor = _editorRepository.GetNullableById(id);
 
             //if (editor == null) return this.RedirectToAction(a => a.Index());
 
-			var viewModel = EditorViewModel.Create(Repository);
+			var viewModel = EditorViewModel.Create(Repository, null, null);
 			viewModel.Editor = editor;
 
 			return View(viewModel);
@@ -103,7 +183,7 @@ namespace Gramps.Controllers
 
             //if (editorToEdit == null) return this.RedirectToAction(a => a.Index());
 
-            TransferValues(editor, editorToEdit);
+            TransferValues(editor, editorToEdit, null, null);
 
             editorToEdit.TransferValidationMessagesTo(ModelState);
 
@@ -114,100 +194,60 @@ namespace Gramps.Controllers
                 Message = "Editor Edited Successfully";
 
                 //return this.RedirectToAction(a => a.Index());
-                var viewModel = EditorViewModel.Create(Repository);
+                var viewModel = EditorViewModel.Create(Repository, null, null);
                 viewModel.Editor = editor;
                 return View(viewModel);
             }
             else
             {
-				var viewModel = EditorViewModel.Create(Repository);
+                var viewModel = EditorViewModel.Create(Repository, null, null);
                 viewModel.Editor = editor;
 
                 return View(viewModel);
             }
         }
-        
-        //
-        // GET: /Editor/Delete/5 
-        public ActionResult Delete(int id)
-        {
-			var editor = _editorRepository.GetNullableById(id);
-
-            //if (editor == null) return this.RedirectToAction(a => a.Index());
-
-            return View(editor);
-        }
 
         //
         // POST: /Editor/Delete/5
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Delete(int id, Editor editor)
+        public ActionResult Delete(int id, int? templateId, int? callForProposalId)
         {
 			var editorToDelete = _editorRepository.GetNullableById(id);
 
-            if (editorToDelete == null) this.RedirectToAction(a => a.Index(null, null));
+            if (editorToDelete == null)
+            {
+                Message = "Editor Not Found";
+                return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
+            }
+
+            if (editorToDelete.IsOwner)
+            {
+                Message = "Can't delete owner.";
+                return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
+            }
 
             _editorRepository.Remove(editorToDelete);
 
             Message = "Editor Removed Successfully";
 
-            return this.RedirectToAction(a => a.Index(null, null));
+            return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
         }
         
         /// <summary>
         /// Transfer editable values from source to destination
         /// </summary>
-        private static void TransferValues(Editor source, Editor destination)
+        private static void TransferValues(Editor source, Editor destination, Template template, CallForProposal callForProposal)
         {
-            throw new NotImplementedException();
+            destination.ReviewerEmail = source.ReviewerEmail;
+            destination.ReviewerName = source.ReviewerName;
+            destination.ReviewerId = source.ReviewerId;
+            destination.CallForProposal = callForProposal;
+            destination.Template = template;
         }
 
     }
 
-	/// <summary>
-    /// ViewModel for the Editor class
-    /// </summary>
-    public class EditorViewModel
-	{
-		public Editor Editor { get; set; }
- 
-		public static EditorViewModel Create(IRepository repository)
-		{
-			Check.Require(repository != null, "Repository must be supplied");
-			
-			var viewModel = new EditorViewModel {Editor = new Editor()};
- 
-			return viewModel;
-		}
-	}
 
-    public class EditorListViewModel
-    {
-        public IQueryable<Editor> editorList;
-        public bool isTemplate = false;
-        public bool isCallForProposal = false;
-        public int? templateId = 0;
-        public int? callForProposalId = 0;
 
-        public static EditorListViewModel Create(IRepository repository, int? templateId, int? callForProposalId)
-        {
-            Check.Require(repository != null, "Repository must be supplied");
-            var viewModel = new EditorListViewModel();
 
-            if (templateId != null)
-            {
-                viewModel.isTemplate = true;
-                viewModel.editorList = repository.OfType<Editor>().Queryable.Where(a => a.Template.Id == templateId);
-                viewModel.templateId = templateId;
-            }
-            else if(callForProposalId != null)
-            {
-                viewModel.isCallForProposal = true;
-                viewModel.editorList = repository.OfType<Editor>().Queryable.Where(a => a.CallForProposal.Id == callForProposalId);
-                viewModel.callForProposalId = callForProposalId;
-            }
-
-            return viewModel;
-        }
-    }
 }

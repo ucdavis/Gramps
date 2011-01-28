@@ -253,3 +253,25 @@ html, body {height:100%;}
 /* ------------------- */
 div.t-grid {}
 #filter_container {margin-top: 20px;}
+
+.button
+{
+    cursor: pointer;
+    padding: 0.4em 1em;
+    margin-right: 0.1em;
+    overflow:visible;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    border: 1px solid #D3D3D3;
+    color: #555555;
+    bottom: 10px;
+}
+
+.button:hover
+{
+    background:url("images/ui-bg_glass_75_dadada_1x400.png") repeat-x scroll 50% 50% #DADADA;
+    border:1px solid #999999;
+    color:#212121;
+    font-weight:normal;
+}

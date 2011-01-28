@@ -134,6 +134,7 @@
     <Compile Include="Controllers\Filters\RoleFilter.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\TemplateController.cs" />
+    <Compile Include="Controllers\ViewModels\EditorViewModels.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -236,6 +237,8 @@
     <Content Include="Images\logo.jpg" />
     <Content Include="Scripts\xVal.jquery.validate.js" />
     <Content Include="Views\Account\LogOn.aspx" />
+    <Content Include="Views\Editor\AddEditor.aspx" />
+    <Content Include="Views\Editor\CreateReviewer.aspx" />
     <Content Include="Views\Editor\Index.aspx" />
     <Content Include="Views\Shared\LogOnUserControl.ascx" />
     <Content Include="Views\Template\Create.aspx" />
