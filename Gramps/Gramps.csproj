@@ -135,6 +135,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\TemplateController.cs" />
     <Compile Include="Controllers\ViewModels\EditorViewModels.cs" />
+    <Compile Include="Controllers\ViewModels\NavigationViewModel.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -242,9 +243,9 @@
     <Content Include="Views\Editor\EditReviewer.aspx" />
     <Content Include="Views\Editor\Index.aspx" />
     <Content Include="Views\Shared\LogOnUserControl.ascx" />
+    <Content Include="Views\Shared\NavigationButtons.ascx" />
     <Content Include="Views\Template\Create.aspx" />
     <Content Include="Views\Template\Edit.aspx" />
-    <Content Include="Views\Template\EditEditors.aspx" />
     <Content Include="Views\Template\Index.aspx" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

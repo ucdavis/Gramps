@@ -11,14 +11,9 @@ namespace Gramps.Controllers.ViewModels
     /// <summary>
     /// ViewModel for the Editor class
     /// </summary>
-    public class EditorViewModel
+    public class EditorViewModel : NavigationViewModel
     {
         public Editor Editor { get; set; }
-        public bool IsTemplate = false;
-        public bool IsCallForProposal = false;
-        public int? TemplateId = 0;
-        public int? CallForProposalId = 0;
-
 
         public static EditorViewModel Create(IRepository repository, Template template, CallForProposal callForProposal)
         {
@@ -42,13 +37,9 @@ namespace Gramps.Controllers.ViewModels
         }
     }
 
-    public class EditorListViewModel
+    public class EditorListViewModel : NavigationViewModel
     {
         public IQueryable<Editor> EditorList;
-        public bool IsTemplate = false;
-        public bool IsCallForProposal = false;
-        public int? TemplateId = 0;
-        public int? CallForProposalId = 0;
 
         public static EditorListViewModel Create(IRepository repository, int? templateId, int? callForProposalId)
         {
@@ -72,16 +63,12 @@ namespace Gramps.Controllers.ViewModels
         }
     }
 
-    public class AddEditorViewModel
+    public class AddEditorViewModel : NavigationViewModel
     {
         public IEnumerable<User> Users { get; set; }
         public CallForProposal CallForProposal { get; set; }
         public Template Template { get; set; }
         public User User { get; set; }
-        public bool IsTemplate = false;
-        public bool IsCallForProposal = false;
-        public int? TemplateId = null;
-        public int? CallForProposalId = null;
 
         public static AddEditorViewModel Create(IRepository repository, Template template, CallForProposal callForProposal)
         {

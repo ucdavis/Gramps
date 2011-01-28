@@ -7,18 +7,7 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
-    <ul class="btn">
-        <li>
-            <%= Html.ActionLink<TemplateController>(a => a.Index() , "Back to List") %>
-        </li>
-        <li>
-            <%: Html.ActionLink<TemplateController>(a => a.Edit(Model.Template.Id), "Details")%>
-        </li>
-        <li>
-            <%: Html.ActionLink<EditorController>(a => a.Index(Model.Template.Id, null), "Editors/Reviewers")%>
-        </li>
-
-    </ul>
+    <% Html.RenderPartial("NavigationButtons"); %>
 
     <h2>Details</h2>
 

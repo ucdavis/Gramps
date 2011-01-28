@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Web.Mvc;
 using Gramps.Controllers.Filters;
+using Gramps.Controllers.ViewModels;
 using Gramps.Core.Domain;
 using UCDArch.Core.PersistanceSupport;
 using UCDArch.Web.Controller;
@@ -99,6 +100,8 @@ namespace Gramps.Controllers
 
 			var viewModel = TemplateViewModel.Create(Repository);
 			viewModel.Template = template;
+            viewModel.TemplateId = template.Id;
+            viewModel.CallForProposalId = null;
 
 			return View(viewModel);
         }
@@ -121,9 +124,10 @@ namespace Gramps.Controllers
                 _templateRepository.EnsurePersistent(templateToEdit);
 
                 Message = "Template Edited Successfully";
-                Message = "Template Edited Successfully";
                 var viewModel = TemplateViewModel.Create(Repository);
                 viewModel.Template = templateToEdit;
+                viewModel.TemplateId = templateToEdit.Id;
+                viewModel.CallForProposalId = null;
                 return View(viewModel);
                 //return this.RedirectToAction(a => a.Index());
             }
@@ -136,49 +140,49 @@ namespace Gramps.Controllers
             }
         }
 
-        public ActionResult EditEditors(int id)
-        {
-            var template = _templateRepository.GetNullableById(id);
+        //public ActionResult EditEditors(int id)
+        //{
+        //    var template = _templateRepository.GetNullableById(id);
 
-            if (template == null) return this.RedirectToAction(a => a.Index());
+        //    if (template == null) return this.RedirectToAction(a => a.Index());
 
-            var viewModel = TemplateViewModel.Create(Repository);
-            viewModel.Template = template;
+        //    var viewModel = TemplateViewModel.Create(Repository);
+        //    viewModel.Template = template;
 
-            return View(viewModel);
-        }
+        //    return View(viewModel);
+        //}
 
-        //
-        // POST: /Template/Edit/5
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult EditEditors(int id, Template template)
-        {
-            var templateToEdit = _templateRepository.GetNullableById(id);
+        ////
+        //// POST: /Template/Edit/5
+        //[AcceptVerbs(HttpVerbs.Post)]
+        //public ActionResult EditEditors(int id, Template template)
+        //{
+        //    var templateToEdit = _templateRepository.GetNullableById(id);
 
-            if (templateToEdit == null) return this.RedirectToAction(a => a.Index());
+        //    if (templateToEdit == null) return this.RedirectToAction(a => a.Index());
 
-            TransferValues(template, templateToEdit);
+        //    TransferValues(template, templateToEdit);
 
-            templateToEdit.TransferValidationMessagesTo(ModelState);
+        //    templateToEdit.TransferValidationMessagesTo(ModelState);
 
-            if (ModelState.IsValid)
-            {
-                _templateRepository.EnsurePersistent(templateToEdit);
+        //    if (ModelState.IsValid)
+        //    {
+        //        _templateRepository.EnsurePersistent(templateToEdit);
 
-                Message = "Template Edited Successfully";
-                var viewModel = TemplateViewModel.Create(Repository);
-                viewModel.Template = templateToEdit;
-                return View(viewModel);
-                //return this.RedirectToAction(a => a.Index());
-            }
-            else
-            {
-                var viewModel = TemplateViewModel.Create(Repository);
-                viewModel.Template = templateToEdit;
+        //        Message = "Template Edited Successfully";
+        //        var viewModel = TemplateViewModel.Create(Repository);
+        //        viewModel.Template = templateToEdit;
+        //        return View(viewModel);
+        //        //return this.RedirectToAction(a => a.Index());
+        //    }
+        //    else
+        //    {
+        //        var viewModel = TemplateViewModel.Create(Repository);
+        //        viewModel.Template = templateToEdit;
 
-                return View(viewModel);
-            }
-        }
+        //        return View(viewModel);
+        //    }
+        //}
         
         //
         // GET: /Template/Delete/5 
@@ -226,15 +230,18 @@ namespace Gramps.Controllers
 	/// <summary>
     /// ViewModel for the Template class
     /// </summary>
-    public class TemplateViewModel
+    public class TemplateViewModel : NavigationViewModel
 	{
 		public Template Template { get; set; }
  
 		public static TemplateViewModel Create(IRepository repository)
 		{
 			Check.Require(repository != null, "Repository must be supplied");
+            
 			
 			var viewModel = new TemplateViewModel {Template = new Template()};
+		    viewModel.IsTemplate = true;
+		    viewModel.IsCallForProposal = false;            
  
 			return viewModel;
 		}
