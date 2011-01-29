@@ -85,14 +85,26 @@ namespace Gramps.Controllers
             editor.Template = template;
 
             editor.TransferValidationMessagesTo(ModelState);
-            if (editor.IsValid())
+
+            if (editor.Template != null && _editorRepository.Queryable.Where(a => a.User == editor.User && a.Template == template).Any())
+            {
+                ModelState.AddModelError("User", "User already exists");
+                Message = "User already exists";
+            }
+
+            if (editor.CallForProposal != null && _editorRepository.Queryable.Where(a => a.User == editor.User && a.CallForProposal == callforProposal).Any())
+            {
+                ModelState.AddModelError("User", "User already exists");
+                Message = "User already exists";
+            }
+            if (ModelState.IsValid)
             {
                 Repository.OfType<Editor>().EnsurePersistent(editor);
                 Message = "Editor Added";                
             }
             else
             {
-                Message = "Unable to add editor";
+                Message = string.Format("Unable to add editor {0}", Message);
             }
 
             return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
