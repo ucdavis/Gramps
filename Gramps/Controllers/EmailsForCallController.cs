@@ -36,16 +36,6 @@ namespace Gramps.Controllers
             return View(viewModel);
         }
 
-        //
-        // GET: /EmailsForCall/Details/5
-        public ActionResult Details(int id)
-        {
-            var emailsforcall = _emailsforcallRepository.GetNullableById(id);
-
-            if (emailsforcall == null) return this.RedirectToAction(a => a.Index(null, null));
-
-            return View(emailsforcall);
-        }
 
         public ActionResult BulkCreate(int? templateId, int? callForProposalId)
         {
@@ -264,31 +254,25 @@ namespace Gramps.Controllers
         //    }
         //}
         
-        //
-        // GET: /EmailsForCall/Delete/5 
-        public ActionResult Delete(int id)
-        {
-			var emailsforcall = _emailsforcallRepository.GetNullableById(id);
-
-            if (emailsforcall == null) return this.RedirectToAction(a => a.Index(null, null));
-
-            return View(emailsforcall);
-        }
 
         //
         // POST: /EmailsForCall/Delete/5
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Delete(int id, EmailsForCall emailsforcall)
+        public ActionResult Delete(int id, int? templateId, int? callForProposalId)
         {
 			var emailsforcallToDelete = _emailsforcallRepository.GetNullableById(id);
 
-            if (emailsforcallToDelete == null) this.RedirectToAction(a => a.Index(null, null));
+            if (emailsforcallToDelete == null)
+            {
+                Message = "Email not removed";
+                this.RedirectToAction(a => a.Index(templateId, callForProposalId));
+            }
 
             _emailsforcallRepository.Remove(emailsforcallToDelete);
 
-            Message = "EmailsForCall Removed Successfully";
+            Message = "Email Removed Successfully";
 
-            return this.RedirectToAction(a => a.Index(null, null));
+            return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
         }
         
         /// <summary>

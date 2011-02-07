@@ -24,15 +24,22 @@
             col.Template(x => {%>
 				<%: Html.ActionLink("Edit", "Edit", new { id = x.Id }) %>           
 				<%});
-			col.Template(x => {%>
-				<%: Html.ActionLink("Details", "Details", new { id = x.Id }) %>           
-				<%});
-                        col.Bound(x => x.Email);
-                        col.Bound(x => x.HasBeenEmailed);
-                        col.Bound(x => x.EmailedOnDate);
-			            col.Template(x => {%>
-				<%: Html.ActionLink("Delete", "Delete", new { id = x.Id }) %>           
-				<%});
+
+            col.Bound(x => x.Email);
+            if(!Model.IsTemplate){
+            col.Bound(x => x.HasBeenEmailed);
+            col.Bound(x => x.EmailedOnDate);
+            }
+            col.Template(x => { %>                                                       
+                <% using (Html.BeginForm("Delete", "EmailsForCall", FormMethod.Post)) { %>
+                    <%= Html.AntiForgeryToken() %>
+                    <%: Html.Hidden("id", x.Id) %>
+                    <%: Html.Hidden("TemplateId", Model.TemplateId) %>
+                    <%: Html.Hidden("CallForProposalId", Model.CallForProposalId) %>
+                    <%= Html.SubmitButton("Submit", "Remove", new {@class="remove_button"}) %>
+                                                                            
+                <%}%>                                       
+            <% });
             })
             //.Pageable()
             //.Sortable()
