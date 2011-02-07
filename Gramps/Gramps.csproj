@@ -131,10 +131,12 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ApplicationController.cs" />
     <Compile Include="Controllers\EditorController.cs" />
+    <Compile Include="Controllers\EmailsForCallController.cs" />
     <Compile Include="Controllers\Filters\RoleFilter.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\TemplateController.cs" />
     <Compile Include="Controllers\ViewModels\EditorViewModels.cs" />
+    <Compile Include="Controllers\ViewModels\EmailsForCallViewModels.cs" />
     <Compile Include="Controllers\ViewModels\NavigationViewModel.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -242,6 +244,9 @@
     <Content Include="Views\Editor\CreateReviewer.aspx" />
     <Content Include="Views\Editor\EditReviewer.aspx" />
     <Content Include="Views\Editor\Index.aspx" />
+    <Content Include="Views\EmailsForCall\BulkCreate.aspx" />
+    <Content Include="Views\EmailsForCall\Create.aspx" />
+    <Content Include="Views\EmailsForCall\Index.aspx" />
     <Content Include="Views\Shared\LogOnUserControl.ascx" />
     <Content Include="Views\Shared\NavigationButtons.ascx" />
     <Content Include="Views\Template\Create.aspx" />
@@ -353,7 +358,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>51713</DevelopmentServerPort>
+          <DevelopmentServerPort>1714</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>

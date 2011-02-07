@@ -12,7 +12,10 @@
             <%}%>
         </li>
         <li>
-            <%: Html.ActionLink<EditorController>(a => a.Index(Model.TemplateId, Model.CallForProposalId), "Editors/Reviewers")%>
+            <%: Html.ActionLink<EditorController>(a => a.Index(Model.TemplateId, Model.CallForProposalId), "Editors/Reviewers")%>            
+        </li>
+        <li>
+            <%: Html.ActionLink<EmailsForCallController>(a => a.Index(Model.TemplateId, Model.CallForProposalId), "Call List")%>
         </li>
 
     </ul>
