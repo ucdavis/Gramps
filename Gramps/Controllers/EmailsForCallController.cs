@@ -1,18 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text;
 using System.Web.Mvc;
 using Gramps.Controllers.Filters;
 using Gramps.Controllers.ViewModels;
 using Gramps.Core.Domain;
-using UCDArch.Core.PersistanceSupport;
-using UCDArch.Web.Controller;
-using UCDArch.Web.Helpers;
-using UCDArch.Core.Utils;
+using Gramps.Services;
 using MvcContrib;
-using System.Linq;
-using System.Linq.Expressions;
+using UCDArch.Core.PersistanceSupport;
+using UCDArch.Web.Helpers;
 
 namespace Gramps.Controllers
 {
@@ -23,10 +20,12 @@ namespace Gramps.Controllers
     public class EmailsForCallController : ApplicationController
     {
 	    private readonly IRepository<EmailsForCall> _emailsforcallRepository;
+        private readonly IAccessService _accessService;
 
-        public EmailsForCallController(IRepository<EmailsForCall> emailsforcallRepository)
+        public EmailsForCallController(IRepository<EmailsForCall> emailsforcallRepository, IAccessService accessService)
         {
             _emailsforcallRepository = emailsforcallRepository;
+            _accessService = accessService;
         }
     
         //
@@ -34,6 +33,12 @@ namespace Gramps.Controllers
         public ActionResult Index(int? templateId, int? callForProposalId)
         {
             var viewModel = EmailsForCallListViewModel.Create(Repository, templateId, callForProposalId);
+
+            if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
 
             return View(viewModel);
         }
@@ -51,6 +56,11 @@ namespace Gramps.Controllers
             else if (callForProposalId.HasValue)
             {
                 callforProposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId.Value);
+            }
+            if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
             }
             var viewModel = EmailsForCallViewModel.Create(Repository, template, callforProposal);
 
@@ -77,6 +87,11 @@ namespace Gramps.Controllers
             {
                 callforProposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId.Value);
                 existingList = _emailsforcallRepository.Queryable.Where(a => a.CallForProposal == callforProposal).Select(a => a.Email).ToList();
+            }
+            if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
             }
             
             var RegexPattern = @"\b[A-Z0-9._-]+@[A-Z0-9][A-Z0-9.-]{0,61}[A-Z0-9]\.[A-Z.]{2,6}\b";
@@ -155,6 +170,11 @@ namespace Gramps.Controllers
             {
                 callforProposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId.Value);
             }
+            if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
             var viewModel = EmailsForCallViewModel.Create(Repository, template, callforProposal);
             
             return View(viewModel);
@@ -167,7 +187,12 @@ namespace Gramps.Controllers
         {
             Template template = null;
             CallForProposal callforProposal = null;
-            IQueryable<string> existingList;
+
+            if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
 
             if (templateId.HasValue)
             {
@@ -213,49 +238,90 @@ namespace Gramps.Controllers
             }
         }
 
-        //
-        // GET: /EmailsForCall/Edit/5
-        //public ActionResult Edit(int id)
-        //{
-        //    var emailsforcall = _emailsforcallRepository.GetNullableById(id);
-
-        //    if (emailsforcall == null) return this.RedirectToAction(a => a.Index(null, null));
-
-        //    var viewModel = EmailsForCallViewModel.Create(Repository);
-        //    viewModel.EmailsForCall = emailsforcall;
-
-        //    return View(viewModel);
-        //}
         
-        //
+        // GET: /EmailsForCall/Edit/5
+        public ActionResult Edit(int id, int? templateId, int? callForProposalId)
+        {
+            if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+
+            var emailsforcall = _emailsforcallRepository.GetNullableById(id);
+
+            if (emailsforcall == null)
+            {
+                Message = "EmailsForCall not found.";
+                return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
+            }
+
+            var viewModel = EmailsForCallViewModel.Create(Repository, emailsforcall.Template, emailsforcall.CallForProposal);
+            viewModel.EmailsForCall = emailsforcall;
+
+            return View(viewModel);
+        }
+        
+        
         // POST: /EmailsForCall/Edit/5
-        //[AcceptVerbs(HttpVerbs.Post)]
-        //public ActionResult Edit(int id, EmailsForCall emailsforcall)
-        //{
-        //    var emailsforcallToEdit = _emailsforcallRepository.GetNullableById(id);
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Edit(int id, int? templateId, int? callForProposalId, EmailsForCall emailsforcall)
+        {
+            Template template = null;
+            CallForProposal callforProposal = null;
 
-        //    if (emailsforcallToEdit == null) return this.RedirectToAction(a => a.Index(null, null));
+            if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
 
-        //    TransferValues(emailsforcall, emailsforcallToEdit);
+            var emailsforcallToEdit = _emailsforcallRepository.GetNullableById(id);
 
-        //    emailsforcallToEdit.TransferValidationMessagesTo(ModelState);
+            if (emailsforcallToEdit == null)
+            {
+                Message = "EmailsForCall not found.";
+                return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
+            }
 
-        //    if (ModelState.IsValid)
-        //    {
-        //        _emailsforcallRepository.EnsurePersistent(emailsforcallToEdit);
+            //TransferValues(emailsforcall, emailsforcallToEdit);
+            emailsforcallToEdit.Email = emailsforcall.Email.ToLower();
 
-        //        Message = "EmailsForCall Edited Successfully";
+            emailsforcallToEdit.TransferValidationMessagesTo(ModelState);
+                                  
+            if (templateId.HasValue)
+            {
+                template = Repository.OfType<Template>().GetNullableById(templateId.Value);
+                if(_emailsforcallRepository.Queryable.Where(a => a.Template == template && a.Id != emailsforcallToEdit.Id && a.Email == emailsforcall.Email).Any())
+                {
+                    ModelState.AddModelError("Email", "Email already exists");
+                }
+            }
+            else if (callForProposalId.HasValue)
+            {
+                callforProposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId.Value);
+                if (_emailsforcallRepository.Queryable.Where(a => a.CallForProposal == callforProposal && a.Id != emailsforcallToEdit.Id && a.Email == emailsforcall.Email).Any())
+                {
+                    ModelState.AddModelError("Email", "Email already exists");
+                }
+            }
 
-        //        return this.RedirectToAction(a => a.Index(null, null));
-        //    }
-        //    else
-        //    {
-        //        var viewModel = EmailsForCallViewModel.Create(Repository);
-        //        viewModel.EmailsForCall = emailsforcall;
+            if (ModelState.IsValid)
+            {
+                _emailsforcallRepository.EnsurePersistent(emailsforcallToEdit);
 
-        //        return View(viewModel);
-        //    }
-        //}
+                Message = "EmailsForCall Edited Successfully";
+
+                return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
+            }
+            else
+            {
+                var viewModel = EmailsForCallViewModel.Create(Repository, emailsforcallToEdit.Template, emailsforcallToEdit.CallForProposal);
+                viewModel.EmailsForCall = emailsforcallToEdit;
+
+                return View(viewModel);
+            }
+        }
         
 
         //
@@ -263,6 +329,12 @@ namespace Gramps.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Delete(int id, int? templateId, int? callForProposalId)
         {
+            if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+
 			var emailsforcallToDelete = _emailsforcallRepository.GetNullableById(id);
 
             if (emailsforcallToDelete == null)

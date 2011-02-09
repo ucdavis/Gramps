@@ -1,4 +1,5 @@
 ﻿using Castle.Windsor;
+using Gramps.Services;
 using UCDArch.Core.CommonValidator;
 using UCDArch.Core.NHibernateValidator.CommonValidatorAdapter;
 using UCDArch.Core.PersistanceSupport;
@@ -15,6 +16,8 @@ namespace Gramps
             container.AddComponent("validator",
                                    typeof(IValidator), typeof(Validator));
             container.AddComponent("dbContext", typeof(IDbContext), typeof(DbContext));
+
+            container.AddComponent("accessService", typeof (IAccessService), typeof (AccessService));
 
         }
 

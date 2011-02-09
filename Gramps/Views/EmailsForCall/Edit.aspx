@@ -2,21 +2,22 @@
 <%@ Import Namespace="Gramps.Core.Domain" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
-	Create
+	Edit
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
     <% Html.RenderPartial("NavigationButtons"); %>
-    <h2>Create</h2>
+    <h2>Edit</h2>
 
     <% using (Html.BeginForm()) {%>
         <%= Html.AntiForgeryToken() %>
         <%= Html.ValidationSummary("Please correct all errors below") %>
-	    <%= Html.ClientSideValidation<EmailsForCall>("EmailsForCall")%>
+	    <%= Html.ClientSideValidation<EmailsForCall>("EmailsForCall")%>    
+        <%: Html.HiddenFor(a => a.EmailsForCall.Id) %> 
         <%: Html.HiddenFor(a => a.TemplateId) %>
         <%: Html.HiddenFor(a => a.CallForProposalId) %>
-
+        
         <fieldset>
             <legend>Fields</legend>
             
@@ -25,12 +26,11 @@
             </div>
             <div class="editor-field">
                 <%: Html.TextBoxFor(model => model.EmailsForCall.Email)%>
-                <%--<%: Html.ValidationMessageFor(model => model.EmailsForCall.Email)%>--%>
-                <%= Html.ValidationMessage("Email") %>
+                <%: Html.ValidationMessageFor(model => model.EmailsForCall.Email)%>
             </div>
-                      
+            
             <p>
-                <input type="submit" value="Create" />
+                <input type="submit" value="Edit" />
             </p>
         </fieldset>
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using FluentNHibernate.Mapping;
 using Gramps.Core.Helpers;
 using NHibernate.Validator.Constraints;
@@ -114,6 +115,11 @@ namespace Gramps.Core.Domain
         #endregion Mapped Fields
 
         #region Methods
+
+        public virtual bool IsEditor(string userId)
+        {
+            return Editors.Where(a => a.User != null && a.User.LoginId == userId).Any();
+        }
 
         public virtual void AddEmailForCall(string email)
         {

@@ -1,5 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<IEnumerable<Gramps.Core.Domain.Template>>" %>
 <%@ Import Namespace="Gramps.Helpers" %>
+<%@ Import Namespace="Gramps.Controllers" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
 	Index
@@ -7,11 +8,11 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
-    <h2>Index</h2>
+    <h2>Index</h2><br/>
 
 
 <p>
-    <%: Html.ActionLink("Create New", "Create") %>
+    <%: Html.ActionLink<TemplateController>(a => a.Create(), "Create Template", new {@class="button"}) %>
 </p>
 
 <% Html.Grid(Model) 
@@ -24,8 +25,8 @@
 			            col.Bound(x => x.Name);
                         col.Bound(x => x.IsActive);
                         })
-            //.Pageable()
-            //.Sortable()
+            .Pageable()
+            .Sortable()
             .Render(); 
         %>
 

@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using Gramps.Controllers.Filters;
 using Gramps.Controllers.ViewModels;
 using Gramps.Core.Domain;
+using Gramps.Services;
 using UCDArch.Core.PersistanceSupport;
 using UCDArch.Web.Controller;
 using UCDArch.Web.Helpers;
@@ -19,18 +20,26 @@ namespace Gramps.Controllers
     public class EditorController : ApplicationController
     {
 	    private readonly IRepository<Editor> _editorRepository;
+        private readonly IAccessService _accessService;
 
-        public EditorController(IRepository<Editor> editorRepository)
+        public EditorController(IRepository<Editor> editorRepository, IAccessService accessService)
         {
             _editorRepository = editorRepository;
+            _accessService = accessService;
         }
     
         //
         // GET: /Editor/
         public ActionResult Index(int? templateId, int? callForProposalId)
         {
+            if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+
             var viewModel = EditorListViewModel.Create(Repository, templateId, callForProposalId);
-            //TODO: Check Editor Access Rights
+
 
             return View(viewModel);
         }
@@ -39,6 +48,7 @@ namespace Gramps.Controllers
         // GET: /Editor/Details/5
         public ActionResult Details(int id)
         {
+            //todo: show all editors, emails, etc.
             var editor = _editorRepository.GetNullableById(id);
 
             if (editor == null) return this.RedirectToAction(a => a.Index(null, null));
@@ -50,6 +60,12 @@ namespace Gramps.Controllers
         {
             Template template = null;
             CallForProposal callforProposal= null;
+
+            if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
 
             if (templateId.HasValue)
             {
@@ -70,6 +86,12 @@ namespace Gramps.Controllers
         {
             Template template = null;
             CallForProposal callforProposal = null;
+
+            if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
 
             if (templateId.HasValue)
             {
@@ -120,6 +142,12 @@ namespace Gramps.Controllers
             Template template = null;
             CallForProposal callforProposal = null;
 
+            if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+
             if (templateId.HasValue)
             {
                 template = Repository.OfType<Template>().GetNullableById(templateId.Value);
@@ -140,6 +168,12 @@ namespace Gramps.Controllers
         {
             Template template = null;
             CallForProposal callforProposal = null;
+
+            if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
 
             if (templateId.HasValue)
             {
@@ -180,6 +214,12 @@ namespace Gramps.Controllers
         // GET: /Editor/Edit/5
         public ActionResult EditReviewer(int id, int? templateId, int? callForProposalId)
         {
+            if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+
             var editor = _editorRepository.GetNullableById(id);
 
             if (editor == null)
@@ -204,6 +244,11 @@ namespace Gramps.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult EditReviewer(int id, int? templateId, int? callForProposalId, Editor editor)
         {
+            if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
 
             var editorToEdit = _editorRepository.GetNullableById(id);
 
@@ -244,6 +289,12 @@ namespace Gramps.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Delete(int id, int? templateId, int? callForProposalId)
         {
+            if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+
 			var editorToDelete = _editorRepository.GetNullableById(id);
 
             if (editorToDelete == null)
@@ -268,6 +319,12 @@ namespace Gramps.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult ResetReviewerId(int id, int? templateId, int? callForProposalId)
         {
+            if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+
             var editorToReset = _editorRepository.GetNullableById(id);
 
             if (editorToReset == null)

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using FluentNHibernate.Mapping;
 using NHibernate.Validator.Constraints;
 using UCDArch.Core.DomainModel;
@@ -42,6 +43,15 @@ namespace Gramps.Core.Domain
         public virtual IList<CallForProposal> CallForProposals { get; set; }
 
         #endregion Mapped Fields
+
+        #region Methods
+
+        public virtual bool IsEditor(string userId)
+        {
+            return Editors.Where(a => a.User != null && a.User.LoginId == userId).Any();
+        }
+
+        #endregion Methods
     }
 
     public class TemplateMap : ClassMap<Template>
