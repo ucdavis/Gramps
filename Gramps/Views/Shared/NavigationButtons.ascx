@@ -17,5 +17,7 @@
         <li>
             <%: Html.ActionLink<EmailsForCallController>(a => a.Index(Model.TemplateId, Model.CallForProposalId), "Call List")%>
         </li>
-
+        <li>
+            <%: Html.ActionLink<EmailTemplateController>(a => a.Index(Model.TemplateId, Model.CallForProposalId), "Email Templates")%>
+        </li>
     </ul>

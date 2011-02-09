@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Web.Mvc;
 using Gramps.Controllers.Filters;
 using Gramps.Controllers.ViewModels;
@@ -83,6 +84,8 @@ namespace Gramps.Controllers
                 editor.Template = templateToCreate;
                 Repository.OfType<Editor>().EnsurePersistent(editor);
 
+                LoadEmailTemplates(templateToCreate);
+
                 //return RedirectToAction("Index");
                 return this.RedirectToAction(a => a.Index());
             }
@@ -92,6 +95,25 @@ namespace Gramps.Controllers
                 viewModel.Template = template;
 
                 return View(viewModel);
+            }
+        }
+
+        private void LoadEmailTemplates(Template template)
+        {
+            var dict = new Dictionary<int, EmailTemplateType>();
+            dict.Add(0, EmailTemplateType.InitialCall);
+            dict.Add(1, EmailTemplateType.ProposalApproved);
+            dict.Add(2, EmailTemplateType.ProposalConfirmation);
+            dict.Add(3, EmailTemplateType.ProposalDenied);
+            dict.Add(4, EmailTemplateType.ReadyForReview);
+            dict.Add(5, EmailTemplateType.ReminderCallIsAboutToClose);
+            for (int i = 0; i < 6; i++)
+            {
+                var emailTemplate = new EmailTemplate(dict[i].ToString() + " Edit This Subject");
+                emailTemplate.TemplateType = dict[i];
+                emailTemplate.Template = template;
+
+                Repository.OfType<EmailTemplate>().EnsurePersistent(emailTemplate);
             }
         }
 
