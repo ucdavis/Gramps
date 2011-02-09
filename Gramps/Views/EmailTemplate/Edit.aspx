@@ -31,7 +31,7 @@
                 <%= Html.ValidationMessageFor(a => a.EmailTemplate.Text)%> 
             </li>
             <li>
-                <input type="submit" value="Create" />
+                <input type="submit" value="Edit" />
                 <input type="button" value="Send Test Email" id="send-test" />
             </li>
             </ul>

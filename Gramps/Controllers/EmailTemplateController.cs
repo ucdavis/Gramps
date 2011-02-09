@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web.Mvc;
+using Gramps.Controllers.Filters;
 using Gramps.Controllers.ViewModels;
 using Gramps.Core.Domain;
 using Gramps.Services;
@@ -14,6 +15,7 @@ namespace Gramps.Controllers
     /// <summary>
     /// Controller for the EmailTemplate class
     /// </summary>
+    [UserOnly]
     public class EmailTemplateController : ApplicationController
     {
 	    private readonly IRepository<EmailTemplate> _emailtemplateRepository;
