@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Web.Mvc;
+using Gramps.Controllers.Filters;
 using Gramps.Controllers.ViewModels;
 using Gramps.Core.Domain;
 using UCDArch.Core.PersistanceSupport;
@@ -18,6 +19,7 @@ namespace Gramps.Controllers
     /// <summary>
     /// Controller for the EmailsForCall class
     /// </summary>
+    [UserOnly]
     public class EmailsForCallController : ApplicationController
     {
 	    private readonly IRepository<EmailsForCall> _emailsforcallRepository;
@@ -123,6 +125,7 @@ namespace Gramps.Controllers
 
             if (notAddedCount > 0)
             {
+                ModelState.Clear();
                 Message = string.Format("{0} EmailsForCall Created Successfully == {1} EmailsForCall Not Created", emailsCreatedCount, notAddedCount);
                 var viewModel = EmailsForCallViewModel.Create(Repository, template, callforProposal);
                 viewModel.BulkLoadEmails = notAddedSb.ToString();

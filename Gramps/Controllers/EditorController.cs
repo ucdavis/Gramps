@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
+using Gramps.Controllers.Filters;
 using Gramps.Controllers.ViewModels;
 using Gramps.Core.Domain;
 using UCDArch.Core.PersistanceSupport;
@@ -14,6 +15,7 @@ namespace Gramps.Controllers
     /// <summary>
     /// Controller for the Editor class
     /// </summary>
+    [UserOnly]
     public class EditorController : ApplicationController
     {
 	    private readonly IRepository<Editor> _editorRepository;

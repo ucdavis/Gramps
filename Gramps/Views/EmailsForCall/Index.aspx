@@ -41,8 +41,8 @@
                 <%}%>                                       
             <% });
             })
-            //.Pageable()
-            //.Sortable()
+            .Pageable()
+            .Sortable()
             .Render(); 
         %>
 
