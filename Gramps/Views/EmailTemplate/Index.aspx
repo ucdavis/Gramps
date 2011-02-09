@@ -1,6 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<Gramps.Controllers.ViewModels.EmailTemplateListViewModel>" %>
 <%@ Import Namespace="Gramps.Helpers" %>
 <%@ Import Namespace="Gramps.Controllers" %>
+<%@ Import Namespace="Gramps.Core.Resources" %>
+<%@ Import Namespace="Gramps.Core.Domain" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
 	Index
@@ -23,7 +25,7 @@
                 </legend>
                 
                 <div class="template_description" style="margin-bottom:20px;">
-                    <%= Html.Encode(t.TemplateType.ToString()) %>
+                    <%= Html.Encode(Model.DescriptionDict[(EmailTemplateType)t.TemplateType]) %>
                 </div>
                 <div>Subject:</div>
                 <div class="template_subject" style="background-color:#f4f4f4; border:1px solid #666; margin:10px 20px 10px 20px; padding:10px;">

@@ -96,7 +96,7 @@ namespace Gramps.Controllers
 
             if (emailtemplate == null) return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
 
-            var viewModel = EmailTemplateViewModel.Create(Repository);
+            var viewModel = EmailTemplateViewModel.Create(Repository, templateId, callForProposalId);
             viewModel.EmailTemplate = emailtemplate;
 
             return View(viewModel);

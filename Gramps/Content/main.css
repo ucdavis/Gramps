@@ -127,7 +127,8 @@ body .content {font: 12px/22px Verdana, Arial, sans-serif;}
 .choose_ceremony_message {font: 20px/28px 'CicleSemi', Arial, sans-serif;letter-spacing: 0;}
 .choose_ceremony_message strong {font: 22px/30px 'CicleGordita', Arial, sans-serif; font-weight:normal;}
 
-
+#right_bar {float:right;line-height:normal; -moz-border-radius: 5px; -webkit-border-radius: 5px; color:#fff; border:1px solid #CCC; display:inline-block; padding:1em 0.5em; margin-top:82px; width:200px; margin-left:10px; background-color:#f4f4f4; border:1px solid #666;}
+#left_bar {float:left; width:690px;}
 #right_menu {float:right; font-size:0.9em; line-height:normal; -moz-border-radius: 5px; -webkit-border-radius: 5px; color:#fff; border:1px solid #CCC; display:inline-block; padding:1em 0.5em; margin-top:2em;}
 #fix form p {width:500px; clear:both; float:left;}
 .mceEditor {clear:both;}

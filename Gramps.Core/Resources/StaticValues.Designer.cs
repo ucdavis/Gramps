@@ -59,5 +59,59 @@ namespace Gramps.Core.Resources {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Email set out to list for proposals.
+        /// </summary>
+        public static string InitialCall {
+            get {
+                return ResourceManager.GetString("InitialCall", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Email sent out to applicant if proposal is approved.
+        /// </summary>
+        public static string ProposalApproved {
+            get {
+                return ResourceManager.GetString("ProposalApproved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Email sent out to applicant to confirm proposal has been submitted.
+        /// </summary>
+        public static string ProposalConfirmation {
+            get {
+                return ResourceManager.GetString("ProposalConfirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Email sent out to applicant to notify them that their proposal has not been accepted.
+        /// </summary>
+        public static string ProposalDenied {
+            get {
+                return ResourceManager.GetString("ProposalDenied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Email sent out to list of reviewers to notify them that the proposals are ready to be reviewed.
+        /// </summary>
+        public static string ReadyForReview {
+            get {
+                return ResourceManager.GetString("ReadyForReview", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Email sent out to list applicants that have not finilized their proposals.
+        /// </summary>
+        public static string ReminderCallIsAboutToClose {
+            get {
+                return ResourceManager.GetString("ReminderCallIsAboutToClose", resourceCulture);
+            }
+        }
     }
 }
