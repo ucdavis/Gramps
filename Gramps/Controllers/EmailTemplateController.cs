@@ -44,8 +44,9 @@ namespace Gramps.Controllers
             return View(viewModel);
         }
 
-        [ValidateInput(false)]
+        
         [HttpPost]
+        [ValidateInput(false)]
         public JsonResult SendTestEmail(string subject, string message)
         {
             var user = Repository.OfType<User>().Queryable.Where(a => a.LoginId == CurrentUser.Identity.Name).FirstOrDefault();
