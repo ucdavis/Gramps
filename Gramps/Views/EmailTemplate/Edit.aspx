@@ -9,7 +9,7 @@
     <% Html.RenderPartial("NavigationButtons"); %>
     <h2>Edit - <%: Html.Encode(Model.DescriptionDict[(EmailTemplateType)Model.EmailTemplate.TemplateType]) %></h2>
 
-    <%= Html.ValidationSummary("Create was unsuccessful. Please correct the errors and try again.") %>
+    <%= Html.ValidationSummary("Save was unsuccessful. Please correct the errors and try again.") %>
     <%= Html.ClientSideValidation<EmailTemplate>("") %>
 
     <% using (Html.BeginForm()) {%>
@@ -23,15 +23,15 @@
 
             <li>
                 <strong>Subject: </strong>
-                <%: Html.TextBox("Subject", Model.EmailTemplate != null ? Model.EmailTemplate.Subject : string.Empty, new { @style = "width:20em;" })%>
+                <%: Html.TextBox("EmailTemplate.Subject", Model.EmailTemplate != null ? Model.EmailTemplate.Subject : string.Empty, new { @style = "width:20em;" })%>
             </li>
             <li>
                 <strong>BodyText:</strong>
-                <%= Html.TextArea("Text", Model.EmailTemplate != null ? Model.EmailTemplate.Text : string.Empty)%>
+                <%= Html.TextArea("EmailTemplate.Text", Model.EmailTemplate != null ? Model.EmailTemplate.Text : string.Empty)%>
                 <%= Html.ValidationMessageFor(a => a.EmailTemplate.Text)%> 
             </li>
             <li>
-                <input type="submit" value="Edit" />
+                <input type="submit" value="Save" />
                 <input type="button" value="Send Test Email" id="send-test" />
             </li>
             </ul>
@@ -59,9 +59,20 @@
         var templatecodes = [];
 
         $(document).ready(function () {
-            $("#Text").enableTinyMce({ script_location: '<%= Url.Content("~/Scripts/tiny_mce/tiny_mce.js") %>', overrideWidth: "700" });
+            $("#EmailTemplate_Text").enableTinyMce({ script_location: '<%= Url.Content("~/Scripts/tiny_mce/tiny_mce.js") %>', overrideWidth: "700" });
+
+            $("#send-test").click(function () {
+                var url = '<%: Url.Action("SendTestEmail", "EmailTemplate") %>';
+                var subject = $("#EmailTemplate_Subject").val();
+                var txt = tinyMCE.get("EmailTemplate_Text").getContent();
+                var antiForgeryToken = $("input[name='__RequestVerificationToken']").val();
+                $.post(url, new { subject: subject, message: txt, __RequestVerificationToken: antiForgeryToken }, function (result) {
+                    if (result) alert("Message has been mailed to you.");
+                    else alert("there was an error sending test email");
+                });
 
 
+            });
         });
 
    </script>

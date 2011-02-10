@@ -61,7 +61,7 @@ namespace Gramps.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Email set out to list for proposals.
+        ///   Looks up a localized string similar to Email sent out to list for proposals.
         /// </summary>
         public static string InitialCall {
             get {

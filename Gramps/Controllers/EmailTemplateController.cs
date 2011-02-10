@@ -1,14 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Mail;
 using System.Web.Mvc;
 using Gramps.Controllers.Filters;
+using Gramps.Helpers;
 using Gramps.Controllers.ViewModels;
 using Gramps.Core.Domain;
 using Gramps.Services;
-using UCDArch.Core.PersistanceSupport;
-using UCDArch.Web.Controller;
-using UCDArch.Web.Helpers;
-using UCDArch.Core.Utils;
 using MvcContrib;
+using UCDArch.Core.PersistanceSupport;
+using UCDArch.Web.Helpers;
 
 namespace Gramps.Controllers
 {
@@ -42,53 +44,18 @@ namespace Gramps.Controllers
             return View(viewModel);
         }
 
-        ////
-        //// GET: /EmailTemplate/Details/5
-        //public ActionResult Details(int id)
-        //{
-        //    var emailtemplate = _emailtemplateRepository.GetNullableById(id);
+        [ValidateInput(false)]
+        [HttpPost]
+        public JsonResult SendTestEmail(string subject, string message)
+        {
+            var user = Repository.OfType<User>().Queryable.Where(a => a.LoginId == CurrentUser.Identity.Name).FirstOrDefault();
+            var mail = new MailMessage("automatedemail@caes.ucdavis.edu", user.Email, subject, message);
+            mail.IsBodyHtml = true;
+            var client = new SmtpClient();
+            client.Send(mail);
 
-        //    if (emailtemplate == null) return this.RedirectToAction(a => a.Index());
-
-        //    return View(emailtemplate);
-        //}
-
-        ////
-        //// GET: /EmailTemplate/Create
-        //public ActionResult Create()
-        //{
-        //    var viewModel = EmailTemplateViewModel.Create(Repository);
-            
-        //    return View(viewModel);
-        //} 
-
-        ////
-        //// POST: /EmailTemplate/Create
-        //[AcceptVerbs(HttpVerbs.Post)]
-        //public ActionResult Create(EmailTemplate emailtemplate)
-        //{
-        //    var emailtemplateToCreate = new EmailTemplate();
-
-        //    TransferValues(emailtemplate, emailtemplateToCreate);
-
-        //    emailtemplateToCreate.TransferValidationMessagesTo(ModelState);
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        _emailtemplateRepository.EnsurePersistent(emailtemplateToCreate);
-
-        //        Message = "EmailTemplate Created Successfully";
-
-        //        return this.RedirectToAction(a => a.Index());
-        //    }
-        //    else
-        //    {
-        //        var viewModel = EmailTemplateViewModel.Create(Repository);
-        //        viewModel.EmailTemplate = emailtemplate;
-
-        //        return View(viewModel);
-        //    }
-        //}
+            return Json(true, JsonRequestBehavior.AllowGet);
+        }
 
         //
         // GET: /EmailTemplate/Edit/5
@@ -103,70 +70,51 @@ namespace Gramps.Controllers
 
             return View(viewModel);
         }
+
+        //
+        // POST: /EmailTemplate/Edit/5
+        [AcceptVerbs(HttpVerbs.Post)]
+        [ValidateInput(false)]
+        public ActionResult Edit(int id, int? templateId, int? callForProposalId, EmailTemplate emailtemplate)
+        {
+            var emailtemplateToEdit = _emailtemplateRepository.GetNullableById(id);
+
+            if (emailtemplateToEdit == null)
+            {
+                Message = "Email Template not found.";
+                return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
+            }
+
+            TransferValues(emailtemplate, emailtemplateToEdit);
+
+            emailtemplateToEdit.TransferValidationMessagesTo(ModelState);
+
+            if (ModelState.IsValid)
+            {
+                _emailtemplateRepository.EnsurePersistent(emailtemplateToEdit);
+
+                Message = "EmailTemplate Edited Successfully";
+
+                return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
+            }
+            else
+            {
+                var viewModel = EmailTemplateViewModel.Create(Repository, templateId, callForProposalId);
+                viewModel.EmailTemplate = emailtemplateToEdit;
+
+                return View(viewModel);
+            }
+        }
         
-        ////
-        //// POST: /EmailTemplate/Edit/5
-        //[AcceptVerbs(HttpVerbs.Post)]
-        //public ActionResult Edit(int id, EmailTemplate emailtemplate)
-        //{
-        //    var emailtemplateToEdit = _emailtemplateRepository.GetNullableById(id);
 
-        //    if (emailtemplateToEdit == null) return this.RedirectToAction(a => a.Index());
-
-        //    TransferValues(emailtemplate, emailtemplateToEdit);
-
-        //    emailtemplateToEdit.TransferValidationMessagesTo(ModelState);
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        _emailtemplateRepository.EnsurePersistent(emailtemplateToEdit);
-
-        //        Message = "EmailTemplate Edited Successfully";
-
-        //        return this.RedirectToAction(a => a.Index());
-        //    }
-        //    else
-        //    {
-        //        var viewModel = EmailTemplateViewModel.Create(Repository);
-        //        viewModel.EmailTemplate = emailtemplate;
-
-        //        return View(viewModel);
-        //    }
-        //}
-        
-        ////
-        //// GET: /EmailTemplate/Delete/5 
-        //public ActionResult Delete(int id)
-        //{
-        //    var emailtemplate = _emailtemplateRepository.GetNullableById(id);
-
-        //    if (emailtemplate == null) return this.RedirectToAction(a => a.Index());
-
-        //    return View(emailtemplate);
-        //}
-
-        ////
-        //// POST: /EmailTemplate/Delete/5
-        //[AcceptVerbs(HttpVerbs.Post)]
-        //public ActionResult Delete(int id, EmailTemplate emailtemplate)
-        //{
-        //    var emailtemplateToDelete = _emailtemplateRepository.GetNullableById(id);
-
-        //    if (emailtemplateToDelete == null) this.RedirectToAction(a => a.Index());
-
-        //    _emailtemplateRepository.Remove(emailtemplateToDelete);
-
-        //    Message = "EmailTemplate Removed Successfully";
-
-        //    return this.RedirectToAction(a => a.Index());
-        //}
         
         /// <summary>
         /// Transfer editable values from source to destination
         /// </summary>
         private static void TransferValues(EmailTemplate source, EmailTemplate destination)
         {
-            throw new NotImplementedException();
+            destination.Subject = source.Subject;
+            destination.Text = source.Text;
         }
 
     }
