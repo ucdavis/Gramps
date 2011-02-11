@@ -7,11 +7,25 @@ namespace Gramps.Core.Domain
 {
     public class QuestionOption : DomainObject
     {
+
+        #region Constructor
+        public QuestionOption()
+        {
+        }
+
+        public QuestionOption(string name)
+        {
+            Name = name;
+        }
+        #endregion Constructor
+
+        #region Mapped Fields        
         [Required]
         [Length(200)]
         public virtual string Name { get; set; }
         [NotNull]
         public virtual Question Question { get; set; }
+        #endregion Mapped Fields
     }
 
     public class QuestionOptionMap : ClassMap<QuestionOption>

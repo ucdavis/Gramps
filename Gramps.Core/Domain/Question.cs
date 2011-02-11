@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using FluentNHibernate.Mapping;
 using NHibernate.Validator.Constraints;
 using UCDArch.Core.DomainModel;
@@ -58,6 +59,58 @@ namespace Gramps.Core.Domain
             }
         }
 
+        [AssertTrue(Message = "The question type requires at least one option.")]
+        private bool OptionsRequired
+        {
+            get
+            {
+                if (QuestionType != null && QuestionType.HasOptions)
+                {
+                    if (Options != null && Options.Count > 0)
+                    {
+                        return Options.Any(o => o.Name != null && !string.IsNullOrEmpty(o.Name.Trim()));
+                    }
+                    return false; //Fail it, they are required
+                }
+                return true;
+            }
+        }
+
+        [AssertTrue(Message = "Options not allowed")]
+        private bool OptionsNotAllowed
+        {
+            get
+            {
+                if (QuestionType != null && QuestionType.HasOptions)
+                {
+                    return true;
+                }
+                else
+                {
+                    if (Options != null && Options.Count > 0)
+                    {
+                        return false; //Fail it, they are not allowed
+                    }
+                }
+                return true;
+            }
+        }
+
+        [AssertTrue(Message = "One or more options is invalid")]
+        private bool OptionsNames
+        {
+            get
+            {
+                if (QuestionType != null && QuestionType.HasOptions)
+                {
+                    if (Options != null && Options.Count > 0)
+                    {
+                        return Options.All(o => o.Name != null && !string.IsNullOrEmpty(o.Name.Trim()));
+                    }
+                }
+                return true;
+            }
+        }
         #endregion Validation Fields
 
         #region Methods
@@ -69,12 +122,27 @@ namespace Gramps.Core.Domain
             Options.Add(newQuestionOption);
         }
 
-        #endregion Methods
+        public virtual string ValidationClasses
+        {
+            get
+            {
+                return string.Join(" ", Validators.Select(a => a.Class).ToArray());
+            }
+        }
+
+        public virtual string OptionChoices
+        {
+            get { return string.Join(" ", Options.Select(a => a.Name).ToArray()); }
+        }
 
         public virtual void Addvalidators(Validator validator)
         {
             Validators.Add(validator);
         }
+
+        #endregion Methods
+
+
     }
 
     public class QuestionMap : ClassMap<Question>

@@ -1,5 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<Gramps.Controllers.ViewModels.QuestionListViewModel>" %>
 <%@ Import Namespace="Gramps.Helpers" %>
+<%@ Import Namespace="Gramps.Controllers" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
 	Question Index
@@ -13,7 +14,7 @@
 
 
 <p>
-    <%: Html.ActionLink("Create New", "Create") %>
+    <%: Html.ActionLink<QuestionController>(a => a.Create(Model.TemplateId, Model.CallForProposalId), "Create", new {@class="button"}) %>
 </p>
 
 <% Html.Grid(Model.QuestionList) 
@@ -28,7 +29,9 @@
 				<%});
                                 col.Bound(x => x.Order);
                                 col.Bound(x => x.Name);
-                                col.Bound(x => x.QuestionType.Name);
+                                col.Bound(x => x.QuestionType.Name).Title("Type");
+                                col.Bound(x => x.OptionChoices).Title("Options");
+                                col.Bound(x => x.ValidationClasses).Title("Validators");
 			            col.Template(x => {%>
 				<%: Html.ActionLink("Delete", "Delete", new { id = x.Id }) %>           
 				<%});

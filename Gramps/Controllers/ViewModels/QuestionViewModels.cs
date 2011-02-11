@@ -36,4 +36,37 @@ namespace Gramps.Controllers.ViewModels
             return viewModel;
         }
     }
+
+    public class QuestionViewModel : NavigationViewModel
+    {
+        public Question Question { get; set; }
+        public IEnumerable<QuestionType> QuestionTypes { get; set; }
+        public IEnumerable<Validator> Validators { get; set; }
+
+        public static QuestionViewModel Create(IRepository repository, int? templateId, int? callForProposalId)
+        {
+            Check.Require(repository != null, "Repository must be supplied");
+            var viewModel = new QuestionViewModel
+            {
+                Question = new Question(),
+                QuestionTypes = repository.OfType<QuestionType>().GetAll(), 
+                Validators = repository.OfType<Validator>().GetAll()
+            };
+
+            if (templateId != null)
+            {
+                viewModel.IsTemplate = true;
+                viewModel.TemplateId = templateId;
+            }
+            else if (callForProposalId != null)
+            {
+                viewModel.IsCallForProposal = true;
+                viewModel.CallForProposalId = callForProposalId;
+            }
+
+            Check.Require(viewModel.IsTemplate || viewModel.IsCallForProposal, "Must have either a template or a call for proposal");
+
+            return viewModel;
+        }
+    }
 }
