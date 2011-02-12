@@ -152,7 +152,6 @@
                   <%}%>
                   $("p#Option").show();
             <%}%>
-            $(".questionOptions[0]").attr("value", "test");
         });
 
         function AddOptionInput(obj) {
