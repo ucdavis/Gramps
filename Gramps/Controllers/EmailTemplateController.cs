@@ -33,6 +33,11 @@ namespace Gramps.Controllers
         // GET: /EmailTemplate/
         public ActionResult Index(int? templateId, int? callForProposalId)
         {
+            if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
             var viewModel = EmailTemplateListViewModel.Create(Repository, templateId, callForProposalId);
 
             if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
@@ -62,9 +67,19 @@ namespace Gramps.Controllers
         // GET: /EmailTemplate/Edit/5
         public ActionResult Edit(int id, int? templateId, int? callForProposalId)
         {
+            if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
             var emailtemplate = _emailtemplateRepository.GetNullableById(id);
 
             if (emailtemplate == null) return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
+            if (!_accessService.HasSameId(emailtemplate.Template, emailtemplate.CallForProposal, templateId, callForProposalId))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
 
             var viewModel = EmailTemplateViewModel.Create(Repository, templateId, callForProposalId);
             viewModel.EmailTemplate = emailtemplate;
@@ -78,12 +93,23 @@ namespace Gramps.Controllers
         [ValidateInput(false)]
         public ActionResult Edit(int id, int? templateId, int? callForProposalId, EmailTemplate emailtemplate)
         {
+            if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+
             var emailtemplateToEdit = _emailtemplateRepository.GetNullableById(id);
 
             if (emailtemplateToEdit == null)
             {
                 Message = "Email Template not found.";
                 return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
+            }
+            if (!_accessService.HasSameId(emailtemplateToEdit.Template, emailtemplateToEdit.CallForProposal, templateId, callForProposalId))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
             TransferValues(emailtemplate, emailtemplateToEdit);

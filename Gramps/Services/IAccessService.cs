@@ -8,6 +8,7 @@ namespace Gramps.Services
     public interface IAccessService
     {
         bool HasAccess(int? templateId, int? callForProposalId, string userId);
+        bool HasSameId(Template template, CallForProposal callForProposal, int? templateId, int? callForProposalId);
     }
 
     public class AccessService : IAccessService
@@ -34,6 +35,30 @@ namespace Gramps.Services
                 return callForProposal.IsEditor(userId); 
             }
             return false;
+        }
+
+        public virtual bool HasSameId(Template template, CallForProposal callForProposal, int? templateId, int? callForProposalId)
+        {
+            if (template != null)
+            {
+                if (templateId == null || templateId != template.Id)
+                {
+                    return false;
+                }
+            }
+            if (callForProposal != null)
+            {
+                if (callForProposalId == null || callForProposalId != callForProposal.Id)
+                {
+                    return false;
+                }
+            }
+            if (template == null && callForProposal == null)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

@@ -255,7 +255,11 @@ namespace Gramps.Controllers
                 Message = "EmailsForCall not found.";
                 return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
             }
-
+            if (!_accessService.HasSameId(emailsforcall.Template, emailsforcall.CallForProposal, templateId, callForProposalId))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
             var viewModel = EmailsForCallViewModel.Create(Repository, emailsforcall.Template, emailsforcall.CallForProposal);
             viewModel.EmailsForCall = emailsforcall;
 
@@ -283,7 +287,11 @@ namespace Gramps.Controllers
                 Message = "EmailsForCall not found.";
                 return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
             }
-
+            if (!_accessService.HasSameId(emailsforcallToEdit.Template, emailsforcallToEdit.CallForProposal, templateId, callForProposalId))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
             //TransferValues(emailsforcall, emailsforcallToEdit);
             emailsforcallToEdit.Email = emailsforcall.Email.ToLower();
 
@@ -342,7 +350,11 @@ namespace Gramps.Controllers
                 Message = "Email not removed";
                 this.RedirectToAction(a => a.Index(templateId, callForProposalId));
             }
-
+            if (!_accessService.HasSameId(emailsforcallToDelete.Template, emailsforcallToDelete.CallForProposal, templateId, callForProposalId))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
             _emailsforcallRepository.Remove(emailsforcallToDelete);
 
             Message = "Email Removed Successfully";

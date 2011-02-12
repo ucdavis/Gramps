@@ -232,6 +232,11 @@ namespace Gramps.Controllers
                 Message = "Not a reviewer";
                 return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
             }
+            if (!_accessService.HasSameId(editor.Template, editor.CallForProposal, templateId, callForProposalId))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
 
             var viewModel = EditorViewModel.Create(Repository, editor.Template, editor.CallForProposal);
 			viewModel.Editor = editor;
@@ -251,7 +256,6 @@ namespace Gramps.Controllers
             }
 
             var editorToEdit = _editorRepository.GetNullableById(id);
-
             if (editor == null)
             {
                 Message = "Reviewer not found";
@@ -261,6 +265,11 @@ namespace Gramps.Controllers
             {
                 Message = "Not a reviewer";
                 return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
+            }
+            if (!_accessService.HasSameId(editorToEdit.Template, editorToEdit.CallForProposal, templateId, callForProposalId))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
             TransferValues(editor, editorToEdit);
@@ -308,6 +317,11 @@ namespace Gramps.Controllers
                 Message = "Can't delete owner.";
                 return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
             }
+            if (!_accessService.HasSameId(editorToDelete.Template, editorToDelete.CallForProposal, templateId, callForProposalId))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
 
             _editorRepository.Remove(editorToDelete);
 
@@ -337,6 +351,11 @@ namespace Gramps.Controllers
             {
                 Message = "Can't Reset non Reviewers";
                 return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
+            }
+            if (!_accessService.HasSameId(editorToReset.Template, editorToReset.CallForProposal, templateId, callForProposalId))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
             editorToReset.ReviewerId = Guid.NewGuid();

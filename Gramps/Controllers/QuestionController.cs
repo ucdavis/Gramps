@@ -146,6 +146,27 @@ namespace Gramps.Controllers
             return View(viewModel);
         }
 
+        public ActionResult Edit(int id, int? templateId, int? callForProposalId)
+        {
+
+            if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+
+            var questionToEdit = _questionRepository.GetNullableById(id);
+            if (questionToEdit == null)
+            {
+                Message = "Question not found";
+                return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
+            }
+
+            var viewModel = QuestionViewModel.Create(Repository, templateId, callForProposalId);
+            viewModel.Question = questionToEdit;
+            return View(viewModel);
+        }
+
     }
 
 
