@@ -146,16 +146,23 @@
             $("#Question_Validators_3").attr("checked", "<%=Model.Question != null && Model.Question.ValidationClasses.Contains("date") ? "checked" : ""%>");
             $("#Question_Validators_4").attr("checked", "<%=Model.Question != null && Model.Question.ValidationClasses.Contains("phoneUS") ? "checked" : ""%>");
             $("#Question_Validators_5").attr("checked", "<%=Model.Question != null && Model.Question.ValidationClasses.Contains("zipUS") ? "checked" : ""%>");
+            <%if(Model.Question != null && Model.Question.Options.Count > 0){%>
+                  <%for (int i = 0; i < Model.Question.Options.Count; i++){%>
+                    AddOptionInput("<%=Model.Question.Options[i].Name %>");
+                  <%}%>
+                  $("p#Option").show();
+            <%}%>
+            $(".questionOptions[0]").attr("value", "test");
         });
 
-        function AddOptionInput() {
+        function AddOptionInput(obj) {
             var index = $("span#OptionsContainer").children().length;
 
             var input = $("<input>");
             var name = "questionOptions[" + index + "]";
             input.attr("id", name);
             input.attr("name", name);
-
+            input.attr("value", obj);
             $("span#OptionsContainer").append(input);
         }
 
@@ -166,7 +173,7 @@
             if ($.inArray(selectedId, typesWithOptions) >= 0) {
                 // it's in the array, it has options
                 $("p#Option").show();
-                $("span#OptionsContainer").empty();
+                //$("span#OptionsContainer").empty();
             }
             else {
                 $("p#Option").hide();
