@@ -1,5 +1,5 @@
-﻿CREATE TABLE [dbo].[QuestionXValidator] (
+﻿/*CREATE TABLE [dbo].[QuestionXValidator] (
     [QuestionId]  INT NOT NULL,
     [ValidatorId] INT NOT NULL
-);
+);*/
 
