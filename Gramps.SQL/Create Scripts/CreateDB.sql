@@ -359,13 +359,13 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [dbo].[QuestionXValidator](
-	[QuestionId] [int] NOT NULL,
-	[ValidatorId] [int] NOT NULL,
+CREATE TABLE [dbo].[QuestionsXValidators](
+	[QuestionsId] [int] NOT NULL,
+	[ValidatorsId] [int] NOT NULL,
  CONSTRAINT [PK_QuestionXValidator] PRIMARY KEY CLUSTERED 
 (
-	[QuestionId] ASC,
-	[ValidatorId] ASC
+	[QuestionsId] ASC,
+	[ValidatorsId] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -505,13 +505,13 @@ REFERENCES [dbo].[Templates] ([id])
 GO
 ALTER TABLE [dbo].[Questions] CHECK CONSTRAINT [FK_Questions_Templates]
 GO
-ALTER TABLE [dbo].[QuestionXValidator]  WITH CHECK ADD  CONSTRAINT [FK_QuestionXValidator_Questions] FOREIGN KEY([QuestionId])
+ALTER TABLE [dbo].[QuestionsXValidators]  WITH CHECK ADD  CONSTRAINT [FK_QuestionXValidator_Questions] FOREIGN KEY([QuestionsId])
 REFERENCES [dbo].[Questions] ([id])
 GO
-ALTER TABLE [dbo].[QuestionXValidator] CHECK CONSTRAINT [FK_QuestionXValidator_Questions]
+ALTER TABLE [dbo].[QuestionsXValidators] CHECK CONSTRAINT [FK_QuestionXValidator_Questions]
 GO
-ALTER TABLE [dbo].[QuestionXValidator]  WITH CHECK ADD  CONSTRAINT [FK_QuestionXValidator_Validators] FOREIGN KEY([ValidatorId])
+ALTER TABLE [dbo].[QuestionsXValidators]  WITH CHECK ADD  CONSTRAINT [FK_QuestionXValidator_Validators] FOREIGN KEY([ValidatorsId])
 REFERENCES [dbo].[Validators] ([id])
 GO
-ALTER TABLE [dbo].[QuestionXValidator] CHECK CONSTRAINT [FK_QuestionXValidator_Validators]
+ALTER TABLE [dbo].[QuestionsXValidators] CHECK CONSTRAINT [FK_QuestionXValidator_Validators]
 GO
