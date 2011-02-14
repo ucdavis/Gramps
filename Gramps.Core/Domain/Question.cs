@@ -159,7 +159,7 @@ namespace Gramps.Core.Domain
 
             HasMany(x => x.Options).Inverse().Cascade.AllDeleteOrphan();
             //HasManyToMany(x => x.Validators).Table("QuestionXValidator").Cascade.SaveUpdate();
-            HasManyToMany(x => x.Validators).Cascade.None();
+            HasManyToMany(x => x.Validators).Cascade.SaveUpdate();
             //HasMany(x => x.Answers);
         }
     }

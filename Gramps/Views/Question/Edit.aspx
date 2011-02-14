@@ -13,6 +13,7 @@
     <% using (Html.BeginForm()) {%>
 
         <%Html.RenderPartial("SharedQuestionSetup"); %>
+        <%: Html.HiddenFor(a => a.Question.Id)  %>
 
         <fieldset>
             <legend>Fields</legend>

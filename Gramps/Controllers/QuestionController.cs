@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using Gramps.Controllers.Filters;
 using Gramps.Controllers.ViewModels;
 using Gramps.Core.Domain;
 using Gramps.Services;
@@ -16,6 +18,7 @@ namespace Gramps.Controllers
     /// <summary>
     /// Controller for the Question class
     /// </summary>
+    [UserOnly]
     public class QuestionController : ApplicationController
     {
         private readonly IAccessService _accessService;
@@ -90,6 +93,23 @@ namespace Gramps.Controllers
 
             MvcValidationAdapter.TransferValidationMessagesTo(ModelState, question.ValidationResults());
 
+            ValidatorsValidation(question);
+
+            if (ModelState.IsValid)
+            {
+                Message = "Question added successfully";
+                _questionRepository.EnsurePersistent(question);
+                return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
+            }
+
+
+            var viewModel = QuestionViewModel.Create(Repository, templateId, callForProposalId);
+            viewModel.Question = question;
+            return View(viewModel);
+        }
+
+        private void ValidatorsValidation(Question question)
+        {
             var validatorsSelected = question.Validators.Count(validator => validator.Class.ToLower().Trim() != "required");
 
             //Validator and Question type validation:
@@ -132,18 +152,6 @@ namespace Gramps.Controllers
                     //No checks
                     break;
             }
-
-            if (ModelState.IsValid)
-            {
-                Message = "Question added successfully";
-                _questionRepository.EnsurePersistent(question);
-                return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
-            }
-
-
-            var viewModel = QuestionViewModel.Create(Repository, templateId, callForProposalId);
-            viewModel.Question = question;
-            return View(viewModel);
         }
 
         public ActionResult Edit(int id, int? templateId, int? callForProposalId)
@@ -165,6 +173,67 @@ namespace Gramps.Controllers
             var viewModel = QuestionViewModel.Create(Repository, templateId, callForProposalId);
             viewModel.Question = questionToEdit;
             return View(viewModel);
+        }
+
+        [HttpPost]
+        public ActionResult Edit(int id, int? templateId, int? callForProposalId, Question question, string[] questionOptions)
+        {
+            if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+
+            var questionToEdit = _questionRepository.GetNullableById(id);
+            if (questionToEdit == null)
+            {
+                Message = "Question not found.";
+                return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
+            }
+            if (!_accessService.HasSameId(questionToEdit.Template, questionToEdit.CallForProposal, templateId, callForProposalId))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+
+            TransferValues(question, questionToEdit, questionOptions);
+            MvcValidationAdapter.TransferValidationMessagesTo(ModelState, questionToEdit.ValidationResults());
+            ValidatorsValidation(questionToEdit);
+
+            if (ModelState.IsValid)
+            {
+                Message = "Question updated successfully";
+                _questionRepository.EnsurePersistent(questionToEdit);
+                return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
+            }
+
+
+            var viewModel = QuestionViewModel.Create(Repository, templateId, callForProposalId);
+            viewModel.Question = questionToEdit;
+            return View(viewModel);
+        }
+
+        /// <summary>
+        /// Transfer editable values from source to destination
+        /// </summary>
+        private static void TransferValues(Question source, Question destination, string[] questionOptions)
+        {
+            destination.Name = source.Name;
+            destination.QuestionType = source.QuestionType;
+            destination.Validators = source.Validators;
+
+            destination.Options.Clear();
+            if (source.QuestionType != null && source.QuestionType.HasOptions && questionOptions != null)
+            {
+                foreach (string s in questionOptions)
+                {
+                    if (!string.IsNullOrEmpty(s))
+                    {
+                        var option = new QuestionOption(s);
+                        destination.AddQuestionOption(option);
+                    }
+                }
+            }
         }
 
     }
