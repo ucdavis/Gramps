@@ -67,16 +67,21 @@ namespace Gramps.Controllers
             }
             Template template = null;
             CallForProposal callforProposal = null;
-            if (templateId.HasValue)
+            var order = 0;
+            if (templateId.HasValue && templateId.Value != 0)
             {
                 template = Repository.OfType<Template>().GetNullableById(templateId.Value);
+                order = _questionRepository.Queryable.Where(a => a.Template == template).Select(a => a.Order).Max() + 1;
             }
-            else if (callForProposalId.HasValue)
+            else if (callForProposalId.HasValue && callForProposalId.Value != 0)
             {
                 callforProposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId.Value);
+                order = _questionRepository.Queryable.Where(a => a.CallForProposal == callforProposal).Select(a => a.Order).Max() + 1;
             }
             question.Template = template;
             question.CallForProposal = callforProposal;
+
+            question.Order = order;
 
             // process the options
             if (question.QuestionType != null && question.QuestionType.HasOptions && questionOptions != null)
@@ -90,6 +95,8 @@ namespace Gramps.Controllers
                     }
                 }
             }
+
+            
 
             MvcValidationAdapter.TransferValidationMessagesTo(ModelState, question.ValidationResults());
 
@@ -167,6 +174,145 @@ namespace Gramps.Controllers
             var viewModel = QuestionViewModel.Create(Repository, templateId, callForProposalId);
             viewModel.Question = questionToEdit;
             return View(viewModel);
+        }
+
+        [HttpPost]
+        public ActionResult Delete(int id, int? templateId, int? callForProposalId)
+        {
+            if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+
+            var questionToDelete = _questionRepository.GetNullableById(id);
+            if (questionToDelete == null)
+            {
+                Message = "Question not found.";
+                return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
+            }
+            if (!_accessService.HasSameId(questionToDelete.Template, questionToDelete.CallForProposal, templateId, callForProposalId))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+            //TODO: Add a check to see if there are answers (not needed for a template)
+
+            _questionRepository.Remove(questionToDelete);
+            Message = "Question removed";
+            return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
+
+        }
+
+        [HttpPost]
+        public ActionResult MoveUp(int id, int? templateId, int? callForProposalId)
+        {
+            if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+
+            var questionToReorder = _questionRepository.GetNullableById(id);
+            if (questionToReorder == null)
+            {
+                Message = "Question not found.";
+                return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
+            }
+            if (
+                !_accessService.HasSameId(questionToReorder.Template, questionToReorder.CallForProposal, templateId,
+                                          callForProposalId))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+
+            Question nextSmaller = null; 
+            if(templateId.HasValue && templateId != 0)
+            {
+                var template = Repository.OfType<Template>().GetNullableById(templateId.Value);
+                nextSmaller = _questionRepository.Queryable
+                    .Where(a => a.Template == template && a.Order < questionToReorder.Order).OrderByDescending(a => a.Order)
+                    .FirstOrDefault();
+            }
+            if (callForProposalId.HasValue && callForProposalId != 0)
+            {
+                var callForProposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId.Value);
+                nextSmaller = _questionRepository.Queryable
+                    .Where(a => a.CallForProposal == callForProposal && a.Order < questionToReorder.Order).OrderByDescending(a => a.Order).LastOrDefault();
+            }
+            if (nextSmaller != null)
+            {
+                var saveOrder = questionToReorder.Order;
+                questionToReorder.Order = nextSmaller.Order;
+                _questionRepository.EnsurePersistent(questionToReorder);
+
+                nextSmaller.Order = saveOrder;
+                _questionRepository.EnsurePersistent(nextSmaller);
+
+                Message = "Moved Up.";
+                return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
+            }
+
+            Message = "Not moved.";
+            return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
+
+        }
+
+
+        [HttpPost]
+        public ActionResult MoveDown(int id, int? templateId, int? callForProposalId)
+        {
+            if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+
+            var questionToReorder = _questionRepository.GetNullableById(id);
+            if (questionToReorder == null)
+            {
+                Message = "Question not found.";
+                return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
+            }
+            if (
+                !_accessService.HasSameId(questionToReorder.Template, questionToReorder.CallForProposal, templateId,
+                                          callForProposalId))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+
+            Question nextBigger = null;
+            if (templateId.HasValue && templateId != 0)
+            {
+                var template = Repository.OfType<Template>().GetNullableById(templateId.Value);
+                nextBigger = _questionRepository.Queryable
+                    .Where(a => a.Template == template && a.Order > questionToReorder.Order).OrderBy(a => a.Order)
+                    .FirstOrDefault();
+            }
+            if (callForProposalId.HasValue && callForProposalId != 0)
+            {
+                var callForProposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId.Value);
+                nextBigger = _questionRepository.Queryable
+                    .Where(a => a.CallForProposal == callForProposal && a.Order > questionToReorder.Order).OrderBy(a => a.Order).LastOrDefault();
+            }
+            if (nextBigger != null)
+            {
+                var saveOrder = questionToReorder.Order;
+                questionToReorder.Order = nextBigger.Order;
+                _questionRepository.EnsurePersistent(questionToReorder);
+
+                nextBigger.Order = saveOrder;
+                _questionRepository.EnsurePersistent(nextBigger);
+
+                Message = "Moved Down.";
+                return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
+            }
+
+            Message = "Not moved.";
+            return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
+
         }
 
         #region Private Methods

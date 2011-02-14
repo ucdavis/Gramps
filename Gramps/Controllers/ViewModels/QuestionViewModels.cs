@@ -23,13 +23,13 @@ namespace Gramps.Controllers.ViewModels
             if (templateId != null)
             {
                 viewModel.IsTemplate = true;
-                viewModel.QuestionList = repository.OfType<Question>().Queryable.Where(a => a.Template.Id == templateId);
+                viewModel.QuestionList = repository.OfType<Question>().Queryable.Where(a => a.Template.Id == templateId).OrderBy(a => a.Order);
                 viewModel.TemplateId = templateId;
             }
             else if (callForProposalId != null)
             {
                 viewModel.IsCallForProposal = true;
-                viewModel.QuestionList = repository.OfType<Question>().Queryable.Where(a => a.CallForProposal.Id == callForProposalId);
+                viewModel.QuestionList = repository.OfType<Question>().Queryable.Where(a => a.CallForProposal.Id == callForProposalId).OrderBy(a => a.Order);
                 viewModel.CallForProposalId = callForProposalId;
             }
 

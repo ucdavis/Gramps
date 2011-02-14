@@ -2,11 +2,13 @@
 <%@ Import Namespace="Gramps.Controllers" %>
     <ul class="btn">
         <li>
-            <%= Html.ActionLink<TemplateController>(a => a.Index() , "Back to List") %>
+            <%if (Model.IsTemplate){%>
+                <%=Html.ActionLink<TemplateController>(a => a.Index(), "Template List")%>
+            <%}%>
         </li>
         <li>
             <%if (Model.IsTemplate){%>
-            <%:Html.ActionLink<TemplateController>(a => a.Edit((int)Model.TemplateId), "Details")%>
+                <%:Html.ActionLink<TemplateController>(a => a.Edit((int)Model.TemplateId), "Details")%>
             <%}else{%>
             <%--<%:Html.ActionLink<TemplateController>(a => a.Edit((int) Model.templateId), "Details")%>--%>
             <%}%>

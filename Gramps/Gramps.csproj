@@ -235,9 +235,12 @@
     <Content Include="Content\Windows7\sprite.png" />
     <Content Include="Global.asax" />
     <Content Include="Images\ajax-loader.gif" />
+    <Content Include="Images\arrow_fat_down.gif" />
+    <Content Include="Images\arrow_fat_up.gif" />
     <Content Include="Images\branding.jpg" />
     <Content Include="Images\Cancel-1.png" />
     <Content Include="Images\Cancel.png" />
+    <Content Include="Images\cancled_transparent.png" />
     <Content Include="Images\CheckMark-1.png" />
     <Content Include="Images\CheckMark.png" />
     <Content Include="Images\loading.gif" />
@@ -503,6 +506,7 @@
     <Content Include="Views\EmailTemplate\Index.aspx" />
     <Content Include="Views\Question\Create.aspx" />
     <Content Include="Views\Question\Edit.aspx" />
+    <Content Include="Views\Question\Edit2.aspx" />
     <Content Include="Views\Question\Index.aspx" />
     <Content Include="Views\Question\SharedQuestionFields.ascx" />
     <Content Include="Views\Question\SharedQuestionSample.ascx" />

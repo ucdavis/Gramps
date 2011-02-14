@@ -5,15 +5,7 @@
             <div class="editor-field">
                 <%: Html.TextBoxFor(model => model.Question.Name, new { style = "width: 700px" })%>
                 <%: Html.ValidationMessageFor(model => model.Question.Name)%>
-            </div>
-            
-            <div class="editor-label">
-                <%: Html.LabelFor(model => model.Question.Order)%>
-            </div>
-            <div class="editor-field">
-                <%: Html.TextBoxFor(model => model.Question.Order)%>
-                <%: Html.ValidationMessageFor(model => model.Question.Order)%>
-            </div>
+            </div>           
 
             <div class="editor-label">
                 <%: Html.LabelFor(model => model.Validators) %>
