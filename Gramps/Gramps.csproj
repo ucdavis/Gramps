@@ -502,7 +502,11 @@
     <Content Include="Views\EmailTemplate\Edit.aspx" />
     <Content Include="Views\EmailTemplate\Index.aspx" />
     <Content Include="Views\Question\Create.aspx" />
+    <Content Include="Views\Question\Edit.aspx" />
     <Content Include="Views\Question\Index.aspx" />
+    <Content Include="Views\Question\SharedQuestionFields.ascx" />
+    <Content Include="Views\Question\SharedQuestionSample.ascx" />
+    <Content Include="Views\Question\SharedQuestionSetup.ascx" />
     <Content Include="Views\Shared\LogOnUserControl.ascx" />
     <Content Include="Views\Shared\NavigationButtons.ascx" />
     <Content Include="Views\Template\Create.aspx" />

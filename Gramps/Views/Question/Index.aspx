@@ -22,7 +22,7 @@
             .PrefixUrlParameters(false) //True if >0 sortable/pageable grids
             .Columns(col => {
             col.Template(x => {%>
-				<%: Html.ActionLink("Edit", "Edit", new { id = x.Id }) %>           
+				    <%:Html.ActionLink<QuestionController>(a => a.Edit(x.Id, Model.TemplateId, Model.CallForProposalId), "Edit")%>           
 				<%});
 			col.Template(x => {%>
 				<%: Html.ActionLink("Details", "Details", new { id = x.Id }) %>           
