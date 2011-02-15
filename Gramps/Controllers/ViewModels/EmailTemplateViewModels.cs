@@ -19,13 +19,13 @@ namespace Gramps.Controllers.ViewModels
             Check.Require(repository != null, "Repository must be supplied");
             var viewModel = new EmailTemplateListViewModel();
 
-            if (templateId != null)
+            if (templateId != null  && templateId != 0)
             {
                 viewModel.IsTemplate = true;
                 viewModel.EmailTemplateList = repository.OfType<EmailTemplate>().Queryable.Where(a => a.Template.Id == templateId);
                 viewModel.TemplateId = templateId;
             }
-            else if (callForProposalId != null)
+            else if (callForProposalId != null && callForProposalId != 0)
             {
                 viewModel.IsCallForProposal = true;
                 viewModel.EmailTemplateList = repository.OfType<EmailTemplate>().Queryable.Where(a => a.CallForProposal.Id == callForProposalId);
@@ -56,12 +56,12 @@ namespace Gramps.Controllers.ViewModels
             Check.Require(repository != null, "Repository must be supplied");
 
             var viewModel = new EmailTemplateViewModel { EmailTemplate = new EmailTemplate() };
-            if (templateId != null)
+            if (templateId != null && templateId != 0)
             {
                 viewModel.IsTemplate = true;
                 viewModel.TemplateId = templateId;
             }
-            else if (callForProposalId != null)
+            else if (callForProposalId != null && callForProposalId != 0)
             {
                 viewModel.IsCallForProposal = true;
                 viewModel.CallForProposalId = callForProposalId;

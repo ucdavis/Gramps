@@ -46,13 +46,13 @@ namespace Gramps.Controllers.ViewModels
             Check.Require(repository != null, "Repository must be supplied");
             var viewModel = new EmailsForCallListViewModel();
 
-            if (templateId != null)
+            if (templateId != null && templateId != 0)
             {
                 viewModel.IsTemplate = true;
                 viewModel.EmailsForCallList = repository.OfType<EmailsForCall>().Queryable.Where(a => a.Template.Id == templateId);
                 viewModel.TemplateId = templateId;
             }
-            else if (callForProposalId != null)
+            else if (callForProposalId != null && callForProposalId != 0)
             {
                 viewModel.IsCallForProposal = true;
                 viewModel.EmailsForCallList = repository.OfType<EmailsForCall>().Queryable.Where(a => a.CallForProposal.Id == callForProposalId);

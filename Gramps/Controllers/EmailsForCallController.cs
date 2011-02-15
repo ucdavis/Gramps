@@ -49,11 +49,11 @@ namespace Gramps.Controllers
             Template template = null;
             CallForProposal callforProposal = null;
 
-            if (templateId.HasValue)
+            if (templateId.HasValue && templateId != 0)
             {
                 template = Repository.OfType<Template>().GetNullableById(templateId.Value);
             }
-            else if (callForProposalId.HasValue)
+            else if (callForProposalId.HasValue && callForProposalId != 0)
             {
                 callforProposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId.Value);
             }
@@ -78,12 +78,12 @@ namespace Gramps.Controllers
             var existingList = new List<string>();
             var notAddedSb = new StringBuilder();
 
-            if (templateId.HasValue)
+            if (templateId.HasValue && templateId != 0)
             {
                 template = Repository.OfType<Template>().GetNullableById(templateId.Value);
                 existingList = _emailsforcallRepository.Queryable.Where(a => a.Template == template).Select(a => a.Email).ToList();
             }
-            else if (callForProposalId.HasValue)
+            else if (callForProposalId.HasValue && callForProposalId != 0)
             {
                 callforProposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId.Value);
                 existingList = _emailsforcallRepository.Queryable.Where(a => a.CallForProposal == callforProposal).Select(a => a.Email).ToList();
@@ -162,11 +162,11 @@ namespace Gramps.Controllers
             Template template = null;
             CallForProposal callforProposal = null;
 
-            if (templateId.HasValue)
+            if (templateId.HasValue && templateId != 0)
             {
                 template = Repository.OfType<Template>().GetNullableById(templateId.Value);
             }
-            else if (callForProposalId.HasValue)
+            else if (callForProposalId.HasValue && callForProposalId != 0)
             {
                 callforProposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId.Value);
             }
@@ -194,7 +194,7 @@ namespace Gramps.Controllers
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
-            if (templateId.HasValue)
+            if (templateId.HasValue && templateId != 0)
             {
                 template = Repository.OfType<Template>().GetNullableById(templateId.Value);
                 if(_emailsforcallRepository.Queryable.Where(a => a.Template == template && a.Email == emailsforcall.Email).Any())
@@ -202,7 +202,7 @@ namespace Gramps.Controllers
                     ModelState.AddModelError("Email", "Email already exists");
                 }
             }
-            else if (callForProposalId.HasValue)
+            else if (callForProposalId.HasValue && callForProposalId != 0)
             {
                 callforProposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId.Value);
                 if (_emailsforcallRepository.Queryable.Where(a => a.CallForProposal == callforProposal && a.Email == emailsforcall.Email).Any())
@@ -296,8 +296,8 @@ namespace Gramps.Controllers
             emailsforcallToEdit.Email = emailsforcall.Email.ToLower();
 
             emailsforcallToEdit.TransferValidationMessagesTo(ModelState);
-                                  
-            if (templateId.HasValue)
+
+            if (templateId.HasValue && templateId != 0)
             {
                 template = Repository.OfType<Template>().GetNullableById(templateId.Value);
                 if(_emailsforcallRepository.Queryable.Where(a => a.Template == template && a.Id != emailsforcallToEdit.Id && a.Email == emailsforcall.Email).Any())
@@ -305,7 +305,7 @@ namespace Gramps.Controllers
                     ModelState.AddModelError("Email", "Email already exists");
                 }
             }
-            else if (callForProposalId.HasValue)
+            else if (callForProposalId.HasValue && callForProposalId != 0)
             {
                 callforProposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId.Value);
                 if (_emailsforcallRepository.Queryable.Where(a => a.CallForProposal == callforProposal && a.Id != emailsforcallToEdit.Id && a.Email == emailsforcall.Email).Any())

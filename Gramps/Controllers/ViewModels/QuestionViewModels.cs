@@ -20,13 +20,13 @@ namespace Gramps.Controllers.ViewModels
             Check.Require(repository != null, "Repository must be supplied");
             var viewModel = new QuestionListViewModel();
 
-            if (templateId != null)
+            if (templateId != null && templateId != 0)
             {
                 viewModel.IsTemplate = true;
                 viewModel.QuestionList = repository.OfType<Question>().Queryable.Where(a => a.Template.Id == templateId).OrderBy(a => a.Order);
                 viewModel.TemplateId = templateId;
             }
-            else if (callForProposalId != null)
+            else if (callForProposalId != null && callForProposalId != 0)
             {
                 viewModel.IsCallForProposal = true;
                 viewModel.QuestionList = repository.OfType<Question>().Queryable.Where(a => a.CallForProposal.Id == callForProposalId).OrderBy(a => a.Order);
@@ -53,12 +53,12 @@ namespace Gramps.Controllers.ViewModels
                 Validators = repository.OfType<Validator>().GetAll()
             };
 
-            if (templateId != null)
+            if (templateId != null && templateId != 0)
             {
                 viewModel.IsTemplate = true;
                 viewModel.TemplateId = templateId;
             }
-            else if (callForProposalId != null)
+            else if (callForProposalId != null && callForProposalId != 0)
             {
                 viewModel.IsCallForProposal = true;
                 viewModel.CallForProposalId = callForProposalId;

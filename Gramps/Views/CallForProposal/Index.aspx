@@ -1,18 +1,18 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<IEnumerable<Gramps.Core.Domain.Template>>" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<IEnumerable<Gramps.Core.Domain.CallForProposal>>" %>
 <%@ Import Namespace="Gramps.Helpers" %>
 <%@ Import Namespace="Gramps.Controllers" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
-	Template Index
+	Calls Index
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
-    <h2>Template Index</h2><br/>
+    <h2>Calls Index</h2><br />
 
 
 <p>
-    <%: Html.ActionLink<TemplateController>(a => a.Create(), "Create Template", new {@class="button"}) %>
+    <%: Html.ActionLink<CallForProposalController>(a => a.Create(), "Create Call", new {@class="button"}) %>
 </p>
 
 <% Html.Grid(Model) 
@@ -24,6 +24,9 @@
 				<%});
 			            col.Bound(x => x.Name);
                         col.Bound(x => x.IsActive);
+                        col.Bound(x => x.CreatedDate);
+                        col.Bound(x => x.EndDate);
+                        col.Bound(x => x.CallsSentDate);
                         })
             .Pageable()
             .Sortable()
@@ -33,5 +36,8 @@
 </asp:Content>
 
 <asp:Content ID="Content3" ContentPlaceHolderID="HeaderContent" runat="server">
+</asp:Content>
+
+<asp:Content ID="Content4" ContentPlaceHolderID="logoContent" runat="server">
 </asp:Content>
 

@@ -67,11 +67,11 @@ namespace Gramps.Controllers
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
-            if (templateId.HasValue)
+            if (templateId.HasValue && templateId != 0)
             {
                 template = Repository.OfType<Template>().GetNullableById(templateId.Value);
             }
-            else if (callForProposalId.HasValue)
+            else if (callForProposalId.HasValue && callForProposalId != 0)
             {
                 callforProposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId.Value);
             }
@@ -93,11 +93,11 @@ namespace Gramps.Controllers
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
-            if (templateId.HasValue)
+            if (templateId.HasValue && templateId != 0)
             {
                 template = Repository.OfType<Template>().GetNullableById(templateId.Value);
             }
-            else if (callForProposalId.HasValue)
+            else if (callForProposalId.HasValue && callForProposalId != 0)
             {
                 callforProposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId.Value);
             }
@@ -148,11 +148,11 @@ namespace Gramps.Controllers
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
-            if (templateId.HasValue)
+            if (templateId.HasValue && templateId != 0)
             {
                 template = Repository.OfType<Template>().GetNullableById(templateId.Value);
             }
-            else if (callForProposalId.HasValue)
+            else if (callForProposalId.HasValue && callForProposalId != 0)
             {
                 callforProposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId.Value);
             }
@@ -175,11 +175,11 @@ namespace Gramps.Controllers
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
-            if (templateId.HasValue)
+            if (templateId.HasValue && templateId != 0)
             {
                 template = Repository.OfType<Template>().GetNullableById(templateId.Value);
             }
-            else if (callForProposalId.HasValue)
+            else if (callForProposalId.HasValue && callForProposalId !=0)
             {
                 callforProposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId.Value);
             }
@@ -321,6 +321,10 @@ namespace Gramps.Controllers
             {
                 Message = "You do not have access to that.";
                 return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+            if (editorToDelete.CallForProposal != null)
+            {
+                editorToDelete.CallForProposal.RemoveEditor(editorToDelete);
             }
 
             _editorRepository.Remove(editorToDelete);

@@ -130,6 +130,7 @@
     <Compile Include="ComponentRegistrar.asax.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ApplicationController.cs" />
+    <Compile Include="Controllers\CallForProposalController.cs" />
     <Compile Include="Controllers\EditorController.cs" />
     <Compile Include="Controllers\EmailsForCallController.cs" />
     <Compile Include="Controllers\EmailTemplateController.cs" />
@@ -137,6 +138,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\QuestionController.cs" />
     <Compile Include="Controllers\TemplateController.cs" />
+    <Compile Include="Controllers\ViewModels\CallForProposalViewModels.cs" />
     <Compile Include="Controllers\ViewModels\EditorViewModels.cs" />
     <Compile Include="Controllers\ViewModels\EmailsForCallViewModels.cs" />
     <Compile Include="Controllers\ViewModels\EmailTemplateViewModels.cs" />
@@ -494,6 +496,9 @@
     <Content Include="Scripts\tiny_mce\utils\validate.js" />
     <Content Include="Scripts\xVal.jquery.validate.js" />
     <Content Include="Views\Account\LogOn.aspx" />
+    <Content Include="Views\CallForProposal\Create.aspx" />
+    <Content Include="Views\CallForProposal\Edit.aspx" />
+    <Content Include="Views\CallForProposal\Index.aspx" />
     <Content Include="Views\Editor\AddEditor.aspx" />
     <Content Include="Views\Editor\CreateReviewer.aspx" />
     <Content Include="Views\Editor\EditReviewer.aspx" />

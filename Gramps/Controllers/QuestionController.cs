@@ -239,7 +239,8 @@ namespace Gramps.Controllers
             {
                 var callForProposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId.Value);
                 nextSmaller = _questionRepository.Queryable
-                    .Where(a => a.CallForProposal == callForProposal && a.Order < questionToReorder.Order).OrderByDescending(a => a.Order).LastOrDefault();
+                    .Where(a => a.CallForProposal == callForProposal && a.Order < questionToReorder.Order).OrderByDescending(a => a.Order)
+                    .FirstOrDefault();
             }
             if (nextSmaller != null)
             {
@@ -295,7 +296,8 @@ namespace Gramps.Controllers
             {
                 var callForProposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId.Value);
                 nextBigger = _questionRepository.Queryable
-                    .Where(a => a.CallForProposal == callForProposal && a.Order > questionToReorder.Order).OrderBy(a => a.Order).LastOrDefault();
+                    .Where(a => a.CallForProposal == callForProposal && a.Order > questionToReorder.Order).OrderBy(a => a.Order)
+                    .FirstOrDefault();
             }
             if (nextBigger != null)
             {

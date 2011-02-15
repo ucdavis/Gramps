@@ -17,6 +17,21 @@ namespace Gramps.Core.Domain
         {            
             SetDefaults();
             TemplateGeneratedFrom = template;
+            Name = template.Name;
+
+            #region Copy/Add Editors
+            var owner = new Editor();
+            owner.IsOwner = true;
+            owner.User = user;
+            AddEditor(owner);
+            foreach (var editor in template.Editors)
+            {
+                if (!editor.IsOwner)
+                {
+                    AddEditor(editor);
+                }
+            }
+            #endregion Copy/Add Editors
 
             #region Added Emails to send out call for proposals to
             foreach (var emailsForCall in template.Emails)
@@ -45,19 +60,15 @@ namespace Gramps.Core.Domain
             }
             #endregion Copy/Add Required Email templates
 
-            #region Copy/Add Editors
-            var owner = new Editor();
-            owner.IsOwner = true;
-            owner.User = user;
-            AddEditor(owner);
-            foreach (var editor in template.Editors)
+            #region Copy Questions
+
+            foreach (var question in template.Questions)
             {
-                if (!editor.IsOwner)
-                {
-                    AddEditor(editor);
-                }
+                AddQuestion(question);
             }
-            #endregion Copy/Add Editors
+    
+
+            #endregion Copy Questions
                       
         }
         public CallForProposal(string name)
@@ -158,7 +169,7 @@ namespace Gramps.Core.Domain
             //newEditor.Comments = 
             newEditor.IsOwner = editor.IsOwner;
             newEditor.ReviewerEmail = editor.ReviewerEmail;
-            //newEditor.ReviewerId = new Guid(); //Should be done in constructor
+            newEditor.ReviewerId = editor.ReviewerId; //Copy the same one unless they reset
             newEditor.ReviewerName = editor.ReviewerName;
             newEditor.Template = null;
             newEditor.User = editor.User;
@@ -180,7 +191,7 @@ namespace Gramps.Core.Domain
             newQuestion.CallForProposal = this;
             newQuestion.QuestionType = question.QuestionType;
             newQuestion.Name = question.Name;
-            newQuestion.Order = Questions.Count + 1;
+            newQuestion.Order = question.Order;
             newQuestion.Template = null;
             if (question.Options != null)
             {

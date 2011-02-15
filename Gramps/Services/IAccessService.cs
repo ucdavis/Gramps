@@ -22,13 +22,13 @@ namespace Gramps.Services
 
         public virtual bool HasAccess(int? templateId, int? callForProposalId, string userId)
         {
-            if (templateId !=null)
+            if (templateId !=null && templateId != 0)
             {
                 var template = _repository.OfType<Template>().GetNullableById(templateId.Value);
                 Check.Require(template != null, "Template is required");
                 return template.IsEditor(userId);
             }
-            if (callForProposalId != null)
+            if (callForProposalId != null && callForProposalId != 0)
             {
                 var callForProposal = _repository.OfType<CallForProposal>().GetNullableById(callForProposalId.Value);
                 Check.Require(callForProposal != null, "CallForProposal is required");

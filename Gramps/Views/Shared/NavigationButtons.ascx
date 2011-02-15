@@ -5,12 +5,15 @@
             <%if (Model.IsTemplate){%>
                 <%=Html.ActionLink<TemplateController>(a => a.Index(), "Template List")%>
             <%}%>
+            <%else if (Model.IsCallForProposal){%>
+                <%=Html.ActionLink<CallForProposalController>(a => a.Index(), "Call Index") %>
+            <%}%>
         </li>
         <li>
             <%if (Model.IsTemplate){%>
                 <%:Html.ActionLink<TemplateController>(a => a.Edit((int)Model.TemplateId), "Details")%>
-            <%}else{%>
-            <%--<%:Html.ActionLink<TemplateController>(a => a.Edit((int) Model.templateId), "Details")%>--%>
+            <%}else if(Model.IsCallForProposal){%>
+                <%:Html.ActionLink<CallForProposalController>(a => a.Edit((int) Model.CallForProposalId), "Details")%>
             <%}%>
         </li>
         <li>

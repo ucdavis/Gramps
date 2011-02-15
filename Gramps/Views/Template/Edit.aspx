@@ -2,14 +2,14 @@
 <%@ Import Namespace="Gramps.Controllers" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
-	Edit
+	Edit Template
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
     <% Html.RenderPartial("NavigationButtons"); %>
 
-    <h2>Details</h2>
+    <h2>Edit Template</h2>
 
 	<%= Html.ClientSideValidation<Gramps.Controllers.TemplateViewModel>() %>
 
