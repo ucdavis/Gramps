@@ -26,8 +26,8 @@
 			            col.Bound(x => x.Name);
                         col.Bound(x => x.IsActive);
                         })
-            .Pageable()
-            .Sortable()
+            //.Pageable()
+            //.Sortable()
             .Render(); 
         %>
 

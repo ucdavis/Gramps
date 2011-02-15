@@ -15,20 +15,41 @@
     <% using (Html.BeginForm()) {%>
         <%= Html.AntiForgeryToken() %>
         <%: Html.ValidationSummary(true) %>
+        <%:Html.HiddenFor(a => a.CallForProposal.Id) %>
 
         <fieldset>
             <legend>Fields</legend>
+            <div class="editor-label">
+                <%: Html.LabelFor(model => model.CallForProposal.Name) %>
+            </div>
+            <div class="editor-field">
+                <%: Html.TextBoxFor(model => model.CallForProposal.Name)%>
+                <%: Html.ValidationMessageFor(model => model.CallForProposal.Name)%>
+            </div>
+            
+            <div class="editor-label">
+                <%: Html.LabelFor(model => model.CallForProposal.IsActive)%>
+            </div>
+            <div class="editor-field">
+                <%: Html.CheckBoxFor(model => model.CallForProposal.IsActive)%>
+                <%: Html.ValidationMessageFor(model => model.CallForProposal.IsActive)%>
+            </div>           
+            
+            <div class="editor-label">
+                <%: Html.LabelFor(model => model.CallForProposal.EndDate)%>
+            </div>
+            <div class="editor-field">
+                <%: Html.TextBoxFor(model => model.CallForProposal.EndDate, String.Format("{0:g}", Model.CallForProposal.EndDate))%>
+                <%: Html.ValidationMessageFor(model => model.CallForProposal.EndDate)%>
+            </div>           
             
             <p>
-                <input type="submit" value="Edit" />
+                <input type="submit" value="Save" />
             </p>
         </fieldset>
 
     <% } %>
 
-    <div>
-        <%: Html.ActionLink("Back to List", "Index") %>
-    </div>
 
 </asp:Content>
 

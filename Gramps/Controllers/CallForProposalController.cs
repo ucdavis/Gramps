@@ -179,7 +179,9 @@ namespace Gramps.Controllers
         /// </summary>
         private static void TransferValues(CallForProposal source, CallForProposal destination)
         {
-            throw new NotImplementedException();
+            destination.Name = source.Name;
+            destination.EndDate = source.EndDate;
+            destination.IsActive = source.IsActive;
         }
 
     }
