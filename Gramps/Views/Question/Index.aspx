@@ -11,7 +11,7 @@
     <% Html.RenderPartial("NavigationButtons"); %>
 
     <h2>Index</h2><br/>
-
+    
 
 <p>
     <%: Html.ActionLink<QuestionController>(a => a.Create(Model.TemplateId, Model.CallForProposalId), "Create", new {@class="button"}) %>
@@ -22,7 +22,7 @@
             .PrefixUrlParameters(false) //True if >0 sortable/pageable grids
             .Columns(col => {
             col.Template(x => {%>
-				    <%:Html.ActionLink<QuestionController>(a => a.Edit(x.Id, Model.TemplateId, Model.CallForProposalId), "Edit")%>
+				    <%:Html.ActionLink<QuestionController>(a => a.Edit(x.Id, Model.TemplateId, Model.CallForProposalId), ".   .", new { @class = "edit_button" })%>
 				<%}).Title("Edit");
 			            col.Template(x => {%>
 				<% using (Html.BeginForm<QuestionController>(b => b.MoveUp(x.Id, Model.TemplateId, Model.CallForProposalId), FormMethod.Post, new { name = "MoveUpQuestionForm" })){%>
@@ -59,7 +59,6 @@
             $("input.DeleteQuestion").click(function (event) { $(this).parents("form[name='DeleteQuestionForm']").submit(); });
             $("input.MoveUpQuestion").click(function (event) { $(this).parents("form[name='MoveUpQuestionForm']").submit(); });
             $("input.MoveDownQuestion").click(function (event) { $(this).parents("form[name='MoveDownQuestionForm']").submit(); });
-            //$("input.EditQuestion").click(function (event) { $(this).parents("form[name='EditQuestionForm']").submit(); });
         });
     </script>
 
@@ -87,17 +86,7 @@
             color:#0D548A;
         }
 
-        .edit_button
-        {
-            background: url("../Content/Common/Icons/edit.png") no-repeat scroll 0 0 transparent;
-            border:0;
-            width: 15px;
-            cursor:pointer;
-        }
-        .edit_button:hover
-        {
-            color:#0D548A;
-        }
+
         
         .remove_button
         {

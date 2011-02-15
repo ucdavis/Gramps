@@ -276,3 +276,15 @@ div.t-grid {}
     color:#212121;
     font-weight:normal;
 }
+
+.edit_button
+{
+    background: url("../Content/Common/Icons/edit.png") no-repeat scroll 0 0 transparent;
+    border:0;
+    width: 15px;
+    cursor:pointer;          
+}
+.edit_button:hover
+{
+    color:#0D548A;
+}

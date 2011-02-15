@@ -20,8 +20,9 @@
             .PrefixUrlParameters(false) //True if >0 sortable/pageable grids
             .Columns(col => {
             col.Template(x => {%>
-				<%: Html.ActionLink("Edit", "Edit", new { id = x.Id }) %>           
-				<%});
+				<%--<%: Html.ActionLink("Edit", "Edit", new { id = x.Id }) %>--%>  
+                <%: Html.ActionLink<TemplateController>(a => a.Edit(x.Id), ".   .", new { @class = "edit_button" }) %>         
+				<%}).Title("Edit");
 			            col.Bound(x => x.Name);
                         col.Bound(x => x.IsActive);
                         })

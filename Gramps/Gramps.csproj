@@ -511,7 +511,6 @@
     <Content Include="Views\EmailTemplate\Index.aspx" />
     <Content Include="Views\Question\Create.aspx" />
     <Content Include="Views\Question\Edit.aspx" />
-    <Content Include="Views\Question\Edit2.aspx" />
     <Content Include="Views\Question\Index.aspx" />
     <Content Include="Views\Question\SharedQuestionFields.ascx" />
     <Content Include="Views\Question\SharedQuestionSample.ascx" />
