@@ -35,10 +35,12 @@ namespace Gramps.Controllers
         public ActionResult Index()
         {
   
-            var templateList = Repository.OfType<Editor>().Queryable
-                .Where(a => a.Template != null && a.User != null && a.User.LoginId == CurrentUser.Identity.Name).Select( x => x.Template).Distinct();
+            //var templateList = Repository.OfType<Editor>().Queryable
+            //    .Where(a => a.Template != null && a.User != null && a.User.LoginId == CurrentUser.Identity.Name).Select( x => x.Template).Distinct();
 
-            return View(templateList);
+            var viewModel = TemplateListViewModel.Create(Repository, CurrentUser.Identity.Name);
+
+            return View(viewModel);
         }
 
         //
@@ -222,23 +224,5 @@ namespace Gramps.Controllers
 
     }
 
-	/// <summary>
-    /// ViewModel for the Template class
-    /// </summary>
-    public class TemplateViewModel : NavigationViewModel
-	{
-		public Template Template { get; set; }
- 
-		public static TemplateViewModel Create(IRepository repository)
-		{
-			Check.Require(repository != null, "Repository must be supplied");
-            
-			
-			var viewModel = new TemplateViewModel {Template = new Template()};
-		    viewModel.IsTemplate = true;
-		    viewModel.IsCallForProposal = false;            
- 
-			return viewModel;
-		}
-	}
+
 }

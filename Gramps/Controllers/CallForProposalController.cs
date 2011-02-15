@@ -32,10 +32,10 @@ namespace Gramps.Controllers
         // GET: /CallForProposal/
         public ActionResult Index()
         {
-            var callforproposalList = Repository.OfType<Editor>().Queryable.Where(a => a.CallForProposal != null && a.User != null && a.User.LoginId == CurrentUser.Identity.Name).Select(x => x.CallForProposal).Distinct();
+            //var callforproposalList = Repository.OfType<Editor>().Queryable.Where(a => a.CallForProposal != null && a.User != null && a.User.LoginId == CurrentUser.Identity.Name).Select(x => x.CallForProposal).Distinct();
+            var viewModel = CallForProposalListViewModel.Create(Repository, CurrentUser.Identity.Name);
 
-
-            return View(callforproposalList);
+            return View(viewModel);
         }
 
         ////
@@ -73,7 +73,7 @@ namespace Gramps.Controllers
             var template = Repository.OfType<Template>().GetNullableById(templateId);
             
             var callforproposalToCreate = new CallForProposal(template, user);
-            callforproposalToCreate.EndDate = DateTime.Now.AddMonths(1);
+            callforproposalToCreate.EndDate = DateTime.Now.AddMonths(1).Date;
             callforproposalToCreate.IsActive = false;
 
             callforproposalToCreate.TransferValidationMessagesTo(ModelState);
@@ -149,14 +149,14 @@ namespace Gramps.Controllers
         
         //
         // GET: /CallForProposal/Delete/5 
-        public ActionResult Delete(int id)
-        {
-			var callforproposal = _callforproposalRepository.GetNullableById(id);
+        //public ActionResult Delete(int id)
+        //{
+        //    var callforproposal = _callforproposalRepository.GetNullableById(id);
 
-            if (callforproposal == null) return this.RedirectToAction(a => a.Index());
+        //    if (callforproposal == null) return this.RedirectToAction(a => a.Index());
 
-            return View(callforproposal);
-        }
+        //    return View(callforproposal);
+        //}
 
         //
         // POST: /CallForProposal/Delete/5

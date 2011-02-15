@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<IEnumerable<Gramps.Core.Domain.CallForProposal>>" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<Gramps.Controllers.ViewModels.CallForProposalListViewModel>" %>
 <%@ Import Namespace="Gramps.Helpers" %>
 <%@ Import Namespace="Gramps.Controllers" %>
 
@@ -15,13 +15,13 @@
     <%: Html.ActionLink<CallForProposalController>(a => a.Create(), "Create Call", new {@class="button"}) %>
 </p>
 
-<% Html.Grid(Model) 
+<% Html.Grid(Model.CallForProposals) 
             .Name("List")
             .PrefixUrlParameters(true) //True if >0 sortable/pageable grids
             .Columns(col => {
             col.Template(x => {%>
 				<%--<%: Html.ActionLink("Edit", "Edit", new { id = x.Id }) %>--%> 
-                <%: Html.ActionLink<CallForProposalController>(a => a.Edit(x.Id), ".   .", new { @class = "edit_button" })%>          
+                <%: Html.ActionLink<CallForProposalController>(a => a.Edit(x.Id), " ", new { @class = "edit_button" })%>          
 				<%}).Title("Edit");
 			            col.Bound(x => x.Name);
                         col.Bound(x => x.IsActive);
@@ -29,8 +29,8 @@
                         col.Bound(x => x.EndDate);
                         col.Bound(x => x.CallsSentDate);
                         })
-            //.Pageable()
-            //.Sortable()
+            .Pageable()
+            .Sortable()
             .Render(); 
         %>
 

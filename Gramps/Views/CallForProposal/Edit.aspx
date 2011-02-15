@@ -39,7 +39,9 @@
                 <%: Html.LabelFor(model => model.CallForProposal.EndDate)%>
             </div>
             <div class="editor-field">
-                <%: Html.TextBoxFor(model => model.CallForProposal.EndDate, String.Format("{0:g}", Model.CallForProposal.EndDate))%>
+                <%: Html.EditorFor(model => model.CallForProposal.EndDate, Model.CallForProposal.EndDate.Date) %>
+                 <%--<%: Html.TextBoxFor(model => model.CallForProposal.EndDate, Model.CallForProposal.EndDate.Date)%> --%>               
+                <%--<%: Html.TextBox("CallForProposal.EndDate", Model.CallForProposal.EndDate.ToString("d")) %>--%>
                 <%: Html.ValidationMessageFor(model => model.CallForProposal.EndDate)%>
             </div>           
             
@@ -54,6 +56,11 @@
 </asp:Content>
 
 <asp:Content ID="Content3" ContentPlaceHolderID="HeaderContent" runat="server">
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#CallForProposal_EndDate").datepicker();
+        });
+    </script>
 </asp:Content>
 
 <asp:Content ID="Content4" ContentPlaceHolderID="logoContent" runat="server">

@@ -280,9 +280,10 @@ div.t-grid {}
 .edit_button
 {
     background: url("../Content/Common/Icons/edit.png") no-repeat scroll 0 0 transparent;
-    border:0;
+    border:0;         
+    display: inline-block;
+    height: 15px;
     width: 15px;
-    cursor:pointer;          
 }
 .edit_button:hover
 {

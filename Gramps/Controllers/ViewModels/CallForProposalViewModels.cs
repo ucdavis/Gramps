@@ -42,4 +42,20 @@ namespace Gramps.Controllers.ViewModels
             return viewModel;
         }
     }
+
+    public class CallForProposalListViewModel
+    {
+        public IQueryable<CallForProposal> CallForProposals { get; set; }
+
+
+        public static CallForProposalListViewModel Create(IRepository repository, string loginId)
+        {
+            Check.Require(repository != null, "Repository must be supplied");
+
+            var viewModel = new CallForProposalListViewModel();
+            var callForProposalIds = repository.OfType<Editor>().Queryable.Where(a => a.CallForProposal != null && a.User != null && a.User.LoginId == loginId).Select(x => x.CallForProposal.Id).ToList();
+            viewModel.CallForProposals = repository.OfType<CallForProposal>().Queryable.Where(a => callForProposalIds.Contains(a.Id));
+            return viewModel;
+        }
+    }
 }

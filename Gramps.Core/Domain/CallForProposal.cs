@@ -7,6 +7,7 @@ using NHibernate.Validator.Constraints;
 using UCDArch.Core.DomainModel;
 using UCDArch.Core.NHibernateValidator.Extensions;
 using UCDArch.Core.Utils;
+using System.ComponentModel.DataAnnotations;
 
 namespace Gramps.Core.Domain
 {
@@ -96,7 +97,7 @@ namespace Gramps.Core.Domain
         #endregion Constructor
 
         #region Mapped Fields
-        [Required]
+        [UCDArch.Core.NHibernateValidator.Extensions.Required]
         [Length(100)]
         public virtual string Name { get; set; }
         public virtual bool IsActive { get; set; }
@@ -105,6 +106,7 @@ namespace Gramps.Core.Domain
         public virtual DateTime CreatedDate { get; set; }
         
         [NotNull]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
         public virtual DateTime EndDate { get; set; }
         public virtual DateTime? CallsSentDate { get; set; }
         public virtual Template TemplateGeneratedFrom { get; set; }

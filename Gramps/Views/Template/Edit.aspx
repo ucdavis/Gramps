@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<Gramps.Controllers.TemplateViewModel>" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<Gramps.Controllers.ViewModels.TemplateViewModel>" %>
 <%@ Import Namespace="Gramps.Controllers" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
@@ -11,7 +11,7 @@
 
     <h2>Edit Template</h2>
 
-	<%= Html.ClientSideValidation<Gramps.Controllers.TemplateViewModel>() %>
+	<%= Html.ClientSideValidation<Gramps.Controllers.ViewModels.TemplateViewModel>() %>
 
     <% using (Html.BeginForm()) {%>
         <%= Html.AntiForgeryToken() %>

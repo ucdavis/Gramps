@@ -36,7 +36,7 @@
             .Columns(col => {
             col.Template(x => {%>
                 <% if (x.User == null){%>
-				    <%:Html.ActionLink<EditorController>(a => a.EditReviewer(x.Id, Model.TemplateId, Model.CallForProposalId), ".   .", new { @class = "edit_button" })%>     
+				    <%:Html.ActionLink<EditorController>(a => a.EditReviewer(x.Id, Model.TemplateId, Model.CallForProposalId), " ", new { @class = "edit_button" })%>     
                 <%}%>      
 				<%}).Title("Edit");
 			col.Template(x => {%>
