@@ -22,11 +22,7 @@
             .PrefixUrlParameters(false) //True if >0 sortable/pageable grids
             .Columns(col => {
             col.Template(x => {%>
-				    <%--<%:Html.ActionLink<QuestionController>(a => a.Edit(x.Id, Model.TemplateId, Model.CallForProposalId), "Edit")%>--%>                      
-                    <% using (Html.BeginForm<QuestionController>(b => b.Edit(x.Id, Model.TemplateId, Model.CallForProposalId), FormMethod.Post, new { name = "EditQuestionForm" })){%>
-                    <%:Html.AntiForgeryToken()%>  
-                    <%= Html.SubmitButton("Submit", " ", new { @class = "EditQuestion edit_button" })%>
-                <%}%>   
+				    <%:Html.ActionLink<QuestionController>(a => a.Edit(x.Id, Model.TemplateId, Model.CallForProposalId), "Edit")%>
 				<%}).Title("Edit");
 			            col.Template(x => {%>
 				<% using (Html.BeginForm<QuestionController>(b => b.MoveUp(x.Id, Model.TemplateId, Model.CallForProposalId), FormMethod.Post, new { name = "MoveUpQuestionForm" })){%>
@@ -63,7 +59,7 @@
             $("input.DeleteQuestion").click(function (event) { $(this).parents("form[name='DeleteQuestionForm']").submit(); });
             $("input.MoveUpQuestion").click(function (event) { $(this).parents("form[name='MoveUpQuestionForm']").submit(); });
             $("input.MoveDownQuestion").click(function (event) { $(this).parents("form[name='MoveDownQuestionForm']").submit(); });
-            $("input.EditQuestion").click(function (event) { $(this).parents("form[name='EditQuestionForm']").submit(); });
+            //$("input.EditQuestion").click(function (event) { $(this).parents("form[name='EditQuestionForm']").submit(); });
         });
     </script>
 
