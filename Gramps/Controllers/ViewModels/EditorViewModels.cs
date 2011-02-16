@@ -97,4 +97,20 @@ namespace Gramps.Controllers.ViewModels
             return viewModel;
         }
     }
+
+    public class ReviewersSendViewModel : CallNavigationViewModel
+    {
+        public IQueryable<Editor> EditorsToNotify;
+        public bool Immediate;
+
+        public static ReviewersSendViewModel Create(IRepository repository, CallForProposal callForProposal)
+        {
+            Check.Require(repository != null, "Repository must be supplied");
+            var viewModel = new ReviewersSendViewModel { CallForProposal = callForProposal, Immediate = false };
+
+            viewModel.EditorsToNotify = repository.OfType<Editor>().Queryable.Where(a => a.CallForProposal == callForProposal && a.User == null);
+
+            return viewModel;
+        }
+    }
 }

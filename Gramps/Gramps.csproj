@@ -507,6 +507,7 @@
     <Content Include="Views\Editor\CreateReviewer.aspx" />
     <Content Include="Views\Editor\EditReviewer.aspx" />
     <Content Include="Views\Editor\Index.aspx" />
+    <Content Include="Views\Editor\SendCall.aspx" />
     <Content Include="Views\EmailsForCall\BulkCreate.aspx" />
     <Content Include="Views\EmailsForCall\Create.aspx" />
     <Content Include="Views\EmailsForCall\Edit.aspx" />

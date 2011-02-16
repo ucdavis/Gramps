@@ -11,7 +11,10 @@
             <%: Html.ActionLink<EmailsForCallController>(a => a.SendCall(Model.CallForProposal.Id), "Send Call")%>            
         </li>
         <li>
-            <%: Html.ActionLink<CallForProposalController>(a => a.Edit(Model.CallForProposal.Id), "Notify Reviewers")%>            
+            <%: Html.ActionLink<EmailsForCallController>(a => a.SendCall(Model.CallForProposal.Id), "Closing")%>            
+        </li>
+        <li>
+            <%: Html.ActionLink<EditorController>(a => a.SendCall(Model.CallForProposal.Id), "Notify Reviewers")%>            
         </li>
         <li>
             <%: Html.ActionLink<CallForProposalController>(a => a.Edit(Model.CallForProposal.Id), "Emails")%>            

@@ -406,7 +406,16 @@ namespace Gramps.Controllers
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
+
+
             var viewModel = EmailsForCallSendViewModel.Create(Repository, callforproposal);
+            if (!callforproposal.IsActive || callforproposal.EndDate.Date <= DateTime.Now.Date)
+            {
+                Message = "Is not active or end date is passed";
+                return View(viewModel);
+            }
+
+
             var count = 0;
             foreach (var emailsForCall in viewModel.EmailsForCallList.Where(a => !a.HasBeenEmailed))
             {

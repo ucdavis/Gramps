@@ -21,11 +21,13 @@ namespace Gramps.Controllers
     {
 	    private readonly IRepository<Editor> _editorRepository;
         private readonly IAccessService _accessService;
+        private readonly IEmailService _emailService;
 
-        public EditorController(IRepository<Editor> editorRepository, IAccessService accessService)
+        public EditorController(IRepository<Editor> editorRepository, IAccessService accessService, IEmailService emailService)
         {
             _editorRepository = editorRepository;
             _accessService = accessService;
+            _emailService = emailService;
         }
     
         //
@@ -374,6 +376,70 @@ namespace Gramps.Controllers
             Message = "Editor Reset Successfully";
 
             return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
+        }
+
+
+        public ActionResult SendCall(int id)
+        {
+            var callforproposal = Repository.OfType<CallForProposal>().GetNullableById(id);
+
+            if (callforproposal == null)
+            {
+
+                return this.RedirectToAction<CallForProposalController>(a => a.Index());
+            }
+
+            if (!_accessService.HasAccess(null, callforproposal.Id, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+
+            var viewModel = ReviewersSendViewModel.Create(Repository, callforproposal);
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public ActionResult SendCall(int id, bool immediate)
+        {
+            var callforproposal = Repository.OfType<CallForProposal>().GetNullableById(id);
+
+            if (callforproposal == null)
+            {
+
+                return this.RedirectToAction<CallForProposalController>(a => a.Index());
+            }
+
+            if (!_accessService.HasAccess(null, callforproposal.Id, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+
+
+
+            var viewModel = ReviewersSendViewModel.Create(Repository, callforproposal);
+            if (!callforproposal.IsActive)
+            {
+                Message = "Is not active";
+                return View(viewModel);
+            }
+
+
+            var count = 0;
+            foreach (var editor in viewModel.EditorsToNotify.Where(a => !a.HasBeenNotified))
+            {
+                _emailService.SendEmail(callforproposal, callforproposal.EmailTemplates.Where(a => a.TemplateType == EmailTemplateType.ReadyForReview).Single(), editor.ReviewerEmail, immediate);
+                editor.NotifiedDate = DateTime.Now;
+                editor.HasBeenNotified = true;
+                _editorRepository.EnsurePersistent(editor);
+                count++;
+            }
+
+            viewModel = ReviewersSendViewModel.Create(Repository, callforproposal);
+            Message = string.Format("{0} Emails Generated", count);
+            return View(viewModel);
         }
         
         /// <summary>
