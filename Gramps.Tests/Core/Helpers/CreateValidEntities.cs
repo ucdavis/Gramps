@@ -120,5 +120,20 @@ namespace Gramps.Tests.Core.Helpers
 
             return rtValue;
         }
+
+        public static ReviewedProposal ReviewedProposal(int? counter)
+        {
+            var rtValue = new ReviewedProposal();
+            var count = 0;
+            if (counter.HasValue)
+            {
+                count = counter.Value;
+            }
+            rtValue.LastViewedDate = new DateTime(2011, 01, 01).AddDays(count);
+            rtValue.Proposal = new Proposal();
+            rtValue.Editor = new Editor();
+
+            return rtValue;
+        }
     }
 }

@@ -21,6 +21,7 @@ namespace Gramps.Tests.Core
         protected string RestoreValue;
         protected bool BoolRestoreValue;
         protected int? IntRestoreValue;
+        protected DateTime DateTimeRestoreValue;
         private readonly IRepository<T> _intRepository;
         private readonly IRepositoryWithTypedId<T, string> _stringRepository;
         private readonly IRepositoryWithTypedId<T, Guid> _guidRepository;

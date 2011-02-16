@@ -109,6 +109,7 @@
     <Compile Include="RepositoryTests\EmailsForCallRepositoryTests.cs" />
     <Compile Include="RepositoryTests\EmailTemplateRepositoryTests.cs" />
     <Compile Include="RepositoryTests\ProposalRepositoryTests.cs" />
+    <Compile Include="RepositoryTests\ReviewedProposalRepositoryTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />
