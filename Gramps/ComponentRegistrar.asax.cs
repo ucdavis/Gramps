@@ -19,6 +19,8 @@ namespace Gramps
 
             container.AddComponent("accessService", typeof (IAccessService), typeof (AccessService));
 
+            container.AddComponent("emailService", typeof(IEmailService), typeof(EmailService));
+
         }
 
         private static void AddGenericRepositoriesTo(IWindsorContainer container)

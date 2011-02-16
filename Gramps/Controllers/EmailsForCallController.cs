@@ -21,11 +21,13 @@ namespace Gramps.Controllers
     {
 	    private readonly IRepository<EmailsForCall> _emailsforcallRepository;
         private readonly IAccessService _accessService;
+        private readonly IEmailService _emailService;
 
-        public EmailsForCallController(IRepository<EmailsForCall> emailsforcallRepository, IAccessService accessService)
+        public EmailsForCallController(IRepository<EmailsForCall> emailsforcallRepository, IAccessService accessService, IEmailService emailService)
         {
             _emailsforcallRepository = emailsforcallRepository;
             _accessService = accessService;
+            _emailService = emailService;
         }
     
         //
@@ -368,13 +370,56 @@ namespace Gramps.Controllers
 
         public ActionResult SendCall(int id)
         {
-            throw new NotImplementedException();
+            var callforproposal = Repository.OfType<CallForProposal>().GetNullableById(id);
+
+            if (callforproposal == null)
+            {
+
+                return this.RedirectToAction<CallForProposalController>(a => a.Index());
+            }
+
+            if (!_accessService.HasAccess(null, callforproposal.Id, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+
+            var viewModel = EmailsForCallSendViewModel.Create(Repository, callforproposal);
+
+            return View(viewModel);
         }
 
         [HttpPost]
         public ActionResult SendCall(int id, bool immediate)
         {
-            throw new NotImplementedException();
+            var callforproposal = Repository.OfType<CallForProposal>().GetNullableById(id);
+
+            if (callforproposal == null)
+            {
+
+                return this.RedirectToAction<CallForProposalController>(a => a.Index());
+            }
+
+            if (!_accessService.HasAccess(null, callforproposal.Id, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+
+            var viewModel = EmailsForCallSendViewModel.Create(Repository, callforproposal);
+            var count = 0;
+            foreach (var emailsForCall in viewModel.EmailsForCallList.Where(a => !a.HasBeenEmailed))
+            {
+                _emailService.SendEmail(callforproposal, callforproposal.EmailTemplates.Where(a => a.TemplateType == EmailTemplateType.InitialCall).Single(), emailsForCall.Email, immediate);
+                emailsForCall.EmailedOnDate = DateTime.Now;
+                emailsForCall.HasBeenEmailed = true;
+                _emailsforcallRepository.EnsurePersistent(emailsForCall);
+                count++;
+            }
+
+            viewModel = EmailsForCallSendViewModel.Create(Repository, callforproposal);
+            Message = string.Format("{0} Emails Generated", count);
+            return View(viewModel);
         }
         
         /// <summary>

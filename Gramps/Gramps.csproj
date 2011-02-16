@@ -154,6 +154,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RouteRegistrar.asax.cs" />
     <Compile Include="Services\IAccessService.cs" />
+    <Compile Include="Services\IEmailService.cs" />
     <Compile Include="Views\Shared\LogOnUserControl.ascx.cs">
       <DependentUpon>LogOnUserControl.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -510,6 +511,7 @@
     <Content Include="Views\EmailsForCall\Create.aspx" />
     <Content Include="Views\EmailsForCall\Edit.aspx" />
     <Content Include="Views\EmailsForCall\Index.aspx" />
+    <Content Include="Views\EmailsForCall\SendCall.aspx" />
     <Content Include="Views\EmailTemplate\Edit.aspx" />
     <Content Include="Views\EmailTemplate\Index.aspx" />
     <Content Include="Views\Question\Create.aspx" />

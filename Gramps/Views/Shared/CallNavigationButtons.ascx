@@ -5,6 +5,9 @@
             <%=Html.ActionLink<CallForProposalController>(a => a.Index(), "Call Index") %>
         </li>
         <li>
+            <%: Html.ActionLink<CallForProposalController>(a => a.Launch(Model.CallForProposal.Id), "Details")%>            
+        </li>
+        <li>
             <%: Html.ActionLink<EmailsForCallController>(a => a.SendCall(Model.CallForProposal.Id), "Send Call")%>            
         </li>
         <li>

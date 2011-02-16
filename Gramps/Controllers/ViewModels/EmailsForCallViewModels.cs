@@ -62,4 +62,20 @@ namespace Gramps.Controllers.ViewModels
             return viewModel;
         }
     }
+
+    public class EmailsForCallSendViewModel : CallNavigationViewModel
+    {
+        public IQueryable<EmailsForCall> EmailsForCallList;
+        public bool Immediate;
+
+        public static EmailsForCallSendViewModel Create(IRepository repository, CallForProposal callForProposal)
+        {
+            Check.Require(repository != null, "Repository must be supplied");
+            var viewModel = new EmailsForCallSendViewModel {CallForProposal = callForProposal, Immediate = false};
+
+            viewModel.EmailsForCallList = repository.OfType<EmailsForCall>().Queryable.Where(a => a.CallForProposal == callForProposal);
+
+            return viewModel;
+        }
+    }
 }
