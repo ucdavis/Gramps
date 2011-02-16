@@ -153,7 +153,8 @@ namespace Gramps.Tests.RepositoryTests.CallForProposalRepositoryTests
             }));
             expectedFields.Add(new NameAndType("EndDate", "System.DateTime", new List<string>
             {
-                "[NHibernate.Validator.Constraints.NotNullAttribute()]"
+                "[NHibernate.Validator.Constraints.NotNullAttribute()]",
+                "[System.ComponentModel.DataAnnotations.DisplayFormatAttribute(DataFormatString = \"{0:MM/dd/yyyy}\", ApplyFormatInEditMode = True)]"
             }));
             expectedFields.Add(new NameAndType("Id", "System.Int32", new List<string>
             {
