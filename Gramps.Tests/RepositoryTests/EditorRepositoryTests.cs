@@ -1577,6 +1577,170 @@ namespace Gramps.Tests.RepositoryTests
         #endregion Cascade Tests
         #endregion ReviewedProposal Tests
 
+        #region HasBeenNotified Tests
+
+        /// <summary>
+        /// Tests the HasBeenNotified is false saves.
+        /// </summary>
+        [TestMethod]
+        public void TestHasBeenNotifiedIsFalseSaves()
+        {
+            #region Arrange
+
+            Editor editor = GetValid(9);
+            editor.HasBeenNotified = false;
+
+            #endregion Arrange
+
+            #region Act
+
+            EditorRepository.DbContext.BeginTransaction();
+            EditorRepository.EnsurePersistent(editor);
+            EditorRepository.DbContext.CommitTransaction();
+
+            #endregion Act
+
+            #region Assert
+
+            Assert.IsFalse(editor.HasBeenNotified);
+            Assert.IsFalse(editor.IsTransient());
+            Assert.IsTrue(editor.IsValid());
+
+            #endregion Assert
+        }
+
+        /// <summary>
+        /// Tests the HasBeenNotified is true saves.
+        /// </summary>
+        [TestMethod]
+        public void TestHasBeenNotifiedIsTrueSaves()
+        {
+            #region Arrange
+
+            var editor = GetValid(9);
+            editor.HasBeenNotified = true;
+
+            #endregion Arrange
+
+            #region Act
+
+            EditorRepository.DbContext.BeginTransaction();
+            EditorRepository.EnsurePersistent(editor);
+            EditorRepository.DbContext.CommitTransaction();
+
+            #endregion Act
+
+            #region Assert
+
+            Assert.IsTrue(editor.HasBeenNotified);
+            Assert.IsFalse(editor.IsTransient());
+            Assert.IsTrue(editor.IsValid());
+
+            #endregion Assert
+        }
+
+        #endregion HasBeenNotified Tests
+
+        #region NotifiedDate Tests
+
+        [TestMethod]
+        public void TestNotifiedDateWitNullValueWillSave()
+        {
+            #region Arrange
+            Editor record = GetValid(99);
+            record.NotifiedDate = null;
+            #endregion Arrange
+
+            #region Act
+            EditorRepository.DbContext.BeginTransaction();
+            EditorRepository.EnsurePersistent(record);
+            EditorRepository.DbContext.CommitChanges();
+            #endregion Act
+
+            #region Assert
+            Assert.IsFalse(record.IsTransient());
+            Assert.IsTrue(record.IsValid());
+            Assert.AreEqual(null, record.NotifiedDate);
+            #endregion Assert
+        }
+
+        /// <summary>
+        /// Tests the NotifiedDate with past date will save.
+        /// </summary>
+        [TestMethod]
+        public void TestNotifiedDateWithPastDateWillSave()
+        {
+            #region Arrange
+            var compareDate = DateTime.Now.AddDays(-10);
+            Editor record = GetValid(99);
+            record.NotifiedDate = compareDate;
+            #endregion Arrange
+
+            #region Act
+            EditorRepository.DbContext.BeginTransaction();
+            EditorRepository.EnsurePersistent(record);
+            EditorRepository.DbContext.CommitChanges();
+            #endregion Act
+
+            #region Assert
+            Assert.IsFalse(record.IsTransient());
+            Assert.IsTrue(record.IsValid());
+            Assert.AreEqual(compareDate, record.NotifiedDate);
+            #endregion Assert		
+        }
+
+        /// <summary>
+        /// Tests the NotifiedDate with current date date will save.
+        /// </summary>
+        [TestMethod]
+        public void TestNotifiedDateWithCurrentDateDateWillSave()
+        {
+            #region Arrange
+            var compareDate = DateTime.Now;
+            var record = GetValid(99);
+            record.NotifiedDate = compareDate;
+            #endregion Arrange
+
+            #region Act
+            EditorRepository.DbContext.BeginTransaction();
+            EditorRepository.EnsurePersistent(record);
+            EditorRepository.DbContext.CommitChanges();
+            #endregion Act
+
+            #region Assert
+            Assert.IsFalse(record.IsTransient());
+            Assert.IsTrue(record.IsValid());
+            Assert.AreEqual(compareDate, record.NotifiedDate);
+            #endregion Assert
+        }
+
+        /// <summary>
+        /// Tests the NotifiedDate with future date date will save.
+        /// </summary>
+        [TestMethod]
+        public void TestNotifiedDateWithFutureDateDateWillSave()
+        {
+            #region Arrange
+            var compareDate = DateTime.Now.AddDays(15);
+            var record = GetValid(99);
+            record.NotifiedDate = compareDate;
+            #endregion Arrange
+
+            #region Act
+            EditorRepository.DbContext.BeginTransaction();
+            EditorRepository.EnsurePersistent(record);
+            EditorRepository.DbContext.CommitChanges();
+            #endregion Act
+
+            #region Assert
+            Assert.IsFalse(record.IsTransient());
+            Assert.IsTrue(record.IsValid());
+            Assert.AreEqual(compareDate, record.NotifiedDate);
+            #endregion Assert
+        }
+        #endregion NotifiedDate Tests
+
+
         #region Fluent Mapping Tests
         [TestMethod]
         public void TestCanCorrectlyMapEditor1()
@@ -1584,6 +1748,7 @@ namespace Gramps.Tests.RepositoryTests
             #region Arrange
             var id = EditorRepository.Queryable.Max(x => x.Id) + 1;
             var session = NHibernateSessionManager.Instance.GetSession();
+            var compareDate = new DateTime(2011, 11, 28);
             #endregion Arrange
 
             #region Act/Assert
@@ -1594,6 +1759,8 @@ namespace Gramps.Tests.RepositoryTests
                 .CheckProperty(c => c.ReviewerEmail, "test@testy.com")
                 .CheckProperty(c => c.ReviewerId, Guid.NewGuid())
                 .CheckProperty(c => c.ReviewerName, "Name")
+                .CheckProperty(c => c.HasBeenNotified, true)
+                .CheckProperty(c => c.NotifiedDate, compareDate)
                 .VerifyTheMappings();
             #endregion Act/Assert
         }
@@ -1613,6 +1780,7 @@ namespace Gramps.Tests.RepositoryTests
                 .CheckProperty(c => c.ReviewerEmail, "test@testy.com")
                 .CheckProperty(c => c.ReviewerId, Guid.NewGuid())
                 .CheckProperty(c => c.ReviewerName, "Name")
+                .CheckProperty(c => c.HasBeenNotified, false)
                 .VerifyTheMappings();
             #endregion Act/Assert
         }
@@ -1780,12 +1948,14 @@ namespace Gramps.Tests.RepositoryTests
             {
                 "[NHibernate.Validator.Constraints.NotNullAttribute()]"
             }));
+            expectedFields.Add(new NameAndType("HasBeenNotified", "System.Boolean", new List<string>()));
             expectedFields.Add(new NameAndType("Id", "System.Int32", new List<string>
             {
                 "[Newtonsoft.Json.JsonPropertyAttribute()]", 
                 "[System.Xml.Serialization.XmlIgnoreAttribute()]"
             }));
             expectedFields.Add(new NameAndType("IsOwner", "System.Boolean", new List<string>()));
+            expectedFields.Add(new NameAndType("NotifiedDate", "System.Nullable`1[System.DateTime]", new List<string>()));
             expectedFields.Add(new NameAndType("RelatedTable", "System.Boolean", new List<string>
             {
                 "[NHibernate.Validator.Constraints.AssertTrueAttribute(Message = \"Must be related to Template or CallForProposal not both.\")]"
