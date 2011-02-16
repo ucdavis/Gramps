@@ -341,6 +341,20 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+CREATE TABLE [dbo].[QuestionsXValidators](
+	[QuestionsId] [int] NOT NULL,
+	[ValidatorsId] [int] NOT NULL,
+ CONSTRAINT [PK_QuestionXValidator] PRIMARY KEY CLUSTERED 
+(
+	[QuestionsId] ASC,
+	[ValidatorsId] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 SET ANSI_PADDING ON
 GO
 CREATE TABLE [dbo].[QuestionOptions](
@@ -359,13 +373,15 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [dbo].[QuestionsXValidators](
-	[QuestionsId] [int] NOT NULL,
-	[ValidatorsId] [int] NOT NULL,
- CONSTRAINT [PK_QuestionXValidator] PRIMARY KEY CLUSTERED 
+CREATE TABLE [dbo].[ReviewedProposals](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[ProposalId] [int] NOT NULL,
+	[EditorId] [int] NOT NULL,
+	[FirstViewedDate] [date] NOT NULL,
+	[LastViewedDate] [date] NOT NULL,
+ CONSTRAINT [PK_ReviewedProposals] PRIMARY KEY CLUSTERED 
 (
-	[QuestionsId] ASC,
-	[ValidatorsId] ASC
+	[id] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -514,4 +530,14 @@ ALTER TABLE [dbo].[QuestionsXValidators]  WITH CHECK ADD  CONSTRAINT [FK_Questio
 REFERENCES [dbo].[Validators] ([id])
 GO
 ALTER TABLE [dbo].[QuestionsXValidators] CHECK CONSTRAINT [FK_QuestionXValidator_Validators]
+GO
+ALTER TABLE [dbo].[ReviewedProposals]  WITH CHECK ADD  CONSTRAINT [FK_ReviewedProposals_Editors] FOREIGN KEY([EditorId])
+REFERENCES [dbo].[Editors] ([id])
+GO
+ALTER TABLE [dbo].[ReviewedProposals] CHECK CONSTRAINT [FK_ReviewedProposals_Editors]
+GO
+ALTER TABLE [dbo].[ReviewedProposals]  WITH CHECK ADD  CONSTRAINT [FK_ReviewedProposals_Proposals] FOREIGN KEY([ProposalId])
+REFERENCES [dbo].[Proposals] ([id])
+GO
+ALTER TABLE [dbo].[ReviewedProposals] CHECK CONSTRAINT [FK_ReviewedProposals_Proposals]
 GO

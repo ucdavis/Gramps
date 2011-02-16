@@ -31,6 +31,7 @@ namespace Gramps.Core.Domain
             IsOwner = false;
             ReviewerId = Guid.NewGuid();
             Comments = new List<Comment>();
+            ReviewedProposals = new List<ReviewedProposal>();
         }
 
         #endregion Constructor
@@ -50,7 +51,7 @@ namespace Gramps.Core.Domain
         public virtual User User { get; set; }
         [NotNull]
         public virtual IList<Comment> Comments { get; set; }
-
+        [NotNull]
         public virtual IList<ReviewedProposal> ReviewedProposals { get; set; }
  
         #endregion Mapped Fields
