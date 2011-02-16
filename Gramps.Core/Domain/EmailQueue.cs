@@ -28,6 +28,7 @@ namespace Gramps.Core.Domain
         {
             Pending = true;
             Created = DateTime.Now;
+            Immediate = false;
         }
         #endregion Constructor
 
@@ -50,6 +51,8 @@ namespace Gramps.Core.Domain
         [Required]
         public virtual string Body { get; set; }
 
+        public virtual bool Immediate { get; set; }
+
         #endregion Mapped Fields
     }
 
@@ -67,6 +70,7 @@ namespace Gramps.Core.Domain
             Map(x => x.SentDateTime);
             Map(x => x.Subject);
             Map(x => x.Body);
+            Map(x => x.Immediate);
         }
     }
 }

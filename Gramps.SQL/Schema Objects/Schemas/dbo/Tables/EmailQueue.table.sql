@@ -6,6 +6,9 @@
     [Pending]           BIT           NOT NULL,
     [SentDateTime]      DATETIME      NULL,
     [Subject]           VARCHAR (200) NOT NULL,
-    [Body]              VARCHAR (MAX) NOT NULL
+    [Body]              VARCHAR (MAX) NOT NULL,
+    [Immediate]         BIT           NOT NULL
 );
+
+
 

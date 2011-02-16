@@ -23,6 +23,9 @@
 				<%--<%: Html.ActionLink("Edit", "Edit", new { id = x.Id }) %>--%> 
                 <%: Html.ActionLink<CallForProposalController>(a => a.Edit(x.Id), " ", new { @class = "edit_button" })%>          
 				<%}).Title("Edit");
+            col.Template(x => {%>
+                <%: Html.ActionLink<CallForProposalController>(a => a.Launch(x.Id), " ", new { @class = "launch_button" })%>          
+				<%}).Title("Launch");
 			            col.Bound(x => x.Name);
                         col.Bound(x => x.IsActive);
                         col.Bound(x => x.CreatedDate);
@@ -37,6 +40,21 @@
 </asp:Content>
 
 <asp:Content ID="Content3" ContentPlaceHolderID="HeaderContent" runat="server">
+    <style type="text/css">
+        .launch_button
+        {
+            background: url("../Images/Rocket_launch.png") no-repeat scroll 0 0 transparent;
+            border:0;         
+            display: inline-block;
+            height: 22px;
+            width: 22px;
+        }
+        .launch_button:hover
+        {
+            color:#0D548A;
+        }
+    </style>
+
 </asp:Content>
 
 <asp:Content ID="Content4" ContentPlaceHolderID="logoContent" runat="server">

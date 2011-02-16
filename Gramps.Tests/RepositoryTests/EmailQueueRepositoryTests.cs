@@ -874,6 +874,72 @@ namespace Gramps.Tests.RepositoryTests
         #endregion Valid Tests
         #endregion Body Tests
 
+        #region Immediate Tests
+
+        /// <summary>
+        /// Tests the Immediate is false saves.
+        /// </summary>
+        [TestMethod]
+        public void TestImmediateIsFalseSaves()
+        {
+            #region Arrange
+
+            EmailQueue emailQueue = GetValid(9);
+            emailQueue.Immediate = false;
+
+            #endregion Arrange
+
+            #region Act
+
+            EmailQueueRepository.DbContext.BeginTransaction();
+            EmailQueueRepository.EnsurePersistent(emailQueue);
+            EmailQueueRepository.DbContext.CommitTransaction();
+
+            #endregion Act
+
+            #region Assert
+
+            Assert.IsFalse(emailQueue.Immediate);
+            Assert.IsFalse(emailQueue.IsTransient());
+            Assert.IsTrue(emailQueue.IsValid());
+
+            #endregion Assert
+        }
+
+        /// <summary>
+        /// Tests the Immediate is true saves.
+        /// </summary>
+        [TestMethod]
+        public void TestImmediateIsTrueSaves()
+        {
+            #region Arrange
+
+            var emailQueue = GetValid(9);
+            emailQueue.Immediate = true;
+
+            #endregion Arrange
+
+            #region Act
+
+            EmailQueueRepository.DbContext.BeginTransaction();
+            EmailQueueRepository.EnsurePersistent(emailQueue);
+            EmailQueueRepository.DbContext.CommitTransaction();
+
+            #endregion Act
+
+            #region Assert
+
+            Assert.IsTrue(emailQueue.Immediate);
+            Assert.IsFalse(emailQueue.IsTransient());
+            Assert.IsTrue(emailQueue.IsValid());
+
+            #endregion Assert
+        }
+
+        #endregion Immediate Tests
+
+  
+
         #region CallForProposal Tests
         #region Invalid Tests
         /// <summary>
@@ -1140,6 +1206,7 @@ namespace Gramps.Tests.RepositoryTests
                 "[Newtonsoft.Json.JsonPropertyAttribute()]", 
                 "[System.Xml.Serialization.XmlIgnoreAttribute()]"
             }));
+            expectedFields.Add(new NameAndType("Immediate", "System.Boolean", new List<string>()));
             expectedFields.Add(new NameAndType("Pending", "System.Boolean", new List<string>()));
             expectedFields.Add(new NameAndType("SentDateTime", "System.Nullable`1[System.DateTime]", new List<string>()));
             expectedFields.Add(new NameAndType("Subject", "System.String", new List<string>

@@ -38,6 +38,28 @@ namespace Gramps.Controllers
             return View(viewModel);
         }
 
+        /// <summary>
+        /// A User
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult Launch(int id)
+        {
+            var callforproposal = _callforproposalRepository.GetNullableById(id);
+
+            if (callforproposal == null) return this.RedirectToAction(a => a.Index());
+
+            if (!_accessService.HasAccess(null, callforproposal.Id, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+            var viewModel = CallNavigationViewModel.Create(callforproposal);
+
+            return View(viewModel);
+
+        }
+
         ////
         //// GET: /CallForProposal/Details/5
         //public ActionResult Details(int id)

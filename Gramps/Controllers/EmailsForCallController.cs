@@ -365,6 +365,17 @@ namespace Gramps.Controllers
 
             return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
         }
+
+        public ActionResult SendCall(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        [HttpPost]
+        public ActionResult SendCall(int id, bool immediate)
+        {
+            throw new NotImplementedException();
+        }
         
         /// <summary>
         /// Transfer editable values from source to destination

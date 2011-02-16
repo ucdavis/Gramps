@@ -285,6 +285,7 @@ CREATE TABLE [dbo].[EmailQueue](
 	[SentDateTime] [datetime] NULL,
 	[Subject] [varchar](200) NOT NULL,
 	[Body] [varchar](max) NOT NULL,
+	[Immediate] [bit] NOT NULL,
  CONSTRAINT [PK_EmailQueues] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
@@ -308,6 +309,8 @@ CREATE TABLE [dbo].[Editors](
 	[ReviewerEmail] [varchar](100) NULL,
 	[ReviewerName] [varchar](200) NULL,
 	[ReviewerId] [uniqueidentifier] NULL,
+	[HasBeenNotified] [bit] NOT NULL,
+	[NotifiedDate] [datetime] NULL,
  CONSTRAINT [PK_Editors] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
@@ -424,7 +427,11 @@ CREATE TABLE [dbo].[Answers](
 GO
 SET ANSI_PADDING OFF
 GO
+ALTER TABLE [dbo].[Editors] ADD  CONSTRAINT [DF_Editors_HasBeenNotified]  DEFAULT ((0)) FOR [HasBeenNotified]
+GO
 ALTER TABLE [dbo].[EmailQueue] ADD  CONSTRAINT [DF_EmailQueues_Pending]  DEFAULT ((1)) FOR [Pending]
+GO
+ALTER TABLE [dbo].[EmailQueue] ADD  CONSTRAINT [DF_EmailQueue_Imediate]  DEFAULT ((0)) FOR [Immediate]
 GO
 ALTER TABLE [dbo].[Emails] ADD  CONSTRAINT [DF_Emails_HasBeenCalled]  DEFAULT ((0)) FOR [HasBeenEmailed]
 GO

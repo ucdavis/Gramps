@@ -251,6 +251,7 @@
     <Content Include="Images\logo-ucdavis.png" />
     <Content Include="Images\logo.jpg" />
     <Content Include="Images\plus.png" />
+    <Content Include="Images\Rocket_launch.png" />
     <Content Include="Scripts\jquery.enableTinyMce.js" />
     <Content Include="Scripts\tiny_mce\jquery.tinymce.js" />
     <Content Include="Scripts\tiny_mce\langs\en.js" />
@@ -500,6 +501,7 @@
     <Content Include="Views\CallForProposal\Create.aspx" />
     <Content Include="Views\CallForProposal\Edit.aspx" />
     <Content Include="Views\CallForProposal\Index.aspx" />
+    <Content Include="Views\CallForProposal\Launch.aspx" />
     <Content Include="Views\Editor\AddEditor.aspx" />
     <Content Include="Views\Editor\CreateReviewer.aspx" />
     <Content Include="Views\Editor\EditReviewer.aspx" />
@@ -516,6 +518,7 @@
     <Content Include="Views\Question\SharedQuestionFields.ascx" />
     <Content Include="Views\Question\SharedQuestionSample.ascx" />
     <Content Include="Views\Question\SharedQuestionSetup.ascx" />
+    <Content Include="Views\Shared\CallNavigationButtons.ascx" />
     <Content Include="Views\Shared\LogOnUserControl.ascx" />
     <Content Include="Views\Shared\NavigationButtons.ascx" />
     <Content Include="Views\Template\Create.aspx" />

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Gramps.Core.Domain;
 
 namespace Gramps.Controllers.ViewModels
 {
@@ -22,6 +23,15 @@ namespace Gramps.Controllers.ViewModels
                            TemplateId = templateId, 
                            CallForProposalId = callForProposalId
                        };
+        }
+    }
+
+    public class CallNavigationViewModel
+    {
+        public CallForProposal CallForProposal;
+        public static CallNavigationViewModel Create(CallForProposal callForProposal)
+        {
+            return new CallNavigationViewModel{CallForProposal = callForProposal};
         }
     }
 }
