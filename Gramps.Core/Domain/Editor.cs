@@ -29,6 +29,7 @@ namespace Gramps.Core.Domain
         protected void SetDefaults()
         {
             IsOwner = false;
+            
             ReviewerId = Guid.NewGuid();
             Comments = new List<Comment>();
             ReviewedProposals = new List<ReviewedProposal>();
@@ -38,6 +39,8 @@ namespace Gramps.Core.Domain
 
         #region Mapped Fields
         public virtual bool IsOwner { get; set; }
+        public virtual bool HasBeenNotified { get; set; }
+        public virtual DateTime? NotifiedDate { get; set; }
         [Email]
         [Length(100)]
         public virtual string ReviewerEmail { get; set; }
@@ -106,6 +109,8 @@ namespace Gramps.Core.Domain
         {
             Id(x => x.Id);
             Map(x => x.IsOwner);
+            Map(x => x.HasBeenNotified);
+            Map(x => x.NotifiedDate);
             Map(x => x.ReviewerEmail);
             Map(x => x.ReviewerName);
             Map(x => x.ReviewerId);

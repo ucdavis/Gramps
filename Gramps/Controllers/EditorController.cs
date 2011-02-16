@@ -273,6 +273,10 @@ namespace Gramps.Controllers
             }
 
             TransferValues(editor, editorToEdit);
+            if (callForProposalId.HasValue && callForProposalId.Value != 0)
+            {
+                editorToEdit.HasBeenNotified = editor.HasBeenNotified;
+            }
 
             editorToEdit.TransferValidationMessagesTo(ModelState);
 
@@ -363,6 +367,7 @@ namespace Gramps.Controllers
             }
 
             editorToReset.ReviewerId = Guid.NewGuid();
+            editorToReset.HasBeenNotified = false;
 
             _editorRepository.EnsurePersistent(editorToReset);
 

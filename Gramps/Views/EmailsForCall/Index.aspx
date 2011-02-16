@@ -36,10 +36,10 @@
                     <%: Html.Hidden("id", x.Id) %>
                     <%: Html.Hidden("TemplateId", Model.TemplateId) %>
                     <%: Html.Hidden("CallForProposalId", Model.CallForProposalId) %>
-                    <%= Html.SubmitButton("Submit", "Remove", new {@class="remove_button"}) %>
+                    <%= Html.SubmitButton("Submit", " ", new {@class="remove_button"}) %>
                                                                             
                 <%}%>                                       
-            <% });
+            <% }).Title("Delete");
             })
             .Pageable()
             .Sortable()

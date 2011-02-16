@@ -6,8 +6,12 @@
     [IsOwner]           BIT              NOT NULL,
     [ReviewerEmail]     VARCHAR (100)    NULL,
     [ReviewerName]      VARCHAR (200)    NULL,
-    [ReviewerId]        UNIQUEIDENTIFIER NULL
+    [ReviewerId]        UNIQUEIDENTIFIER NULL,
+    [HasBeenNotified]   BIT              NOT NULL,
+    [NotifiedDate]      DATETIME         NULL
 );
+
+
 
 
 

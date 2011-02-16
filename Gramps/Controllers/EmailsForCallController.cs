@@ -294,6 +294,10 @@ namespace Gramps.Controllers
             }
             //TransferValues(emailsforcall, emailsforcallToEdit);
             emailsforcallToEdit.Email = emailsforcall.Email.ToLower();
+            if (callForProposalId.HasValue && callForProposalId != 0)
+            {
+                emailsforcallToEdit.HasBeenEmailed = emailsforcall.HasBeenEmailed;
+            }
 
             emailsforcallToEdit.TransferValidationMessagesTo(ModelState);
 

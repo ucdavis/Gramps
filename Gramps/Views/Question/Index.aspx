@@ -86,21 +86,6 @@
             color:#0D548A;
         }
 
-
-        
-        .remove_button
-        {
-            background: url("../Images/cancled_transparent.png") no-repeat scroll 0 0 transparent;
-            border:0;
-            float: left;
-            cursor:pointer;
-            width: 22px;
-            height: 22px
-        }
-        .remove_button:hover
-        {
-            color:#0D548A;
-        }
     </style>
 
 </asp:Content>

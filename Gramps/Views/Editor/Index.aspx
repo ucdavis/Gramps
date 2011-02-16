@@ -54,6 +54,11 @@
                         col.Bound(x => x.ReviewerName).Title("Name");
                         col.Bound(x => x.ReviewerEmail);                        
                         col.Bound(x => x.ReviewerId);
+                        if (Model.IsCallForProposal)
+                        {
+                            col.Bound(x => x.HasBeenNotified).Title("Notified");
+                            col.Bound(x => x.NotifiedDate);
+                        }
                         col.Template(x => { %>  
                             <% if (x.IsOwner == false){%>                                      
                             <% using (Html.BeginForm("Delete", "Editor", FormMethod.Post)) { %>
@@ -61,11 +66,11 @@
                                 <%: Html.Hidden("id", x.Id) %>
                                 <%: Html.Hidden("TemplateId", Model.TemplateId) %>
                                 <%: Html.Hidden("CallForProposalId", Model.CallForProposalId) %>
-                                <%= Html.SubmitButton("Submit", "Remove", new {@class="remove_button"}) %>
+                                <%= Html.SubmitButton("Submit", " ", new {@class="remove_button"}) %>
                                                                            
                             <% } %>  
                             <%}%>                                       
-                        <% });
+                        <% }).Title("Delete");
             })
             .Pageable()
             .Sortable()

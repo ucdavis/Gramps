@@ -35,6 +35,15 @@
                 <%: Html.TextBoxFor(model => model.Editor.ReviewerName)%>
                 <%: Html.ValidationMessageFor(model => model.Editor.ReviewerName)%>
             </div>
+            <%if(Model.IsCallForProposal) {%>
+                <div class="editor-label">
+                    <%: Html.LabelFor(model => model.Editor.HasBeenNotified)%>
+                </div>
+                <div class="editor-field">
+                    <%: Html.CheckBoxFor(model => model.Editor.HasBeenNotified)%>
+                    <%: Html.ValidationMessageFor(model => model.Editor.HasBeenNotified)%>
+                </div>    
+            <%}%>
             <p>
                 <input type="submit" value="Save" />
             </p>

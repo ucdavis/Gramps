@@ -28,9 +28,18 @@
                 <%: Html.TextBoxFor(model => model.EmailsForCall.Email)%>
                 <%: Html.ValidationMessageFor(model => model.EmailsForCall.Email)%>
             </div>
+            <%if(Model.IsCallForProposal) {%>
+                <div class="editor-label">
+                    <%: Html.LabelFor(model => model.EmailsForCall.HasBeenEmailed) %>
+                </div>
+                <div class="editor-field">
+                    <%: Html.CheckBoxFor(model => model.EmailsForCall.HasBeenEmailed)%>
+                    <%: Html.ValidationMessageFor(model => model.EmailsForCall.HasBeenEmailed)%>
+                </div>
+            <%}%>
             
             <p>
-                <input type="submit" value="Edit" />
+                <input type="submit" value="Save" />
             </p>
         </fieldset>
 
