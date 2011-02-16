@@ -24,6 +24,7 @@ namespace Gramps.Core.Domain
             ApprovedAmount = 0m;
             Comments = new List<Comment>();
             Answers = new List<QuestionAnswer>();
+            ReviewedByEditors = new List<ReviewedProposal>();
             IsApproved = false;
             IsDenied = false;
             IsNotified = false;
@@ -57,6 +58,8 @@ namespace Gramps.Core.Domain
         public virtual IList<Comment> Comments { get; set; }
         [NotNull]
         public virtual IList<QuestionAnswer> Answers { get; set; }
+        [NotNull]
+        public virtual IList<ReviewedProposal> ReviewedByEditors { get; set; }
 
         #endregion Mapped Fields
 
@@ -95,6 +98,7 @@ namespace Gramps.Core.Domain
             References(x => x.CallForProposal).Not.Nullable();
             HasMany(x => x.Comments);
             HasMany(x => x.Answers).Cascade.AllDeleteOrphan();
+            HasMany(x => x.ReviewedByEditors);//.Table("ReviewedProposals");
         }
     }
 }

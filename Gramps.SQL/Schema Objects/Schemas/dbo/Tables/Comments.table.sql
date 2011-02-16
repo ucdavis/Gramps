@@ -6,3 +6,5 @@
     [CreatedDate] DATETIME      NOT NULL
 );
 
+
+

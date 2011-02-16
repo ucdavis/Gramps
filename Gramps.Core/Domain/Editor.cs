@@ -50,6 +50,8 @@ namespace Gramps.Core.Domain
         public virtual User User { get; set; }
         [NotNull]
         public virtual IList<Comment> Comments { get; set; }
+
+        public virtual IList<ReviewedProposal> ReviewedProposals { get; set; }
  
         #endregion Mapped Fields
 
@@ -111,6 +113,7 @@ namespace Gramps.Core.Domain
             References(x => x.CallForProposal);
             References(x => x.User);
             HasMany(x => x.Comments);
+            HasMany(x => x.ReviewedProposals);
         }
     }
 }

@@ -66,6 +66,7 @@
     <Compile Include="Domain\QuestionAnswer.cs" />
     <Compile Include="Domain\QuestionOption.cs" />
     <Compile Include="Domain\QuestionType.cs" />
+    <Compile Include="Domain\ReviewedProposal.cs" />
     <Compile Include="Domain\Template.cs" />
     <Compile Include="Domain\Users.cs" />
     <Compile Include="Domain\Validator.cs" />
