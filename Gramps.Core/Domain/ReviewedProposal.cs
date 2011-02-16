@@ -14,6 +14,12 @@ namespace Gramps.Core.Domain
             SetDefaults();
         }
 
+        public ReviewedProposal(Proposal proposal, Editor editor)
+        {
+            SetDefaults();
+            Proposal = proposal;
+            Editor = editor;
+        }
         protected void SetDefaults()
         {
             FirstViewedDate = DateTime.Now;
