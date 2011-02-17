@@ -437,7 +437,7 @@ ALTER TABLE [dbo].[Emails] ADD  CONSTRAINT [DF_Emails_HasBeenCalled]  DEFAULT ((
 GO
 ALTER TABLE [dbo].[Templates] ADD  CONSTRAINT [DF_Templates_IsActive]  DEFAULT ((1)) FOR [IsActive]
 GO
-ALTER TABLE [dbo].[EmailTemplates]  WITH CHECK ADD  CONSTRAINT [CK_EmailTemplates] CHECK  (([TemplateType]='ReadyForReview' OR [TemplateType]='ProposalConfirmation' OR [TemplateType]='ProposalDenied' OR [TemplateType]='ProposalApproved' OR [TemplateType]='ReminderCallIsAboutToClose' OR [TemplateType]='InitialCall'))
+ALTER TABLE [dbo].[EmailTemplates]  WITH CHECK ADD  CONSTRAINT [CK_EmailTemplates] CHECK  (([TemplateType]='ReadyForReview' OR [TemplateType]='ProposalConfirmation' OR [TemplateType]='ProposalDenied' OR [TemplateType]='ProposalApproved' OR [TemplateType]='ReminderCallIsAboutToClose' OR [TemplateType]='InitialCall' OR [TemplateType]='ProposalUnsubmitted'))
 GO
 ALTER TABLE [dbo].[EmailTemplates] CHECK CONSTRAINT [CK_EmailTemplates]
 GO
