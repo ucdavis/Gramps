@@ -31,13 +31,14 @@ namespace Gramps.Controllers.ViewModels
                 viewModel.EmailTemplateList = repository.OfType<EmailTemplate>().Queryable.Where(a => a.CallForProposal.Id == callForProposalId);
                 viewModel.CallForProposalId = callForProposalId;
             }
-            viewModel.DescriptionDict = new Dictionary<EmailTemplateType, string>(6);
+            viewModel.DescriptionDict = new Dictionary<EmailTemplateType, string>(7);
             viewModel.DescriptionDict.Add(EmailTemplateType.InitialCall, StaticValues.InitialCall);
             viewModel.DescriptionDict.Add(EmailTemplateType.ProposalApproved, StaticValues.ProposalApproved);
             viewModel.DescriptionDict.Add(EmailTemplateType.ProposalConfirmation, StaticValues.ProposalConfirmation);
             viewModel.DescriptionDict.Add(EmailTemplateType.ProposalDenied, StaticValues.ProposalDenied);
             viewModel.DescriptionDict.Add(EmailTemplateType.ReadyForReview, StaticValues.ReadyForReview);
             viewModel.DescriptionDict.Add(EmailTemplateType.ReminderCallIsAboutToClose, StaticValues.ReminderCallIsAboutToClose);
+            viewModel.DescriptionDict.Add(EmailTemplateType.ProposalUnsubmitted, StaticValues.ProposalUnsubmitted);
 
             return viewModel;
         }
@@ -67,13 +68,14 @@ namespace Gramps.Controllers.ViewModels
                 viewModel.CallForProposalId = callForProposalId;
             }
 
-            viewModel.DescriptionDict = new Dictionary<EmailTemplateType, string>(6);
+            viewModel.DescriptionDict = new Dictionary<EmailTemplateType, string>(7);
             viewModel.DescriptionDict.Add(EmailTemplateType.InitialCall, StaticValues.InitialCall);
             viewModel.DescriptionDict.Add(EmailTemplateType.ProposalApproved, StaticValues.ProposalApproved);
             viewModel.DescriptionDict.Add(EmailTemplateType.ProposalConfirmation, StaticValues.ProposalConfirmation);
             viewModel.DescriptionDict.Add(EmailTemplateType.ProposalDenied, StaticValues.ProposalDenied);
             viewModel.DescriptionDict.Add(EmailTemplateType.ReadyForReview, StaticValues.ReadyForReview);
             viewModel.DescriptionDict.Add(EmailTemplateType.ReminderCallIsAboutToClose, StaticValues.ReminderCallIsAboutToClose);
+            viewModel.DescriptionDict.Add(EmailTemplateType.ProposalUnsubmitted, StaticValues.ProposalUnsubmitted);
 
             return viewModel;
         }

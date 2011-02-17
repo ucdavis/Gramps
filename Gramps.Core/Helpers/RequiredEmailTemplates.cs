@@ -10,14 +10,15 @@ namespace Gramps.Core.Helpers
     {
         public static Dictionary<EmailTemplateType, bool> GetRequiredEmailTemplates()
         {
-            var emailTemplates = new Dictionary<EmailTemplateType ,bool>
+            var emailTemplates = new Dictionary<EmailTemplateType, bool>
                                      {
                                          {EmailTemplateType.InitialCall, false},
                                          {EmailTemplateType.ReadyForReview, false},
                                          {EmailTemplateType.ReminderCallIsAboutToClose, false},
                                          {EmailTemplateType.ProposalConfirmation, false},
                                          {EmailTemplateType.ProposalApproved, false},
-                                         {EmailTemplateType.ProposalDenied, false}
+                                         {EmailTemplateType.ProposalDenied, false},
+                                         {EmailTemplateType.ProposalUnsubmitted, false}
                                      };
 
             return emailTemplates;

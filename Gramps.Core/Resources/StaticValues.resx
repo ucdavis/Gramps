@@ -130,6 +130,9 @@
   <data name="ProposalDenied" xml:space="preserve">
     <value>Email sent out to applicant to notify them that their proposal has not been accepted</value>
   </data>
+  <data name="ProposalUnsubmitted" xml:space="preserve">
+    <value>Email sent to applicant to inform them their proposal has been set back to edit</value>
+  </data>
   <data name="ReadyForReview" xml:space="preserve">
     <value>Email sent out to list of reviewers to notify them that the proposals are ready to be reviewed</value>
   </data>

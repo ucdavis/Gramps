@@ -97,6 +97,15 @@ namespace Gramps.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Email sent to applicant to inform them their proposal has been set back to edit.
+        /// </summary>
+        public static string ProposalUnsubmitted {
+            get {
+                return ResourceManager.GetString("ProposalUnsubmitted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Email sent out to list of reviewers to notify them that the proposals are ready to be reviewed.
         /// </summary>
         public static string ReadyForReview {

@@ -74,6 +74,7 @@ namespace Gramps.Core.Domain
         ProposalApproved,
         ProposalDenied,
         ProposalConfirmation,
-        ReadyForReview
+        ReadyForReview,
+        ProposalUnsubmitted
     }
 }

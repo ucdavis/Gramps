@@ -109,7 +109,8 @@ namespace Gramps.Controllers
             dict.Add(3, EmailTemplateType.ProposalDenied);
             dict.Add(4, EmailTemplateType.ReadyForReview);
             dict.Add(5, EmailTemplateType.ReminderCallIsAboutToClose);
-            for (int i = 0; i < 6; i++)
+            dict.Add(6, EmailTemplateType.ProposalUnsubmitted);
+            for (int i = 0; i < 7; i++)
             {
                 var emailTemplate = new EmailTemplate(dict[i].ToString() + " Edit This Subject");
                 emailTemplate.TemplateType = dict[i];
