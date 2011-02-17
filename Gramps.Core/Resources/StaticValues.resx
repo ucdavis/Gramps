@@ -140,4 +140,7 @@
     <value>Email sent out to list applicants that have not finilized their proposals</value>
     <comment>Maybe include the list of emails for call?</comment>
   </data>
+  <data name="VersionKey" xml:space="preserve">
+    <value>VersionKey</value>
+  </data>
 </root>

@@ -122,5 +122,14 @@ namespace Gramps.Core.Resources {
                 return ResourceManager.GetString("ReminderCallIsAboutToClose", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VersionKey.
+        /// </summary>
+        public static string VersionKey {
+            get {
+                return ResourceManager.GetString("VersionKey", resourceCulture);
+            }
+        }
     }
 }

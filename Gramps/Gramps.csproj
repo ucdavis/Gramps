@@ -135,6 +135,7 @@
     <Compile Include="Controllers\EmailsForCallController.cs" />
     <Compile Include="Controllers\EmailTemplateController.cs" />
     <Compile Include="Controllers\Filters\RoleFilter.cs" />
+    <Compile Include="Controllers\Filters\VersionAttribute.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\QuestionController.cs" />
     <Compile Include="Controllers\TemplateController.cs" />
