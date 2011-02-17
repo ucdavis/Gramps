@@ -20,7 +20,7 @@
             <%: Html.ActionLink<EmailQueueController>(a => a.Index(Model.CallForProposal.Id), "Emails")%>            
         </li>
         <li>
-            <%: Html.ActionLink<CallForProposalController>(a => a.Edit(Model.CallForProposal.Id), "Proposals")%>            
+            <%: Html.ActionLink<ProposalController>(a => a.AdminIndex(Model.CallForProposal.Id), "Proposals")%>            
         </li>
         <li>
             <%: Html.ActionLink<CallForProposalController>(a => a.Edit(Model.CallForProposal.Id), "Reporting")%>            

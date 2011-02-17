@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI;
 using Gramps.Core.Resources;
 using Gramps.Helpers;
 using Telerik.Web.Mvc.UI;
@@ -12,6 +15,24 @@ namespace Gramps.Helpers
 {
     public static class HtmlHelperExtensions
     {
+        public static string GenerateCaptcha(this HtmlHelper helper)
+        {
+
+            var captchaControl = new Recaptcha.RecaptchaControl
+            {
+                ID = "recaptcha",
+                Theme = "clean",
+                PublicKey = ConfigurationManager.AppSettings["RecaptchaPublicKey"],
+                PrivateKey = ConfigurationManager.AppSettings["RecaptchaPrivateKey"]
+            };
+
+            var htmlWriter = new HtmlTextWriter(new StringWriter());
+
+            captchaControl.RenderControl(htmlWriter);
+
+            return htmlWriter.InnerWriter.ToString();
+        }
+
         public static CustomGridBuilder<T> Grid<T>(this HtmlHelper htmlHelper, IEnumerable<T> dataModel) where T : class
         {
             var builder = htmlHelper.Telerik().Grid(dataModel);

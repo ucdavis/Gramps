@@ -72,6 +72,9 @@
     <Reference Include="NHibernate.ByteCode.Spring">
       <HintPath>..\Bin\NHibernate.ByteCode.Spring.dll</HintPath>
     </Reference>
+    <Reference Include="Recaptcha">
+      <HintPath>..\Bin\Recaptcha.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -135,9 +138,11 @@
     <Compile Include="Controllers\EmailQueueController.cs" />
     <Compile Include="Controllers\EmailsForCallController.cs" />
     <Compile Include="Controllers\EmailTemplateController.cs" />
+    <Compile Include="Controllers\Filters\Recaptcha.cs" />
     <Compile Include="Controllers\Filters\RoleFilter.cs" />
     <Compile Include="Controllers\Filters\VersionAttribute.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ProposalController.cs" />
     <Compile Include="Controllers\QuestionController.cs" />
     <Compile Include="Controllers\TemplateController.cs" />
     <Compile Include="Controllers\ViewModels\CallForProposalViewModels.cs" />
@@ -146,6 +151,7 @@
     <Compile Include="Controllers\ViewModels\EmailsForCallViewModels.cs" />
     <Compile Include="Controllers\ViewModels\EmailTemplateViewModels.cs" />
     <Compile Include="Controllers\ViewModels\NavigationViewModel.cs" />
+    <Compile Include="Controllers\ViewModels\ProposalViewModels.cs" />
     <Compile Include="Controllers\ViewModels\QuestionViewModels.cs" />
     <Compile Include="Controllers\ViewModels\TemplateViewModels.cs" />
     <Compile Include="Global.asax.cs">
@@ -513,7 +519,6 @@
     <Content Include="Views\Editor\Index.aspx" />
     <Content Include="Views\Editor\SendCall.aspx" />
     <Content Include="Views\EmailQueue\Details.aspx" />
-    <Content Include="Views\EmailQueue\Details2.aspx" />
     <Content Include="Views\EmailQueue\Edit.aspx" />
     <Content Include="Views\EmailQueue\Index.aspx" />
     <Content Include="Views\EmailsForCall\BulkCreate.aspx" />
@@ -523,6 +528,9 @@
     <Content Include="Views\EmailsForCall\SendCall.aspx" />
     <Content Include="Views\EmailTemplate\Edit.aspx" />
     <Content Include="Views\EmailTemplate\Index.aspx" />
+    <Content Include="Views\Proposal\AdminIndex.aspx" />
+    <Content Include="Views\Proposal\Confirmation.aspx" />
+    <Content Include="Views\Proposal\Create.aspx" />
     <Content Include="Views\Question\Create.aspx" />
     <Content Include="Views\Question\Edit.aspx" />
     <Content Include="Views\Question\Index.aspx" />
@@ -625,6 +633,7 @@
     <None Include="Content\font\Cicle_Shadow-webfont.eot" />
     <None Include="Content\font\Cicle_Shadow-webfont.ttf" />
     <None Include="Content\font\Cicle_Shadow-webfont.woff" />
+    <Content Include="Views\Shared\PublicSite.Master" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

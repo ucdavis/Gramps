@@ -5,7 +5,7 @@
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head runat="server">
+<head id="Head1" runat="server">
     <title><asp:ContentPlaceHolder ID="TitleContent" runat="server">Grants Management:Home - College of Agricultural & Environmental Sciences</asp:ContentPlaceHolder></title>
     <%--<link href="../../Content/Site.css" rel="stylesheet" type="text/css" />--%>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -42,13 +42,8 @@
 <div class="wrapper">
 <div id="branding">
     <span class="logos">
-        <span class="ucdavis"><a href="<%: Url.Action("About", "Home") %>"><img src="<%= Url.Content("~/Images/logo-ucdavis.png") %>" alt="UC Davis" /></a></span>
-        <span class="ucdavis"><a href="<%: Url.Action("About", "Home") %>"><img src="<%= Url.Content("~/Images/logo-caes.png") %>" alt="College of Agricultural &amp; Environmental Sciences" /></a></span>
-        <asp:ContentPlaceHolder ID="logoContent" runat="server">        
-        </asp:ContentPlaceHolder>
-             <span id="logindisplay">
-                <% Html.RenderPartial("LogOnUserControl"); %>
-             </span> 
+        <span class="ucdavis"><a href=""><img src="<%= Url.Content("~/Images/logo-ucdavis.png") %>" alt="UC Davis" /></a></span>
+        <span class="ucdavis"><a href=""><img src="<%= Url.Content("~/Images/logo-caes.png") %>" alt="College of Agricultural &amp; Environmental Sciences" /></a></span>
     </span>
     
         
@@ -65,10 +60,7 @@
 
 <div id="footer">
 <div id="footer_text">
-<p><%: Html.ActionLink<HomeController>(a=>a.Index(), "Home", new {style="color:white; text-decoration:none;"}) %> | 
-<a href="https://secure.caes.ucdavis.edu/help/ticket/SubmitRedirect?appName=Gramps" style="color:white; text-decoration:none;"">Questions or Comments</a> | 
-<a href="https://secure.caes.ucdavis.edu/help/Help?appName=Gramps" style="color:white; text-decoration:none;"">FAQ</a>
-<br />
+<p>
 <span id="ByLine">Developed By The College Of Agricultural And Environmental Science Dean's Office</span><br />
 Copyright The Regents of the University of California, Davis campus, 2005-11. All Rights Reserved.
 <br />
@@ -77,36 +69,5 @@ Copyright The Regents of the University of California, Davis campus, 2005-11. Al
 </div>
 </div>
 
-
-<%--    <div class="page">
-
-        <div id="header">
-            <div id="title">
-                <h1>My MVC Application</h1>
-            </div>
-              
-            <div id="logindisplay">
-                <ul>
-                    <% Html.RenderPartial("~/Views/Shared/LogOnUserControl.ascx"); %>
-                </ul>
-            </div> 
-            
-            <div id="menucontainer">
-            
-                <ul id="menu">              
-                    <li><%: Html.ActionLink("Home", "Index", "Home")%></li>
-                    <li><%: Html.ActionLink("About", "About", "Home")%></li>
-                </ul>
-            
-            </div>
-        </div>
-
-        <div id="main">
-            <asp:ContentPlaceHolder ID="MainContent" runat="server" />
-
-            <div id="footer">
-            </div>
-        </div>
-    </div>--%>
 </body>
 </html>
