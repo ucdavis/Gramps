@@ -303,3 +303,17 @@ div.t-grid {}
 {
     color:#0D548A;
 }
+
+.details_button
+{
+    background: url("../Images/Details.png") no-repeat scroll 0 0 transparent;
+    border:0;
+    float: left;
+    cursor:pointer;
+    width: 22px;
+    height: 22px
+}
+.details_button:hover
+{
+    color:#0D548A;
+}

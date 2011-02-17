@@ -11,13 +11,13 @@
             <%: Html.ActionLink<EmailsForCallController>(a => a.SendCall(Model.CallForProposal.Id), "Send Call")%>            
         </li>
         <li>
-            <%: Html.ActionLink<EmailsForCallController>(a => a.SendCall(Model.CallForProposal.Id), "Closing")%>            
+            <%: Html.ActionLink<EmailsForCallController>(a => a.SendCall(Model.CallForProposal.Id), "Warning")%>            
         </li>
         <li>
             <%: Html.ActionLink<EditorController>(a => a.SendCall(Model.CallForProposal.Id), "Notify Reviewers")%>            
         </li>
         <li>
-            <%: Html.ActionLink<CallForProposalController>(a => a.Edit(Model.CallForProposal.Id), "Emails")%>            
+            <%: Html.ActionLink<EmailQueueController>(a => a.Index(Model.CallForProposal.Id), "Emails")%>            
         </li>
         <li>
             <%: Html.ActionLink<CallForProposalController>(a => a.Edit(Model.CallForProposal.Id), "Proposals")%>            

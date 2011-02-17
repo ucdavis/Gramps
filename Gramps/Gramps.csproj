@@ -132,6 +132,7 @@
     <Compile Include="Controllers\ApplicationController.cs" />
     <Compile Include="Controllers\CallForProposalController.cs" />
     <Compile Include="Controllers\EditorController.cs" />
+    <Compile Include="Controllers\EmailQueueController.cs" />
     <Compile Include="Controllers\EmailsForCallController.cs" />
     <Compile Include="Controllers\EmailTemplateController.cs" />
     <Compile Include="Controllers\Filters\RoleFilter.cs" />
@@ -141,6 +142,7 @@
     <Compile Include="Controllers\TemplateController.cs" />
     <Compile Include="Controllers\ViewModels\CallForProposalViewModels.cs" />
     <Compile Include="Controllers\ViewModels\EditorViewModels.cs" />
+    <Compile Include="Controllers\ViewModels\EmailQueueViewModels.cs" />
     <Compile Include="Controllers\ViewModels\EmailsForCallViewModels.cs" />
     <Compile Include="Controllers\ViewModels\EmailTemplateViewModels.cs" />
     <Compile Include="Controllers\ViewModels\NavigationViewModel.cs" />
@@ -248,6 +250,7 @@
     <Content Include="Images\cancled_transparent.png" />
     <Content Include="Images\CheckMark-1.png" />
     <Content Include="Images\CheckMark.png" />
+    <Content Include="Images\Details.png" />
     <Content Include="Images\loading.gif" />
     <Content Include="Images\logo-caes.png" />
     <Content Include="Images\logo-ucdavis.png" />
@@ -509,6 +512,10 @@
     <Content Include="Views\Editor\EditReviewer.aspx" />
     <Content Include="Views\Editor\Index.aspx" />
     <Content Include="Views\Editor\SendCall.aspx" />
+    <Content Include="Views\EmailQueue\Details.aspx" />
+    <Content Include="Views\EmailQueue\Details2.aspx" />
+    <Content Include="Views\EmailQueue\Edit.aspx" />
+    <Content Include="Views\EmailQueue\Index.aspx" />
     <Content Include="Views\EmailsForCall\BulkCreate.aspx" />
     <Content Include="Views\EmailsForCall\Create.aspx" />
     <Content Include="Views\EmailsForCall\Edit.aspx" />
