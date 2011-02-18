@@ -138,7 +138,7 @@ namespace Gramps.Tests.RepositoryTests
             {
                 Assert.IsNotNull(proposal);
                 Assert.IsNotNull(ex);
-                Assert.AreEqual("could not insert: [Gramps.Core.Domain.Proposal][SQL: INSERT INTO Proposals (Guid, Email, IsApproved, IsDenied, IsNotified, RequestedAmount, ApprovedAmount, IsSubmitted, CreatedDate, SubmittedDate, NotifiedDate, CallForProposalID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?); select last_insert_rowid()]", ex.Message);
+                Assert.AreEqual("could not insert: [Gramps.Core.Domain.Proposal][SQL: INSERT INTO Proposals (Guid, Email, IsApproved, IsDenied, IsNotified, RequestedAmount, ApprovedAmount, IsSubmitted, CreatedDate, SubmittedDate, NotifiedDate, WasWarned, CallForProposalID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?); select last_insert_rowid()]", ex.Message);
                 throw;
             }	
         }
@@ -1909,6 +1909,71 @@ namespace Gramps.Tests.RepositoryTests
         #endregion Cascades Tests
         #endregion ReviewedByEditors Tests
 
+        #region WasWarned Tests
+
+        /// <summary>
+        /// Tests the WasWarned is false saves.
+        /// </summary>
+        [TestMethod]
+        public void TestWasWarnedIsFalseSaves()
+        {
+            #region Arrange
+
+            Proposal proposal = GetValid(9);
+            proposal.WasWarned = false;
+
+            #endregion Arrange
+
+            #region Act
+
+            ProposalRepository.DbContext.BeginTransaction();
+            ProposalRepository.EnsurePersistent(proposal);
+            ProposalRepository.DbContext.CommitTransaction();
+
+            #endregion Act
+
+            #region Assert
+
+            Assert.IsFalse(proposal.WasWarned);
+            Assert.IsFalse(proposal.IsTransient());
+            Assert.IsTrue(proposal.IsValid());
+
+            #endregion Assert
+        }
+
+        /// <summary>
+        /// Tests the WasWarned is true saves.
+        /// </summary>
+        [TestMethod]
+        public void TestWasWarnedIsTrueSaves()
+        {
+            #region Arrange
+
+            var proposal = GetValid(9);
+            proposal.WasWarned = true;
+
+            #endregion Arrange
+
+            #region Act
+
+            ProposalRepository.DbContext.BeginTransaction();
+            ProposalRepository.EnsurePersistent(proposal);
+            ProposalRepository.DbContext.CommitTransaction();
+
+            #endregion Act
+
+            #region Assert
+
+            Assert.IsTrue(proposal.WasWarned);
+            Assert.IsFalse(proposal.IsTransient());
+            Assert.IsTrue(proposal.IsValid());
+
+            #endregion Assert
+        }
+
+        #endregion WasWarned Tests
+
+
         #region Constructor Tests
 
         [TestMethod]
@@ -1929,6 +1994,7 @@ namespace Gramps.Tests.RepositoryTests
             Assert.IsFalse(record.IsDenied);
             Assert.IsFalse(record.IsNotified);
             Assert.IsFalse(record.IsSubmitted);
+            Assert.IsFalse(record.WasWarned);
             #endregion Assert		
         }
         #endregion Constructor Tests
@@ -2246,6 +2312,7 @@ namespace Gramps.Tests.RepositoryTests
                 "[NHibernate.Validator.Constraints.NotNullAttribute()]"
             }));
             expectedFields.Add(new NameAndType("SubmittedDate", "System.Nullable`1[System.DateTime]", new List<string>()));
+            expectedFields.Add(new NameAndType("WasWarned", "System.Boolean", new List<string>()));
             #endregion Arrange
 
             AttributeAndFieldValidation.ValidateFieldsAndAttributes(expectedFields, typeof(Proposal));
