@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web;
 using System.Web.Mvc;
 using Gramps.Controllers.Filters;
 using Gramps.Controllers.ViewModels;
@@ -9,6 +10,7 @@ using UCDArch.Web.Controller;
 using UCDArch.Web.Helpers;
 using UCDArch.Core.Utils;
 using MvcContrib;
+using System.Linq;
 
 namespace Gramps.Controllers
 {
@@ -57,14 +59,92 @@ namespace Gramps.Controllers
 
         //
         // GET: /Proposal/Details/5
-        public ActionResult Details(int id)
+        [UserOnly]
+        public ActionResult Details(int id, int callForProposalId)
         {
+            var callforproposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId);
+
+            if (callforproposal == null)
+            {
+                return this.RedirectToAction<CallForProposalController>(a => a.Index());
+            }
+
+            if (!_accessService.HasAccess(null, callforproposal.Id, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+            if(!_accessService.HasSameId(null, callforproposal, null, callForProposalId))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+
             var proposal = _proposalRepository.GetNullableById(id);
 
-            if (proposal == null) return this.RedirectToAction(a => a.Index());
+            if (proposal == null)
+            {
+                Message = "Proposal Not Found";
+                return this.RedirectToAction(a => a.Index());
+            }
+            var editor = Repository.OfType<Editor>().Queryable.Where(a => a.CallForProposal == callforproposal && a.User != null && a.User.LoginId == CurrentUser.Identity.Name).Single();
+            var reviewed = Repository.OfType<ReviewedProposal>().Queryable.Where(a => a.Proposal == proposal && a.Editor == editor).FirstOrDefault();
+            if (reviewed == null)
+            {
+                reviewed = new ReviewedProposal(proposal, editor);
+            }
+            else
+            {
+                reviewed.LastViewedDate = DateTime.Now;
+            }
+            Repository.OfType<ReviewedProposal>().EnsurePersistent(reviewed);
 
-            return View(proposal);
+            var viewModel = ProposalAdminViewModel.Create(Repository, callforproposal, proposal);
+
+            return View(viewModel);
         }
+
+        [HttpPost]
+        [UserOnly]
+        public ActionResult SendCall(int id, bool immediate)
+        {
+            var callforproposal = Repository.OfType<CallForProposal>().GetNullableById(id);
+
+            if (callforproposal == null)
+            {
+
+                return this.RedirectToAction<CallForProposalController>(a => a.Index());
+            }
+
+            if (!_accessService.HasAccess(null, callforproposal.Id, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+
+            if (!callforproposal.IsActive || callforproposal.EndDate.Date <= DateTime.Now.Date)
+            {
+                Message = "Is not active or end date is passed";
+                return this.RedirectToAction(a => a.AdminIndex(id));
+            }
+
+
+            var count = 0;
+
+            var proposals = callforproposal.Proposals.Where(a => !a.IsSubmitted && !a.WasWarned);
+
+            foreach (var proposal in proposals)
+            {
+                _emailService.SendEmail(callforproposal, callforproposal.EmailTemplates.Where(a => a.TemplateType == EmailTemplateType.ReminderCallIsAboutToClose).Single(), proposal.Email, immediate);
+                proposal.WasWarned = true;
+                Repository.OfType<Proposal>().EnsurePersistent(proposal);
+                count++;
+            }
+            Message = string.Format("{0} Emails Generated", count);
+
+            return this.RedirectToAction(a => a.AdminIndex(id));
+        }
+
 
         //
         // GET: /Proposal/Create
@@ -116,6 +196,8 @@ namespace Gramps.Controllers
 
                 Message = "Proposal Created Successfully";
 
+                _emailService.SendConfirmation(Request, Url, proposalToCreate, proposalToCreate.CallForProposal.EmailTemplates.Where(a => a.TemplateType==EmailTemplateType.ProposalConfirmation).Single(), true);
+
                 return this.RedirectToAction(a => a.Confirmation(proposalToCreate.Email));
             }
             else
@@ -126,6 +208,13 @@ namespace Gramps.Controllers
                 return View(viewModel);
             }
         }
+
+        //private string GetAbsoluteUrl(string relative)
+        //{
+        //    return string.Format("{0}://{1}:{2}{3}", Request.Url.Scheme, Request.Url.Host, Request.Url.Port, Url.Content(relative));
+        //}
+
+
 
         public ActionResult Confirmation(string proposalEmail)
         {

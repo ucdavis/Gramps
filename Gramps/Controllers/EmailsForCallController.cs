@@ -426,6 +426,9 @@ namespace Gramps.Controllers
                 count++;
             }
 
+            callforproposal.CallsSentDate = DateTime.Now;
+            Repository.OfType<CallForProposal>().EnsurePersistent(callforproposal);
+
             viewModel = EmailsForCallSendViewModel.Create(Repository, callforproposal);
             Message = string.Format("{0} Emails Generated", count);
             return View(viewModel);

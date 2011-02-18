@@ -11,9 +11,6 @@
             <%: Html.ActionLink<EmailsForCallController>(a => a.SendCall(Model.CallForProposal.Id), "Send Call")%>            
         </li>
         <li>
-            <%: Html.ActionLink<EmailsForCallController>(a => a.SendCall(Model.CallForProposal.Id), "Warning")%>            
-        </li>
-        <li>
             <%: Html.ActionLink<EditorController>(a => a.SendCall(Model.CallForProposal.Id), "Notify Reviewers")%>            
         </li>
         <li>

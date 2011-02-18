@@ -220,6 +220,7 @@ CREATE TABLE [dbo].[Proposals](
 	[CreatedDate] [datetime] NOT NULL,
 	[SubmittedDate] [datetime] NULL,
 	[NotifiedDate] [datetime] NULL,
+	[WasWarned] [bit] NOT NULL,
  CONSTRAINT [PK_Proposals] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
@@ -380,8 +381,8 @@ CREATE TABLE [dbo].[ReviewedProposals](
 	[id] [int] IDENTITY(1,1) NOT NULL,
 	[ProposalId] [int] NOT NULL,
 	[EditorId] [int] NOT NULL,
-	[FirstViewedDate] [date] NOT NULL,
-	[LastViewedDate] [date] NOT NULL,
+	[FirstViewedDate] [datetime] NOT NULL,
+	[LastViewedDate] [datetime] NOT NULL,
  CONSTRAINT [PK_ReviewedProposals] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
@@ -434,6 +435,8 @@ GO
 ALTER TABLE [dbo].[EmailQueue] ADD  CONSTRAINT [DF_EmailQueue_Imediate]  DEFAULT ((0)) FOR [Immediate]
 GO
 ALTER TABLE [dbo].[Emails] ADD  CONSTRAINT [DF_Emails_HasBeenCalled]  DEFAULT ((0)) FOR [HasBeenEmailed]
+GO
+ALTER TABLE [dbo].[Proposals] ADD  CONSTRAINT [DF_Proposals_WasWarned]  DEFAULT ((0)) FOR [WasWarned]
 GO
 ALTER TABLE [dbo].[Templates] ADD  CONSTRAINT [DF_Templates_IsActive]  DEFAULT ((1)) FOR [IsActive]
 GO

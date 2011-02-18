@@ -531,6 +531,7 @@
     <Content Include="Views\Proposal\AdminIndex.aspx" />
     <Content Include="Views\Proposal\Confirmation.aspx" />
     <Content Include="Views\Proposal\Create.aspx" />
+    <Content Include="Views\Proposal\Details.aspx" />
     <Content Include="Views\Question\Create.aspx" />
     <Content Include="Views\Question\Edit.aspx" />
     <Content Include="Views\Question\Index.aspx" />

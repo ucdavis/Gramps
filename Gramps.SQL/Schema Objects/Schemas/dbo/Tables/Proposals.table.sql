@@ -11,8 +11,11 @@
     [IsSubmitted]       BIT              NOT NULL,
     [CreatedDate]       DATETIME         NOT NULL,
     [SubmittedDate]     DATETIME         NULL,
-    [NotifiedDate]      DATETIME         NULL
+    [NotifiedDate]      DATETIME         NULL,
+    [WasWarned]         BIT              NOT NULL
 );
+
+
 
 
 

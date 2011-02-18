@@ -79,7 +79,7 @@ namespace Gramps.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Email sent out to applicant to confirm proposal has been submitted.
+        ///   Looks up a localized string similar to Email sent out to applicant to confirm proposal has been created.
         /// </summary>
         public static string ProposalConfirmation {
             get {

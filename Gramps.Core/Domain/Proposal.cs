@@ -29,6 +29,7 @@ namespace Gramps.Core.Domain
             IsDenied = false;
             IsNotified = false;
             IsSubmitted = false;
+
         }
 
         #endregion Constructor
@@ -54,6 +55,7 @@ namespace Gramps.Core.Domain
         public virtual DateTime CreatedDate { get; set; }
         public virtual DateTime? SubmittedDate { get; set; }
         public virtual DateTime? NotifiedDate { get; set; }
+        public virtual bool WasWarned { get; set; }
         [NotNull]
         public virtual IList<Comment> Comments { get; set; }
         [NotNull]
@@ -94,6 +96,7 @@ namespace Gramps.Core.Domain
             Map(x => x.CreatedDate);
             Map(x => x.SubmittedDate);
             Map(x => x.NotifiedDate);
+            Map(x => x.WasWarned);
 
             References(x => x.CallForProposal).Not.Nullable();
             HasMany(x => x.Comments);

@@ -124,7 +124,7 @@
     <value>Email sent out to applicant if proposal is approved</value>
   </data>
   <data name="ProposalConfirmation" xml:space="preserve">
-    <value>Email sent out to applicant to confirm proposal has been submitted</value>
+    <value>Email sent out to applicant to confirm proposal has been created</value>
     <comment>Not a 100% sure if we need this one.</comment>
   </data>
   <data name="ProposalDenied" xml:space="preserve">

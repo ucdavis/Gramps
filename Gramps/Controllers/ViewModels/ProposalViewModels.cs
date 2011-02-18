@@ -30,6 +30,7 @@ namespace Gramps.Controllers.ViewModels
     {
         public IList<ProposalList> Proposals { get; set; }
         public Editor Editor { get; set; }
+        public bool Immediate { get; set; }
 
         public static ProposalAdminListViewModel Create(IRepository repository, CallForProposal callForProposal, string login)
         {
@@ -50,7 +51,8 @@ namespace Gramps.Controllers.ViewModels
                                      Approved = x.IsApproved,
                                      Denied = x.IsDenied,
                                      Submitted = x.IsSubmitted,
-                                     SubmittedDate = x.SubmittedDate,                                     
+                                     SubmittedDate = x.SubmittedDate,  
+                                     WarnedOfClosing = x.WasWarned
                                  }).ToList();
             foreach (var proposal in viewModel.Proposals)
             {
@@ -64,7 +66,21 @@ namespace Gramps.Controllers.ViewModels
                 
             }
 
+            viewModel.Immediate = false;
+
             return viewModel;
+        }
+    }
+
+    public class ProposalAdminViewModel : CallNavigationViewModel
+    {
+        public Proposal Proposal;
+        public static ProposalAdminViewModel Create(IRepository repository, CallForProposal callForProposal, Proposal proposal)
+        {
+            Check.Require(repository != null, "Repository must be supplied");
+            Check.Require(callForProposal != null, "Grant to apply for must be supplied (CallForProposal)");
+            return new ProposalAdminViewModel {CallForProposal = callForProposal, Proposal = proposal};
+
         }
     }
 
@@ -96,6 +112,7 @@ namespace Gramps.Controllers.ViewModels
         public bool Submitted;
         public DateTime? SubmittedDate;
         public DateTime? LastViewedDate;
+        public bool WarnedOfClosing;
 
 
         //        col.Bound(x => x.Email);
