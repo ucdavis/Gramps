@@ -46,8 +46,68 @@
         <div class="display-label">NotifiedDate</div>
         <div class="display-field"><%: String.Format("{0:g}", Model.Proposal.NotifiedDate)%></div>
 
-        <h1> Still need to add Answers</h1>
-        
+        <h1>Answers</h1>
+        <%foreach (var question in Model.Proposal.CallForProposal.Questions.OrderBy(a => a.Order)){%>
+        <div class="display-label"><%: Html.Encode(question.Name) %></div>
+        <%
+            var answer = "";
+        %>
+        <%if(Model.Proposal.Answers.Where(a => a.Question.Id == question.Id).Any()){%>
+            <% answer = Model.Proposal.Answers.Where(a => a.Question.Id == question.Id).Any() ? Model.Proposal.Answers.Where(a => a.Question.Id == question.Id).FirstOrDefault().Answer : " "; %>   
+        <%}%>
+            <% switch (question.QuestionType.Name){%>
+                <% case "Text Box" : %>
+                    <fieldset>
+                        <%:Html.Encode(answer)%>
+                        <br />
+                    </fieldset>                  
+                <% break; %>
+                <% case "Text Area" : %>
+                    <fieldset>
+                        <%:Html.Encode(answer)%>
+                        <br />
+                    </fieldset> 
+                <% break; %>
+                <% case "Boolean" : %>
+                    <%--<%= Html.Encode(Model.Question.Name) %>--%>
+                    <%
+                        var ans = false;
+                        if (!Boolean.TryParse(answer, out ans)) {
+                            ans = false; } %>
+                    <%= Html.CheckBox(".Answer", ans, new { @disabled = "True" })%> <%= Html.Encode(question.Name) %>
+                <% break; %>
+                <% case "Radio Buttons" : %>  
+                    <% var option = !string.IsNullOrEmpty(answer) ? answer.Trim().ToLower() : string.Empty;%>            
+                    <% foreach (var o in question.Options){ %> 
+                        <%var isChecked = option == o.Name.Trim().ToLower();%>
+                        <%= Html.RadioButton(".Answer", o.Name, isChecked, new { @disabled = "True" })%>
+                        <%= Html.Encode(o.Name) %>
+                    <% } %>
+                <% break; %>
+                <% case "Checkbox List" : %>
+                    <% var options = !string.IsNullOrEmpty(answer) ? answer.Split(',') : new string[1]; %>
+                    <%--<%= Html.Encode(Model.Answer) %>--%>
+                    <% foreach (var o in question.Options){%>
+                        <%var cblAns = options.Contains(o.Name); %>
+                        
+                        <%= Html.CheckBox(".CblAnswer", cblAns, new { @disabled = "True" })%>
+                        <%= Html.Encode(o.Name) %>
+                    <% } %>
+                <% break; %>
+                <% case "Drop Down" : %>
+                    <%= this.Select(".Answer").Options(question.Options.OrderBy(a => a.Name), x => x.Name, x => x.Name).Class("indexedControl " + question.ValidationClasses)
+                            .Selected(answer ?? string.Empty)
+                                                    .FirstOption("--Not Selected--").Disabled(true)%>
+                <% break; %>
+                <% case "Date" : %>
+                    <fieldset>
+                        <%:Html.Encode(answer)%>
+                        <br />
+                    </fieldset> 
+                <% break; %>
+            <%}%>
+    <%}%>
+         
     </fieldset>
 
 
