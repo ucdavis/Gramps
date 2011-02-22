@@ -1,4 +1,5 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<Gramps.Controllers.ViewModels.ProposalAdminViewModel>" %>
+<%@ Import Namespace="Gramps.Helpers" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
 	Admin Proposal Detail
@@ -8,7 +9,7 @@
 
     <%Html.RenderPartial("CallNavigationButtons"); %>
 
-    <h2>Admin Proposal Detail</h2>
+    <h2>Admin Proposal Detail Number: <%:Model.Proposal.Sequence %></h2>
 
     <fieldset>
         <legend>Fields</legend>
@@ -58,13 +59,13 @@
             <% switch (question.QuestionType.Name){%>
                 <% case "Text Box" : %>
                     <fieldset>
-                        <%:Html.Encode(answer)%>
+                        <%:Html.HtmlEncode(answer)%>
                         <br />
                     </fieldset>                  
                 <% break; %>
                 <% case "Text Area" : %>
                     <fieldset>
-                        <%:Html.Encode(answer)%>
+                        <%: Html.HtmlEncode(answer)%>
                         <br />
                     </fieldset> 
                 <% break; %>

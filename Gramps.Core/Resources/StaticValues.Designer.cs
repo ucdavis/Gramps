@@ -61,6 +61,15 @@ namespace Gramps.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to indexedControl.
+        /// </summary>
+        public static string Class_indexedControl {
+            get {
+                return ResourceManager.GetString("Class_indexedControl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Email sent out to list for proposals.
         /// </summary>
         public static string InitialCall {

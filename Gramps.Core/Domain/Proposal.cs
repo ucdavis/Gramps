@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using FluentNHibernate.Mapping;
 using NHibernate.Validator.Constraints;
 using UCDArch.Core.DomainModel;
@@ -39,7 +40,7 @@ namespace Gramps.Core.Domain
         public virtual Guid Guid { get; set; }
         [NotNull]
         public virtual CallForProposal CallForProposal { get; set; }
-        [Required]
+        [UCDArch.Core.NHibernateValidator.Extensions.Required]
         [Email]
         [Length(100)]
         public virtual string Email { get; set; }
@@ -49,6 +50,7 @@ namespace Gramps.Core.Domain
         public virtual bool IsNotified { get; set; }
         public virtual bool IsSubmitted { get; set; }
         [RangeDouble(Min = 0.00, Message = "Minimum amount is zero")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:C}")]
         public virtual decimal RequestedAmount { get; set; }
         [RangeDouble(Min = 0.00, Message = "Minimum amount is zero")]
         public virtual decimal ApprovedAmount { get; set; }
@@ -62,6 +64,8 @@ namespace Gramps.Core.Domain
         public virtual IList<QuestionAnswer> Answers { get; set; }
         [NotNull]
         public virtual IList<ReviewedProposal> ReviewedByEditors { get; set; }
+
+        public virtual int Sequence { get; set; }
 
         #endregion Mapped Fields
 
@@ -97,6 +101,7 @@ namespace Gramps.Core.Domain
             Map(x => x.SubmittedDate);
             Map(x => x.NotifiedDate);
             Map(x => x.WasWarned);
+            Map(x => x.Sequence);
 
             References(x => x.CallForProposal).Not.Nullable();
             HasMany(x => x.Comments);

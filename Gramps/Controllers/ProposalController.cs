@@ -37,6 +37,8 @@ namespace Gramps.Controllers
             return this.RedirectToAction<HomeController>(a => a.About());
         }
 
+        #region Admin(User) Methods
+        
         [UserOnly]
         public ActionResult AdminIndex(int id)
         {
@@ -60,7 +62,7 @@ namespace Gramps.Controllers
         //
         // GET: /Proposal/Details/5
         [UserOnly]
-        public ActionResult Details(int id, int callForProposalId)
+        public ActionResult AdminDetails(int id, int callForProposalId)
         {
             var callforproposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId);
 
@@ -144,8 +146,10 @@ namespace Gramps.Controllers
 
             return this.RedirectToAction(a => a.AdminIndex(id));
         }
+        #endregion Admin(User) Methods
 
-
+        #region Public Methods (Proposer)
+               
         //
         // GET: /Proposal/Create
         public ActionResult Create(int id)
@@ -182,6 +186,10 @@ namespace Gramps.Controllers
 
             proposalToCreate.Email = proposal.Email;
             proposalToCreate.CallForProposal = callforproposal;
+            proposalToCreate.Sequence =
+                Repository.OfType<Proposal>().Queryable
+                .Where(a => a.CallForProposal == callforproposal)
+                .Max(a => a.Sequence) + 1;
 
             proposalToCreate.TransferValidationMessagesTo(ModelState);
 
@@ -224,26 +232,45 @@ namespace Gramps.Controllers
 
         //
         // GET: /Proposal/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(Guid id)
         {
-            var proposal = _proposalRepository.GetNullableById(id);
+            var proposal = _proposalRepository.Queryable.Where(a => a.Guid == id).SingleOrDefault();
+            if (proposal == null)
+            {
+                Message = "Your proposal was not found.";
+                return this.RedirectToAction<ErrorController>(a => a.Index());
+            }
+            if (proposal.IsSubmitted)
+            {
+                Message = "Cannot edit proposal once submitted.";
+                return this.RedirectToAction(a => a.Details(id));
+            }
 
-            if (proposal == null) return this.RedirectToAction(a => a.Index());
-
-			var viewModel = ProposalViewModel.Create(Repository, null);
+			var viewModel = ProposalViewModel.Create(Repository, proposal.CallForProposal);
 			viewModel.Proposal = proposal;
 
 			return View(viewModel);
         }
+
         
         //
         // POST: /Proposal/Edit/5
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Edit(int id, Proposal proposal)
+        [HttpPost]
+        [ValidateInput(false)]
+        public ActionResult Edit(Guid id, Proposal proposal, QuestionAnswerParameter[] proposalAnswers)
         {
-            var proposalToEdit = _proposalRepository.GetNullableById(id);
+            var proposalToEdit = _proposalRepository.Queryable.Where(a => a.Guid == id).SingleOrDefault();
+            if (proposalToEdit == null)
+            {
+                Message = "Your proposal was not found.";
+                return this.RedirectToAction<ErrorController>(a => a.Index());
+            }
+            if(proposalToEdit.IsSubmitted)
+            {
+                Message = "Cannot edit proposal once submitted.";
+                return this.RedirectToAction(a => a.Details(id));
+            }
 
-            if (proposalToEdit == null) return this.RedirectToAction(a => a.Index());
 
             TransferValues(proposal, proposalToEdit);
 
@@ -265,7 +292,14 @@ namespace Gramps.Controllers
                 return View(viewModel);
             }
         }
-        
+
+
+        public ActionResult Details(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion Public Methods (Proposer)
+
         //
         // GET: /Proposal/Delete/5 
         public ActionResult Delete(int id)
@@ -303,5 +337,11 @@ namespace Gramps.Controllers
 
     }
 
+    public class QuestionAnswerParameter
+    {
+        public int QuestionId { get; set; }
+        public string Answer { get; set; }
 
+        public string[] CblAnswer { get; set; }
+    }
 }

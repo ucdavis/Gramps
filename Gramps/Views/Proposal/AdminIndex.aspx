@@ -22,7 +22,7 @@
 				<%: Html.ActionLink("Edit", "Edit", new { id = x.Id }) %>           
 				<%});
 			col.Template(x => {%>
-				<%: Html.ActionLink<ProposalController>(a => a.Details(x.Id, Model.CallForProposal.Id), " ", new { @class = "details_button" })%>           
+				<%: Html.ActionLink<ProposalController>(a => a.AdminDetails(x.Id, Model.CallForProposal.Id), " ", new { @class = "details_button" })%>           
 				<%}).Title("Details");
             col.Bound(x => x.Email);
             col.Bound(x => x.LastViewedDate);
