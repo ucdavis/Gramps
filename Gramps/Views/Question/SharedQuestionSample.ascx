@@ -14,7 +14,7 @@
                     <li id="SampleTextArea"style="display:none;" class="hideAndShow">
                         <%=Html.Encode(Model.Question != null && !string.IsNullOrWhiteSpace(Model.Question.Name) ? Model.Question.Name : "Sample of a TextArea Question?")%>
                         <br />
-                        <%= Html.TextArea(".Answer", "") %>
+                        <%= Html.TextArea("TextArea", "") %>
                     </li>
                     <li id="SampleBoolean"style="display:none;" class="hideAndShow">
                         <%= Html.CheckBox(".Answer", true, new {@class="BooleanSample"})%> Sample of a Boolean Question?

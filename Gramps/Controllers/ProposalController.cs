@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using Gramps.Controllers.Filters;
 using Gramps.Controllers.ViewModels;
 using Gramps.Core.Domain;
+using Gramps.Core.Resources;
 using Gramps.Services;
 using UCDArch.Core.PersistanceSupport;
 using UCDArch.Web.Controller;
@@ -257,7 +259,8 @@ namespace Gramps.Controllers
         // POST: /Proposal/Edit/5
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult Edit(Guid id, Proposal proposal, QuestionAnswerParameter[] proposalAnswers)
+        [CaptchaValidator]
+        public ActionResult Edit(Guid id, Proposal proposal, QuestionAnswerParameter[] proposalAnswers, bool captchaValid)
         {
             var proposalToEdit = _proposalRepository.Queryable.Where(a => a.Guid == id).SingleOrDefault();
             if (proposalToEdit == null)
@@ -270,9 +273,51 @@ namespace Gramps.Controllers
                 Message = "Cannot edit proposal once submitted.";
                 return this.RedirectToAction(a => a.Details(id));
             }
+            if (proposalAnswers == null)
+            {
+                proposalAnswers = new QuestionAnswerParameter[0];
+            }
 
+
+            if (!captchaValid)
+            {
+                ModelState.AddModelError("Captcha", "Captcha values are not valid.");
+            }
 
             TransferValues(proposal, proposalToEdit);
+
+            var allQuestions = proposalToEdit.CallForProposal.Questions.ToList();
+
+            foreach (var pa in proposalAnswers)
+            {
+                var question = allQuestions.Where(a => a.Id == pa.QuestionId).FirstOrDefault();
+                if (question != null)
+                {
+                    var answer = CleanUpAnswer(question.QuestionType.Name, pa, question.ValidationClasses);
+                    if (proposal.IsSubmitted)
+                    {
+                        foreach (var validator in question.Validators)
+                        {
+                            string message;
+                            if (!Validate(validator, answer, question.Name, out message))
+                            {
+                                ModelState.AddModelError("Answer", message);
+                            }
+                        }
+                    }
+                    var pteAnswers = proposalToEdit.Answers.Where(a => a.Question.Id == question.Id).FirstOrDefault();
+                    if(pteAnswers != null)
+                    {
+                        pteAnswers.Answer = answer;
+                    }
+                    else if(!string.IsNullOrWhiteSpace(answer))
+                    {
+                        proposalToEdit.AddAnswer(question, answer);
+                    }
+
+                }
+
+            }
 
             proposalToEdit.TransferValidationMessagesTo(ModelState);
 
@@ -281,13 +326,29 @@ namespace Gramps.Controllers
                 _proposalRepository.EnsurePersistent(proposalToEdit);
 
                 Message = "Proposal Edited Successfully";
+                if (!proposalToEdit.IsSubmitted)
+                {
+                    var viewModel = ProposalViewModel.Create(Repository, proposalToEdit.CallForProposal);
+                    viewModel.Proposal = proposalToEdit;
 
-                return this.RedirectToAction(a => a.Index());
+                    return View(viewModel);
+                }
+
+                return this.RedirectToAction(a => a.Details(proposalToEdit.Guid));
             }
             else
             {
-				var viewModel = ProposalViewModel.Create(Repository, null);
-                viewModel.Proposal = proposal;
+                if (!captchaValid)
+                {
+                    Message = "Captcha not valid";
+                }
+                else
+                {
+                    Message = "Unable to submit final. Please Correct Errors";
+                }
+
+                var viewModel = ProposalViewModel.Create(Repository, proposalToEdit.CallForProposal);
+                viewModel.Proposal = proposalToEdit;
 
                 return View(viewModel);
             }
@@ -332,9 +393,70 @@ namespace Gramps.Controllers
         /// </summary>
         private static void TransferValues(Proposal source, Proposal destination)
         {
-            throw new NotImplementedException();
+            destination.RequestedAmount = source.RequestedAmount;
         }
 
+        private bool Validate(Validator validator, string answer, string fieldName, out string message)
+        {
+            // set as default so we can return without having to set it individually
+            message = string.Empty;
+
+            // check to make sure we have a reg ex
+            if (string.IsNullOrEmpty(validator.RegEx)) return true;
+
+            var regExVal = new Regex(validator.RegEx);
+            // valid
+            // check for when answer is null, because when doing a radio button it is null when nothing is selected
+            if (regExVal.IsMatch(answer ?? string.Empty)) return true;
+
+            // not valid input provide error message
+            message = string.Format(validator.ErrorMessage, fieldName);
+            return false;
+        }
+
+        private static string CleanUpAnswer(string name, QuestionAnswerParameter qa, string validationClasses)
+        {
+            string answer;
+            if (name != QuestionTypeText.STR_CheckboxList)
+            {
+                if (name == QuestionTypeText.STR_Boolean)
+                {
+                    //Convert unchecked bool of null to false
+                    if (string.IsNullOrEmpty(qa.Answer) || qa.Answer.ToLower() == "false")
+                    {
+                        answer = "false";
+                    }
+                    else
+                    {
+                        answer = "true";
+                    }
+                }
+                else if (name == QuestionTypeText.STR_TextArea)
+                {
+                    answer = qa.Answer;
+                }
+                else
+                {
+                    answer = qa.Answer ?? string.Empty;
+                    if (validationClasses != null && validationClasses.Contains("email"))
+                    {
+                        answer = answer.ToLower();
+                    }
+                }
+            }
+            else
+            {
+                if (qa.CblAnswer != null)
+                {
+                    answer = string.Join(", ", qa.CblAnswer);
+                }
+                else
+                {
+                    answer = string.Empty;
+                }
+            }
+            return answer;
+        }
     }
 
     public class QuestionAnswerParameter

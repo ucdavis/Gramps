@@ -13,6 +13,8 @@
 
 	<%= Html.ClientSideValidation<Proposal>() %>
 
+    <%: Html.ValidationSummary("There were validation Errors.") %>
+
     <fieldset>
     <legend>Non Editable</legend>
         <div class="display-label">Proposal Id</div>
@@ -36,7 +38,7 @@
 
     <% using (Html.BeginForm()) {%>
         <%= Html.AntiForgeryToken() %>
-        <%: Html.ValidationSummary("There were validation Errors.") %>
+
         <%: Html.Hidden("id", Model.Proposal.Guid) %>
 
 
@@ -117,6 +119,9 @@
             </div>
         <%}%>
 
+            <p>
+                <%= Html.GenerateCaptcha() %>
+            </p>
 
             <p>
                 <%: Html.CheckBoxFor(a => a.Proposal.IsSubmitted) %> <%: Html.Encode("Submit Final") %>
@@ -142,8 +147,10 @@
 
         $(document).ready(function () {
             $(".TinyMce").each(function (index) {
-
-              $(this).enableTinyMce({ script_location: '<%= Url.Content("~/Scripts/tiny_mce/tiny_mce.js") %>', overrideWidth: "700" });
+                $(this).enableTinyMce({ script_location: '<%= Url.Content("~/Scripts/tiny_mce/tiny_mce.js") %>', overrideWidth: "700" });
+            });
+            $(".dateForm").each(function (index) {
+                $(this).datepicker();
             });
         });
 

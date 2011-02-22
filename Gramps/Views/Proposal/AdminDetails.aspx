@@ -78,6 +78,7 @@
                     <%= Html.CheckBox(".Answer", ans, new { @disabled = "True" })%> <%= Html.Encode(question.Name) %>
                 <% break; %>
                 <% case "Radio Buttons" : %>  
+                    <%: Html.HtmlEncode(answer)%>
                     <% var option = !string.IsNullOrEmpty(answer) ? answer.Trim().ToLower() : string.Empty;%>            
                     <% foreach (var o in question.Options){ %> 
                         <%var isChecked = option == o.Name.Trim().ToLower();%>
@@ -86,6 +87,7 @@
                     <% } %>
                 <% break; %>
                 <% case "Checkbox List" : %>
+                    <%: Html.HtmlEncode(answer)%>
                     <% var options = !string.IsNullOrEmpty(answer) ? answer.Split(',') : new string[1]; %>
                     <%--<%= Html.Encode(Model.Answer) %>--%>
                     <% foreach (var o in question.Options){%>
