@@ -149,6 +149,138 @@ namespace Gramps.Controllers
 
             return this.RedirectToAction(a => a.AdminIndex(id));
         }
+
+        [UserOnly]
+        public ActionResult AdminEdit(int id, int callForProposalId)
+        {
+            var callforproposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId);
+
+            if (callforproposal == null)
+            {
+                return this.RedirectToAction<CallForProposalController>(a => a.Index());
+            }
+
+            if (!_accessService.HasAccess(null, callforproposal.Id, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+            if (!_accessService.HasSameId(null, callforproposal, null, callForProposalId))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+
+            var proposal = _proposalRepository.GetNullableById(id);
+
+            if (proposal == null)
+            {
+                Message = "Proposal Not Found";
+                return this.RedirectToAction(a => a.Index());
+            }
+
+            var editor = Repository.OfType<Editor>().Queryable.Where(a => a.CallForProposal == callforproposal && a.User != null && a.User.LoginId == CurrentUser.Identity.Name).Single();
+            var reviewed = Repository.OfType<ReviewedProposal>().Queryable.Where(a => a.Proposal == proposal && a.Editor == editor).FirstOrDefault();
+            if (reviewed == null)
+            {
+                reviewed = new ReviewedProposal(proposal, editor);
+            }
+            else
+            {
+                reviewed.LastViewedDate = DateTime.Now;
+            }
+            Repository.OfType<ReviewedProposal>().EnsurePersistent(reviewed);
+
+            var viewModel = ProposalAdminViewModel.Create(Repository, callforproposal, proposal);
+
+            viewModel.Comment = Repository.OfType<Comment>().Queryable
+                .Where(a => a.Proposal == proposal && a.Editor == editor).FirstOrDefault();
+
+            return View(viewModel);
+        }
+
+        [UserOnly]
+        [HttpPost]
+        [ValidateInput(false)]
+        public ActionResult AdminEdit(int id, int callForProposalId, Proposal proposal, Comment comment)
+        {
+            var callforproposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId);
+
+            if (callforproposal == null)
+            {
+                return this.RedirectToAction<CallForProposalController>(a => a.Index());
+            }
+
+            if (!_accessService.HasAccess(null, callforproposal.Id, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+            if (!_accessService.HasSameId(null, callforproposal, null, callForProposalId))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+
+            var proposalToEdit = _proposalRepository.GetNullableById(id);
+
+            if (proposalToEdit == null)
+            {
+                Message = "Proposal Not Found";
+                return this.RedirectToAction(a => a.Index());
+            }
+
+            var saveIsSubmitted = proposalToEdit.IsSubmitted;
+
+            var editor = Repository.OfType<Editor>().Queryable.Where(a => a.CallForProposal == callforproposal && a.User != null && a.User.LoginId == CurrentUser.Identity.Name).Single();
+            var commentToEdit = Repository.OfType<Comment>().Queryable
+                .Where(a => a.Proposal == proposalToEdit && a.Editor == editor).FirstOrDefault();
+            if (commentToEdit == null)
+            {
+                commentToEdit = new Comment(proposalToEdit, editor, string.Empty);
+            }
+
+            AdminTransferValues(proposal, proposalToEdit, comment, commentToEdit);
+
+            proposalToEdit.TransferValidationMessagesTo(ModelState);
+            commentToEdit.TransferValidationMessagesTo(ModelState);
+
+            if (proposalToEdit.IsApproved && proposalToEdit.IsDenied)
+            {
+                ModelState.AddModelError("IsApproved", "IsApproved and IsDenied can not both be checked");
+            }
+            if (!proposalToEdit.IsSubmitted && proposalToEdit.IsApproved)
+            {
+                ModelState.AddModelError("IsApproved", "Can not approve an unsubmitted proposal");
+            }
+
+
+            if (ModelState.IsValid)
+            {
+                _proposalRepository.EnsurePersistent(proposalToEdit);
+                Repository.OfType<Comment>().EnsurePersistent(commentToEdit);
+
+                if (saveIsSubmitted && !proposalToEdit.IsSubmitted)
+                {
+                    throw new NotImplementedException("Need to send email to proposer that their proposal has been set back to edit.");
+                }                
+
+                Message = "Proposal successfully edited";
+                return this.RedirectToAction(a => a.AdminIndex(callForProposalId));
+            }
+            else
+            {
+                var viewModel = ProposalAdminViewModel.Create(Repository, callforproposal, proposalToEdit);
+
+                viewModel.Comment = commentToEdit;
+
+                return View(viewModel);
+
+            }
+
+            
+        }
+
         #endregion Admin(User) Methods
 
         #region Public Methods (Proposer)
@@ -220,10 +352,6 @@ namespace Gramps.Controllers
             }
         }
 
-        //private string GetAbsoluteUrl(string relative)
-        //{
-        //    return string.Format("{0}://{1}:{2}{3}", Request.Url.Scheme, Request.Url.Host, Request.Url.Port, Url.Content(relative));
-        //}
 
 
 
@@ -300,6 +428,13 @@ namespace Gramps.Controllers
                         foreach (var validator in question.Validators)
                         {
                             string message;
+                            if (question.QuestionType.Name == QuestionTypeText.STR_TextArea)
+                            {
+                                if(validator.Class == "required" && !string.IsNullOrWhiteSpace(answer))
+                                {
+                                    continue;
+                                }
+                            }
                             if (!Validate(validator, answer, question.Name, out message))
                             {
                                 ModelState.AddModelError("Answer", message);
@@ -324,18 +459,22 @@ namespace Gramps.Controllers
 
             if (ModelState.IsValid)
             {
+                if (proposalToEdit.IsSubmitted)
+                {
+                    proposalToEdit.SubmittedDate = DateTime.Now;
+                }
                 _proposalRepository.EnsurePersistent(proposalToEdit);
 
                 Message = "Proposal Edited Successfully";
                 if (!proposalToEdit.IsSubmitted)
                 {
-
+                    
                     var viewModel = ProposalViewModel.Create(Repository, proposalToEdit.CallForProposal);
                     viewModel.Proposal = proposalToEdit;
 
                     return View(viewModel);
                 }
-
+                Message = "Proposal Submitted Successfully";
                 return this.RedirectToAction(a => a.Details(proposalToEdit.Guid));
             }
             else
@@ -410,6 +549,17 @@ namespace Gramps.Controllers
         private static void TransferValues(Proposal source, Proposal destination)
         {
             destination.RequestedAmount = source.RequestedAmount;
+            destination.IsSubmitted = source.IsSubmitted;
+        }
+
+        private static void AdminTransferValues(Proposal source, Proposal destination, Comment commentSource, Comment commentDestination)
+        {
+            destination.ApprovedAmount = source.ApprovedAmount;
+            destination.IsSubmitted = source.IsSubmitted;
+            destination.IsApproved = source.IsApproved;
+            destination.IsDenied = source.IsDenied;
+
+            commentDestination.Text = commentSource.Text;
         }
 
         private bool Validate(Validator validator, string answer, string fieldName, out string message)

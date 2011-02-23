@@ -75,6 +75,7 @@ namespace Gramps.Controllers.ViewModels
     public class ProposalAdminViewModel : CallNavigationViewModel
     {
         public Proposal Proposal;
+        public Comment Comment;
         public static ProposalAdminViewModel Create(IRepository repository, CallForProposal callForProposal, Proposal proposal)
         {
             Check.Require(repository != null, "Repository must be supplied");
