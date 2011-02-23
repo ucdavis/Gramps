@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
@@ -293,7 +294,7 @@ namespace Gramps.Controllers
                 var question = allQuestions.Where(a => a.Id == pa.QuestionId).FirstOrDefault();
                 if (question != null)
                 {
-                    var answer = CleanUpAnswer(question.QuestionType.Name, pa, question.ValidationClasses);
+                    var answer = CleanUpAnswer(question.QuestionType.Name, pa, question.ValidationClasses);//, question);
                     if (proposal.IsSubmitted)
                     {
                         foreach (var validator in question.Validators)
@@ -328,6 +329,7 @@ namespace Gramps.Controllers
                 Message = "Proposal Edited Successfully";
                 if (!proposalToEdit.IsSubmitted)
                 {
+
                     var viewModel = ProposalViewModel.Create(Repository, proposalToEdit.CallForProposal);
                     viewModel.Proposal = proposalToEdit;
 
@@ -414,7 +416,7 @@ namespace Gramps.Controllers
             return false;
         }
 
-        private static string CleanUpAnswer(string name, QuestionAnswerParameter qa, string validationClasses)
+        private static string CleanUpAnswer(string name, QuestionAnswerParameter qa, string validationClasses)//, Question question)
         {
             string answer;
             if (name != QuestionTypeText.STR_CheckboxList)
@@ -448,7 +450,7 @@ namespace Gramps.Controllers
             {
                 if (qa.CblAnswer != null)
                 {
-                    answer = string.Join(", ", qa.CblAnswer);
+                    answer = string.Join(",", qa.CblAnswer);
                 }
                 else
                 {
@@ -456,6 +458,56 @@ namespace Gramps.Controllers
                 }
             }
             return answer;
+            //else
+            //{
+            //    answer = string.Empty;
+            //    if (qa.CblAnswer != null)
+            //    {
+            //        var tempAnswer = string.Empty;
+            //        var count = qa.CblAnswer.Count();
+            //        for (int i = count-1; i >= 0; i--)
+            //        {
+            //            if (i > 0)
+            //            {
+            //                if (qa.CblAnswer[i - 1].ToLower() == "true")
+            //                {
+            //                    tempAnswer = "+" + tempAnswer ;
+            //                    i--;
+            //                }
+            //                else
+            //                {
+            //                    tempAnswer = "-" + tempAnswer ;
+            //                }
+            //            }
+            //            else
+            //            {
+            //                if (qa.CblAnswer[i].ToLower() == "false")
+            //                {
+            //                    tempAnswer = "-" + tempAnswer;
+            //                }
+            //            }
+            //        }
+
+            //        var answerList = new List<string>();
+
+            //        for (int i = 0; i < tempAnswer.Count(); i++)
+            //        {
+            //            if (tempAnswer[i] == '+')
+            //            {
+            //                answerList.Add(question.Options[i].Name);
+            //            }
+            //        }
+            //        if (answerList.Count > 0)
+            //        {
+            //            answer = string.Join(",", answerList);      
+            //        }
+            //    }
+            //    else
+            //    {
+            //        answer = string.Empty;
+            //    }
+            //}
+            //return answer;
         }
     }
 

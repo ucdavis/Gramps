@@ -95,10 +95,12 @@
                     <div class="editor-label"><%: Html.Encode(question.Name) %></div>
                     <% var options = !string.IsNullOrEmpty(answer) ? answer.Split(',') : new string[1]; %>
                     <%--<%= Html.Encode(Model.Answer) %>--%>
+     
                     <% foreach (var o in question.Options){%>
-                        <%var cblAns = options.Contains(o.Name); %>
-                        
-                        <%= Html.CheckBox("proposalAnswers" + indexString + ".CblAnswer", cblAns, new { @class = StaticValues.Class_indexedControl + " " + question.ValidationClasses })%>
+                        <% var cblAns = options.Contains(o.Name) ? "checked=\"checked\"" : ""; %>
+     
+                        <input id="proposalAnswers<%=o.Name%><%=indexString%>.CblAnswer" type="checkbox" <%=cblAns%> value="<%=o.Name%>" name="proposalAnswers<%=indexString%>.CblAnswer" class="indexedControl <%=question.ValidationClasses%>" />                        
+                        <%--<%= Html.CheckBox("proposalAnswers" + indexString + ".CblAnswer", cblAns, new { @class = StaticValues.Class_indexedControl + " " + question.ValidationClasses })%>--%>
                         <%= Html.Encode(o.Name) %>
                     <% } %>
                 <% break; %>
