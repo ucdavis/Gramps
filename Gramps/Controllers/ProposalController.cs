@@ -359,7 +359,21 @@ namespace Gramps.Controllers
 
         public ActionResult Details(Guid id)
         {
-            throw new NotImplementedException();
+            var proposal = _proposalRepository.Queryable.Where(a => a.Guid == id).SingleOrDefault();
+            if (proposal == null)
+            {
+                Message = "Your proposal was not found.";
+                return this.RedirectToAction<ErrorController>(a => a.Index());
+            }
+            if (!proposal.IsSubmitted)
+            {
+                Message = "Your proposal is not submitted yet!";
+            }
+
+            var viewModel = ProposalViewModel.Create(Repository, proposal.CallForProposal);
+            viewModel.Proposal = proposal;
+
+            return View(viewModel);
         }
         #endregion Public Methods (Proposer)
 
