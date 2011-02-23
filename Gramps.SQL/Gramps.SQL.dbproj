@@ -380,6 +380,9 @@
     <Build Include="Schema Objects\Schemas\dbo\Tables\Constraints\DF_Proposals_WasWarned.defconst.sql">
       <SubType>Code</SubType>
     </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Constraints\DF_Proposals_Sequence.defconst.sql">
+      <SubType>Code</SubType>
+    </Build>
   </ItemGroup>
   <ItemGroup>
     <NotInBuild Include="Create Scripts\CreateDB.sql">

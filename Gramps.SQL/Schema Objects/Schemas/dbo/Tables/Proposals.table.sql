@@ -6,14 +6,17 @@
     [IsApproved]        BIT              NOT NULL,
     [IsDenied]          BIT              NOT NULL,
     [IsNotified]        BIT              NOT NULL,
-    [RequestedAmount]   MONEY            NULL,
-    [ApprovedAmount]    MONEY            NULL,
+    [RequestedAmount]   DECIMAL (18, 2)  NULL,
+    [ApprovedAmount]    DECIMAL (18, 2)  NULL,
     [IsSubmitted]       BIT              NOT NULL,
     [CreatedDate]       DATETIME         NOT NULL,
     [SubmittedDate]     DATETIME         NULL,
     [NotifiedDate]      DATETIME         NULL,
-    [WasWarned]         BIT              NOT NULL
+    [WasWarned]         BIT              NOT NULL,
+    [Sequence]          INT              NOT NULL
 );
+
+
 
 
 

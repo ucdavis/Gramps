@@ -214,13 +214,14 @@ CREATE TABLE [dbo].[Proposals](
 	[IsApproved] [bit] NOT NULL,
 	[IsDenied] [bit] NOT NULL,
 	[IsNotified] [bit] NOT NULL,
-	[RequestedAmount] [money] NULL,
-	[ApprovedAmount] [money] NULL,
+	[RequestedAmount] [decimal](18, 2) NULL,
+	[ApprovedAmount] [decimal](18, 2) NULL,
 	[IsSubmitted] [bit] NOT NULL,
 	[CreatedDate] [datetime] NOT NULL,
 	[SubmittedDate] [datetime] NULL,
 	[NotifiedDate] [datetime] NULL,
 	[WasWarned] [bit] NOT NULL,
+	[Sequence] [int] NOT NULL,
  CONSTRAINT [PK_Proposals] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
@@ -437,6 +438,8 @@ GO
 ALTER TABLE [dbo].[Emails] ADD  CONSTRAINT [DF_Emails_HasBeenCalled]  DEFAULT ((0)) FOR [HasBeenEmailed]
 GO
 ALTER TABLE [dbo].[Proposals] ADD  CONSTRAINT [DF_Proposals_WasWarned]  DEFAULT ((0)) FOR [WasWarned]
+GO
+ALTER TABLE [dbo].[Proposals] ADD  CONSTRAINT [DF_Proposals_Sequence]  DEFAULT ((0)) FOR [Sequence]
 GO
 ALTER TABLE [dbo].[Templates] ADD  CONSTRAINT [DF_Templates_IsActive]  DEFAULT ((1)) FOR [IsActive]
 GO
