@@ -25,7 +25,7 @@ namespace Gramps.Core.Domain
 
         #region Mapped Fields
         [Required]
-        [Length(100)]
+        [Length(500)]
         public virtual string Name { get; set; }
         [NotNull]
         public virtual QuestionType QuestionType { get; set; }

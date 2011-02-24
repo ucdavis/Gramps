@@ -110,7 +110,7 @@ namespace Gramps.Core.Domain
         public virtual DateTime EndDate { get; set; }
         public virtual DateTime? CallsSentDate { get; set; }
         public virtual Template TemplateGeneratedFrom { get; set; }
-        [RangeDouble(Min = 0.01, Message = "Minimum amount is one cent")]
+        [RangeDouble(Min = 0.00, Message = "Minimum amount is one cent")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:C}")]
         public virtual Decimal ProposalMaximum { get; set; }
         

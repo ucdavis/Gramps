@@ -43,7 +43,15 @@
                  <%--<%: Html.TextBoxFor(model => model.CallForProposal.EndDate, Model.CallForProposal.EndDate.Date)%> --%>               
                 <%--<%: Html.TextBox("CallForProposal.EndDate", Model.CallForProposal.EndDate.ToString("d")) %>--%>
                 <%: Html.ValidationMessageFor(model => model.CallForProposal.EndDate)%>
-            </div>           
+            </div>          
+            
+            <div class="editor-label">
+                <%: Html.LabelFor(model => model.CallForProposal.ProposalMaximum) %>
+            </div>
+            <div class="editor-field">
+                <%: Html.TextBoxFor(model => model.CallForProposal.ProposalMaximum, String.Format("{0:F}", Model.CallForProposal.ProposalMaximum))%>
+                <%: Html.ValidationMessageFor(model => model.CallForProposal.ProposalMaximum)%>
+            </div> 
             
             <p>
                 <input type="submit" value="Save" />

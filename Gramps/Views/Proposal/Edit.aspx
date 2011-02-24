@@ -44,9 +44,11 @@
 
         <fieldset>
             <legend>Fields</legend>
-                <div class="editor-label">
-                    <%: Html.LabelFor(model => model.Proposal.RequestedAmount) %>
-                </div>
+            <div class="display-label">Proposal Maximum Amount</div>
+            <div class="display-field"><%: String.Format("{0:C}", Model.CallForProposal.ProposalMaximum)%></div>
+            <div class="editor-label">
+                <%: Html.LabelFor(model => model.Proposal.RequestedAmount) %>
+            </div>
             <div class="editor-field">
                 <%: Html.TextBoxFor(model => model.Proposal.RequestedAmount, String.Format("{0:F}", Model.Proposal.RequestedAmount))%>
                 <%: Html.ValidationMessageFor(model => model.Proposal.RequestedAmount)%>

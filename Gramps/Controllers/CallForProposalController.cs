@@ -152,6 +152,11 @@ namespace Gramps.Controllers
 
             callforproposalToEdit.TransferValidationMessagesTo(ModelState);
 
+            if (callforproposalToEdit.ProposalMaximum < 0.01m)
+            {
+                ModelState.AddModelError("ProposalMaximum", "You need to specify a Proposal Maximum of at least a cent");
+            }
+
             if (ModelState.IsValid)
             {
                 _callforproposalRepository.EnsurePersistent(callforproposalToEdit);
@@ -204,6 +209,7 @@ namespace Gramps.Controllers
             destination.Name = source.Name;
             destination.EndDate = source.EndDate;
             destination.IsActive = source.IsActive;
+            destination.ProposalMaximum = source.ProposalMaximum;
         }
 
     }

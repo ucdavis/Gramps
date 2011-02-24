@@ -512,6 +512,7 @@
     <Content Include="Views\Account\LogOn.aspx" />
     <Content Include="Views\CallForProposal\Create.aspx" />
     <Content Include="Views\CallForProposal\Edit.aspx" />
+    <Content Include="Views\CallForProposal\Edit2.aspx" />
     <Content Include="Views\CallForProposal\Index.aspx" />
     <Content Include="Views\CallForProposal\Launch.aspx" />
     <Content Include="Views\Editor\AddEditor.aspx" />
