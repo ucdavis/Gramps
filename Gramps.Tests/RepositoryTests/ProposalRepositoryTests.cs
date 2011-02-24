@@ -138,7 +138,7 @@ namespace Gramps.Tests.RepositoryTests
             {
                 Assert.IsNotNull(proposal);
                 Assert.IsNotNull(ex);
-                Assert.AreEqual("could not insert: [Gramps.Core.Domain.Proposal][SQL: INSERT INTO Proposals (Guid, Email, IsApproved, IsDenied, IsNotified, RequestedAmount, ApprovedAmount, IsSubmitted, CreatedDate, SubmittedDate, NotifiedDate, WasWarned, CallForProposalID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?); select last_insert_rowid()]", ex.Message);
+                Assert.AreEqual("could not insert: [Gramps.Core.Domain.Proposal][SQL: INSERT INTO Proposals (Guid, Email, IsApproved, IsDenied, IsNotified, RequestedAmount, ApprovedAmount, IsSubmitted, CreatedDate, SubmittedDate, NotifiedDate, WasWarned, Sequence, CallForProposalID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?); select last_insert_rowid()]", ex.Message);
                 throw;
             }	
         }

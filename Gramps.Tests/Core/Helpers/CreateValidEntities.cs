@@ -28,6 +28,7 @@ namespace Gramps.Tests.Core.Helpers
             rtValue.Name = "Name" + counter.Extra();
             rtValue.EndDate = DateTime.Now.Date.AddDays(30);
             rtValue.IsActive = true;
+            rtValue.ProposalMaximum = 0.01m;
 
             return rtValue;
         }
@@ -132,6 +133,23 @@ namespace Gramps.Tests.Core.Helpers
             rtValue.LastViewedDate = new DateTime(2011, 01, 01).AddDays(count);
             rtValue.Proposal = new Proposal();
             rtValue.Editor = new Editor();
+
+            return rtValue;
+        }
+
+        public static Investigator Investigator(int? counter)
+        {
+            var rtValue = new Investigator();
+            rtValue.Proposal = new Proposal();
+            
+            rtValue.Name = "Name" + counter.Extra();
+            rtValue.Institution = "Institution" + counter.Extra();
+            rtValue.Address1 = "Address1" + counter.Extra();
+            rtValue.City = "City" + counter.Extra();
+            rtValue.State = "CA";
+            rtValue.Zip = "95616";
+            rtValue.Phone = "(530) 551-5515";
+            rtValue.Email = string.Format("test{0}@testy.com", counter.Extra());
 
             return rtValue;
         }

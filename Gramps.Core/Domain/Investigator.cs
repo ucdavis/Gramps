@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using FluentNHibernate.Mapping;
 using NHibernate.Validator.Constraints;
 using UCDArch.Core.DomainModel;
@@ -12,24 +11,32 @@ namespace Gramps.Core.Domain
     {
         #region Constructor
 
-        
+        public Investigator()
+        {
+            SetDefaults();
+        }
+
+        private void SetDefaults()
+        {
+            IsPrimary = false;
+        }
 
         #endregion Constructor
 
         #region Mapped Fields
-
+        [NotNull]
         public virtual Proposal Proposal {get; set;}
         public virtual bool IsPrimary { get; set; }
 
-        [UCDArch.Core.NHibernateValidator.Extensions.Required]
+        [Required]
         [Length(200)]
         public virtual string Name { get; set; }
 
-        [UCDArch.Core.NHibernateValidator.Extensions.Required]
+        [Required]
         [Length(200)]
         public virtual string Institution { get; set; }
 
-        [UCDArch.Core.NHibernateValidator.Extensions.Required]
+        [Required]
         [Length(200)]
         public virtual string Address1 { get; set; }
 
@@ -39,10 +46,22 @@ namespace Gramps.Core.Domain
         [Length(200)]
         public virtual string Address3 { get; set; }
 
+        [Required]
+        [Length(100)]
+        public virtual string City { get; set; }
+
+        [Required]
+        [Length(2)]
+        public virtual string State { get; set; }
+
+        [Required]
+        [Length(11)]
+        public virtual string Zip { get; set; }
+        
         [Length(50)]
         public virtual string Phone { get; set; }
 
-        [UCDArch.Core.NHibernateValidator.Extensions.Required]
+        [Required]
         [Email]
         [Length(200)]
         public virtual string Email { get; set; }
@@ -67,6 +86,9 @@ namespace Gramps.Core.Domain
             Map(x => x.Address1);
             Map(x => x.Address2);
             Map(x => x.Address3);
+            Map(x => x.City);
+            Map(x => x.State);
+            Map(x => x.Zip);
             Map(x => x.Phone);
             Map(x => x.Email);
             Map(x => x.Notes);
