@@ -2,6 +2,7 @@
 <%@ Import Namespace="Gramps.Core.Domain" %>
 <%@ Import Namespace="Gramps.Helpers" %>
 <%@ Import Namespace="Gramps.Core.Resources" %>
+<%@ Import Namespace="Gramps.Controllers" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
 	Edit Proposal
@@ -34,6 +35,31 @@
         <div class="display-label">CreatedDate</div>
         <div class="display-field"><%: String.Format("{0:g}", Model.Proposal.CreatedDate)%></div>
             
+    </fieldset>
+
+    <fieldset>
+    <legend>Investigators</legend>
+    <br /><br />
+    <p>
+        <%: Html.ActionLink<InvestigatorController>(a => a.Create(), "Add Investigator", new { @class = "button" })%>
+    </p>
+
+<% Html.Grid(Model.Proposal.Investigators) 
+            .Name("List")
+            .PrefixUrlParameters(true) //True if >0 sortable/pageable grids
+            .Columns(col => {
+            col.Template(x => {%>
+				<%--<%: Html.ActionLink("Edit", "Edit", new { id = x.Id }) %>--%> 
+                <%: Html.ActionLink<InvestigatorController>(a => a.Edit(x.Id), " ", new { @class = "edit_button" })%>          
+				<%}).Title("Edit");
+                    col.Bound(x => x.IsPrimary).Title("Primary");
+			            col.Bound(x => x.Name);
+                        col.Bound(x => x.Email);                        
+                        })
+            .Pageable()
+            .Sortable()
+            .Render(); 
+        %>
     </fieldset>
 
     <% using (Html.BeginForm()) {%>
