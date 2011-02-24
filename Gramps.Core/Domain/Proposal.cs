@@ -26,6 +26,7 @@ namespace Gramps.Core.Domain
             Comments = new List<Comment>();
             Answers = new List<QuestionAnswer>();
             ReviewedByEditors = new List<ReviewedProposal>();
+            Investigators = new List<Investigator>();
             IsApproved = false;
             IsDenied = false;
             IsNotified = false;
@@ -65,6 +66,9 @@ namespace Gramps.Core.Domain
         [NotNull]
         public virtual IList<ReviewedProposal> ReviewedByEditors { get; set; }
 
+        [NotNull]
+        public virtual IList<Investigator> Investigators { get; set; }
+
         public virtual int Sequence { get; set; }
 
         #endregion Mapped Fields
@@ -78,6 +82,12 @@ namespace Gramps.Core.Domain
             questionAnswer.Question = question;
             questionAnswer.Answer = answer;
             Answers.Add(questionAnswer);
+        }
+
+        public virtual void AddInvestigator(Investigator investigator)
+        {
+            investigator.Proposal = this;
+            Investigators.Add(investigator);
         }
 
         #endregion Methods
@@ -106,6 +116,7 @@ namespace Gramps.Core.Domain
             References(x => x.CallForProposal).Not.Nullable();
             HasMany(x => x.Comments);
             HasMany(x => x.Answers).Cascade.AllDeleteOrphan();
+            HasMany(x => x.Investigators).Cascade.AllDeleteOrphan();
             HasMany(x => x.ReviewedByEditors);//.Table("ReviewedProposals");
         }
     }

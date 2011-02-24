@@ -192,37 +192,8 @@ CREATE TABLE [dbo].[CallForProposals](
 	[EndDate] [datetime] NOT NULL,
 	[CallsSentDate] [datetime] NULL,
 	[CreatedDate] [datetime] NOT NULL,
+	[ProposalMaximum] [decimal](18, 2) NOT NULL,
  CONSTRAINT [PK_CallForProposals] PRIMARY KEY CLUSTERED 
-(
-	[id] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-SET ANSI_PADDING OFF
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-SET ANSI_PADDING ON
-GO
-CREATE TABLE [dbo].[Proposals](
-	[id] [int] IDENTITY(1,1) NOT NULL,
-	[Guid] [uniqueidentifier] NOT NULL,
-	[CallForProposalId] [int] NOT NULL,
-	[Email] [varchar](100) NOT NULL,
-	[IsApproved] [bit] NOT NULL,
-	[IsDenied] [bit] NOT NULL,
-	[IsNotified] [bit] NOT NULL,
-	[RequestedAmount] [decimal](18, 2) NULL,
-	[ApprovedAmount] [decimal](18, 2) NULL,
-	[IsSubmitted] [bit] NOT NULL,
-	[CreatedDate] [datetime] NOT NULL,
-	[SubmittedDate] [datetime] NULL,
-	[NotifiedDate] [datetime] NULL,
-	[WasWarned] [bit] NOT NULL,
-	[Sequence] [int] NOT NULL,
- CONSTRAINT [PK_Proposals] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
@@ -327,6 +298,36 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_PADDING ON
 GO
+CREATE TABLE [dbo].[Proposals](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[Guid] [uniqueidentifier] NOT NULL,
+	[CallForProposalId] [int] NOT NULL,
+	[Email] [varchar](100) NOT NULL,
+	[IsApproved] [bit] NOT NULL,
+	[IsDenied] [bit] NOT NULL,
+	[IsNotified] [bit] NOT NULL,
+	[RequestedAmount] [decimal](18, 2) NULL,
+	[ApprovedAmount] [decimal](18, 2) NULL,
+	[IsSubmitted] [bit] NOT NULL,
+	[CreatedDate] [datetime] NOT NULL,
+	[SubmittedDate] [datetime] NULL,
+	[NotifiedDate] [datetime] NULL,
+	[WasWarned] [bit] NOT NULL,
+	[Sequence] [int] NOT NULL,
+ CONSTRAINT [PK_Proposals] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
 CREATE TABLE [dbo].[Questions](
 	[id] [int] IDENTITY(1,1) NOT NULL,
 	[QuestionTypeId] [int] NOT NULL,
@@ -396,6 +397,32 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_PADDING ON
 GO
+CREATE TABLE [dbo].[Investigators](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[ProposalId] [int] NOT NULL,
+	[IsPrimary] [bit] NOT NULL,
+	[Name] [varchar](200) NOT NULL,
+	[Institution] [varchar](200) NOT NULL,
+	[Address1] [varchar](200) NOT NULL,
+	[Address2] [varchar](200) NULL,
+	[Address3] [varchar](200) NULL,
+	[Phone] [varchar](50) NOT NULL,
+	[Email] [varchar](200) NOT NULL,
+	[Notes] [varchar](max) NULL,
+ CONSTRAINT [PK_Investigators] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
 CREATE TABLE [dbo].[Comments](
 	[id] [int] IDENTITY(1,1) NOT NULL,
 	[Text] [varchar](max) NULL,
@@ -429,6 +456,8 @@ CREATE TABLE [dbo].[Answers](
 GO
 SET ANSI_PADDING OFF
 GO
+ALTER TABLE [dbo].[CallForProposals] ADD  CONSTRAINT [DF_CallForProposals_ProposalMaximum]  DEFAULT ((0)) FOR [ProposalMaximum]
+GO
 ALTER TABLE [dbo].[Editors] ADD  CONSTRAINT [DF_Editors_HasBeenNotified]  DEFAULT ((0)) FOR [HasBeenNotified]
 GO
 ALTER TABLE [dbo].[EmailQueue] ADD  CONSTRAINT [DF_EmailQueues_Pending]  DEFAULT ((1)) FOR [Pending]
@@ -436,6 +465,8 @@ GO
 ALTER TABLE [dbo].[EmailQueue] ADD  CONSTRAINT [DF_EmailQueue_Imediate]  DEFAULT ((0)) FOR [Immediate]
 GO
 ALTER TABLE [dbo].[Emails] ADD  CONSTRAINT [DF_Emails_HasBeenCalled]  DEFAULT ((0)) FOR [HasBeenEmailed]
+GO
+ALTER TABLE [dbo].[Investigators] ADD  CONSTRAINT [DF_Investigators_IsPrimary]  DEFAULT ((0)) FOR [IsPrimary]
 GO
 ALTER TABLE [dbo].[Proposals] ADD  CONSTRAINT [DF_Proposals_WasWarned]  DEFAULT ((0)) FOR [WasWarned]
 GO
@@ -508,6 +539,11 @@ ALTER TABLE [dbo].[EmailTemplates]  WITH CHECK ADD  CONSTRAINT [FK_EmailTemplate
 REFERENCES [dbo].[Templates] ([id])
 GO
 ALTER TABLE [dbo].[EmailTemplates] CHECK CONSTRAINT [FK_EmailTemplates_Templates]
+GO
+ALTER TABLE [dbo].[Investigators]  WITH CHECK ADD  CONSTRAINT [FK_Investigators_Proposals] FOREIGN KEY([ProposalId])
+REFERENCES [dbo].[Proposals] ([id])
+GO
+ALTER TABLE [dbo].[Investigators] CHECK CONSTRAINT [FK_Investigators_Proposals]
 GO
 ALTER TABLE [dbo].[Proposals]  WITH CHECK ADD  CONSTRAINT [FK_Proposals_CallForProposals] FOREIGN KEY([CallForProposalId])
 REFERENCES [dbo].[CallForProposals] ([id])

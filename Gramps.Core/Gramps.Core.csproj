@@ -61,6 +61,7 @@
     <Compile Include="Domain\EmailQueue.cs" />
     <Compile Include="Domain\EmailsForCall.cs" />
     <Compile Include="Domain\EmailTemplate.cs" />
+    <Compile Include="Domain\Investigator.cs" />
     <Compile Include="Domain\Proposal.cs" />
     <Compile Include="Domain\Question.cs" />
     <Compile Include="Domain\QuestionAnswer.cs" />

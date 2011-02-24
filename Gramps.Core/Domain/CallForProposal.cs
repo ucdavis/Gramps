@@ -110,6 +110,9 @@ namespace Gramps.Core.Domain
         public virtual DateTime EndDate { get; set; }
         public virtual DateTime? CallsSentDate { get; set; }
         public virtual Template TemplateGeneratedFrom { get; set; }
+        [RangeDouble(Min = 0.01, Message = "Minimum amount is one cent")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:C}")]
+        public virtual Decimal ProposalMaximum { get; set; }
         
         [NotNull]
         public virtual IList<EmailsForCall> Emails { get; set; }
@@ -336,6 +339,7 @@ namespace Gramps.Core.Domain
             Map(x => x.CreatedDate);
             Map(x => x.EndDate);
             Map(x => x.CallsSentDate);
+            Map(x => x.ProposalMaximum);
             References(x => x.TemplateGeneratedFrom);
             HasMany(x => x.Emails).Inverse().Cascade.AllDeleteOrphan();
             HasMany(x => x.EmailTemplates).Inverse().Cascade.AllDeleteOrphan();
