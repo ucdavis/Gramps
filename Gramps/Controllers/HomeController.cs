@@ -20,5 +20,10 @@ namespace Gramps.Controllers
         {
             return View();
         }
+
+        public ActionResult LoggedOut()
+        {
+            return View();
+        }
     }
 }

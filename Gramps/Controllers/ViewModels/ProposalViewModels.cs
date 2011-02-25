@@ -8,6 +8,35 @@ using UCDArch.Core.Utils;
 
 namespace Gramps.Controllers.ViewModels
 {
+    public class ProposalPublicListViewModel
+    {
+        public bool IsReviewer = false;
+        public IList<CallForProposal> CallForProposals { get; set; } //Will only be populated if user is a reviewer
+        public IList<Proposal> UsersProposals { get; set; }
+
+        public static ProposalPublicListViewModel Create(IRepository repository, string login)
+        {
+            Check.Require(repository != null, "Repository must be supplied");
+
+            var viewModel = new ProposalPublicListViewModel();
+            viewModel.IsReviewer = repository.OfType<Editor>()
+                .Queryable.Where(a => a.CallForProposal != null && a .CallForProposal.IsActive && a.User == null && a.ReviewerEmail == login).Any();
+            if (viewModel.IsReviewer)
+            {
+                var callForProposalIds =
+                    repository.OfType<Editor>().Queryable.Where(
+                        a =>
+                        a.CallForProposal != null && a.CallForProposal.IsActive && a.User == null &&
+                        a.ReviewerEmail == login).Select(x => x.CallForProposal.Id).ToList();
+                viewModel.CallForProposals =
+                    repository.OfType<CallForProposal>().Queryable.Where(a => callForProposalIds.Contains(a.Id)).ToList();
+            }
+            viewModel.UsersProposals = repository.OfType<Proposal>().Queryable.Where(a => a.Email == login).OrderByDescending(a => a.CreatedDate).ToList();
+
+            return viewModel;
+        }
+    }
+
     /// <summary>
     /// ViewModel for the Proposal class
     /// </summary>

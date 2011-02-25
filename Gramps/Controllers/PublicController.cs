@@ -9,6 +9,7 @@ using System.Web.Routing;
 using System.Web.Security;
 using Gramps.Controllers.Filters;
 using Gramps.Models;
+using MvcContrib;
 
 namespace Gramps.Controllers
 {
@@ -51,7 +52,7 @@ namespace Gramps.Controllers
                     }
                     else
                     {
-                        return RedirectToAction("About", "Home");
+                        return this.RedirectToAction<ProposalController>(a => a.Home());
                     }
                 }
                 else
@@ -67,7 +68,6 @@ namespace Gramps.Controllers
         [HttpGet]
         public ActionResult ResetPassword()
         {
-            MembershipService.ResetPassword("jasoncsylvestre@gmail.com");
             throw new NotImplementedException();
         }
 
@@ -79,7 +79,7 @@ namespace Gramps.Controllers
         {
             FormsService.SignOut();
 
-            return RedirectToAction("Index", "Home");
+            return this.RedirectToAction<HomeController>(a => a.LoggedOut());
         }
 
         // **************************************

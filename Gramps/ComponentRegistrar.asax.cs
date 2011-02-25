@@ -1,4 +1,5 @@
 ﻿using Castle.Windsor;
+using Gramps.Models;
 using Gramps.Services;
 using UCDArch.Core.CommonValidator;
 using UCDArch.Core.NHibernateValidator.CommonValidatorAdapter;

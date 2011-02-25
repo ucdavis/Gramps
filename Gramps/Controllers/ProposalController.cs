@@ -7,6 +7,7 @@ using Gramps.Controllers.Filters;
 using Gramps.Controllers.ViewModels;
 using Gramps.Core.Domain;
 using Gramps.Core.Resources;
+using Gramps.Models;
 using Gramps.Services;
 using UCDArch.Core.PersistanceSupport;
 using UCDArch.Web.Controller;
@@ -339,7 +340,22 @@ namespace Gramps.Controllers
 
                 Message = "Proposal Created Successfully";
 
-                _emailService.SendConfirmation(Request, Url, proposalToCreate, proposalToCreate.CallForProposal.EmailTemplates.Where(a => a.TemplateType==EmailTemplateType.ProposalConfirmation).Single(), true);
+                string tempPass = null;
+                var membershipService = new AccountMembershipService();
+                if (membershipService.DoesUserExist(proposalToCreate.Email))
+                {
+                    //Send an email saying you already exist and can view here
+                    
+                }
+                else
+                {
+                    membershipService.CreateUser(proposalToCreate.Email.Trim().ToLower(),
+                                                 "Ht548*%KjjY2#",
+                                                 proposalToCreate.Email.Trim().ToLower());
+                    tempPass = membershipService.ResetPassword(proposalToCreate.Email.Trim().ToLower());
+                }
+
+                _emailService.SendConfirmation(Request, Url, proposalToCreate, proposalToCreate.CallForProposal.EmailTemplates.Where(a => a.TemplateType == EmailTemplateType.ProposalConfirmation).Single(), true, proposalToCreate.Email.Trim().ToLower(), tempPass);
 
                 return this.RedirectToAction(a => a.Confirmation(proposalToCreate.Email));
             }
@@ -363,6 +379,7 @@ namespace Gramps.Controllers
 
         //
         // GET: /Proposal/Edit/5
+        [PublicAuthorize]
         public ActionResult Edit(Guid id)
         {
             var proposal = _proposalRepository.Queryable.Where(a => a.Guid == id).SingleOrDefault();
@@ -371,30 +388,47 @@ namespace Gramps.Controllers
                 Message = "Your proposal was not found.";
                 return this.RedirectToAction<ErrorController>(a => a.Index());
             }
+            if (proposal.Email != CurrentUser.Identity.Name)
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<ErrorController>(a => a.Index());
+            }
             if (proposal.IsSubmitted)
             {
                 Message = "Cannot edit proposal once submitted.";
                 return this.RedirectToAction(a => a.Details(id));
             }
+            
 
 			var viewModel = ProposalViewModel.Create(Repository, proposal.CallForProposal);
 			viewModel.Proposal = proposal;
 
 			return View(viewModel);
         }
+        [PublicAuthorize]
+        public ActionResult Home()
+        {
+            var viewModel = ProposalPublicListViewModel.Create(Repository, CurrentUser.Identity.Name);
 
+            return View(viewModel);
+        }
         
         //
         // POST: /Proposal/Edit/5
         [HttpPost]
         [ValidateInput(false)]
-        [CaptchaValidator]
-        public ActionResult Edit(Guid id, Proposal proposal, QuestionAnswerParameter[] proposalAnswers, bool captchaValid)
+        [PublicAuthorize]
+        public ActionResult Edit(Guid id, Proposal proposal, QuestionAnswerParameter[] proposalAnswers)
         {
             var proposalToEdit = _proposalRepository.Queryable.Where(a => a.Guid == id).SingleOrDefault();
             if (proposalToEdit == null)
             {
                 Message = "Your proposal was not found.";
+                return this.RedirectToAction<ErrorController>(a => a.Index());
+            }
+            if (proposal.Email != CurrentUser.Identity.Name)
+            {
+                Message = "You do not have access to that.";
                 return this.RedirectToAction<ErrorController>(a => a.Index());
             }
             if(proposalToEdit.IsSubmitted)
@@ -407,11 +441,6 @@ namespace Gramps.Controllers
                 proposalAnswers = new QuestionAnswerParameter[0];
             }
 
-
-            if (!captchaValid)
-            {
-                ModelState.AddModelError("Captcha", "Captcha values are not valid.");
-            }
 
             TransferValues(proposal, proposalToEdit);
 
@@ -479,14 +508,9 @@ namespace Gramps.Controllers
             }
             else
             {
-                if (!captchaValid)
-                {
-                    Message = "Captcha not valid";
-                }
-                else
-                {
-                    Message = "Unable to submit final. Please Correct Errors";
-                }
+
+                Message = "Unable to submit final. Please Correct Errors";
+
 
                 var viewModel = ProposalViewModel.Create(Repository, proposalToEdit.CallForProposal);
                 viewModel.Proposal = proposalToEdit;

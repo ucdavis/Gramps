@@ -534,6 +534,7 @@
     <Content Include="Views\EmailTemplate\Edit.aspx" />
     <Content Include="Views\EmailTemplate\Index.aspx" />
     <Content Include="Views\Error\Index.aspx" />
+    <Content Include="Views\Home\LoggedOut.aspx" />
     <Content Include="Views\Proposal\AdminEdit.aspx" />
     <Content Include="Views\Proposal\AdminIndex.aspx" />
     <Content Include="Views\Proposal\Confirmation.aspx" />
@@ -541,11 +542,11 @@
     <Content Include="Views\Proposal\AdminDetails.aspx" />
     <Content Include="Views\Proposal\Details.aspx" />
     <Content Include="Views\Proposal\Edit.aspx" />
+    <Content Include="Views\Proposal\Home.aspx" />
     <Content Include="Views\Proposal\ProposalAnswerDetails.ascx" />
     <Content Include="Views\Public\ChangePassword.aspx" />
     <Content Include="Views\Public\ChangePasswordSuccess.aspx" />
     <Content Include="Views\Public\LogOn.aspx" />
-    <Content Include="Views\Public\Register.aspx" />
     <Content Include="Views\Question\Create.aspx" />
     <Content Include="Views\Question\Edit.aspx" />
     <Content Include="Views\Question\Index.aspx" />
