@@ -44,6 +44,11 @@
     <span class="logos">
         <span class="ucdavis"><a href=""><img src="<%= Url.Content("~/Images/logo-ucdavis.png") %>" alt="UC Davis" /></a></span>
         <span class="ucdavis"><a href=""><img src="<%= Url.Content("~/Images/logo-caes.png") %>" alt="College of Agricultural &amp; Environmental Sciences" /></a></span>
+        <asp:ContentPlaceHolder ID="logoContent" runat="server">        
+        </asp:ContentPlaceHolder>
+             <span id="logindisplay">
+                <% Html.RenderPartial("PublicLogOnUserControl"); %>
+             </span> 
     </span>
     
         

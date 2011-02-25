@@ -139,12 +139,14 @@
     <Compile Include="Controllers\EmailsForCallController.cs" />
     <Compile Include="Controllers\EmailTemplateController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
+    <Compile Include="Controllers\Filters\PublicAuthorize.cs" />
     <Compile Include="Controllers\Filters\Recaptcha.cs" />
     <Compile Include="Controllers\Filters\RoleFilter.cs" />
     <Compile Include="Controllers\Filters\VersionAttribute.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InvestigatorController.cs" />
     <Compile Include="Controllers\ProposalController.cs" />
+    <Compile Include="Controllers\PublicController.cs" />
     <Compile Include="Controllers\QuestionController.cs" />
     <Compile Include="Controllers\TemplateController.cs" />
     <Compile Include="Controllers\ViewModels\CallForProposalViewModels.cs" />
@@ -162,6 +164,7 @@
     <Compile Include="Helpers\CustomGridBuilder.cs" />
     <Compile Include="Helpers\HtmlHelperExtensions.cs" />
     <Compile Include="Helpers\StringExtension.cs" />
+    <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RouteRegistrar.asax.cs" />
     <Compile Include="Services\IAccessService.cs" />
@@ -539,6 +542,10 @@
     <Content Include="Views\Proposal\Details.aspx" />
     <Content Include="Views\Proposal\Edit.aspx" />
     <Content Include="Views\Proposal\ProposalAnswerDetails.ascx" />
+    <Content Include="Views\Public\ChangePassword.aspx" />
+    <Content Include="Views\Public\ChangePasswordSuccess.aspx" />
+    <Content Include="Views\Public\LogOn.aspx" />
+    <Content Include="Views\Public\Register.aspx" />
     <Content Include="Views\Question\Create.aspx" />
     <Content Include="Views\Question\Edit.aspx" />
     <Content Include="Views\Question\Index.aspx" />
@@ -548,6 +555,7 @@
     <Content Include="Views\Shared\CallNavigationButtons.ascx" />
     <Content Include="Views\Shared\LogOnUserControl.ascx" />
     <Content Include="Views\Shared\NavigationButtons.ascx" />
+    <Content Include="Views\Shared\PublicLogOnUserControl.ascx" />
     <Content Include="Views\Template\Create.aspx" />
     <Content Include="Views\Template\Edit.aspx" />
     <Content Include="Views\Template\Index.aspx" />
@@ -579,7 +587,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Gramps.Core\Gramps.Core.csproj">
