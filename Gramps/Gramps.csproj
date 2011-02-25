@@ -546,6 +546,7 @@
     <Content Include="Views\Proposal\ProposalAnswerDetails.ascx" />
     <Content Include="Views\Public\ChangePassword.aspx" />
     <Content Include="Views\Public\ChangePasswordSuccess.aspx" />
+    <Content Include="Views\Public\ForgotPassword.aspx" />
     <Content Include="Views\Public\LogOn.aspx" />
     <Content Include="Views\Question\Create.aspx" />
     <Content Include="Views\Question\Edit.aspx" />

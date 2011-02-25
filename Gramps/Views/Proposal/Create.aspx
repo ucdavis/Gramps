@@ -9,6 +9,10 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
     <h2>Create Proposal</h2>
+    <% if (Request.IsAuthenticated){%>
+        <% Model.Proposal.Email = Html.Encode(Page.User.Identity.Name);%>
+    <%
+}%>
 
 	<%= Html.ClientSideValidation<Proposal>() %>
 

@@ -13,6 +13,7 @@ namespace Gramps.Services
     {
         void SendEmail(CallForProposal callForProposal, EmailTemplate emailTemplate, string email, bool immediate);
         void SendConfirmation(HttpRequestBase request, UrlHelper url, Proposal proposal, EmailTemplate emailTemplate, bool immediate, string userName, string tempPass);
+        void SendPasswordReset(CallForProposal callForProposal, string email, string tempPassword);
     }
 
     public class EmailService : IEmailService
@@ -22,6 +23,16 @@ namespace Gramps.Services
         public EmailService(IRepository repository)
         {
             _repository = repository;
+        }
+
+        public virtual void SendPasswordReset(CallForProposal callForProposal, string email, string tempPassword)
+        {
+            var emailQueue = new EmailQueue(callForProposal, email, "Password Reset", "");
+            emailQueue.Immediate = true;
+            emailQueue.Body =
+                "<p>Your password has been reset to the following. We recommend changing it once you login.</p>";
+            emailQueue.Body = string.Format("{0}<p>UserName {1}</p><p>Password {2}</p>", emailQueue.Body, email, tempPassword);
+            _repository.OfType<EmailQueue>().EnsurePersistent(emailQueue);
         }
 
         public virtual void SendEmail(CallForProposal callForProposal,EmailTemplate emailTemplate, string email, bool immediate)
@@ -48,7 +59,7 @@ namespace Gramps.Services
             }
             else
             {
-                emailQueue.Body = string.Format("{0}<p>An account has been created for you.</><p>UserName {1}</p><p>Password {2}</p><p>You may change your password (recommended) after logging in.</p>", emailQueue.Body, userName, tempPass);
+                emailQueue.Body = string.Format("{0}<p>An account has been created for you.</p><p>UserName {1}</p><p>Password {2}</p><p>You may change your password (recommended) after logging in.</p>", emailQueue.Body, userName, tempPass);
             }
             _repository.OfType<EmailQueue>().EnsurePersistent(emailQueue);
         }

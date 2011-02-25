@@ -7,19 +7,24 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Security;
+using Gramps.Controllers;
 using Gramps.Controllers.Filters;
+using Gramps.Core.Domain;
 using Gramps.Models;
+using Gramps.Services;
 using MvcContrib;
 
 namespace Gramps.Controllers
 {
 
+
     [HandleError]
-    public class PublicController : Controller
+    public class PublicController : ApplicationController 
     {
 
         public IFormsAuthenticationService FormsService { get; set; }
         public IMembershipService MembershipService { get; set; }
+        public IEmailService EmailService { get; set; }
 
         protected override void Initialize(RequestContext requestContext)
         {
@@ -63,6 +68,73 @@ namespace Gramps.Controllers
 
             // If we got this far, something failed, redisplay form
             return View(model);
+        }
+
+        public ActionResult ForgotPassword()
+        {
+            var viewModel = new ForgotPasswordModel();
+            
+            return View(viewModel);
+        }
+
+        [CaptchaValidator]
+        [HttpPost]
+        public ActionResult ForgotPassword(string userName, bool captchaValid )
+        {
+            if (!captchaValid)
+            {
+                ModelState.AddModelError("Captcha", "Recaptcha value not valid");
+            }
+            userName = userName.Trim().ToLower();
+
+            if (!MembershipService.DoesUserExist(userName))
+            {
+                ModelState.AddModelError("UserName", "Email not found");
+            }
+
+            CallForProposal callForProposal = null;
+            var proposal =
+                Repository.OfType<Proposal>().Queryable.Where(a => a.Email == userName && a.CallForProposal.IsActive)
+                    .FirstOrDefault();
+            if(proposal == null)
+            {
+                proposal =
+                    Repository.OfType<Proposal>().Queryable.Where(a => a.Email == userName).FirstOrDefault();
+            }
+            if(proposal == null)
+            {
+                var editor =
+                    Repository.OfType<Editor>().Queryable.Where(a => a.ReviewerEmail == userName && a.CallForProposal != null).FirstOrDefault();
+                if(editor != null)
+                {
+                    callForProposal =
+                        Repository.OfType<CallForProposal>().Queryable.Where(a => a.Editors.Contains(editor)).
+                            FirstOrDefault();
+                }
+            }
+            else
+            {
+                callForProposal = proposal.CallForProposal;
+            }
+
+            if(callForProposal == null)
+            {
+               ModelState.AddModelError("UserName", "Linked Email not found"); 
+            }
+
+            if (ModelState.IsValid)
+            {
+                var tempPass = MembershipService.ResetPassword(userName);
+                EmailService.SendPasswordReset(callForProposal, userName, tempPass);
+
+                Message = "A new password has been sent to your email. It should arrive in a few minutes";
+                return this.RedirectToAction<PublicController>(a => a.LogOn());
+            }
+
+            Message = "Unable to reset password";
+            var viewModel = new ForgotPasswordModel();
+            viewModel.UserName = userName;
+            return View(viewModel);
         }
 
         [HttpGet]

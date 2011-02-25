@@ -426,7 +426,7 @@ namespace Gramps.Controllers
                 Message = "Your proposal was not found.";
                 return this.RedirectToAction<ErrorController>(a => a.Index());
             }
-            if (proposal.Email != CurrentUser.Identity.Name)
+            if (proposalToEdit.Email != CurrentUser.Identity.Name)
             {
                 Message = "You do not have access to that.";
                 return this.RedirectToAction<ErrorController>(a => a.Index());

@@ -149,21 +149,14 @@
             </div>
         <%}%>
 
-            <p>
-                <%= Html.GenerateCaptcha() %>
-            </p>
-
+        </fieldset>
+        <br />
             <p>
                 <%: Html.CheckBoxFor(a => a.Proposal.IsSubmitted) %> <%: Html.Encode("Submit Final") %>
                 <input type="submit" value="Save" />
             </p>
-        </fieldset>
-
     <% } %>
 
-    <div>
-        <%: Html.ActionLink("Back to List", "Index") %>
-    </div>
 
 </asp:Content>
 

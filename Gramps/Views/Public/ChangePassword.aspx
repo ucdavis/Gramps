@@ -15,6 +15,7 @@
 
     <% using (Html.BeginForm()) { %>
         <%: Html.ValidationSummary(true, "Password change was unsuccessful. Please correct the errors and try again.") %>
+        <%= Html.AntiForgeryToken() %>
         <div>
             <fieldset>
                 <legend>Account Information</legend>

@@ -6,7 +6,8 @@
         Welcome <b><%= Html.Encode(Page.User.Identity.Name) %></b>!   
         
          <%= Html.ActionLink<PublicController>(a => a.LogOff(), "Log Off")%>  
-         <%= Html.ActionLink<ProposalController>(a => a.Home(), "Home")%>          
+         <%= Html.ActionLink<ProposalController>(a => a.Home(), "Home")%>  
+         <%: Html.ActionLink<PublicController>(a => a.ChangePassword(), "Change Password") %>        
 <%
     }
     else {

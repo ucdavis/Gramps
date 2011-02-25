@@ -47,6 +47,14 @@ namespace Gramps.Models
         public bool RememberMe { get; set; }
     }
 
+    public class ForgotPasswordModel
+    {
+        [Required]
+        [DataType(DataType.EmailAddress)]
+        [DisplayName("Email")]
+        public string UserName { get; set; }
+    }
+
     [PropertiesMustMatch("Password", "ConfirmPassword", ErrorMessage = "The password and confirmation password do not match.")]
     public class RegisterModel
     {
