@@ -43,6 +43,44 @@
     </fieldset>
 
     <fieldset>
+        <legend>Investigators</legend>
+        <%foreach (var investigator in Model.Proposal.Investigators.Where(a => a.IsPrimary)){%>
+            <fieldset>
+            <legend><strong>Primary Investigator</strong></legend>
+                <%: Html.Encode(investigator.Name) %> <br />
+                <%: Html.Encode(investigator.Institution) %> <br />
+                <%: Html.Encode(investigator.Address1) %> <br />
+                <%if (!string.IsNullOrWhiteSpace(investigator.Address2)) {%>
+                    <%: Html.Encode(investigator.Address2) %> <br />
+                <%}%>
+                <%if (!string.IsNullOrWhiteSpace(investigator.Address3)) {%>
+                    <%: Html.Encode(investigator.Address3) %> <br />
+                <%}%>
+                <%: Html.Encode(string.Format("{0} {1} {2}", investigator.City, investigator.State, investigator.Zip)) %> <br />
+                <%: Html.Encode(investigator.Phone) %> <br />
+                <%: Html.Encode(investigator.Email) %> <br />
+            </fieldset>
+        <%}%>
+        <%foreach (var investigator in Model.Proposal.Investigators.Where(a => !a.IsPrimary)){%>
+            <fieldset>
+            <legend>Investigator</legend>
+                <%: Html.Encode(investigator.Name) %> <br />
+                <%: Html.Encode(investigator.Institution) %> <br />
+                <%: Html.Encode(investigator.Address1) %> <br />
+                <%if (!string.IsNullOrWhiteSpace(investigator.Address2)) {%>
+                    <%: Html.Encode(investigator.Address2) %> <br />
+                <%}%>
+                <%if (!string.IsNullOrWhiteSpace(investigator.Address3)) {%>
+                    <%: Html.Encode(investigator.Address3) %> <br />
+                <%}%>
+                <%: Html.Encode(string.Format("{0} {1} {2}", investigator.City, investigator.State, investigator.Zip)) %> <br />
+                <%: Html.Encode(investigator.Phone) %> <br />
+                <%: Html.Encode(investigator.Email) %> <br />
+            </fieldset>
+        <%}%>
+        </fieldset>
+
+    <fieldset>
         <legend><strong>Answers</strong></legend>
         <% var index = 0;%>
         <%foreach (var question in Model.Proposal.CallForProposal.Questions.OrderBy(a => a.Order)){%>

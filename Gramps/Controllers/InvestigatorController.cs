@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using Gramps.Core.Domain;
 using UCDArch.Core.PersistanceSupport;
@@ -15,37 +16,56 @@ namespace Gramps.Controllers
     public class InvestigatorController : ApplicationController
     {
 	    private readonly IRepository<Investigator> _investigatorRepository;
+        private readonly IRepository<Proposal> _proposalRepository;
 
-        public InvestigatorController(IRepository<Investigator> investigatorRepository)
+        public InvestigatorController(IRepository<Investigator> investigatorRepository, IRepository<Proposal> proposalRepository)
         {
             _investigatorRepository = investigatorRepository;
+            _proposalRepository = proposalRepository;
         }
     
-        //
-        // GET: /Investigator/
-        public ActionResult Index()
-        {
-            var investigatorList = _investigatorRepository.Queryable;
+        ////
+        //// GET: /Investigator/
+        //public ActionResult Index()
+        //{
+        //    var investigatorList = _investigatorRepository.Queryable;
 
-            return View(investigatorList);
-        }
+        //    return View(investigatorList);
+        //}
 
-        //
-        // GET: /Investigator/Details/5
-        public ActionResult Details(int id)
-        {
-            var investigator = _investigatorRepository.GetNullableById(id);
+        ////
+        //// GET: /Investigator/Details/5
+        //public ActionResult Details(int id)
+        //{
+        //    var investigator = _investigatorRepository.GetNullableById(id);
 
-            if (investigator == null) return this.RedirectToAction(a => a.Index());
+        //    if (investigator == null) return this.RedirectToAction(a => a.Index());
 
-            return View(investigator);
-        }
+        //    return View(investigator);
+        //}
 
         //
         // GET: /Investigator/Create
-        public ActionResult Create()
+        public ActionResult Create(Guid id) //Proposal ID
         {
-			var viewModel = InvestigatorViewModel.Create(Repository);
+            var proposal = _proposalRepository.Queryable.Where(a => a.Guid == id).SingleOrDefault();
+            if (proposal == null)
+            {
+                Message = "Your proposal was not found.";
+                return this.RedirectToAction<ErrorController>(a => a.Index());
+            }
+            if (proposal.Email != CurrentUser.Identity.Name)
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<ErrorController>(a => a.Index());
+            }
+            if (proposal.IsSubmitted)
+            {
+                Message = "Cannot edit proposal once submitted.";
+                return this.RedirectToAction<ProposalController>(a => a.Details(id));
+            }
+
+			var viewModel = InvestigatorViewModel.Create(Repository, proposal);
             
             return View(viewModel);
         } 
@@ -78,76 +98,76 @@ namespace Gramps.Controllers
             }
         }
 
-        //
-        // GET: /Investigator/Edit/5
-        public ActionResult Edit(int id)
-        {
-            var investigator = _investigatorRepository.GetNullableById(id);
+        ////
+        //// GET: /Investigator/Edit/5
+        //public ActionResult Edit(int id)
+        //{
+        //    var investigator = _investigatorRepository.GetNullableById(id);
 
-            if (investigator == null) return this.RedirectToAction(a => a.Index());
+        //    if (investigator == null) return this.RedirectToAction(a => a.Index());
 
-			var viewModel = InvestigatorViewModel.Create(Repository);
-			viewModel.Investigator = investigator;
+        //    var viewModel = InvestigatorViewModel.Create(Repository);
+        //    viewModel.Investigator = investigator;
 
-			return View(viewModel);
-        }
+        //    return View(viewModel);
+        //}
         
-        //
-        // POST: /Investigator/Edit/5
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Edit(int id, Investigator investigator)
-        {
-            var investigatorToEdit = _investigatorRepository.GetNullableById(id);
+        ////
+        //// POST: /Investigator/Edit/5
+        //[AcceptVerbs(HttpVerbs.Post)]
+        //public ActionResult Edit(int id, Investigator investigator)
+        //{
+        //    var investigatorToEdit = _investigatorRepository.GetNullableById(id);
 
-            if (investigatorToEdit == null) return this.RedirectToAction(a => a.Index());
+        //    if (investigatorToEdit == null) return this.RedirectToAction(a => a.Index());
 
-            TransferValues(investigator, investigatorToEdit);
+        //    TransferValues(investigator, investigatorToEdit);
 
-            investigatorToEdit.TransferValidationMessagesTo(ModelState);
+        //    investigatorToEdit.TransferValidationMessagesTo(ModelState);
 
-            if (ModelState.IsValid)
-            {
-                _investigatorRepository.EnsurePersistent(investigatorToEdit);
+        //    if (ModelState.IsValid)
+        //    {
+        //        _investigatorRepository.EnsurePersistent(investigatorToEdit);
 
-                Message = "Investigator Edited Successfully";
+        //        Message = "Investigator Edited Successfully";
 
-                return this.RedirectToAction(a => a.Index());
-            }
-            else
-            {
-				var viewModel = InvestigatorViewModel.Create(Repository);
-                viewModel.Investigator = investigator;
+        //        return this.RedirectToAction(a => a.Index());
+        //    }
+        //    else
+        //    {
+        //        var viewModel = InvestigatorViewModel.Create(Repository);
+        //        viewModel.Investigator = investigator;
 
-                return View(viewModel);
-            }
-        }
+        //        return View(viewModel);
+        //    }
+        //}
         
-        //
-        // GET: /Investigator/Delete/5 
-        public ActionResult Delete(int id)
-        {
-			var investigator = _investigatorRepository.GetNullableById(id);
+        ////
+        //// GET: /Investigator/Delete/5 
+        //public ActionResult Delete(int id)
+        //{
+        //    var investigator = _investigatorRepository.GetNullableById(id);
 
-            if (investigator == null) return this.RedirectToAction(a => a.Index());
+        //    if (investigator == null) return this.RedirectToAction(a => a.Index());
 
-            return View(investigator);
-        }
+        //    return View(investigator);
+        //}
 
-        //
-        // POST: /Investigator/Delete/5
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Delete(int id, Investigator investigator)
-        {
-			var investigatorToDelete = _investigatorRepository.GetNullableById(id);
+        ////
+        //// POST: /Investigator/Delete/5
+        //[AcceptVerbs(HttpVerbs.Post)]
+        //public ActionResult Delete(int id, Investigator investigator)
+        //{
+        //    var investigatorToDelete = _investigatorRepository.GetNullableById(id);
 
-            if (investigatorToDelete == null) this.RedirectToAction(a => a.Index());
+        //    if (investigatorToDelete == null) this.RedirectToAction(a => a.Index());
 
-            _investigatorRepository.Remove(investigatorToDelete);
+        //    _investigatorRepository.Remove(investigatorToDelete);
 
-            Message = "Investigator Removed Successfully";
+        //    Message = "Investigator Removed Successfully";
 
-            return this.RedirectToAction(a => a.Index());
-        }
+        //    return this.RedirectToAction(a => a.Index());
+        //}
         
         /// <summary>
         /// Transfer editable values from source to destination
@@ -165,12 +185,14 @@ namespace Gramps.Controllers
     public class InvestigatorViewModel
 	{
 		public Investigator Investigator { get; set; }
+        public Proposal Proposal { get; set; }
  
-		public static InvestigatorViewModel Create(IRepository repository)
+		public static InvestigatorViewModel Create(IRepository repository, Proposal proposal)
 		{
 			Check.Require(repository != null, "Repository must be supplied");
+            Check.Require(proposal != null);
 			
-			var viewModel = new InvestigatorViewModel {Investigator = new Investigator()};
+			var viewModel = new InvestigatorViewModel {Investigator = new Investigator(), Proposal = proposal};
  
 			return viewModel;
 		}
