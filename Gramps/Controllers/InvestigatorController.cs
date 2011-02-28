@@ -72,14 +72,37 @@ namespace Gramps.Controllers
 
         //
         // POST: /Investigator/Create
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Create(Investigator investigator)
+        [HttpPost]
+        public ActionResult Create(Guid id, Investigator investigator)
         {
+            var proposal = _proposalRepository.Queryable.Where(a => a.Guid == id).SingleOrDefault();
+            if (proposal == null)
+            {
+                Message = "Your proposal was not found.";
+                return this.RedirectToAction<ErrorController>(a => a.Index());
+            }
+            if (proposal.Email != CurrentUser.Identity.Name)
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<ErrorController>(a => a.Index());
+            }
+            if (proposal.IsSubmitted)
+            {
+                Message = "Cannot edit proposal once submitted.";
+                return this.RedirectToAction<ProposalController>(a => a.Details(id));
+            }
+
+
             var investigatorToCreate = new Investigator();
+            investigatorToCreate.Proposal = proposal;
 
             TransferValues(investigator, investigatorToCreate);
 
             investigatorToCreate.TransferValidationMessagesTo(ModelState);
+            if (investigatorToCreate.IsPrimary && Repository.OfType<Investigator>().Queryable.Where(a => a.Proposal == proposal && a.IsPrimary).Any())
+            {
+                ModelState.AddModelError("Investigator.IsPrimary", "There can only be one primary investigator per proposal.");
+            }
 
             if (ModelState.IsValid)
             {
@@ -87,60 +110,119 @@ namespace Gramps.Controllers
 
                 Message = "Investigator Created Successfully";
 
-                return this.RedirectToAction(a => a.Index());
+                return this.RedirectToAction<ProposalController>(a => a.Edit(id));
             }
             else
             {
-				var viewModel = InvestigatorViewModel.Create(Repository);
-                viewModel.Investigator = investigator;
+				var viewModel = InvestigatorViewModel.Create(Repository, proposal);
+                viewModel.Investigator = investigatorToCreate;
 
                 return View(viewModel);
             }
         }
 
-        ////
-        //// GET: /Investigator/Edit/5
-        //public ActionResult Edit(int id)
-        //{
-        //    var investigator = _investigatorRepository.GetNullableById(id);
 
-        //    if (investigator == null) return this.RedirectToAction(a => a.Index());
+        //
+        // GET: /Investigator/Edit/5
+        public ActionResult Edit(int id, Guid proposalId)
+        {
+            var proposal = _proposalRepository.Queryable.Where(a => a.Guid == proposalId).SingleOrDefault();
+            if (proposal == null)
+            {
+                Message = "Your proposal was not found.";
+                return this.RedirectToAction<ErrorController>(a => a.Index());
+            }
+            if (proposal.Email != CurrentUser.Identity.Name)
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<ErrorController>(a => a.Index());
+            }
+            if (proposal.IsSubmitted)
+            {
+                Message = "Cannot edit proposal once submitted.";
+                return this.RedirectToAction<ProposalController>(a => a.Details(proposalId));
+            }
 
-        //    var viewModel = InvestigatorViewModel.Create(Repository);
-        //    viewModel.Investigator = investigator;
 
-        //    return View(viewModel);
-        //}
-        
-        ////
-        //// POST: /Investigator/Edit/5
-        //[AcceptVerbs(HttpVerbs.Post)]
-        //public ActionResult Edit(int id, Investigator investigator)
-        //{
-        //    var investigatorToEdit = _investigatorRepository.GetNullableById(id);
+            var investigator = _investigatorRepository.GetNullableById(id);
 
-        //    if (investigatorToEdit == null) return this.RedirectToAction(a => a.Index());
+            if (investigator == null)
+            {
+                Message = "Investigator Not Found";
+                return this.RedirectToAction<ProposalController>(a => a.Edit(proposalId));
+            }
+            if (investigator.Proposal.Guid != proposalId)
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<ErrorController>(a => a.Index());
+            }
 
-        //    TransferValues(investigator, investigatorToEdit);
+            var viewModel = InvestigatorViewModel.Create(Repository, proposal);
+            viewModel.Investigator = investigator;
 
-        //    investigatorToEdit.TransferValidationMessagesTo(ModelState);
+            return View(viewModel);
+        }
 
-        //    if (ModelState.IsValid)
-        //    {
-        //        _investigatorRepository.EnsurePersistent(investigatorToEdit);
+        //
+        // POST: /Investigator/Edit/5
+        [HttpPost]
+        public ActionResult Edit(int id, Guid proposalId, Investigator investigator)
+        {
+            var proposal = _proposalRepository.Queryable.Where(a => a.Guid == proposalId).SingleOrDefault();
+            if (proposal == null)
+            {
+                Message = "Your proposal was not found.";
+                return this.RedirectToAction<ErrorController>(a => a.Index());
+            }
+            if (proposal.Email != CurrentUser.Identity.Name)
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<ErrorController>(a => a.Index());
+            }
+            if (proposal.IsSubmitted)
+            {
+                Message = "Cannot edit proposal once submitted.";
+                return this.RedirectToAction<ProposalController>(a => a.Details(proposalId));
+            }
 
-        //        Message = "Investigator Edited Successfully";
+            var investigatorToEdit = _investigatorRepository.GetNullableById(id);
 
-        //        return this.RedirectToAction(a => a.Index());
-        //    }
-        //    else
-        //    {
-        //        var viewModel = InvestigatorViewModel.Create(Repository);
-        //        viewModel.Investigator = investigator;
+            if (investigatorToEdit == null)
+            {
+                Message = "Investigator Not Found";
+                return this.RedirectToAction<ProposalController>(a => a.Edit(proposalId));
+            }
+            if (investigatorToEdit.Proposal.Guid != proposalId)
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<ErrorController>(a => a.Index());
+            }
 
-        //        return View(viewModel);
-        //    }
-        //}
+            TransferValues(investigator, investigatorToEdit);
+
+            investigatorToEdit.TransferValidationMessagesTo(ModelState);
+
+            if (investigatorToEdit.IsPrimary && Repository.OfType<Investigator>().Queryable.Where(a => a.Proposal == proposal && a.IsPrimary).Any())
+            {
+                ModelState.AddModelError("Investigator.IsPrimary", "There can only be one primary investigator per proposal.");
+            }
+
+            if (ModelState.IsValid)
+            {
+                _investigatorRepository.EnsurePersistent(investigatorToEdit);
+
+                Message = "Investigator Edited Successfully";
+
+                return this.RedirectToAction<ProposalController>(a => a.Edit(proposalId));
+            }
+            else
+            {
+                var viewModel = InvestigatorViewModel.Create(Repository, proposal);
+                viewModel.Investigator = investigatorToEdit;
+
+                return View(viewModel);
+            }
+        }
         
         ////
         //// GET: /Investigator/Delete/5 
@@ -174,7 +256,17 @@ namespace Gramps.Controllers
         /// </summary>
         private static void TransferValues(Investigator source, Investigator destination)
         {
-            throw new NotImplementedException();
+            destination.Address1 =      source.Address1;
+            destination.Address2 =      source.Address2;
+            destination.Address3 =      source.Address3;
+            destination.City =          source.City;
+            destination.Email =         source.Email;
+            destination.Institution =   source.Institution;
+            destination.IsPrimary =     source.IsPrimary;
+            destination.Name =          source.Name;
+            destination.Phone =         source.Phone;
+            destination.State =         source.State;
+            destination.Zip =           source.Zip;
         }
 
     }
@@ -186,6 +278,7 @@ namespace Gramps.Controllers
 	{
 		public Investigator Investigator { get; set; }
         public Proposal Proposal { get; set; }
+        public bool PrimaryIsSet { get; set; }
  
 		public static InvestigatorViewModel Create(IRepository repository, Proposal proposal)
 		{
@@ -193,6 +286,7 @@ namespace Gramps.Controllers
             Check.Require(proposal != null);
 			
 			var viewModel = new InvestigatorViewModel {Investigator = new Investigator(), Proposal = proposal};
+		    viewModel.PrimaryIsSet = repository.OfType<Investigator>().Queryable.Where(a => a.Proposal == proposal && a.IsPrimary).Any();
  
 			return viewModel;
 		}

@@ -59,6 +59,7 @@ namespace Gramps.Core.Domain
         public virtual string Zip { get; set; }
         
         [Length(50)]
+        [Required]
         public virtual string Phone { get; set; }
 
         [Required]

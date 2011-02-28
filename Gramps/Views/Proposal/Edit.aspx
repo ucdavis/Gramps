@@ -41,7 +41,7 @@
     <legend>Investigators</legend>
     <br /><br />
     <p>
-        <%: Html.ActionLink<InvestigatorController>(a => a.Create(), "Add Investigator", new { @class = "button" })%>
+        <%: Html.ActionLink<InvestigatorController>(a => a.Create(Model.Proposal.Guid), "Add Investigator", new { @class = "button" })%>
     </p>
 
 <% Html.Grid(Model.Proposal.Investigators) 
@@ -50,7 +50,7 @@
             .Columns(col => {
             col.Template(x => {%>
 				<%--<%: Html.ActionLink("Edit", "Edit", new { id = x.Id }) %>--%> 
-                <%: Html.ActionLink<InvestigatorController>(a => a.Edit(x.Id), " ", new { @class = "edit_button" })%>          
+                <%: Html.ActionLink<InvestigatorController>(a => a.Edit(x.Id, Model.Proposal.Guid), " ", new { @class = "edit_button" })%>          
 				<%}).Title("Edit");
                     col.Bound(x => x.IsPrimary).Title("Primary");
 			            col.Bound(x => x.Name);

@@ -535,6 +535,9 @@
     <Content Include="Views\EmailTemplate\Index.aspx" />
     <Content Include="Views\Error\Index.aspx" />
     <Content Include="Views\Home\LoggedOut.aspx" />
+    <Content Include="Views\Investigator\Create.aspx" />
+    <Content Include="Views\Investigator\Edit.aspx" />
+    <Content Include="Views\Investigator\InvestigatorForm.ascx" />
     <Content Include="Views\Proposal\AdminEdit.aspx" />
     <Content Include="Views\Proposal\AdminIndex.aspx" />
     <Content Include="Views\Proposal\Confirmation.aspx" />
