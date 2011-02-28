@@ -23,26 +23,6 @@ namespace Gramps.Controllers
             _investigatorRepository = investigatorRepository;
             _proposalRepository = proposalRepository;
         }
-    
-        ////
-        //// GET: /Investigator/
-        //public ActionResult Index()
-        //{
-        //    var investigatorList = _investigatorRepository.Queryable;
-
-        //    return View(investigatorList);
-        //}
-
-        ////
-        //// GET: /Investigator/Details/5
-        //public ActionResult Details(int id)
-        //{
-        //    var investigator = _investigatorRepository.GetNullableById(id);
-
-        //    if (investigator == null) return this.RedirectToAction(a => a.Index());
-
-        //    return View(investigator);
-        //}
 
         //
         // GET: /Investigator/Create
@@ -223,33 +203,50 @@ namespace Gramps.Controllers
                 return View(viewModel);
             }
         }
-        
-        ////
-        //// GET: /Investigator/Delete/5 
-        //public ActionResult Delete(int id)
-        //{
-        //    var investigator = _investigatorRepository.GetNullableById(id);
 
-        //    if (investigator == null) return this.RedirectToAction(a => a.Index());
 
-        //    return View(investigator);
-        //}
+        //
+        // POST: /Investigator/Delete/5
+        [HttpPost]
+        public ActionResult Delete(int investigatorId, Guid proposalId)
+        {
+            var proposal = _proposalRepository.Queryable.Where(a => a.Guid == proposalId).SingleOrDefault();
+            if (proposal == null)
+            {
+                Message = "Your proposal was not found.";
+                return this.RedirectToAction<ErrorController>(a => a.Index());
+            }
+            if (proposal.Email != CurrentUser.Identity.Name)
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<ErrorController>(a => a.Index());
+            }
+            if (proposal.IsSubmitted)
+            {
+                Message = "Cannot edit proposal once submitted.";
+                return this.RedirectToAction<ProposalController>(a => a.Details(proposalId));
+            }
 
-        ////
-        //// POST: /Investigator/Delete/5
-        //[AcceptVerbs(HttpVerbs.Post)]
-        //public ActionResult Delete(int id, Investigator investigator)
-        //{
-        //    var investigatorToDelete = _investigatorRepository.GetNullableById(id);
+            var investigatorToDelete = _investigatorRepository.GetNullableById(investigatorId);
 
-        //    if (investigatorToDelete == null) this.RedirectToAction(a => a.Index());
+            if (investigatorToDelete == null || investigatorToDelete.Proposal != proposal)
+            {
+                Message = "Not Deleted";
+                this.RedirectToAction<ProposalController>(a => a.Edit(proposalId));
+            }
 
-        //    _investigatorRepository.Remove(investigatorToDelete);
+            try
+            {
+                _investigatorRepository.Remove(investigatorToDelete);
 
-        //    Message = "Investigator Removed Successfully";
-
-        //    return this.RedirectToAction(a => a.Index());
-        //}
+                Message = "Investigator Removed Successfully";
+            }
+            catch (Exception)
+            {
+                Message = "Not Deleted";
+            }
+            return this.RedirectToAction<ProposalController>(a => a.Edit(proposalId));
+        }
         
         /// <summary>
         /// Transfer editable values from source to destination
@@ -278,7 +275,6 @@ namespace Gramps.Controllers
 	{
 		public Investigator Investigator { get; set; }
         public Proposal Proposal { get; set; }
-        public bool PrimaryIsSet { get; set; }
  
 		public static InvestigatorViewModel Create(IRepository repository, Proposal proposal)
 		{
@@ -286,7 +282,6 @@ namespace Gramps.Controllers
             Check.Require(proposal != null);
 			
 			var viewModel = new InvestigatorViewModel {Investigator = new Investigator(), Proposal = proposal};
-		    viewModel.PrimaryIsSet = repository.OfType<Investigator>().Queryable.Where(a => a.Proposal == proposal && a.IsPrimary).Any();
  
 			return viewModel;
 		}

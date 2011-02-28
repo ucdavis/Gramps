@@ -3,6 +3,7 @@ using Gramps.Core.Domain;
 using Gramps.Tests.Core.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using UCDArch.Data.NHibernate;
+using UCDArch.Testing.Extensions;
 
 
 namespace Gramps.Tests.RepositoryTests.CallForProposalRepositoryTests
@@ -243,5 +244,43 @@ namespace Gramps.Tests.RepositoryTests.CallForProposalRepositoryTests
         
 
         #endregion Proposal Tests
+
+        #region ProposalMaximum Tests
+
+        /// <summary>
+        /// Tests the ProposalMaximum with A value of 0.00m does not save.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(ApplicationException))]
+        public void TestProposalMaximumWithAValueOfZeroeroDoesNotSave()
+        {
+            CallForProposal callForProposal = null;
+            try
+            {
+                #region Arrange
+                callForProposal = GetValid(9);
+                callForProposal.ProposalMaximum = -0.01m;
+                #endregion Arrange
+
+                #region Act
+                CallForProposalRepository.DbContext.BeginTransaction();
+                CallForProposalRepository.EnsurePersistent(callForProposal);
+                CallForProposalRepository.DbContext.CommitTransaction();
+                #endregion Act
+            }
+            catch (Exception)
+            {
+                Assert.IsNotNull(callForProposal);
+                Assert.AreEqual(callForProposal.ProposalMaximum, -0.01m);
+                var results = callForProposal.ValidationResults().AsMessageList();
+                results.AssertErrorsAre("ProposalMaximum: Minimum amount is one cent");
+                Assert.IsTrue(callForProposal.IsTransient());
+                Assert.IsFalse(callForProposal.IsValid());
+                throw;
+            }	
+        }
+
+        #endregion ProposalMaximum Tests
+
     }
 }

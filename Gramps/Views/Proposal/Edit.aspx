@@ -54,7 +54,15 @@
 				<%}).Title("Edit");
                     col.Bound(x => x.IsPrimary).Title("Primary");
 			            col.Bound(x => x.Name);
-                        col.Bound(x => x.Email);                        
+                        col.Bound(x => x.Email); 
+                        col.Template(x => { %>                                       
+                            <% using (Html.BeginForm("Delete", "Investigator", FormMethod.Post)) { %>
+                                <%= Html.AntiForgeryToken() %>
+                                <%: Html.Hidden("investigatorId", x.Id) %>    
+                                <%: Html.Hidden("proposalId", Model.Proposal.Guid) %>
+                                <%= Html.SubmitButton("Submit", " ", new {@class="remove_button"}) %>                                                                           
+                            <% } %>                                      
+                        <% }).Title("Delete");                       
                         })
             .Pageable()
             .Sortable()
