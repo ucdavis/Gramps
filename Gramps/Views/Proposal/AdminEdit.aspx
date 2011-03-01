@@ -1,5 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<Gramps.Controllers.ViewModels.ProposalAdminViewModel>" %>
 <%@ Import Namespace="Gramps.Core.Domain" %>
+<%@ Import Namespace="Gramps.Core.Resources" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
 	Admin Edit
@@ -20,7 +21,14 @@
 
         <fieldset>
             <legend>Fields</legend>
-            <div class="editor-label">Is Approved</div>
+            <span id = "ApprovedSpan">
+            <label for="Approved">Decission: </label>
+                <input type="radio" id="IsApproved" name="ApprovedDenied" value="<%:StaticValues.Approved%>" "<%=Model.Proposal.IsApproved ? "checked" : string.Empty%>" /><label for="approved">Approved</label>
+                <input type="radio" id="IsDenied" name="ApprovedDenied" value="<%:StaticValues.Denied%>" "<%= Model.Proposal.IsDenied ? "checked" : string.Empty %>" /><label for="denied">Denied</label>
+                <input type="radio" id="IsNotDecied" name="ApprovedDenied" value="<%:StaticValues.NotDecided%>" "<%= !Model.Proposal.IsDenied && !Model.Proposal.IsApproved ? "checked" : string.Empty %>" /><label for="notDecieded">Not Decided</label>
+            </span>
+
+<%--            <div class="editor-label">Is Approved</div>
             <div class="editor-field">
                 <%: Html.CheckBoxFor(a => a.Proposal.IsApproved)%>
                 <%: Html.ValidationMessageFor(a => a.Proposal.IsApproved) %>
@@ -30,7 +38,7 @@
             <div class="editor-field">
                 <%: Html.CheckBoxFor(a => a.Proposal.IsDenied)%>
                 <%: Html.ValidationMessageFor(a => a.Proposal.IsDenied) %>
-            </div>
+            </div>--%>
 
             <div class="editor-label">Is Submitted</div>
             <div class="editor-field">

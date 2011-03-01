@@ -1,4 +1,5 @@
 ﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<Gramps.Controllers.ViewModels.ProposalAdminViewModel>" %>
+<%@ Import Namespace="Gramps.Core.Resources" %>
 
     <h2>Proposal Detail Number: <%:Model.Proposal.Sequence %></h2>
 
@@ -10,12 +11,18 @@
         <div class="display-label">Email</div>
         <div class="display-field"><%: Model.Proposal.Email%></div>
         
-        <div class="display-field">
+        <span id = "ApprovedSpan">
+            <label for="Approved">Decission: </label>
+                <input type="radio" id="IsApproved" name="ApprovedDenied" disabled="true" value="<%:StaticValues.Approved%>" "<%=Model.Proposal.IsApproved ? "checked" : string.Empty%>" /><label for="approved">Approved</label>
+                <input type="radio" id="IsDenied" name="ApprovedDenied" disabled="true" value="<%:StaticValues.Denied%>" "<%= Model.Proposal.IsDenied ? "checked" : string.Empty %>" /><label for="denied">Denied</label>
+                <input type="radio" id="IsNotDecied" name="ApprovedDenied" disabled="true" value="<%:StaticValues.NotDecided%>" "<%= !Model.Proposal.IsDenied && !Model.Proposal.IsApproved ? "checked" : string.Empty %>" /><label for="notDecieded">Not Decided</label>
+        </span>
+<%--        <div class="display-field">
             <%= Html.CheckBox("IsApproved", Model.Proposal.IsApproved, new { @disabled = "True"}) %> <%: Html.Encode("Approved")%>
         </div>
         <div class="display-field">
             <%= Html.CheckBox("IsDenied", Model.Proposal.IsDenied, new { @disabled = "True" })%> <%: Html.Encode("Denied")%>
-        </div>
+        </div>--%>
         <div class="display-field">
             <%= Html.CheckBox("IsNotified", Model.Proposal.IsNotified, new { @disabled = "True" })%> <%: Html.Encode("Notified")%>
         </div>

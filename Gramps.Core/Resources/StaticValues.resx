@@ -117,12 +117,24 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Approved" xml:space="preserve">
+    <value>Approved</value>
+    <comment>RadioButton</comment>
+  </data>
   <data name="Class_indexedControl" xml:space="preserve">
     <value>indexedControl</value>
     <comment>CSS Class used to find controls that need to be indexed for an array</comment>
   </data>
+  <data name="Denied" xml:space="preserve">
+    <value>Denied</value>
+    <comment>RadioButton</comment>
+  </data>
   <data name="InitialCall" xml:space="preserve">
     <value>Email sent out to list for proposals</value>
+  </data>
+  <data name="NotDecided" xml:space="preserve">
+    <value>NotDecided</value>
+    <comment>RadioButton</comment>
   </data>
   <data name="ProposalApproved" xml:space="preserve">
     <value>Email sent out to applicant if proposal is approved</value>

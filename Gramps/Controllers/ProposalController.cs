@@ -203,7 +203,7 @@ namespace Gramps.Controllers
         [UserOnly]
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult AdminEdit(int id, int callForProposalId, Proposal proposal, Comment comment)
+        public ActionResult AdminEdit(int id, int callForProposalId, Proposal proposal, Comment comment, string approvedDenied)
         {
             var callforproposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId);
 
@@ -240,6 +240,44 @@ namespace Gramps.Controllers
             {
                 commentToEdit = new Comment(proposalToEdit, editor, string.Empty);
             }
+
+            if (approvedDenied == StaticValues.Approved)
+            {
+                proposal.IsApproved = true;
+                proposal.IsDenied = false;
+            }
+            else if(approvedDenied == StaticValues.Denied)
+            {
+                proposal.IsApproved = false;
+                proposal.IsDenied = true;
+            }
+            else if(approvedDenied == StaticValues.NotDecided)
+            {
+                proposal.IsApproved = false;
+                proposal.IsDenied = false;
+            }
+            else
+            {
+                throw new ApplicationException("Error with parameter");
+            }
+
+            //switch (approvedDenied)
+            //{
+            //    case StaticValues.Approved:
+            //        proposal.IsApproved = true;
+            //        proposal.IsDenied = false;
+            //        break;
+            //    case "Denied":
+            //        proposal.IsApproved = false;
+            //        proposal.IsDenied = true;
+            //        break;
+            //    case "NotDecided":
+            //        proposal.IsApproved = false;
+            //        proposal.IsDenied = false;
+            //        break;
+            //    default:
+            //        throw new ApplicationException("Error with parameter"); 
+            //}
 
             AdminTransferValues(proposal, proposalToEdit, comment, commentToEdit);
 

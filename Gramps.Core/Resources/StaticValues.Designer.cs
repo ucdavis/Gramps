@@ -61,6 +61,15 @@ namespace Gramps.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Approved.
+        /// </summary>
+        public static string Approved {
+            get {
+                return ResourceManager.GetString("Approved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to indexedControl.
         /// </summary>
         public static string Class_indexedControl {
@@ -70,11 +79,29 @@ namespace Gramps.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Denied.
+        /// </summary>
+        public static string Denied {
+            get {
+                return ResourceManager.GetString("Denied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Email sent out to list for proposals.
         /// </summary>
         public static string InitialCall {
             get {
                 return ResourceManager.GetString("InitialCall", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NotDecided.
+        /// </summary>
+        public static string NotDecided {
+            get {
+                return ResourceManager.GetString("NotDecided", resourceCulture);
             }
         }
         
