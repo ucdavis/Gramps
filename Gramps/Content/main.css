@@ -317,3 +317,34 @@ div.t-grid {}
 {
     color:#0D548A;
 }
+
+/* client side validation messages */
+.failed
+{
+    border: 1px solid #ff0000;    
+	color:Red;
+}
+.failed.passed
+{
+	border: none;    
+	color:inherit;
+}
+.field-validation-error
+{
+	border: 1px solid #ff0000;    
+	color:Red;
+}
+
+.warning
+{
+	background-color:Orange
+}
+
+
+
+.validation-summary-errors 
+{ 
+    border-bottom:1px #e6e6e6 solid; 
+    font-weight:bold;
+    color:Red;
+}
