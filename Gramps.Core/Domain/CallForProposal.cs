@@ -113,6 +113,8 @@ namespace Gramps.Core.Domain
         [RangeDouble(Min = 0.00, Message = "Minimum amount is one cent")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:C}")]
         public virtual Decimal ProposalMaximum { get; set; }
+
+        public virtual string Description { get; set; }
         
         [NotNull]
         public virtual IList<EmailsForCall> Emails { get; set; }
@@ -339,6 +341,7 @@ namespace Gramps.Core.Domain
         {
             Id(x => x.Id);
             Map(x => x.Name);
+            Map(x => x.Description);
             Map(x => x.IsActive);
             Map(x => x.CreatedDate);
             Map(x => x.EndDate);

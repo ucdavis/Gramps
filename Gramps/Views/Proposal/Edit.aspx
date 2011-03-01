@@ -12,6 +12,11 @@
 
     <h2>Edit Proposal</h2>
 
+     <fieldset>
+    <legend><%: Html.Encode(Model.CallForProposal.Name) %> </legend>
+        <%: Html.HtmlEncode(Model.CallForProposal.Description) %>
+    </fieldset>
+
 	<%= Html.ClientSideValidation<Proposal>() %>
 
     <%: Html.ValidationSummary("There were validation Errors.") %>

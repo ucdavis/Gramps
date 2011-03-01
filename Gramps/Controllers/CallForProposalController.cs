@@ -141,7 +141,8 @@ namespace Gramps.Controllers
         
         //
         // POST: /CallForProposal/Edit/5
-        [AcceptVerbs(HttpVerbs.Post)]
+        [HttpPost]
+        [ValidateInput(false)]
         public ActionResult Edit(int id, CallForProposal callforproposal)
         {
             var callforproposalToEdit = _callforproposalRepository.GetNullableById(id);
@@ -154,7 +155,12 @@ namespace Gramps.Controllers
 
             if (callforproposalToEdit.ProposalMaximum < 0.01m)
             {
-                ModelState.AddModelError("ProposalMaximum", "You need to specify a Proposal Maximum of at least a cent");
+                ModelState.AddModelError("CallForProposal.ProposalMaximum", "You need to specify a Proposal Maximum of at least a cent");
+            }
+
+            if (callforproposalToEdit.IsActive && string.IsNullOrWhiteSpace(callforproposalToEdit.Description))
+            {
+                ModelState.AddModelError("CallForProposal.Description", "Please supply a description");
             }
 
             if (ModelState.IsValid)
@@ -210,6 +216,7 @@ namespace Gramps.Controllers
             destination.EndDate = source.EndDate;
             destination.IsActive = source.IsActive;
             destination.ProposalMaximum = source.ProposalMaximum;
+            destination.Description = source.Description;
         }
 
     }

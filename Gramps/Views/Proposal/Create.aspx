@@ -16,6 +16,11 @@
 
 	<%= Html.ClientSideValidation<Proposal>() %>
 
+    <fieldset>
+    <legend><%: Html.Encode(Model.CallForProposal.Name) %> </legend>
+        <%: Html.HtmlEncode(Model.CallForProposal.Description) %>
+    </fieldset>
+
     <% using (Html.BeginForm()) {%>
         <%= Html.AntiForgeryToken() %>
         <%: Html.ValidationSummary("There were Validation Errors") %>

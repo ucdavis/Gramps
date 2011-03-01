@@ -14,7 +14,7 @@
 
     <% using (Html.BeginForm()) {%>
         <%= Html.AntiForgeryToken() %>
-        <%: Html.ValidationSummary(true) %>
+        <%: Html.ValidationSummary("") %>
         <%:Html.HiddenFor(a => a.CallForProposal.Id) %>
 
         <fieldset>
@@ -52,6 +52,14 @@
                 <%: Html.TextBoxFor(model => model.CallForProposal.ProposalMaximum, String.Format("{0:F}", Model.CallForProposal.ProposalMaximum))%>
                 <%: Html.ValidationMessageFor(model => model.CallForProposal.ProposalMaximum)%>
             </div> 
+
+            <div class="editor-label">
+                <%: Html.LabelFor(model => model.CallForProposal.Description) %>
+                <%: Html.ValidationMessageFor(model => model.CallForProposal.Description)%>
+            </div>
+            <div class="editor-field">
+                <%: Html.TextAreaFor(model => model.CallForProposal.Description)%>                
+            </div> 
             
             <p>
                 <input type="submit" value="Save" />
@@ -64,11 +72,18 @@
 </asp:Content>
 
 <asp:Content ID="Content3" ContentPlaceHolderID="HeaderContent" runat="server">
+    <script src="<%= Url.Content("~/Scripts/tiny_mce/jquery.tinymce.js") %>" type="text/javascript"></script>
+    <script src="<%= Url.Content("~/Scripts/jquery.enableTinyMce.js") %>" type="text/javascript"></script>
+    
     <script type="text/javascript">
         $(document).ready(function () {
             $("#CallForProposal_EndDate").datepicker();
+            $("#CallForProposal_Description").enableTinyMce({ script_location: '<%= Url.Content("~/Scripts/tiny_mce/tiny_mce.js") %>', overrideWidth: "700" });
         });
     </script>
+
+
+
 </asp:Content>
 
 <asp:Content ID="Content4" ContentPlaceHolderID="logoContent" runat="server">
