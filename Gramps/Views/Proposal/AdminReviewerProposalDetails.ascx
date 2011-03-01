@@ -10,7 +10,20 @@
         <div class="display-label">Email</div>
         <div class="display-field"><%: Model.Proposal.Email%></div>
         
-        <div class="display-label">IsApproved</div>
+        <div class="display-field">
+            <%= Html.CheckBox("IsApproved", Model.Proposal.IsApproved, new { @disabled = "True"}) %> <%: Html.Encode("Approved")%>
+        </div>
+        <div class="display-field">
+            <%= Html.CheckBox("IsDenied", Model.Proposal.IsDenied, new { @disabled = "True" })%> <%: Html.Encode("Denied")%>
+        </div>
+        <div class="display-field">
+            <%= Html.CheckBox("IsNotified", Model.Proposal.IsNotified, new { @disabled = "True" })%> <%: Html.Encode("Notified")%>
+        </div>
+        <div class="display-field">
+            <%= Html.CheckBox("IsSubmitted", Model.Proposal.IsSubmitted, new { @disabled = "True" })%> <%: Html.Encode("Submitted") %>
+        </div>
+
+<%--        <div class="display-label">IsApproved</div>
         <div class="display-field"><%: Model.Proposal.IsApproved%></div>
         
         <div class="display-label">IsDenied</div>
@@ -20,7 +33,7 @@
         <div class="display-field"><%: Model.Proposal.IsNotified%></div>
         
         <div class="display-label">IsSubmitted</div>
-        <div class="display-field"><%: Model.Proposal.IsSubmitted%></div>
+        <div class="display-field"><%: Model.Proposal.IsSubmitted%></div>--%>
         
         <div class="display-label">RequestedAmount</div>
         <div class="display-field"><%: String.Format("{0:F}", Model.Proposal.RequestedAmount)%></div>
