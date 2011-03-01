@@ -1,8 +1,10 @@
 ﻿CREATE VIEW dbo.vUsers
 AS
-SELECT     UserID AS id, LoginID, Email, Phone, FirstName, LastName, EmployeeID, SID, UserKey
-FROM         Catbert3.dbo.Users
-WHERE     (Inactive = 0)
+SELECT     Catbert3.dbo.Users.UserID AS id, Catbert3.dbo.Users.LoginID, Catbert3.dbo.Users.Email, Catbert3.dbo.Users.Phone, Catbert3.dbo.Users.FirstName, 
+                      Catbert3.dbo.Users.LastName, Catbert3.dbo.Users.EmployeeID, Catbert3.dbo.Users.SID, Catbert3.dbo.Users.UserKey
+FROM         Catbert3.dbo.Users INNER JOIN
+                      dbo.vActiveUsers ON Catbert3.dbo.Users.UserID = dbo.vActiveUsers.UserID
+WHERE     (Catbert3.dbo.Users.Inactive = 0)
 
 GO
 EXECUTE sp_addextendedproperty @name = N'MS_DiagramPane1', @value = N'[0E232FF0-B466-11cf-A24F-00AA00A3EFFF, 1.00]
