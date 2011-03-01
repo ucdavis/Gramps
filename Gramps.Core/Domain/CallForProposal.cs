@@ -137,6 +137,10 @@ namespace Gramps.Core.Domain
             return Editors.Where(a => a.User != null && a.User.LoginId == userId).Any();
         }
 
+        public virtual bool IsReviewer(string userId)
+        {
+            return Editors.Where(a => a.ReviewerEmail == userId).Any();
+        }
         public virtual void AddEmailForCall(string email)
         {
             var emailForCall = new EmailsForCall(email);

@@ -540,6 +540,7 @@
     <Content Include="Views\Investigator\InvestigatorForm.ascx" />
     <Content Include="Views\Proposal\AdminEdit.aspx" />
     <Content Include="Views\Proposal\AdminIndex.aspx" />
+    <Content Include="Views\Proposal\AdminReviewerProposalDetails.ascx" />
     <Content Include="Views\Proposal\Confirmation.aspx" />
     <Content Include="Views\Proposal\Create.aspx" />
     <Content Include="Views\Proposal\AdminDetails.aspx" />
@@ -547,6 +548,8 @@
     <Content Include="Views\Proposal\Edit.aspx" />
     <Content Include="Views\Proposal\Home.aspx" />
     <Content Include="Views\Proposal\ProposalAnswerDetails.ascx" />
+    <Content Include="Views\Proposal\ReviewerDetails.aspx" />
+    <Content Include="Views\Proposal\ReviewerIndex.aspx" />
     <Content Include="Views\Public\ChangePassword.aspx" />
     <Content Include="Views\Public\ChangePasswordSuccess.aspx" />
     <Content Include="Views\Public\ForgotPassword.aspx" />

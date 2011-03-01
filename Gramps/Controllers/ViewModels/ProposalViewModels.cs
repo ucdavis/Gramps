@@ -101,6 +101,52 @@ namespace Gramps.Controllers.ViewModels
         }
     }
 
+    public class ProposalReviewerListViewModel : CallNavigationViewModel
+    {
+        public IList<ProposalList> Proposals { get; set; }
+        public Editor Editor { get; set; }
+        public bool Immediate { get; set; }
+
+        public static ProposalReviewerListViewModel Create(IRepository repository, CallForProposal callForProposal, string login)
+        {
+            Check.Require(repository != null, "Repository must be supplied");
+            Check.Require(callForProposal != null, "Grant to apply for must be supplied (CallForProposal)");
+
+            var viewModel = new ProposalReviewerListViewModel { CallForProposal = callForProposal };
+            viewModel.Editor = repository.OfType<Editor>()
+                .Queryable.Where(a => a.CallForProposal == callForProposal && a.ReviewerEmail == login).First();
+            var temp = repository.OfType<Proposal>()
+                .Queryable.Where(a => a.CallForProposal == callForProposal && a.IsSubmitted).ToList();
+
+            viewModel.Proposals = temp.Select(x => new ProposalList
+            {
+                Id = x.Id,
+                Email = x.Email,
+                CreatedDate = x.CreatedDate,
+                Approved = x.IsApproved,
+                Denied = x.IsDenied,
+                Submitted = x.IsSubmitted,
+                SubmittedDate = x.SubmittedDate,
+                WarnedOfClosing = x.WasWarned
+            }).ToList();
+            foreach (var proposal in viewModel.Proposals)
+            {
+                var viewDate =
+                    temp.Where(a => a.Id == proposal.Id).Single().ReviewedByEditors.Where(
+                        x => x.Editor == viewModel.Editor).FirstOrDefault();
+                if (viewDate != null)
+                {
+                    proposal.LastViewedDate = viewDate.LastViewedDate;
+                }
+
+            }
+
+            viewModel.Immediate = false;
+
+            return viewModel;
+        }
+    }
+
     public class ProposalAdminViewModel : CallNavigationViewModel
     {
         public Proposal Proposal;
@@ -113,6 +159,7 @@ namespace Gramps.Controllers.ViewModels
 
         }
     }
+
 
     public class ProposalConfirmationViewModel
     {

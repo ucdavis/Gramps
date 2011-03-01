@@ -284,6 +284,75 @@ namespace Gramps.Controllers
 
         #endregion Admin(User) Methods
 
+        #region Reviewer Methods
+        [PublicAuthorize]
+        public ActionResult ReviewerIndex(int id)
+        {
+            var callforproposal = Repository.OfType<CallForProposal>().GetNullableById(id);
+
+            if (callforproposal == null)
+            {
+                return this.RedirectToAction<ProposalController>(a => a.Home());
+            }
+
+            if (!callforproposal.IsReviewer(CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<ProposalController>(a => a.Home());
+            }
+            var viewModel = ProposalReviewerListViewModel.Create(Repository, callforproposal, CurrentUser.Identity.Name);
+
+            return View(viewModel);
+        }
+
+        [PublicAuthorize]
+        public ActionResult ReviewerDetails(int id, int callForProposalId)
+        {
+            var callforproposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId);
+
+            if (callforproposal == null)
+            {
+                return this.RedirectToAction<ProposalController>(a => a.Home());
+            }
+
+            if (!callforproposal.IsReviewer(CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<ProposalController>(a => a.Home());
+            }
+
+            if (!_accessService.HasSameId(null, callforproposal, null, callForProposalId))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<ProposalController>(a => a.Home());
+            }
+
+            var proposal = _proposalRepository.GetNullableById(id);
+
+            if (proposal == null)
+            {
+                Message = "Proposal Not Found";
+                return this.RedirectToAction<ProposalController>(a => a.Home());
+            }
+            var editor = Repository.OfType<Editor>().Queryable.Where(a => a.CallForProposal == callforproposal && a.ReviewerEmail == CurrentUser.Identity.Name).First();
+            var reviewed = Repository.OfType<ReviewedProposal>().Queryable.Where(a => a.Proposal == proposal && a.Editor == editor).FirstOrDefault();
+            if (reviewed == null)
+            {
+                reviewed = new ReviewedProposal(proposal, editor);
+            }
+            else
+            {
+                reviewed.LastViewedDate = DateTime.Now;
+            }
+            Repository.OfType<ReviewedProposal>().EnsurePersistent(reviewed);
+
+            var viewModel = ProposalAdminViewModel.Create(Repository, callforproposal, proposal);
+
+            return View(viewModel);
+        }
+
+        #endregion Reviewer Methods
+
         #region Public Methods (Proposer)
                
         //
