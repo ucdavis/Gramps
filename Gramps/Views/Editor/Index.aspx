@@ -39,21 +39,10 @@
 				    <%:Html.ActionLink<EditorController>(a => a.EditReviewer(x.Id, Model.TemplateId, Model.CallForProposalId), " ", new { @class = "edit_button" })%>     
                 <%}%>      
 				<%}).Title("Edit");
-			col.Template(x => {%>
-                <% if (x.User == null){%>
-				    <% using (Html.BeginForm("ResetReviewerId", "Editor", FormMethod.Post)){ %>
-                    <%= Html.AntiForgeryToken() %>
-                    <%: Html.Hidden("id", x.Id) %>
-                    <%: Html.Hidden("TemplateId", Model.TemplateId) %>
-                    <%: Html.Hidden("CallForProposalId", Model.CallForProposalId) %>
-                    <%= Html.SubmitButton("Submit", "Reset") %>                                                                           
-                    <% } %> 
-                <%}%>        
-				<%});
+
 			            col.Bound(x => x.IsOwner);
                         col.Bound(x => x.ReviewerName).Title("Name");
                         col.Bound(x => x.ReviewerEmail);                        
-                        col.Bound(x => x.ReviewerId);
                         if (Model.IsCallForProposal)
                         {
                             col.Bound(x => x.HasBeenNotified).Title("Notified");

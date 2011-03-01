@@ -1,4 +1,5 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<Gramps.Controllers.ViewModels.CallNavigationViewModel>" %>
+<%@ Import Namespace="Gramps.Helpers" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
 	Details
@@ -10,14 +11,15 @@
 
     <h2>Details</h2>
 
+     <fieldset>
+    <legend><%: Html.Encode(Model.CallForProposal.Name) %> </legend>
+        <%: Html.HtmlEncode(Model.CallForProposal.Description) %>
+    </fieldset>
+
     <fieldset>
         <legend>Details</legend>
         
-        <div class="display-label">Name</div>
-        <div class="display-field"><%: Model.CallForProposal.Name %></div>
-        
-        <div class="display-label">IsActive</div>
-        <div class="display-field"><%: Model.CallForProposal.IsActive%></div>
+        <div class="display-field"><%: Html.CheckBoxFor(a => a.CallForProposal.IsActive, new {@disabled = "true"}) %> <%: Html.Encode("Active") %></div>
         
         <div class="display-label">CreatedDate</div>
         <div class="display-field"><%: String.Format("{0:g}", Model.CallForProposal.CreatedDate)%></div>
