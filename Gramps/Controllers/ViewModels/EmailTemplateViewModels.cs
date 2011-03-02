@@ -51,6 +51,8 @@ namespace Gramps.Controllers.ViewModels
     {
         public EmailTemplate EmailTemplate { get; set; }
         public Dictionary<EmailTemplateType, string> DescriptionDict;
+        public string FooterText { get; set; }
+        public string AlternateFooterText { get; set; }
 
         public static EmailTemplateViewModel Create(IRepository repository, int? templateId, int? callForProposalId)
         {

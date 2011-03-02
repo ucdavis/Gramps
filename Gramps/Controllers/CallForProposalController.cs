@@ -106,7 +106,7 @@ namespace Gramps.Controllers
 
                 Message = "CallForProposal Created Successfully";
 
-                return this.RedirectToAction(a => a.Index());
+                return this.RedirectToAction(a => a.Edit(callforproposalToCreate.Id));
             }
             else
             {
@@ -169,7 +169,7 @@ namespace Gramps.Controllers
 
                 Message = "CallForProposal Edited Successfully";
 
-                return this.RedirectToAction(a => a.Index());
+                return this.RedirectToAction(a => a.Edit(callforproposalToEdit.Id));
             }
             else
             {

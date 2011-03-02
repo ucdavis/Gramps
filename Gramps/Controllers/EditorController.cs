@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using Gramps.Controllers.Filters;
 using Gramps.Controllers.ViewModels;
 using Gramps.Core.Domain;
+using Gramps.Models;
 using Gramps.Services;
 using UCDArch.Core.PersistanceSupport;
 using UCDArch.Web.Controller;
@@ -426,11 +427,25 @@ namespace Gramps.Controllers
                 return View(viewModel);
             }
 
-
+            var membershipService = new AccountMembershipService();
             var count = 0;
             foreach (var editor in viewModel.EditorsToNotify.Where(a => !a.HasBeenNotified))
             {
-                _emailService.SendEmail(Request, Url, callforproposal, callforproposal.EmailTemplates.Where(a => a.TemplateType == EmailTemplateType.ReadyForReview).Single(), editor.ReviewerEmail, immediate);
+                string tempPass = null;
+                if (membershipService.DoesUserExist(editor.ReviewerEmail))
+                {
+                    //Send an email saying you already exist and can view here
+
+                }
+                else
+                {
+                    membershipService.CreateUser(editor.ReviewerEmail.Trim().ToLower(),
+                                                 "Ht548*%KjjY2#",
+                                                 editor.ReviewerEmail.Trim().ToLower());
+                    tempPass = membershipService.ResetPassword(editor.ReviewerEmail.Trim().ToLower());
+                }
+
+                _emailService.SendEmail(Request, Url, callforproposal, callforproposal.EmailTemplates.Where(a => a.TemplateType == EmailTemplateType.ReadyForReview).Single(), editor.ReviewerEmail, immediate, tempPass);
                 editor.NotifiedDate = DateTime.Now;
                 editor.HasBeenNotified = true;
                 _editorRepository.EnsurePersistent(editor);

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Mail;
 using System.Web.Mvc;
 using Gramps.Controllers.Filters;
+using Gramps.Core.Resources;
 using Gramps.Helpers;
 using Gramps.Controllers.ViewModels;
 using Gramps.Core.Domain;
@@ -83,6 +84,33 @@ namespace Gramps.Controllers
 
             var viewModel = EmailTemplateViewModel.Create(Repository, templateId, callForProposalId);
             viewModel.EmailTemplate = emailtemplate;
+            viewModel.FooterText = StaticValues.EmailAutomatedDisclaimer;
+            if (emailtemplate.TemplateType == EmailTemplateType.InitialCall)
+            {
+                viewModel.FooterText = string.Format("{0}<br />{1}<br />This will be replaced with the link to create a proposal", viewModel.FooterText, StaticValues.EmailCreateProposal);
+            }
+            if (emailtemplate.TemplateType == EmailTemplateType.ReadyForReview)
+            {               
+                viewModel.FooterText = string.Format("{0}<p>{1}</p><p>{2}</p><p>{3}</p><p>{4}</p><p>{5}</p><p>{6}</p><p>{7}</p><p>{8}</p>"
+                    , viewModel.FooterText
+                    , "An account has been created for you."
+                    , "UserName johnnytest@test.com"
+                    , "Password bdLJ&SftBN>%oe"
+                    , "You may change your password (recommended) after logging in."
+                    , "After you have logged in, you may use this link to review submitted proposals for this Grant Request:"
+                    , "http://localhost:31701/Proposal/ReviewerIndex/8"
+                    , "Or to view all active Call For Proposals you can use this link(Home):"
+                    , "http://localhost:31701/Proposal/Home");
+
+                viewModel.AlternateFooterText = string.Format("{0}<br /><p>{1}</p><p>{2}</p><p>{3}</p><p>{4}</p><p>{5}</p>"
+                    , StaticValues.EmailAutomatedDisclaimer
+                    , "You have an existing account. Use your email as the userName to login"
+                    , "After you have logged in, you may use this link to review submitted proposals for this Grant Request:"
+                    , "http://localhost:31701/Proposal/ReviewerIndex/8"
+                    , "Or to view all active Call For Proposals you can use this link(Home):"
+                    , "http://localhost:31701/Proposal/Home");
+
+            }
 
             return View(viewModel);
         }

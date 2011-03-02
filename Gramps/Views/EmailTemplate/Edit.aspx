@@ -1,5 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<Gramps.Controllers.ViewModels.EmailTemplateViewModel>" %>
 <%@ Import Namespace="Gramps.Core.Domain" %>
+<%@ Import Namespace="Gramps.Helpers" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
 	Edit
@@ -29,6 +30,18 @@
                 <strong>BodyText:</strong>
                 <%= Html.TextArea("EmailTemplate.Text", Model.EmailTemplate != null ? Model.EmailTemplate.Text : string.Empty)%>
                 <%= Html.ValidationMessageFor(a => a.EmailTemplate.Text)%> 
+            </li>
+            <li>
+                <div>Email Footer Text:</div>
+                <div class="template_Footer" style="background-color:#f4f4f4; border:1px solid #666; padding:10px; line-height:1.5em;">
+                    <%: Html.HtmlEncode(Model.FooterText) %>
+                </div>
+                <%if (!string.IsNullOrWhiteSpace(Model.AlternateFooterText)) { %>
+                    <div>Email Alternate Footer Text:</div>
+                    <div class="template_Footer" style="background-color:#f4f4f4; border:1px solid #666; padding:10px; line-height:1.5em;">
+                        <%: Html.HtmlEncode(Model.AlternateFooterText)%>
+                    </div>
+                <%} %>
             </li>
             <li>
                 <input type="submit" value="Save" />

@@ -44,7 +44,31 @@
                         <%: Html.Encode(StaticValues.EmailCreateProposal) %> <br />
                         <%: Html.Encode("This will be replaced with the link to create a proposal") %>
                     <%}%>
+                    <%if(t.TemplateType == EmailTemplateType.ReadyForReview) {%>
+                        <%: Html.HtmlEncode(string.Format("{0}<p>{1}</p><p>{2}</p><p>{3}</p><p>{4}</p><p>{5}</p><p>{6}</p><p>{7}</p>"
+                    , "An account has been created for you."
+                    , "UserName johnnytest@test.com"
+                    , "Password bdLJ&SftBN>%oe"
+                    , "You may change your password (recommended) after logging in."
+                    , "After you have logged in, you may use this link to review submitted proposals for this Grant Request:"
+                    , "http://localhost:31701/Proposal/ReviewerIndex/8"
+                    , "Or to view all active Call For Proposals you can use this link(Home):"
+                    , "http://localhost:31701/Proposal/Home"))%>
+                    <%}%>
                 </div>
+                <%if(t.TemplateType == EmailTemplateType.ReadyForReview) {%>
+                <div>Email Alternate Footer Text:</div>
+                <div class="template_Footer" style="background-color:#f4f4f4; border:1px solid #666; margin:10px 20px 10px 20px; padding:10px; line-height:1.5em;">
+                    <br />
+                    <%: Html.HtmlEncode(string.Format("{0}<br /><p>{1}</p><p>{2}</p><p>{3}</p><p>{4}</p><p>{5}</p>"
+                    , StaticValues.EmailAutomatedDisclaimer
+                    , "You have an existing account. Use your email as the userName to login"
+                    , "After you have logged in, you may use this link to review submitted proposals for this Grant Request:"
+                    , "http://localhost:31701/Proposal/ReviewerIndex/8"
+                    , "Or to view all active Call For Proposals you can use this link(Home):"
+                    , "http://localhost:31701/Proposal/Home"))%>
+                </div>
+                <%}%>
 
                 
             </fieldset>

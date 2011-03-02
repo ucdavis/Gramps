@@ -12,7 +12,7 @@ namespace Gramps.Services
 {
     public interface IEmailService
     {
-        void SendEmail(HttpRequestBase request, UrlHelper url, CallForProposal callForProposal, EmailTemplate emailTemplate, string email, bool immediate);
+        void SendEmail(HttpRequestBase request, UrlHelper url, CallForProposal callForProposal, EmailTemplate emailTemplate, string email, bool immediate, string tempPass = null);
         void SendConfirmation(HttpRequestBase request, UrlHelper url, Proposal proposal, EmailTemplate emailTemplate, bool immediate, string userName, string tempPass);
         void SendPasswordReset(CallForProposal callForProposal, string email, string tempPassword);
     }
@@ -36,7 +36,7 @@ namespace Gramps.Services
             _repository.OfType<EmailQueue>().EnsurePersistent(emailQueue);
         }
 
-        public virtual void SendEmail(HttpRequestBase request, UrlHelper url, CallForProposal callForProposal, EmailTemplate emailTemplate, string email, bool immediate)
+        public virtual void SendEmail(HttpRequestBase request, UrlHelper url, CallForProposal callForProposal, EmailTemplate emailTemplate, string email, bool immediate, string tempPass = null)
         {
             var emailQueue = new EmailQueue(callForProposal, email, emailTemplate.Subject, emailTemplate.Text);
             //Need to replace parameters.
@@ -46,6 +46,22 @@ namespace Gramps.Services
             {
                 emailQueue.Body = emailQueue.Body + "<br />" + StaticValues.EmailCreateProposal + "<br />";
                 emailQueue.Body = string.Format("{0}<p>{1}</p>", emailQueue.Body, GetAbsoluteUrl(request, url, "~/Proposal/Create/" + callForProposal.Id));
+            }
+            if (emailTemplate.TemplateType == EmailTemplateType.ReadyForReview)
+            {
+                if (string.IsNullOrEmpty(tempPass))
+                {
+                    emailQueue.Body = string.Format("{0}<p>{1}</p>", emailQueue.Body, "You have an existing account. Use your email as the userName to login");
+                }
+                else
+                {
+                    emailQueue.Body = string.Format("{0}<p>An account has been created for you.</p><p>UserName {1}</p><p>Password {2}</p><p>You may change your password (recommended) after logging in.</p>", emailQueue.Body, email, tempPass);
+                }
+                emailQueue.Body = string.Format("{0}<p>{1}</p>", emailQueue.Body, "After you have logged in, you may use this link to review submitted proposals for this Grant Request:");
+                emailQueue.Body = string.Format("{0}<p>{1}</p>", emailQueue.Body, GetAbsoluteUrl(request, url, "~/Proposal/ReviewerIndex/" + callForProposal.Id));
+                emailQueue.Body = string.Format("{0}<p>{1}</p>", emailQueue.Body,
+                                                "Or to view all active Call For Proposals you can use this link(Home):");
+                emailQueue.Body = string.Format("{0}<p>{1}</p>", emailQueue.Body, GetAbsoluteUrl(request, url, "~/Proposal/Home"));
             }
 
             emailQueue.Immediate = immediate;
