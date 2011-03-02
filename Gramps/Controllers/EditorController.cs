@@ -430,7 +430,7 @@ namespace Gramps.Controllers
             var count = 0;
             foreach (var editor in viewModel.EditorsToNotify.Where(a => !a.HasBeenNotified))
             {
-                _emailService.SendEmail(callforproposal, callforproposal.EmailTemplates.Where(a => a.TemplateType == EmailTemplateType.ReadyForReview).Single(), editor.ReviewerEmail, immediate);
+                _emailService.SendEmail(Request, Url, callforproposal, callforproposal.EmailTemplates.Where(a => a.TemplateType == EmailTemplateType.ReadyForReview).Single(), editor.ReviewerEmail, immediate);
                 editor.NotifiedDate = DateTime.Now;
                 editor.HasBeenNotified = true;
                 _editorRepository.EnsurePersistent(editor);

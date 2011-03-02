@@ -141,7 +141,7 @@ namespace Gramps.Controllers
 
             foreach (var proposal in proposals)
             {
-                _emailService.SendEmail(callforproposal, callforproposal.EmailTemplates.Where(a => a.TemplateType == EmailTemplateType.ReminderCallIsAboutToClose).Single(), proposal.Email, immediate);
+                _emailService.SendEmail(Request, Url, callforproposal, callforproposal.EmailTemplates.Where(a => a.TemplateType == EmailTemplateType.ReminderCallIsAboutToClose).Single(), proposal.Email, immediate);
                 proposal.WasWarned = true;
                 Repository.OfType<Proposal>().EnsurePersistent(proposal);
                 count++;

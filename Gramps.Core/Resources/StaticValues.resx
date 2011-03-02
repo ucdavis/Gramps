@@ -129,6 +129,13 @@
     <value>Denied</value>
     <comment>RadioButton</comment>
   </data>
+  <data name="EmailAutomatedDisclaimer" xml:space="preserve">
+    <value>Please do not reply to this email. It was automatically generated.</value>
+    <comment>Text to go at the botom of the emails sent out.</comment>
+  </data>
+  <data name="EmailCreateProposal" xml:space="preserve">
+    <value>Create a new proposal:</value>
+  </data>
   <data name="InitialCall" xml:space="preserve">
     <value>Email sent out to list for proposals</value>
   </data>

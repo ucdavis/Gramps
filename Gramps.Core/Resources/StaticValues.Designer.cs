@@ -88,6 +88,24 @@ namespace Gramps.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please do not reply to this email. It was automatically generated..
+        /// </summary>
+        public static string EmailAutomatedDisclaimer {
+            get {
+                return ResourceManager.GetString("EmailAutomatedDisclaimer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create a new proposal:.
+        /// </summary>
+        public static string EmailCreateProposal {
+            get {
+                return ResourceManager.GetString("EmailCreateProposal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Email sent out to list for proposals.
         /// </summary>
         public static string InitialCall {

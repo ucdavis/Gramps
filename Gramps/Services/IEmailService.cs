@@ -5,13 +5,14 @@ using System.Security.Policy;
 using System.Web;
 using System.Web.Mvc;
 using Gramps.Core.Domain;
+using Gramps.Core.Resources;
 using UCDArch.Core.PersistanceSupport;
 
 namespace Gramps.Services
 {
     public interface IEmailService
     {
-        void SendEmail(CallForProposal callForProposal, EmailTemplate emailTemplate, string email, bool immediate);
+        void SendEmail(HttpRequestBase request, UrlHelper url, CallForProposal callForProposal, EmailTemplate emailTemplate, string email, bool immediate);
         void SendConfirmation(HttpRequestBase request, UrlHelper url, Proposal proposal, EmailTemplate emailTemplate, bool immediate, string userName, string tempPass);
         void SendPasswordReset(CallForProposal callForProposal, string email, string tempPassword);
     }
@@ -35,10 +36,17 @@ namespace Gramps.Services
             _repository.OfType<EmailQueue>().EnsurePersistent(emailQueue);
         }
 
-        public virtual void SendEmail(CallForProposal callForProposal,EmailTemplate emailTemplate, string email, bool immediate)
+        public virtual void SendEmail(HttpRequestBase request, UrlHelper url, CallForProposal callForProposal, EmailTemplate emailTemplate, string email, bool immediate)
         {
             var emailQueue = new EmailQueue(callForProposal, email, emailTemplate.Subject, emailTemplate.Text);
             //Need to replace parameters.
+
+            emailQueue.Body = emailQueue.Body + "<br />" + StaticValues.EmailAutomatedDisclaimer;
+            if (emailTemplate.TemplateType == EmailTemplateType.InitialCall)
+            {
+                emailQueue.Body = emailQueue.Body + "<br />" + StaticValues.EmailCreateProposal + "<br />";
+                emailQueue.Body = string.Format("{0}<p>{1}</p>", emailQueue.Body, GetAbsoluteUrl(request, url, "~/Proposal/Create/" + callForProposal.Id));
+            }
 
             emailQueue.Immediate = immediate;
 
@@ -52,6 +60,7 @@ namespace Gramps.Services
             var emailQueue = new EmailQueue(proposal.CallForProposal, proposal.Email, emailTemplate.Subject,
                                             emailTemplate.Text);
             emailQueue.Immediate = immediate;
+            emailQueue.Body = emailQueue.Body + "<br />" + StaticValues.EmailAutomatedDisclaimer;
             emailQueue.Body = string.Format("{0}<p>{1}</p>", emailQueue.Body, GetAbsoluteUrl(request, url, "~/Proposal/Edit/" + proposal.Guid));
             if (string.IsNullOrEmpty(tempPass))
             {
@@ -61,6 +70,8 @@ namespace Gramps.Services
             {
                 emailQueue.Body = string.Format("{0}<p>An account has been created for you.</p><p>UserName {1}</p><p>Password {2}</p><p>You may change your password (recommended) after logging in.</p>", emailQueue.Body, userName, tempPass);
             }
+            emailQueue.Body = string.Format("{0}<p>{1}</p>", emailQueue.Body, "After you have logged in, you may use the edit link above to directly access your proposal, or you may access a list of your proposal(s) here:");
+            emailQueue.Body = string.Format("{0}<p>{1}</p>", emailQueue.Body, GetAbsoluteUrl(request, url, "~/Proposal/Home"));
             _repository.OfType<EmailQueue>().EnsurePersistent(emailQueue);
         }
 

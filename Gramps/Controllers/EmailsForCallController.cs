@@ -419,7 +419,7 @@ namespace Gramps.Controllers
             var count = 0;
             foreach (var emailsForCall in viewModel.EmailsForCallList.Where(a => !a.HasBeenEmailed))
             {
-                _emailService.SendEmail(callforproposal, callforproposal.EmailTemplates.Where(a => a.TemplateType == EmailTemplateType.InitialCall).Single(), emailsForCall.Email, immediate);
+                _emailService.SendEmail(Request, Url, callforproposal, callforproposal.EmailTemplates.Where(a => a.TemplateType == EmailTemplateType.InitialCall).Single(), emailsForCall.Email, immediate);
                 emailsForCall.EmailedOnDate = DateTime.Now;
                 emailsForCall.HasBeenEmailed = true;
                 _emailsforcallRepository.EnsurePersistent(emailsForCall);

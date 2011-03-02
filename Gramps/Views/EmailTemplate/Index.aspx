@@ -35,6 +35,17 @@
                 <div class="template_body" style="background-color:#f4f4f4; border:1px solid #666; margin:10px 20px 10px 20px; padding:10px; line-height:1.5em;">
                     <%: Html.HtmlEncode(t.Text) %>
                 </div>
+
+                <div>Email Footer Text:</div>
+                <div class="template_Footer" style="background-color:#f4f4f4; border:1px solid #666; margin:10px 20px 10px 20px; padding:10px; line-height:1.5em;">
+                    <br />
+                    <%: Html.Encode(StaticValues.EmailAutomatedDisclaimer) %> <br />
+                    <%if(t.TemplateType == EmailTemplateType.InitialCall) {%>
+                        <%: Html.Encode(StaticValues.EmailCreateProposal) %> <br />
+                        <%: Html.Encode("This will be replaced with the link to create a proposal") %>
+                    <%}%>
+                </div>
+
                 
             </fieldset>
         
