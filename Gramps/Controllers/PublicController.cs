@@ -46,6 +46,10 @@ namespace Gramps.Controllers
         [HttpPost]
         public ActionResult LogOn(LogOnModel model, string returnUrl)
         {
+            if(!string.IsNullOrEmpty(model.UserName))
+            {
+                model.UserName = model.UserName.Trim().ToLower();
+            }
             if (ModelState.IsValid)
             {
                 if (MembershipService.ValidateUser(model.UserName, model.Password))
