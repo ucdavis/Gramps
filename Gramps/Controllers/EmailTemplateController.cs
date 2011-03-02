@@ -88,6 +88,9 @@ namespace Gramps.Controllers
             if (emailtemplate.TemplateType == EmailTemplateType.InitialCall)
             {
                 viewModel.FooterText = string.Format("{0}<br />{1}<br />This will be replaced with the link to create a proposal", viewModel.FooterText, StaticValues.EmailCreateProposal);
+
+                viewModel.Tokens.Add(StaticValues.TokenProposalMaximum);
+                viewModel.Tokens.Add(StaticValues.TokenCloseDate);
             }
             if (emailtemplate.TemplateType == EmailTemplateType.ReadyForReview)
             {               
@@ -109,6 +112,8 @@ namespace Gramps.Controllers
                     , "http://localhost:31701/Proposal/ReviewerIndex/8"
                     , "Or to view all active Call For Proposals you can use this link(Home):"
                     , "http://localhost:31701/Proposal/Home");
+
+                viewModel.Tokens.Add(StaticValues.TokenReviewerName);
 
             }
 

@@ -44,11 +44,31 @@ namespace Gramps.Services
             emailQueue.Body = emailQueue.Body + "<br />" + StaticValues.EmailAutomatedDisclaimer;
             if (emailTemplate.TemplateType == EmailTemplateType.InitialCall)
             {
+                emailQueue.Body = emailQueue.Body.Replace(Token(StaticValues.TokenProposalMaximum),
+                                                          String.Format("{0:C}", callForProposal.ProposalMaximum));
+
+                emailQueue.Body = emailQueue.Body.Replace(Token(StaticValues.TokenCloseDate),
+                                                          String.Format("{0:D}", callForProposal.EndDate));
+
+
                 emailQueue.Body = emailQueue.Body + "<br />" + StaticValues.EmailCreateProposal + "<br />";
                 emailQueue.Body = string.Format("{0}<p>{1}</p>", emailQueue.Body, GetAbsoluteUrl(request, url, "~/Proposal/Create/" + callForProposal.Id));
             }
             if (emailTemplate.TemplateType == EmailTemplateType.ReadyForReview)
             {
+                var reviewerName = callForProposal.Editors.Where(a => a.ReviewerEmail == email).FirstOrDefault();
+                if (reviewerName != null)
+                {
+                    emailQueue.Body = emailQueue.Body.Replace(Token(StaticValues.TokenReviewerName),
+                                                          reviewerName.ReviewerName);
+                }
+                else
+                {
+                    emailQueue.Body = emailQueue.Body.Replace(Token(StaticValues.TokenReviewerName),
+                                                          email);
+                }
+                
+
                 if (string.IsNullOrEmpty(tempPass))
                 {
                     emailQueue.Body = string.Format("{0}<p>{1}</p>", emailQueue.Body, "You have an existing account. Use your email as the userName to login");
@@ -69,6 +89,11 @@ namespace Gramps.Services
             _repository.OfType<EmailQueue>().EnsurePersistent(emailQueue);
 
             
+        }
+
+        private static string Token(string token)
+        {
+            return string.Format("{{{0}}}", token);
         }
 
         public virtual void SendConfirmation(HttpRequestBase request, UrlHelper url, Proposal proposal, EmailTemplate emailTemplate, bool immediate, string userName, string tempPass)

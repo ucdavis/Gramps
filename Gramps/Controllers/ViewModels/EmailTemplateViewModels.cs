@@ -53,6 +53,7 @@ namespace Gramps.Controllers.ViewModels
         public Dictionary<EmailTemplateType, string> DescriptionDict;
         public string FooterText { get; set; }
         public string AlternateFooterText { get; set; }
+        public IList<string> Tokens { get; set; }
 
         public static EmailTemplateViewModel Create(IRepository repository, int? templateId, int? callForProposalId)
         {
@@ -78,6 +79,8 @@ namespace Gramps.Controllers.ViewModels
             viewModel.DescriptionDict.Add(EmailTemplateType.ReadyForReview, StaticValues.ReadyForReview);
             viewModel.DescriptionDict.Add(EmailTemplateType.ReminderCallIsAboutToClose, StaticValues.ReminderCallIsAboutToClose);
             viewModel.DescriptionDict.Add(EmailTemplateType.ProposalUnsubmitted, StaticValues.ProposalUnsubmitted);
+
+            viewModel.Tokens = new List<string>();
 
             return viewModel;
         }

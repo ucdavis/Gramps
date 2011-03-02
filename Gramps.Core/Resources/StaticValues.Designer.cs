@@ -178,6 +178,33 @@ namespace Gramps.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to CloseDate.
+        /// </summary>
+        public static string TokenCloseDate {
+            get {
+                return ResourceManager.GetString("TokenCloseDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ProposalMaximum.
+        /// </summary>
+        public static string TokenProposalMaximum {
+            get {
+                return ResourceManager.GetString("TokenProposalMaximum", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ReviewerName.
+        /// </summary>
+        public static string TokenReviewerName {
+            get {
+                return ResourceManager.GetString("TokenReviewerName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to VersionKey.
         /// </summary>
         public static string VersionKey {

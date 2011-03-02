@@ -48,18 +48,15 @@
                 <input type="button" value="Send Test Email" id="send-test" />
             </li>
             </ul>
-                 
-<%--           <div id="right_bar">
-                <ul class="registration_form">
-                    <% foreach (var a in Model.TemplateTypes) { %>
-                        <div id="<%: a.Code %>" class="tokens" style='<%: Model.Template != null && Model.Template.TemplateType.Code == a.Code ? "display:block;" : "display:none;" %>'>
-                            <% foreach (var b in a.TemplateTokens) { %>
-                                <li><a href="javascript:;" class="add_token" data-token="<%: b.Token %>"><%: b.Name %></a></li>
-                            <% } %>
-                        </div>
+            <%if(Model.Tokens.Count > 0) {%> 
+                <div id="right_bar">
+                    <strong style="font-family:Trebuchet MS,Arial,Georgia; font-size:1.2em;">Template Fields: </strong>
+                    <% foreach (var a in Model.Tokens) { %>
+                        <a href="javascript:;" class="add-token" name = "{<%:a%>}"><%:a%></a><br>         
                     <% } %>
-                </ul>
-           </div>--%>
+   
+               </div>  
+            <%}%>                
     <% } %>
 </asp:Content>
 
@@ -69,11 +66,12 @@
 
     <script type="text/javascript">
 
-        var templatecodes = [];
-
         $(document).ready(function () {
             $("#EmailTemplate_Text").enableTinyMce({ script_location: '<%= Url.Content("~/Scripts/tiny_mce/tiny_mce.js") %>', overrideWidth: "700" });
-
+            $(".add-token").click(function (event) {
+                var pasteValue = $(this).attr("name");
+                tinyMCE.execInstanceCommand("EmailTemplate_Text", "mceInsertContent", false, pasteValue);
+            });
             $("#send-test").click(function () {
                 var url = '<%: Url.Action("SendTestEmail", "EmailTemplate") %>';
                 var subject = $("#EmailTemplate_Subject").val();
