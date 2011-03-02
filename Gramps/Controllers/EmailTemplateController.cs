@@ -92,7 +92,7 @@ namespace Gramps.Controllers
                 viewModel.Tokens.Add(StaticValues.TokenProposalMaximum);
                 viewModel.Tokens.Add(StaticValues.TokenCloseDate);
             }
-            if (emailtemplate.TemplateType == EmailTemplateType.ReadyForReview)
+            else if (emailtemplate.TemplateType == EmailTemplateType.ReadyForReview)
             {               
                 viewModel.FooterText = string.Format("{0}<p>{1}</p><p>{2}</p><p>{3}</p><p>{4}</p><p>{5}</p><p>{6}</p><p>{7}</p><p>{8}</p>"
                     , viewModel.FooterText
@@ -114,7 +114,36 @@ namespace Gramps.Controllers
                     , "http://localhost:31701/Proposal/Home");
 
                 viewModel.Tokens.Add(StaticValues.TokenReviewerName);
+            }
+            else if (emailtemplate.TemplateType == EmailTemplateType.ProposalConfirmation)
+            {
+                viewModel.FooterText = string.Format("{0}<p>{1}</p><p>{2} {3}</p><p>{4} {5}</p><p>{6}</p>"
+                    , viewModel.FooterText
+                    , "An account has been created for you."
+                    , "UserName"
+                    , "johnnytest@test.com"
+                    , "Password"
+                    , "bdLJ&SftBN>%oe"
+                    , "You may change your password (recommended) after logging in.");
 
+                viewModel.FooterText = string.Format("{0}<p>{1}</p><p>{2}</p><p>{3}</p><p>{4}</p>"
+                    , viewModel.FooterText
+                    , "After you have logged in, you may use this link to edit your proposal:"
+                    , "http://localhost:31701/Proposal/Edit/e18348ee-424c-4754-ab48-a23cc7d177a9"
+                    , "Or you may access a list of your proposal(s) here:"
+                    , "http://localhost:31701/Proposal/Home");
+
+                viewModel.AlternateFooterText = string.Format("{0}<p>{1}</p>"
+                    , viewModel.AlternateFooterText
+                    , "You have an existing account. Use your email as the userName to login");
+                viewModel.AlternateFooterText = string.Format("{0}<p>{1}</p><p>{2}</p><p>{3}</p><p>{4}</p>"
+                    , viewModel.AlternateFooterText
+                    , "After you have logged in, you may use this link to edit your proposal:"
+                    , "http://localhost:31701/Proposal/Edit/e18348ee-424c-4754-ab48-a23cc7d177a9"
+                    , "Or you may access a list of your proposal(s) here:"
+                    , "http://localhost:31701/Proposal/Home");
+
+                viewModel.Tokens.Add(StaticValues.TokenCloseDate);
             }
 
             return View(viewModel);

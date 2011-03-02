@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using Gramps.Core.Domain;
 using Gramps.Core.Resources;
 using UCDArch.Core.PersistanceSupport;
+using UCDArch.Core.Utils;
 
 namespace Gramps.Services
 {
@@ -98,22 +99,40 @@ namespace Gramps.Services
 
         public virtual void SendConfirmation(HttpRequestBase request, UrlHelper url, Proposal proposal, EmailTemplate emailTemplate, bool immediate, string userName, string tempPass)
         {
+            Check.Require(emailTemplate.TemplateType == EmailTemplateType.ProposalConfirmation, "Email must be Proposal Template Type");
+            
             var emailQueue = new EmailQueue(proposal.CallForProposal, proposal.Email, emailTemplate.Subject,
                                             emailTemplate.Text);
             emailQueue.Immediate = immediate;
-            emailQueue.Body = emailQueue.Body + "<br />" + StaticValues.EmailAutomatedDisclaimer;
-            emailQueue.Body = string.Format("{0}<p>{1}</p>", emailQueue.Body, GetAbsoluteUrl(request, url, "~/Proposal/Edit/" + proposal.Guid));
+
+            emailQueue.Body = emailQueue.Body.Replace(Token(StaticValues.TokenCloseDate),
+                                                          String.Format("{0:D}", proposal.CallForProposal.EndDate));
+
+            emailQueue.Body = string.Format("{0}<br /><p>{1}</p>", emailQueue.Body, StaticValues.EmailAutomatedDisclaimer);
             if (string.IsNullOrEmpty(tempPass))
             {
                 emailQueue.Body = string.Format("{0}<p>{1}</p>", emailQueue.Body, "You have an existing account. Use your email as the userName to login");
             }
             else
             {
-                emailQueue.Body = string.Format("{0}<p>An account has been created for you.</p><p>UserName {1}</p><p>Password {2}</p><p>You may change your password (recommended) after logging in.</p>", emailQueue.Body, userName, tempPass);
+                emailQueue.Body = string.Format("{0}<p>{1}</p><p>{2} {3}</p><p>{4} {5}</p><p>{6}</p>"
+                    , emailQueue.Body
+                    , "An account has been created for you."
+                    , "UserName"
+                    , userName
+                    , "Password"
+                    , tempPass
+                    , "You may change your password (recommended) after logging in.");
             }
-            emailQueue.Body = string.Format("{0}<p>{1}</p>", emailQueue.Body, "After you have logged in, you may use the edit link above to directly access your proposal, or you may access a list of your proposal(s) here:");
-            emailQueue.Body = string.Format("{0}<p>{1}</p>", emailQueue.Body, GetAbsoluteUrl(request, url, "~/Proposal/Home"));
+            emailQueue.Body = string.Format("{0}<p>{1}</p><p>{2}</p><p>{3}</p><p>{4}</p>"
+                , emailQueue.Body
+                , "After you have logged in, you may use this link to edit your proposal:"
+                , GetAbsoluteUrl(request, url, "~/Proposal/Edit/" + proposal.Guid)
+                , "Or you may access a list of your proposal(s) here:"
+                , GetAbsoluteUrl(request, url, "~/Proposal/Home"));
+
             _repository.OfType<EmailQueue>().EnsurePersistent(emailQueue);
+
         }
 
         private string GetAbsoluteUrl(HttpRequestBase request, UrlHelper url, string relative)
