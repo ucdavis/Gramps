@@ -16,7 +16,7 @@ namespace Gramps.Services
         void SendEmail(HttpRequestBase request, UrlHelper url, CallForProposal callForProposal, EmailTemplate emailTemplate, string email, bool immediate, string tempPass = null);
         void SendConfirmation(HttpRequestBase request, UrlHelper url, Proposal proposal, EmailTemplate emailTemplate, bool immediate, string userName, string tempPass);
         void SendPasswordReset(CallForProposal callForProposal, string email, string tempPassword);
-        void SendDecision(HttpRequestBase request, UrlHelper url, Proposal proposal, EmailTemplate emailTemplate, bool immediate);
+        void SendProposalEmail(HttpRequestBase request, UrlHelper url, Proposal proposal, EmailTemplate emailTemplate, bool immediate);
     }
 
     public class EmailService : IEmailService
@@ -137,7 +137,7 @@ namespace Gramps.Services
 
         }
 
-        public virtual void SendDecision(HttpRequestBase request, UrlHelper url, Proposal proposal, EmailTemplate emailTemplate, bool immediate)
+        public virtual void SendProposalEmail(HttpRequestBase request, UrlHelper url, Proposal proposal, EmailTemplate emailTemplate, bool immediate)
         {
             var emailQueue = new EmailQueue(proposal.CallForProposal, proposal.Email, emailTemplate.Subject,
                                             emailTemplate.Text);
@@ -155,6 +155,20 @@ namespace Gramps.Services
             {
                 emailQueue.Body = emailQueue.Body.Replace(Token(StaticValues.TokenProposalLink),
                                                           GetAbsoluteUrl(request, url, "~/Proposal/Details/" + proposal.Guid));
+            }
+            else if(emailTemplate.TemplateType == EmailTemplateType.ReminderCallIsAboutToClose)
+            {
+                emailQueue.Body = emailQueue.Body.Replace(Token(StaticValues.TokenCloseDate),
+                                                          String.Format("{0:D}", proposal.CallForProposal.EndDate));
+                emailQueue.Body = emailQueue.Body.Replace(Token(StaticValues.TokenProposalLink),
+                                                          GetAbsoluteUrl(request, url, "~/Proposal/Edit/" + proposal.Guid));
+            }
+            else if(emailTemplate.TemplateType == EmailTemplateType.ProposalUnsubmitted)
+            {
+                emailQueue.Body = emailQueue.Body.Replace(Token(StaticValues.TokenCloseDate),
+                                          String.Format("{0:D}", proposal.CallForProposal.EndDate));
+                emailQueue.Body = emailQueue.Body.Replace(Token(StaticValues.TokenProposalLink),
+                                                          GetAbsoluteUrl(request, url, "~/Proposal/Edit/" + proposal.Guid));
             }
 
             _repository.OfType<EmailQueue>().EnsurePersistent(emailQueue);

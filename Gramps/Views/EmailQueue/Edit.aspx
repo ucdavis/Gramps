@@ -21,6 +21,10 @@
 
         <ul class="registration_form" id="left_bar">
         <li>
+            <strong>Email: </strong>
+            <%:Html.DisplayFor(a => a.EmailQueue.EmailAddress) %>
+        </li>
+        <li>
             <strong>Pending</strong>
             <%= Html.CheckBoxFor(a => a.EmailQueue.Pending) %>
             <%= Html.ValidationMessageFor(a => a.EmailQueue.Pending)%> 

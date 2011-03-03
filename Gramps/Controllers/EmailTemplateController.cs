@@ -156,6 +156,18 @@ namespace Gramps.Controllers
 
                 viewModel.Tokens.Add(StaticValues.TokenProposalLink);
             }
+            else if(emailtemplate.TemplateType == EmailTemplateType.ReminderCallIsAboutToClose)
+            {
+                
+                viewModel.Tokens.Add(StaticValues.TokenCloseDate);
+                viewModel.Tokens.Add(StaticValues.TokenProposalLink);
+            }
+            else if (emailtemplate.TemplateType == EmailTemplateType.ProposalUnsubmitted)
+            {
+
+                viewModel.Tokens.Add(StaticValues.TokenCloseDate);
+                viewModel.Tokens.Add(StaticValues.TokenProposalLink);
+            }
 
             return View(viewModel);
         }

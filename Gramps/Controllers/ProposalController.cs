@@ -141,7 +141,7 @@ namespace Gramps.Controllers
 
             foreach (var proposal in proposals)
             {
-                _emailService.SendEmail(Request, Url, callforproposal, callforproposal.EmailTemplates.Where(a => a.TemplateType == EmailTemplateType.ReminderCallIsAboutToClose).Single(), proposal.Email, immediate);
+                _emailService.SendProposalEmail(Request, Url, proposal, callforproposal.EmailTemplates.Where(a => a.TemplateType == EmailTemplateType.ReminderCallIsAboutToClose).Single(), immediate);
                 proposal.WasWarned = true;
                 Repository.OfType<Proposal>().EnsurePersistent(proposal);
                 count++;
@@ -186,12 +186,12 @@ namespace Gramps.Controllers
             {
                 if(proposal.IsApproved)
                 {
-                    _emailService.SendDecision(Request, Url, proposal, callforproposal.EmailTemplates.Where(a => a.TemplateType == EmailTemplateType.ProposalApproved).Single(), immediate);
+                    _emailService.SendProposalEmail(Request, Url, proposal, callforproposal.EmailTemplates.Where(a => a.TemplateType == EmailTemplateType.ProposalApproved).Single(), immediate);
                     approvedCount++;
                 }
                 else if(proposal.IsDenied)
                 {
-                    _emailService.SendDecision(Request, Url, proposal, callforproposal.EmailTemplates.Where(a => a.TemplateType == EmailTemplateType.ProposalDenied).Single(), immediate);
+                    _emailService.SendProposalEmail(Request, Url, proposal, callforproposal.EmailTemplates.Where(a => a.TemplateType == EmailTemplateType.ProposalDenied).Single(), immediate);
                     deniedCount++;
                 }
                 else
@@ -341,6 +341,10 @@ namespace Gramps.Controllers
                 ModelState.AddModelError("IsApproved", "Can not approve an unsubmitted proposal");
             }
 
+            if (saveIsSubmitted && !proposalToEdit.IsSubmitted && (proposalToEdit.IsApproved || proposalToEdit.IsDenied))
+            {
+                ModelState.AddModelError("Proposal.IsSubmitted", "Can not unsubmit unless the decission is undecided");
+            }
 
             if (ModelState.IsValid)
             {
@@ -349,7 +353,7 @@ namespace Gramps.Controllers
 
                 if (saveIsSubmitted && !proposalToEdit.IsSubmitted)
                 {
-                    throw new NotImplementedException("Need to send email to proposer that their proposal has been set back to edit.");
+                    _emailService.SendProposalEmail(Request, Url, proposalToEdit, callforproposal.EmailTemplates.Where(a => a.TemplateType == EmailTemplateType.ProposalUnsubmitted).Single(), false);
                 }                
 
                 Message = "Proposal successfully edited";
