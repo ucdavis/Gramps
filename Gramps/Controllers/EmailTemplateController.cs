@@ -145,6 +145,17 @@ namespace Gramps.Controllers
 
                 viewModel.Tokens.Add(StaticValues.TokenCloseDate);
             }
+            else if(emailtemplate.TemplateType == EmailTemplateType.ProposalApproved)
+            {
+                
+                viewModel.Tokens.Add(StaticValues.TokenApprovedAmount);
+                viewModel.Tokens.Add(StaticValues.TokenProposalLink);
+            }
+            else if (emailtemplate.TemplateType == EmailTemplateType.ProposalDenied)
+            {
+
+                viewModel.Tokens.Add(StaticValues.TokenProposalLink);
+            }
 
             return View(viewModel);
         }

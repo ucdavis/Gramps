@@ -151,6 +151,62 @@ namespace Gramps.Controllers
             return this.RedirectToAction(a => a.AdminIndex(id));
         }
 
+        [HttpPost]
+        [UserOnly]
+        public ActionResult SendDecision(int id, bool immediate)
+        {
+            var callforproposal = Repository.OfType<CallForProposal>().GetNullableById(id);
+
+            if (callforproposal == null)
+            {
+
+                return this.RedirectToAction<CallForProposalController>(a => a.Index());
+            }
+
+            if (!_accessService.HasAccess(null, callforproposal.Id, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+
+            if (!callforproposal.IsActive || callforproposal.EndDate.Date >= DateTime.Now.Date)
+            {
+                Message = "Is not active or end date is not passed";
+                return this.RedirectToAction(a => a.AdminIndex(id));
+            }
+
+
+            var approvedCount = 0;
+            var deniedCount = 0;
+
+
+            var proposals = callforproposal.Proposals.Where(a => !a.IsNotified && (a.IsApproved || a.IsDenied));
+
+            foreach (var proposal in proposals)
+            {
+                if(proposal.IsApproved)
+                {
+                    _emailService.SendDecision(Request, Url, proposal, callforproposal.EmailTemplates.Where(a => a.TemplateType == EmailTemplateType.ProposalApproved).Single(), immediate);
+                    approvedCount++;
+                }
+                else if(proposal.IsDenied)
+                {
+                    _emailService.SendDecision(Request, Url, proposal, callforproposal.EmailTemplates.Where(a => a.TemplateType == EmailTemplateType.ProposalDenied).Single(), immediate);
+                    deniedCount++;
+                }
+                else
+                {
+                    continue;
+                }
+                proposal.IsNotified = true;
+                proposal.NotifiedDate = DateTime.Now;
+                Repository.OfType<Proposal>().EnsurePersistent(proposal);                
+            }
+            Message = string.Format("{0} Emails Generated. {1} Approved {2} Denied", approvedCount + deniedCount, approvedCount, deniedCount);
+
+            return this.RedirectToAction(a => a.AdminIndex(id));
+        }
+
         [UserOnly]
         public ActionResult AdminEdit(int id, int callForProposalId)
         {
@@ -233,6 +289,7 @@ namespace Gramps.Controllers
 
             var saveIsSubmitted = proposalToEdit.IsSubmitted;
 
+
             var editor = Repository.OfType<Editor>().Queryable.Where(a => a.CallForProposal == callforproposal && a.User != null && a.User.LoginId == CurrentUser.Identity.Name).Single();
             var commentToEdit = Repository.OfType<Comment>().Queryable
                 .Where(a => a.Proposal == proposalToEdit && a.Editor == editor).FirstOrDefault();
@@ -261,23 +318,14 @@ namespace Gramps.Controllers
                 throw new ApplicationException("Error with parameter");
             }
 
-            //switch (approvedDenied)
-            //{
-            //    case StaticValues.Approved:
-            //        proposal.IsApproved = true;
-            //        proposal.IsDenied = false;
-            //        break;
-            //    case "Denied":
-            //        proposal.IsApproved = false;
-            //        proposal.IsDenied = true;
-            //        break;
-            //    case "NotDecided":
-            //        proposal.IsApproved = false;
-            //        proposal.IsDenied = false;
-            //        break;
-            //    default:
-            //        throw new ApplicationException("Error with parameter"); 
-            //}
+            if (proposalToEdit.IsNotified && proposal.IsNotified)
+            {
+                if (proposalToEdit.IsApproved != proposal.IsApproved || proposalToEdit.IsDenied != proposal.IsDenied)
+                {
+                    ModelState.AddModelError("Proposal.IsNotified", "You should not change the Decission if they have been notified.");
+                }
+            }
+
 
             AdminTransferValues(proposal, proposalToEdit, comment, commentToEdit);
 
@@ -706,6 +754,7 @@ namespace Gramps.Controllers
             destination.IsSubmitted = source.IsSubmitted;
             destination.IsApproved = source.IsApproved;
             destination.IsDenied = source.IsDenied;
+            destination.IsNotified = source.IsNotified;
 
             commentDestination.Text = commentSource.Text;
         }

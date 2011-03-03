@@ -21,7 +21,7 @@
         <div class="display-field"><%: Model.Proposal.Email%></div>
         
         <span id = "ApprovedSpan">
-            <label for="Approved">Decission: </label>
+            <label for="Approved">Decision: </label>
                 <input type="radio" id="IsApproved" name="ApprovedDenied" disabled="true" value="<%:StaticValues.Approved%>" "<%=Model.Proposal.IsApproved ? "checked" : string.Empty%>" /><label for="approved">Approved</label>
                 <input type="radio" id="IsDenied" name="ApprovedDenied" disabled="true" value="<%:StaticValues.Denied%>" "<%= Model.Proposal.IsDenied ? "checked" : string.Empty %>" /><label for="denied">Denied</label>
                 <input type="radio" id="IsNotDecied" name="ApprovedDenied" disabled="true" value="<%:StaticValues.NotDecided%>" "<%= !Model.Proposal.IsDenied && !Model.Proposal.IsApproved ? "checked" : string.Empty %>" /><label for="notDecieded">Not Decided</label>

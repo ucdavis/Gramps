@@ -59,6 +59,7 @@ namespace Gramps.Core.Domain
         public virtual DateTime? SubmittedDate { get; set; }
         public virtual DateTime? NotifiedDate { get; set; }
         public virtual bool WasWarned { get; set; }
+
         [NotNull]
         public virtual IList<Comment> Comments { get; set; }
         [NotNull]

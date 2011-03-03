@@ -148,7 +148,6 @@
   </data>
   <data name="ProposalConfirmation" xml:space="preserve">
     <value>Email sent out to applicant to confirm proposal has been created</value>
-    <comment>Not a 100% sure if we need this one.</comment>
   </data>
   <data name="ProposalDenied" xml:space="preserve">
     <value>Email sent out to applicant to notify them that their proposal has not been accepted</value>
@@ -163,9 +162,17 @@
     <value>Email sent out to list applicants that have not finilized their proposals</value>
     <comment>Maybe include the list of emails for call?</comment>
   </data>
+  <data name="TokenApprovedAmount" xml:space="preserve">
+    <value>ApprovedAmount</value>
+    <comment>Approved email</comment>
+  </data>
   <data name="TokenCloseDate" xml:space="preserve">
     <value>CloseDate</value>
     <comment>Initial Call </comment>
+  </data>
+  <data name="TokenProposalLink" xml:space="preserve">
+    <value>ProposalLink</value>
+    <comment>Approved/Denied email</comment>
   </data>
   <data name="TokenProposalMaximum" xml:space="preserve">
     <value>ProposalMaximum</value>

@@ -26,9 +26,10 @@
 				<%}).Title("Details");
             col.Bound(x => x.Email);
             col.Bound(x => x.LastViewedDate);
-            col.Bound(x => x.Approved);
+            col.Bound(x => x.Approved).Title("Apprv.");
             col.Bound(x => x.Denied);
-            col.Bound(x => x.Submitted);
+            col.Bound(x => x.NotifiedOfDecission).Title("Notified");
+            col.Bound(x => x.Submitted).Title("Sub.");
             col.Bound(x => x.WarnedOfClosing).Title("Warned");                
             col.Bound(x => x.SubmittedDate);
             col.Bound(x => x.CreatedDate);  
@@ -37,15 +38,20 @@
             .Sortable()
             .Render(); 
         %>
-
+    <br/>
+    <div>
     <% using (Html.BeginForm<ProposalController>(b => b.SendCall(Model.CallForProposal.Id, Model.Immediate), FormMethod.Post)){%>
-        <%:Html.AntiForgeryToken()%>  
-        <div>
-            <br/>
-            <%= Html.SubmitButton("Submit", "Send Warning of Close")%>
-        </div>
+        <%:Html.AntiForgeryToken()%>          
+        
+        <%= Html.SubmitButton("Submit", "Send Warning of Close")%>        
     <%}%>  
-
+    </div>
+    <div>
+    <% using (Html.BeginForm<ProposalController>(b => b.SendDecision(Model.CallForProposal.Id, Model.Immediate), FormMethod.Post)){%>
+        <%:Html.AntiForgeryToken()%>          
+        <%= Html.SubmitButton("Submit", "Send Decision")%>        
+    <%}%> 
+    </div>
 </asp:Content>
 
 <asp:Content ID="Content3" ContentPlaceHolderID="HeaderContent" runat="server">

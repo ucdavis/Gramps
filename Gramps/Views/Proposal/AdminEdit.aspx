@@ -22,23 +22,17 @@
         <fieldset>
             <legend>Fields</legend>
             <span id = "ApprovedSpan">
-            <label for="Approved">Decission: </label>
+            <label for="Approved">Decision: </label>
                 <input type="radio" id="IsApproved" name="ApprovedDenied" value="<%:StaticValues.Approved%>" "<%=Model.Proposal.IsApproved ? "checked" : string.Empty%>" /><label for="approved">Approved</label>
                 <input type="radio" id="IsDenied" name="ApprovedDenied" value="<%:StaticValues.Denied%>" "<%= Model.Proposal.IsDenied ? "checked" : string.Empty %>" /><label for="denied">Denied</label>
                 <input type="radio" id="IsNotDecied" name="ApprovedDenied" value="<%:StaticValues.NotDecided%>" "<%= !Model.Proposal.IsDenied && !Model.Proposal.IsApproved ? "checked" : string.Empty %>" /><label for="notDecieded">Not Decided</label>
             </span>
 
-<%--            <div class="editor-label">Is Approved</div>
+            <div class="editor-label">Is Notified</div>
             <div class="editor-field">
-                <%: Html.CheckBoxFor(a => a.Proposal.IsApproved)%>
-                <%: Html.ValidationMessageFor(a => a.Proposal.IsApproved) %>
+                <%: Html.CheckBoxFor(a => a.Proposal.IsNotified)%>
+                <%: Html.ValidationMessageFor(a => a.Proposal.IsNotified)%>
             </div>
-        
-            <div class="editor-label">Is Denied</div>
-            <div class="editor-field">
-                <%: Html.CheckBoxFor(a => a.Proposal.IsDenied)%>
-                <%: Html.ValidationMessageFor(a => a.Proposal.IsDenied) %>
-            </div>--%>
 
             <div class="editor-label">Is Submitted</div>
             <div class="editor-field">

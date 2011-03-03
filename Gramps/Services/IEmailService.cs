@@ -16,6 +16,7 @@ namespace Gramps.Services
         void SendEmail(HttpRequestBase request, UrlHelper url, CallForProposal callForProposal, EmailTemplate emailTemplate, string email, bool immediate, string tempPass = null);
         void SendConfirmation(HttpRequestBase request, UrlHelper url, Proposal proposal, EmailTemplate emailTemplate, bool immediate, string userName, string tempPass);
         void SendPasswordReset(CallForProposal callForProposal, string email, string tempPassword);
+        void SendDecision(HttpRequestBase request, UrlHelper url, Proposal proposal, EmailTemplate emailTemplate, bool immediate);
     }
 
     public class EmailService : IEmailService
@@ -85,6 +86,7 @@ namespace Gramps.Services
                 emailQueue.Body = string.Format("{0}<p>{1}</p>", emailQueue.Body, GetAbsoluteUrl(request, url, "~/Proposal/Home"));
             }
 
+
             emailQueue.Immediate = immediate;
 
             _repository.OfType<EmailQueue>().EnsurePersistent(emailQueue);
@@ -99,7 +101,7 @@ namespace Gramps.Services
 
         public virtual void SendConfirmation(HttpRequestBase request, UrlHelper url, Proposal proposal, EmailTemplate emailTemplate, bool immediate, string userName, string tempPass)
         {
-            Check.Require(emailTemplate.TemplateType == EmailTemplateType.ProposalConfirmation, "Email must be Proposal Template Type");
+            Check.Require(emailTemplate.TemplateType == EmailTemplateType.ProposalConfirmation, "Email must be Proposal Conformation Template Type");
             
             var emailQueue = new EmailQueue(proposal.CallForProposal, proposal.Email, emailTemplate.Subject,
                                             emailTemplate.Text);
@@ -130,6 +132,30 @@ namespace Gramps.Services
                 , GetAbsoluteUrl(request, url, "~/Proposal/Edit/" + proposal.Guid)
                 , "Or you may access a list of your proposal(s) here:"
                 , GetAbsoluteUrl(request, url, "~/Proposal/Home"));
+
+            _repository.OfType<EmailQueue>().EnsurePersistent(emailQueue);
+
+        }
+
+        public virtual void SendDecision(HttpRequestBase request, UrlHelper url, Proposal proposal, EmailTemplate emailTemplate, bool immediate)
+        {
+            var emailQueue = new EmailQueue(proposal.CallForProposal, proposal.Email, emailTemplate.Subject,
+                                            emailTemplate.Text);
+            emailQueue.Immediate = immediate;
+            emailQueue.Body = string.Format("{0}<br /><p>{1}</p>", emailQueue.Body, StaticValues.EmailAutomatedDisclaimer);
+
+            if (emailTemplate.TemplateType == EmailTemplateType.ProposalApproved)
+            {
+                emailQueue.Body = emailQueue.Body.Replace(Token(StaticValues.TokenApprovedAmount),
+                                                          String.Format("{0:C}", proposal.ApprovedAmount));
+                emailQueue.Body = emailQueue.Body.Replace(Token(StaticValues.TokenProposalLink),
+                                                          GetAbsoluteUrl(request, url, "~/Proposal/Details/" + proposal.Guid));
+            }
+            else if(emailTemplate.TemplateType == EmailTemplateType.ProposalDenied)
+            {
+                emailQueue.Body = emailQueue.Body.Replace(Token(StaticValues.TokenProposalLink),
+                                                          GetAbsoluteUrl(request, url, "~/Proposal/Details/" + proposal.Guid));
+            }
 
             _repository.OfType<EmailQueue>().EnsurePersistent(emailQueue);
 
