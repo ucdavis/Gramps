@@ -15,6 +15,24 @@
     <%: Html.ActionLink<CallForProposalController>(a => a.Create(), "Create Call", new {@class="button"}) %>
 </p>
 
+    <div id="filter_container">
+        <h3><a href="#">Filters</a></h3>
+        <% using (Html.BeginForm("Index", "CallForProposal", FormMethod.Post)) { %>
+            <%= Html.AntiForgeryToken() %>
+            <ul>
+        
+            <span id = "IsActiveSpan">
+            <label for="Approved"></label>
+                <input type="radio" id="Active" name="filterActive" value="Active" "<%=Model.FilterActive == "Active" ? "checked" : string.Empty%>" /><label for="active">Active</label>
+                <input type="radio" id="InActive" name="filterActive" value="InActive" "<%= Model.FilterActive == "InActive" ? "checked" : string.Empty %>" /><label for="inactive">InActive</label>
+                <input type="radio" id="Both" name="filterActive" value="Both" "<%= string.IsNullOrWhiteSpace(Model.FilterActive) || Model.FilterActive == "Both" ? "checked" : string.Empty %>" /><label for="both">Both</label>
+            </span>
+
+            <li><strong></strong><%= Html.SubmitButton("Submit", "Filter") %></li>
+        </ul>
+        <% } %>
+    </div>
+
 <% Html.Grid(Model.CallForProposals) 
             .Name("List")
             .PrefixUrlParameters(true) //True if >0 sortable/pageable grids
@@ -32,14 +50,21 @@
                         col.Bound(x => x.EndDate);
                         col.Bound(x => x.CallsSentDate);
                         })
+            .DataBinding(binding => binding.Server().Select<CallForProposalController>(a => a.Index(Model.FilterActive)))
             .Pageable()
-            .Sortable()
+            .Sortable(s => s.OrderBy(a => a.Add(b => b.CreatedDate).Descending()))
             .Render(); 
         %>
 
 </asp:Content>
 
 <asp:Content ID="Content3" ContentPlaceHolderID="HeaderContent" runat="server">
+     <script type="text/javascript">
+         $(function () {
+             $("#filter_container").accordion({ collapsible: true, autoHeight: false, active: false });
+         });
+    </script>
+ 
     <style type="text/css">
         .launch_button
         {

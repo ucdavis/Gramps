@@ -9,7 +9,7 @@
 
     <ul class="btn">
         <li>
-            <%= Html.ActionLink<CallForProposalController>(a => a.Index(), "Calls Index")%>
+            <%= Html.ActionLink<CallForProposalController>(a => a.Index(null), "Calls Index")%>
         </li>
         <li>
             <%= Html.ActionLink<TemplateController>(a => a.Index(), "Template Index")%>

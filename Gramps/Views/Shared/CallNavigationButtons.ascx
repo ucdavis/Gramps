@@ -2,7 +2,7 @@
 <%@ Import Namespace="Gramps.Controllers" %>
     <ul class="btn">
         <li>
-            <%=Html.ActionLink<CallForProposalController>(a => a.Index(), "Call Index") %>
+            <%=Html.ActionLink<CallForProposalController>(a => a.Index(null), "Call Index") %>
         </li>
         <li>
             <%: Html.ActionLink<CallForProposalController>(a => a.Launch(Model.CallForProposal.Id), "Details")%>            

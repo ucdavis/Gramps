@@ -25,7 +25,8 @@
 				<%}).Title("Edit");
 			            col.Bound(x => x.Name);
                         col.Bound(x => x.IsActive);
-                        })
+                        col.Bound(x => x.CallForProposals.Count).Title("Number of times used");
+            })
             .Pageable()
             .Sortable()
             .Render(); 

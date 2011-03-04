@@ -30,10 +30,10 @@ namespace Gramps.Controllers
 
         //
         // GET: /CallForProposal/
-        public ActionResult Index()
+        public ActionResult Index(string filterActive)
         {
             //var callforproposalList = Repository.OfType<Editor>().Queryable.Where(a => a.CallForProposal != null && a.User != null && a.User.LoginId == CurrentUser.Identity.Name).Select(x => x.CallForProposal).Distinct();
-            var viewModel = CallForProposalListViewModel.Create(Repository, CurrentUser.Identity.Name);
+            var viewModel = CallForProposalListViewModel.Create(Repository, CurrentUser.Identity.Name, filterActive);
 
             return View(viewModel);
         }
@@ -47,7 +47,7 @@ namespace Gramps.Controllers
         {
             var callforproposal = _callforproposalRepository.GetNullableById(id);
 
-            if (callforproposal == null) return this.RedirectToAction(a => a.Index());
+            if (callforproposal == null) return this.RedirectToAction(a => a.Index(null));
 
             if (!_accessService.HasAccess(null, callforproposal.Id, CurrentUser.Identity.Name))
             {
@@ -123,7 +123,7 @@ namespace Gramps.Controllers
         {
             var callforproposal = _callforproposalRepository.GetNullableById(id);
 
-            if (callforproposal == null) return this.RedirectToAction(a => a.Index());
+            if (callforproposal == null) return this.RedirectToAction(a => a.Index(null));
 
             if (!_accessService.HasAccess(null, callforproposal.Id, CurrentUser.Identity.Name))
             {
@@ -147,7 +147,7 @@ namespace Gramps.Controllers
         {
             var callforproposalToEdit = _callforproposalRepository.GetNullableById(id);
 
-            if (callforproposalToEdit == null) return this.RedirectToAction(a => a.Index());
+            if (callforproposalToEdit == null) return this.RedirectToAction(a => a.Index(null));
 
             TransferValues(callforproposal, callforproposalToEdit);
 
@@ -198,13 +198,13 @@ namespace Gramps.Controllers
         {
 			var callforproposalToDelete = _callforproposalRepository.GetNullableById(id);
 
-            if (callforproposalToDelete == null) this.RedirectToAction(a => a.Index());
+            if (callforproposalToDelete == null) this.RedirectToAction(a => a.Index(null));
 
             _callforproposalRepository.Remove(callforproposalToDelete);
 
             Message = "CallForProposal Removed Successfully";
 
-            return this.RedirectToAction(a => a.Index());
+            return this.RedirectToAction(a => a.Index(null));
         }
         
         /// <summary>

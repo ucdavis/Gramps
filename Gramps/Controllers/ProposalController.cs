@@ -50,7 +50,7 @@ namespace Gramps.Controllers
 
             if (callforproposal == null)
             {
-                return this.RedirectToAction<CallForProposalController>(a => a.Index());
+                return this.RedirectToAction<CallForProposalController>(a => a.Index(null));
             }
 
             if (!_accessService.HasAccess(null, callforproposal.Id, CurrentUser.Identity.Name))
@@ -72,7 +72,7 @@ namespace Gramps.Controllers
 
             if (callforproposal == null)
             {
-                return this.RedirectToAction<CallForProposalController>(a => a.Index());
+                return this.RedirectToAction<CallForProposalController>(a => a.Index(null));
             }
 
             if (!_accessService.HasAccess(null, callforproposal.Id, CurrentUser.Identity.Name))
@@ -119,7 +119,7 @@ namespace Gramps.Controllers
             if (callforproposal == null)
             {
 
-                return this.RedirectToAction<CallForProposalController>(a => a.Index());
+                return this.RedirectToAction<CallForProposalController>(a => a.Index(null));
             }
 
             if (!_accessService.HasAccess(null, callforproposal.Id, CurrentUser.Identity.Name))
@@ -160,7 +160,7 @@ namespace Gramps.Controllers
             if (callforproposal == null)
             {
 
-                return this.RedirectToAction<CallForProposalController>(a => a.Index());
+                return this.RedirectToAction<CallForProposalController>(a => a.Index(null));
             }
 
             if (!_accessService.HasAccess(null, callforproposal.Id, CurrentUser.Identity.Name))
@@ -214,7 +214,7 @@ namespace Gramps.Controllers
 
             if (callforproposal == null)
             {
-                return this.RedirectToAction<CallForProposalController>(a => a.Index());
+                return this.RedirectToAction<CallForProposalController>(a => a.Index(null));
             }
 
             if (!_accessService.HasAccess(null, callforproposal.Id, CurrentUser.Identity.Name))
@@ -265,7 +265,7 @@ namespace Gramps.Controllers
 
             if (callforproposal == null)
             {
-                return this.RedirectToAction<CallForProposalController>(a => a.Index());
+                return this.RedirectToAction<CallForProposalController>(a => a.Index(null));
             }
 
             if (!_accessService.HasAccess(null, callforproposal.Id, CurrentUser.Identity.Name))

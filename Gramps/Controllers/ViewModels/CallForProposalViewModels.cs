@@ -46,15 +46,28 @@ namespace Gramps.Controllers.ViewModels
     public class CallForProposalListViewModel
     {
         public IQueryable<CallForProposal> CallForProposals { get; set; }
+        public string FilterActive { get; set; }
 
-
-        public static CallForProposalListViewModel Create(IRepository repository, string loginId)
+        public static CallForProposalListViewModel Create(IRepository repository, string loginId, string filterActive)
         {
             Check.Require(repository != null, "Repository must be supplied");
 
-            var viewModel = new CallForProposalListViewModel();
-            var callForProposalIds = repository.OfType<Editor>().Queryable.Where(a => a.CallForProposal != null && a.User != null && a.User.LoginId == loginId).Select(x => x.CallForProposal.Id).ToList();
+            var viewModel = new CallForProposalListViewModel{FilterActive = filterActive};
+            var callForProposalIds = repository.OfType<Editor>().Queryable
+                .Where(a => a.CallForProposal != null && 
+                    a.User != null && 
+                    a.User.LoginId == loginId)
+                .Select(x => x.CallForProposal.Id).ToList();
             viewModel.CallForProposals = repository.OfType<CallForProposal>().Queryable.Where(a => callForProposalIds.Contains(a.Id));
+            if (filterActive == "Active")
+            {
+                viewModel.CallForProposals = viewModel.CallForProposals.Where(a => a.IsActive);
+            }
+            if (filterActive == "InActive")
+            {
+                viewModel.CallForProposals = viewModel.CallForProposals.Where(a => !a.IsActive);
+            }
+
             return viewModel;
         }
     }
