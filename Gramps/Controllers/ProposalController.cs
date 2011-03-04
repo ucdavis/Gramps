@@ -557,6 +557,14 @@ namespace Gramps.Controllers
                 Message = "Cannot edit proposal once submitted.";
                 return this.RedirectToAction(a => a.Details(id));
             }
+            if (proposal.CallForProposal.EndDate.Date < DateTime.Now.Date)
+            {
+                Message = "Call for proposal has closed, you will not be able to save changes.";
+            }
+            else if(!proposal.CallForProposal.IsActive)
+            {
+                Message = "Call for proposal has been deactivated, you will not be able to save changes.";
+            }
             
 
 			var viewModel = ProposalViewModel.Create(Repository, proposal.CallForProposal);
@@ -598,6 +606,15 @@ namespace Gramps.Controllers
             if (proposalAnswers == null)
             {
                 proposalAnswers = new QuestionAnswerParameter[0];
+            }
+
+            if (proposalToEdit.CallForProposal.EndDate.Date < DateTime.Now.Date)
+            {
+                ModelState.AddModelError("Call Closed", "Call for proposal has closed");
+            }
+            else if (!proposalToEdit.CallForProposal.IsActive)
+            {
+                ModelState.AddModelError("Call deactivated", "Call for proposal has been deactivated");
             }
 
 
@@ -823,56 +840,7 @@ namespace Gramps.Controllers
                 }
             }
             return answer;
-            //else
-            //{
-            //    answer = string.Empty;
-            //    if (qa.CblAnswer != null)
-            //    {
-            //        var tempAnswer = string.Empty;
-            //        var count = qa.CblAnswer.Count();
-            //        for (int i = count-1; i >= 0; i--)
-            //        {
-            //            if (i > 0)
-            //            {
-            //                if (qa.CblAnswer[i - 1].ToLower() == "true")
-            //                {
-            //                    tempAnswer = "+" + tempAnswer ;
-            //                    i--;
-            //                }
-            //                else
-            //                {
-            //                    tempAnswer = "-" + tempAnswer ;
-            //                }
-            //            }
-            //            else
-            //            {
-            //                if (qa.CblAnswer[i].ToLower() == "false")
-            //                {
-            //                    tempAnswer = "-" + tempAnswer;
-            //                }
-            //            }
-            //        }
 
-            //        var answerList = new List<string>();
-
-            //        for (int i = 0; i < tempAnswer.Count(); i++)
-            //        {
-            //            if (tempAnswer[i] == '+')
-            //            {
-            //                answerList.Add(question.Options[i].Name);
-            //            }
-            //        }
-            //        if (answerList.Count > 0)
-            //        {
-            //            answer = string.Join(",", answerList);      
-            //        }
-            //    }
-            //    else
-            //    {
-            //        answer = string.Empty;
-            //    }
-            //}
-            //return answer;
         }
     }
 

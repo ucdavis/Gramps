@@ -462,7 +462,7 @@ namespace Gramps.Controllers
         /// </summary>
         private static void TransferValues(Editor source, Editor destination)
         {
-            destination.ReviewerEmail = source.ReviewerEmail;
+            destination.ReviewerEmail = source.ReviewerEmail.Trim().ToLower();
             destination.ReviewerName = source.ReviewerName;
             destination.ReviewerId = source.ReviewerId;
         }
