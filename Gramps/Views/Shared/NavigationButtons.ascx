@@ -6,7 +6,7 @@
                 <%=Html.ActionLink<TemplateController>(a => a.Index(), "Template List")%>
             <%}%>
             <%else if (Model.IsCallForProposal){%>
-                <%=Html.ActionLink<CallForProposalController>(a => a.Index(null), "Call Index") %>
+                <%=Html.ActionLink<CallForProposalController>(a => a.Index(null, null, null), "Call Index") %>
             <%}%>
         </li>
         <li>

@@ -35,7 +35,7 @@ namespace Gramps.Controllers
 
             if (callforproposal == null)
             {
-                return this.RedirectToAction<CallForProposalController>(a => a.Index(null));
+                return this.RedirectToAction<CallForProposalController>(a => a.Index(null, null, null));
             }
 
             if (!_accessService.HasAccess(null, callforproposal.Id, CurrentUser.Identity.Name))
@@ -56,7 +56,7 @@ namespace Gramps.Controllers
 
             if (callforproposal == null)
             {
-                return this.RedirectToAction<CallForProposalController>(a => a.Index(null));
+                return this.RedirectToAction<CallForProposalController>(a => a.Index(null, null, null));
             }
 
             if (!_accessService.HasAccess(null, callForProposalId, CurrentUser.Identity.Name))
@@ -94,7 +94,7 @@ namespace Gramps.Controllers
 
             if (callforproposal == null)
             {
-                return this.RedirectToAction<CallForProposalController>(a => a.Index(null));
+                return this.RedirectToAction<CallForProposalController>(a => a.Index(null, null, null));
             }
 
             if (!_accessService.HasAccess(null, callForProposalId, CurrentUser.Identity.Name))
@@ -127,7 +127,7 @@ namespace Gramps.Controllers
 
             if (callforproposal == null)
             {
-                return this.RedirectToAction<CallForProposalController>(a => a.Index(null));
+                return this.RedirectToAction<CallForProposalController>(a => a.Index(null, null, null));
             }
 
             if (!_accessService.HasAccess(null, callForProposalId, CurrentUser.Identity.Name))

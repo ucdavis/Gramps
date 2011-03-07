@@ -20,13 +20,22 @@
         <% using (Html.BeginForm("Index", "CallForProposal", FormMethod.Post)) { %>
             <%= Html.AntiForgeryToken() %>
             <ul>
-        
+            <li>
             <span id = "IsActiveSpan">
             <label for="Approved"></label>
                 <input type="radio" id="Active" name="filterActive" value="Active" "<%=Model.FilterActive == "Active" ? "checked" : string.Empty%>" /><label for="active">Active</label>
                 <input type="radio" id="InActive" name="filterActive" value="InActive" "<%= Model.FilterActive == "InActive" ? "checked" : string.Empty %>" /><label for="inactive">InActive</label>
                 <input type="radio" id="Both" name="filterActive" value="Both" "<%= string.IsNullOrWhiteSpace(Model.FilterActive) || Model.FilterActive == "Both" ? "checked" : string.Empty %>" /><label for="both">Both</label>
             </span>
+            </li>
+            <li>
+                <%: Html.Label("Create Date is After:") %>
+                <%: Html.TextBoxFor(a => a.FilterStartCreate) %>
+            </li>
+                        <li>
+                <%: Html.Label("Create Date is Before:") %>
+                <%: Html.TextBoxFor(a => a.FilterEndCreate) %>
+            </li>
 
             <li><strong></strong><%= Html.SubmitButton("Submit", "Filter") %></li>
         </ul>
@@ -50,7 +59,7 @@
                         col.Bound(x => x.EndDate);
                         col.Bound(x => x.CallsSentDate);
                         })
-            .DataBinding(binding => binding.Server().Select<CallForProposalController>(a => a.Index(Model.FilterActive)))
+            .DataBinding(binding => binding.Server().Select<CallForProposalController>(a => a.Index(Model.FilterActive, Model.FilterStartCreate, Model.FilterEndCreate)))
             .Pageable()
             .Sortable(s => s.OrderBy(a => a.Add(b => b.CreatedDate).Descending()))
             .Render(); 
@@ -79,6 +88,13 @@
             color:#0D548A;
         }
     </style>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#FilterStartCreate").datepicker();
+            $("#FilterEndCreate").datepicker();           
+        });
+    </script>
 
 </asp:Content>
 

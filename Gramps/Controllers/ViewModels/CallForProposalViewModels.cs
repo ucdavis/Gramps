@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Gramps.Core.Domain;
 using UCDArch.Core.PersistanceSupport;
@@ -47,12 +48,14 @@ namespace Gramps.Controllers.ViewModels
     {
         public IQueryable<CallForProposal> CallForProposals { get; set; }
         public string FilterActive { get; set; }
+        public DateTime? FilterStartCreate { get; set; }
+        public DateTime? FilterEndCreate { get; set; }
 
-        public static CallForProposalListViewModel Create(IRepository repository, string loginId, string filterActive)
+        public static CallForProposalListViewModel Create(IRepository repository, string loginId, string filterActive, DateTime? filterStartCreate = null, DateTime? filterEndCreate = null)
         {
             Check.Require(repository != null, "Repository must be supplied");
 
-            var viewModel = new CallForProposalListViewModel{FilterActive = filterActive};
+            var viewModel = new CallForProposalListViewModel{FilterActive = filterActive, FilterStartCreate = filterStartCreate, FilterEndCreate = filterEndCreate};
             var callForProposalIds = repository.OfType<Editor>().Queryable
                 .Where(a => a.CallForProposal != null && 
                     a.User != null && 
@@ -66,6 +69,14 @@ namespace Gramps.Controllers.ViewModels
             if (filterActive == "InActive")
             {
                 viewModel.CallForProposals = viewModel.CallForProposals.Where(a => !a.IsActive);
+            }
+            if (filterStartCreate != null)
+            {
+                viewModel.CallForProposals = viewModel.CallForProposals.Where(a => a.CreatedDate > filterStartCreate);
+            }
+            if (filterEndCreate != null)
+            {
+                viewModel.CallForProposals = viewModel.CallForProposals.Where(a => a.CreatedDate < filterEndCreate);
             }
 
             return viewModel;
