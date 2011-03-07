@@ -400,6 +400,7 @@ CREATE TABLE [dbo].[CallForProposals](
 	[CallsSentDate] [datetime] NULL,
 	[CreatedDate] [datetime] NOT NULL,
 	[ProposalMaximum] [decimal](18, 2) NOT NULL,
+	[Description] [varchar](max) NULL,
  CONSTRAINT [PK_CallForProposals] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC

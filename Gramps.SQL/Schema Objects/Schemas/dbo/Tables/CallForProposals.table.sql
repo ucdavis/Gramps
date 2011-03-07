@@ -6,8 +6,11 @@
     [EndDate]         DATETIME        NOT NULL,
     [CallsSentDate]   DATETIME        NULL,
     [CreatedDate]     DATETIME        NOT NULL,
-    [ProposalMaximum] DECIMAL (18, 2) NOT NULL
+    [ProposalMaximum] DECIMAL (18, 2) NOT NULL,
+    [Description]     VARCHAR (MAX)   NULL
 );
+
+
 
 
 
