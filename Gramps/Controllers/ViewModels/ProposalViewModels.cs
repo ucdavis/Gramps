@@ -148,7 +148,8 @@ namespace Gramps.Controllers.ViewModels
                                      Submitted = x.IsSubmitted,
                                      SubmittedDate = x.SubmittedDate,  
                                      WarnedOfClosing = x.WasWarned,
-                                     NotifiedOfDecission = x.IsNotified
+                                     NotifiedOfDecission = x.IsNotified,
+                                     Seq = x.Sequence
                                  }).ToList();
             foreach (var proposal in viewModel.Proposals)
             {
@@ -195,7 +196,8 @@ namespace Gramps.Controllers.ViewModels
                 Submitted = x.IsSubmitted,
                 SubmittedDate = x.SubmittedDate,
                 WarnedOfClosing = x.WasWarned,
-                NotifiedOfDecission = x.IsNotified
+                NotifiedOfDecission = x.IsNotified,
+                Seq = x .Sequence
             }).ToList();
             foreach (var proposal in viewModel.Proposals)
             {
@@ -259,6 +261,7 @@ namespace Gramps.Controllers.ViewModels
         public DateTime? LastViewedDate;
         public bool WarnedOfClosing;
         public bool NotifiedOfDecission;
+        public int Seq;
 
 
         //        col.Bound(x => x.Email);

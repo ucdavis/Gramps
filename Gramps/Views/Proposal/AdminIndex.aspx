@@ -68,8 +68,9 @@
 			col.Template(x => {%>
 				<%: Html.ActionLink<ProposalController>(a => a.AdminDetails(x.Id, Model.CallForProposal.Id), " ", new { @class = "details_button" })%>           
 				<%}).Title("Details");
+            col.Bound(x => x.Seq);
             col.Bound(x => x.Email);
-            col.Bound(x => x.LastViewedDate);
+            col.Bound(x => x.LastViewedDate).Title("Viewed Date");
             col.Bound(x => x.Approved).Title("Aprv.");
             col.Bound(x => x.Denied);
             col.Bound(x => x.NotifiedOfDecission).Title("Notified");
