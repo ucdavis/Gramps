@@ -383,7 +383,7 @@ namespace Gramps.Controllers
 
         #region Reviewer Methods
         [PublicAuthorize]
-        public ActionResult ReviewerIndex(int id)
+        public ActionResult ReviewerIndex(int id, string filterDecission, string filterEmail)
         {
             var callforproposal = Repository.OfType<CallForProposal>().GetNullableById(id);
 
@@ -397,7 +397,7 @@ namespace Gramps.Controllers
                 Message = "You do not have access to that.";
                 return this.RedirectToAction<ProposalController>(a => a.Home());
             }
-            var viewModel = ProposalReviewerListViewModel.Create(Repository, callforproposal, CurrentUser.Identity.Name);
+            var viewModel = ProposalReviewerListViewModel.Create(Repository, callforproposal, CurrentUser.Identity.Name, filterDecission, filterEmail);
 
             return View(viewModel);
         }

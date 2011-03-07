@@ -18,7 +18,7 @@
             .PrefixUrlParameters(false) //True if >0 sortable/pageable grids
             .Columns(col => {
             col.Template(x => {%>
-				<%: Html.ActionLink<ProposalController>(a => a.ReviewerIndex(x.Id), " ", new { @class = "details_button" })%>           
+				<%: Html.ActionLink<ProposalController>(a => a.ReviewerIndex(x.Id, null, null), " ", new { @class = "details_button" })%>           
 				<%}).Title("Details");
                                 col.Bound(x => x.Name);
                                 col.Bound(x => x.CreatedDate);

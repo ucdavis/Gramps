@@ -11,7 +11,7 @@
 
     <ul class="btn">
         <li>
-            <%: Html.ActionLink<ProposalController>(a => a.ReviewerIndex(Model.CallForProposal.Id), "Proposals")%>            
+            <%: Html.ActionLink<ProposalController>(a => a.ReviewerIndex(Model.CallForProposal.Id, null, null), "Proposals")%>            
         </li>
     </ul>
 

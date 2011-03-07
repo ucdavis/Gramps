@@ -174,17 +174,41 @@ namespace Gramps.Controllers.ViewModels
         public IList<ProposalList> Proposals { get; set; }
         public Editor Editor { get; set; }
         public bool Immediate { get; set; }
+        public string FilterDecission { get; set; }
+        public string FilterEmail { get; set; }
 
-        public static ProposalReviewerListViewModel Create(IRepository repository, CallForProposal callForProposal, string login)
+        public static ProposalReviewerListViewModel Create(IRepository repository, CallForProposal callForProposal, string login, string filterDecission, string filterEmail)
         {
             Check.Require(repository != null, "Repository must be supplied");
             Check.Require(callForProposal != null, "Grant to apply for must be supplied (CallForProposal)");
 
-            var viewModel = new ProposalReviewerListViewModel { CallForProposal = callForProposal };
+            var viewModel = new ProposalReviewerListViewModel { CallForProposal = callForProposal, FilterDecission = filterDecission, FilterEmail = filterEmail};
             viewModel.Editor = repository.OfType<Editor>()
                 .Queryable.Where(a => a.CallForProposal == callForProposal && a.ReviewerEmail == login).First();
-            var temp = repository.OfType<Proposal>()
-                .Queryable.Where(a => a.CallForProposal == callForProposal && a.IsSubmitted).ToList();
+            var tempToFilter = repository.OfType<Proposal>()
+                .Queryable.Where(a => a.CallForProposal == callForProposal && a.IsSubmitted);
+
+            if (filterDecission == "Approved")
+            {
+                tempToFilter = tempToFilter.Where(a => a.IsApproved && !a.IsDenied);
+            }
+            else if (filterDecission == "Denied")
+            {
+                tempToFilter = tempToFilter.Where(a => !a.IsApproved && a.IsDenied);
+            }
+            else if (filterDecission == "NotDecied")
+            {
+                tempToFilter = tempToFilter.Where(a => !a.IsApproved && !a.IsDenied);
+            }
+
+            if (!string.IsNullOrWhiteSpace(filterEmail))
+            {
+                filterEmail = filterEmail.ToLower();
+                tempToFilter = tempToFilter.Where(a => a.Email.Contains(filterEmail));
+            }
+
+
+            var temp = tempToFilter.ToList();
 
             viewModel.Proposals = temp.Select(x => new ProposalList
             {
