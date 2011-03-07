@@ -32,7 +32,7 @@
                 <%: Html.Label("Create Date is After:") %>
                 <%: Html.TextBoxFor(a => a.FilterStartCreate) %>
             </li>
-                        <li>
+            <li>
                 <%: Html.Label("Create Date is Before:") %>
                 <%: Html.TextBoxFor(a => a.FilterEndCreate) %>
             </li>

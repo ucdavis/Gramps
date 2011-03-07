@@ -60,18 +60,84 @@ namespace Gramps.Controllers.ViewModels
         public IList<ProposalList> Proposals { get; set; }
         public Editor Editor { get; set; }
         public bool Immediate { get; set; }
+        public string FilterDecission { get; set; }
+        public string FilterNotified { get; set; }
+        public string FilterSubmitted { get; set; }
+        public string FilterWarned { get; set; }
+        public string FilterEmail { get; set; }
 
-        public static ProposalAdminListViewModel Create(IRepository repository, CallForProposal callForProposal, string login)
+        public static ProposalAdminListViewModel Create(IRepository repository, 
+            CallForProposal callForProposal, 
+            string login,
+            string filterDecission,
+            string filterNotified,
+            string filterSubmitted,
+            string filterWarned,
+            string filterEmail)
         {
             Check.Require(repository != null, "Repository must be supplied");
             Check.Require(callForProposal != null, "Grant to apply for must be supplied (CallForProposal)");
 
-            var viewModel = new ProposalAdminListViewModel {CallForProposal = callForProposal};
+            var viewModel = new ProposalAdminListViewModel 
+            {
+                CallForProposal = callForProposal,
+                FilterDecission = filterDecission,
+                FilterNotified = filterNotified,
+                FilterSubmitted = filterSubmitted,
+                FilterWarned = filterWarned,
+                FilterEmail = filterEmail
+            };
             viewModel.Editor = repository.OfType<Editor>()
                 .Queryable.Where(a => a.CallForProposal == callForProposal && a.User != null && a.User.LoginId == login).Single();
-            var temp = repository.OfType<Proposal>()
-                .Queryable.Where(a => a.CallForProposal == callForProposal).ToList();
+            var tempToFilter = repository.OfType<Proposal>()
+                .Queryable.Where(a => a.CallForProposal == callForProposal);
 
+            if (filterDecission == "Approved")
+            {
+                tempToFilter = tempToFilter.Where(a => a.IsApproved && !a.IsDenied);
+            }
+            else if (filterDecission == "Denied")
+            {
+                tempToFilter = tempToFilter.Where(a => !a.IsApproved && a.IsDenied);
+            }
+            else if (filterDecission == "NotDecied")
+            {
+                tempToFilter = tempToFilter.Where(a => !a.IsApproved && !a.IsDenied);
+            }
+            
+            if (filterNotified == "Notified")
+            {
+                tempToFilter = tempToFilter.Where(a => a.IsNotified);
+            }
+            else if (filterNotified == "NotNotified")
+            {
+                tempToFilter = tempToFilter.Where(a => !a.IsNotified);
+            }
+
+            if (filterSubmitted == "Submitted")
+            {
+                tempToFilter = tempToFilter.Where(a => a.IsSubmitted);
+            }
+            else if (filterSubmitted == "NotSubmitted")
+            {
+                tempToFilter = tempToFilter.Where(a => !a.IsSubmitted);
+            }
+
+            if (filterWarned == "Warned")
+            {
+                tempToFilter = tempToFilter.Where(a => a.WasWarned);
+            }
+            else if (filterWarned == "NotWarned")
+            {
+                tempToFilter = tempToFilter.Where(a => !a.WasWarned);
+            }
+            if (!string.IsNullOrWhiteSpace(filterEmail))
+            {
+                filterEmail = filterEmail.ToLower();
+                tempToFilter = tempToFilter.Where(a => a.Email.Contains(filterEmail));
+            }
+
+            var temp = tempToFilter.ToList();
             viewModel.Proposals = temp.Select(x => new ProposalList
                                  {
                                      Id = x.Id, 

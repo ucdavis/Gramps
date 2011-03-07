@@ -44,7 +44,7 @@ namespace Gramps.Controllers
         #region Admin(User) Methods
         
         [UserOnly]
-        public ActionResult AdminIndex(int id)
+        public ActionResult AdminIndex(int id, string filterDecission, string filterNotified, string filterSubmitted, string filterWarned, string filterEmail)
         {
             var callforproposal = Repository.OfType<CallForProposal>().GetNullableById(id);
 
@@ -58,7 +58,14 @@ namespace Gramps.Controllers
                 Message = "You do not have access to that.";
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
-            var viewModel = ProposalAdminListViewModel.Create(Repository, callforproposal, CurrentUser.Identity.Name);
+            var viewModel = ProposalAdminListViewModel.Create(Repository, 
+                callforproposal, 
+                CurrentUser.Identity.Name,
+                filterDecission,         
+                filterNotified,
+                filterSubmitted,
+                filterWarned,
+                filterEmail);
 
             return View(viewModel);
         }
@@ -131,7 +138,7 @@ namespace Gramps.Controllers
             if (!callforproposal.IsActive || callforproposal.EndDate.Date <= DateTime.Now.Date)
             {
                 Message = "Is not active or end date is passed";
-                return this.RedirectToAction(a => a.AdminIndex(id));
+                return this.RedirectToAction(a => a.AdminIndex(id, null, null, null, null, null));
             }
 
 
@@ -148,7 +155,7 @@ namespace Gramps.Controllers
             }
             Message = string.Format("{0} Emails Generated", count);
 
-            return this.RedirectToAction(a => a.AdminIndex(id));
+            return this.RedirectToAction(a => a.AdminIndex(id, null, null, null, null, null));
         }
 
         [HttpPost]
@@ -172,7 +179,7 @@ namespace Gramps.Controllers
             if (!callforproposal.IsActive || callforproposal.EndDate.Date >= DateTime.Now.Date)
             {
                 Message = "Is not active or end date is not passed";
-                return this.RedirectToAction(a => a.AdminIndex(id));
+                return this.RedirectToAction(a => a.AdminIndex(id, null, null, null, null, null));
             }
 
 
@@ -204,7 +211,7 @@ namespace Gramps.Controllers
             }
             Message = string.Format("{0} Emails Generated. {1} Approved {2} Denied", approvedCount + deniedCount, approvedCount, deniedCount);
 
-            return this.RedirectToAction(a => a.AdminIndex(id));
+            return this.RedirectToAction(a => a.AdminIndex(id, null, null, null, null, null));
         }
 
         [UserOnly]
@@ -357,7 +364,7 @@ namespace Gramps.Controllers
                 }                
 
                 Message = "Proposal successfully edited";
-                return this.RedirectToAction(a => a.AdminIndex(callForProposalId));
+                return this.RedirectToAction(a => a.AdminIndex(callForProposalId, null, null, null, null, null));
             }
             else
             {
