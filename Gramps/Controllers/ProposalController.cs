@@ -119,6 +119,44 @@ namespace Gramps.Controllers
             return View(viewModel);
         }
 
+        [UserOnly]
+        public ActionResult AdminDownload(int id, int callForProposalId)
+        {
+            var callforproposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId);
+
+            if (callforproposal == null)
+            {
+                return this.RedirectToAction<CallForProposalController>(a => a.Index(null, null, null));
+            }
+
+            if (!_accessService.HasAccess(null, callforproposal.Id, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+            if (!_accessService.HasSameId(null, callforproposal, null, callForProposalId))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+
+            var proposal = _proposalRepository.GetNullableById(id);
+
+            if (proposal == null)
+            {
+                Message = "Proposal Not Found";
+                return this.RedirectToAction(a => a.Index());
+            }
+
+            if (proposal.File == null || proposal.File.Contents == null)
+            {
+                Message = "Proposal PDF Not Found";
+                return this.RedirectToAction(a => a.Index());
+            }
+
+            return File(proposal.File.Contents, proposal.File.ContentType, proposal.File.Name);
+        }
+
         [HttpPost]
         [UserOnly]
         public ActionResult SendCall(int id, bool immediate)
@@ -448,6 +486,45 @@ namespace Gramps.Controllers
             var viewModel = ProposalAdminViewModel.Create(Repository, callforproposal, proposal);
 
             return View(viewModel);
+        }
+
+        [PublicAuthorize]
+        public ActionResult ReviewerDownload(int id, int callForProposalId)
+        {
+            var callforproposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId);
+
+            if (callforproposal == null)
+            {
+                return this.RedirectToAction<ProposalController>(a => a.Home());
+            }
+
+            if (!callforproposal.IsReviewer(CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<ProposalController>(a => a.Home());
+            }
+
+            if (!_accessService.HasSameId(null, callforproposal, null, callForProposalId))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<ProposalController>(a => a.Home());
+            }
+
+            var proposal = _proposalRepository.GetNullableById(id);
+
+            if (proposal == null)
+            {
+                Message = "Proposal Not Found";
+                return this.RedirectToAction<ProposalController>(a => a.Home());
+            }
+
+            if (proposal.File == null || proposal.File.Contents == null)
+            {
+                Message = "Proposal PDF Not Found";
+                return this.RedirectToAction<ProposalController>(a => a.Home());
+            }
+
+            return File(proposal.File.Contents, proposal.File.ContentType, proposal.File.Name);
         }
 
         #endregion Reviewer Methods

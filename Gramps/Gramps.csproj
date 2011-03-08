@@ -272,6 +272,7 @@
     <Content Include="Images\ajax-loader.gif" />
     <Content Include="Images\arrow_fat_down.gif" />
     <Content Include="Images\arrow_fat_up.gif" />
+    <Content Include="Images\Big_pdf.png" />
     <Content Include="Images\branding.jpg" />
     <Content Include="Images\Cancel-1.png" />
     <Content Include="Images\Cancel.png" />
