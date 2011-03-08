@@ -305,17 +305,17 @@ namespace Gramps.Controllers
                 commentToEdit = new Comment(proposalToEdit, editor, string.Empty);
             }
 
-            if (approvedDenied == StaticValues.Approved)
+            if (approvedDenied == StaticValues.RB_Decission_Approved)
             {
                 proposal.IsApproved = true;
                 proposal.IsDenied = false;
             }
-            else if(approvedDenied == StaticValues.Denied)
+            else if(approvedDenied == StaticValues.RB_Decission_Denied)
             {
                 proposal.IsApproved = false;
                 proposal.IsDenied = true;
             }
-            else if(approvedDenied == StaticValues.NotDecided)
+            else if(approvedDenied == StaticValues.RB_Decission_NotDecided)
             {
                 proposal.IsApproved = false;
                 proposal.IsDenied = false;

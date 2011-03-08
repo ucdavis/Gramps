@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Gramps.Core.Domain;
+using Gramps.Core.Resources;
 using UCDArch.Core.PersistanceSupport;
 using UCDArch.Core.Utils;
 
@@ -92,42 +93,42 @@ namespace Gramps.Controllers.ViewModels
             var tempToFilter = repository.OfType<Proposal>()
                 .Queryable.Where(a => a.CallForProposal == callForProposal);
 
-            if (filterDecission == "Approved")
+            if (filterDecission == StaticValues.RB_Decission_Approved)
             {
                 tempToFilter = tempToFilter.Where(a => a.IsApproved && !a.IsDenied);
             }
-            else if (filterDecission == "Denied")
+            else if (filterDecission == StaticValues.RB_Decission_Denied)
             {
                 tempToFilter = tempToFilter.Where(a => !a.IsApproved && a.IsDenied);
             }
-            else if (filterDecission == "NotDecied")
+            else if (filterDecission == StaticValues.RB_Decission_NotDecided)
             {
                 tempToFilter = tempToFilter.Where(a => !a.IsApproved && !a.IsDenied);
             }
             
-            if (filterNotified == "Notified")
+            if (filterNotified == StaticValues.RB_Notified_Notified)
             {
                 tempToFilter = tempToFilter.Where(a => a.IsNotified);
             }
-            else if (filterNotified == "NotNotified")
+            else if (filterNotified == StaticValues.RB_Notified_NotNotified)
             {
                 tempToFilter = tempToFilter.Where(a => !a.IsNotified);
             }
 
-            if (filterSubmitted == "Submitted")
+            if (filterSubmitted == StaticValues.RB_Submitted_Submitted)
             {
                 tempToFilter = tempToFilter.Where(a => a.IsSubmitted);
             }
-            else if (filterSubmitted == "NotSubmitted")
+            else if (filterSubmitted == StaticValues.RB_Submitted_NotSubmitted)
             {
                 tempToFilter = tempToFilter.Where(a => !a.IsSubmitted);
             }
 
-            if (filterWarned == "Warned")
+            if (filterWarned == StaticValues.RB_Warned_Warned)
             {
                 tempToFilter = tempToFilter.Where(a => a.WasWarned);
             }
-            else if (filterWarned == "NotWarned")
+            else if (filterWarned == StaticValues.RB_Warned_NotWarned)
             {
                 tempToFilter = tempToFilter.Where(a => !a.WasWarned);
             }
@@ -188,15 +189,15 @@ namespace Gramps.Controllers.ViewModels
             var tempToFilter = repository.OfType<Proposal>()
                 .Queryable.Where(a => a.CallForProposal == callForProposal && a.IsSubmitted);
 
-            if (filterDecission == "Approved")
+            if (filterDecission == StaticValues.RB_Decission_Approved)
             {
                 tempToFilter = tempToFilter.Where(a => a.IsApproved && !a.IsDenied);
             }
-            else if (filterDecission == "Denied")
+            else if (filterDecission == StaticValues.RB_Decission_Denied)
             {
                 tempToFilter = tempToFilter.Where(a => !a.IsApproved && a.IsDenied);
             }
-            else if (filterDecission == "NotDecied")
+            else if (filterDecission == StaticValues.RB_Decission_NotDecided)
             {
                 tempToFilter = tempToFilter.Where(a => !a.IsApproved && !a.IsDenied);
             }

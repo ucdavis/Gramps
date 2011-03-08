@@ -1,6 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<Gramps.Controllers.ViewModels.ProposalAdminListViewModel>" %>
 <%@ Import Namespace="Gramps.Helpers" %>
 <%@ Import Namespace="Gramps.Controllers" %>
+<%@ Import Namespace="Gramps.Core.Resources" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
 	Admin Proposals Index
@@ -20,32 +21,32 @@
             <li>
             <span id = "DecissionSpan">
             <label for="Decission"></label>
-                <input type="radio" id="Approved" name="filterDecission" value="Approved" "<%=Model.FilterDecission == "Approved" ? "checked" : string.Empty%>" /><label for="approved">Approved</label>
-                <input type="radio" id="Denied" name="filterDecission" value="Denied" "<%= Model.FilterDecission == "Denied" ? "checked" : string.Empty %>" /><label for="denied">Denied</label>
-                <input type="radio" id="NotDecied" name="filterDecission" value="NotDecied" "<%= Model.FilterDecission == "NotDecied" ? "checked" : string.Empty %>" /><label for="notDecied">Not Decied</label>
+                <input type="radio" id="Approved" name="filterDecission" value="<%: StaticValues.RB_Decission_Approved %>" "<%=Model.FilterDecission == StaticValues.RB_Decission_Approved ? "checked" : string.Empty%>" /><label for="approved">Approved</label>
+                <input type="radio" id="Denied" name="filterDecission" value="<%: StaticValues.RB_Decission_Denied %>" "<%= Model.FilterDecission == StaticValues.RB_Decission_Denied ? "checked" : string.Empty %>" /><label for="denied">Denied</label>
+                <input type="radio" id="NotDecied" name="filterDecission" value="<%: StaticValues.RB_Decission_NotDecided %>" "<%= Model.FilterDecission == StaticValues.RB_Decission_NotDecided ? "checked" : string.Empty %>" /><label for="notDecied">Not Decied</label>
                 <input type="radio" id="All" name="filterDecission" value="All" "<%= string.IsNullOrWhiteSpace(Model.FilterDecission) || Model.FilterDecission == "All" ? "checked" : string.Empty %>" /><label for="all">Not Filtered</label>
             </span>
             </li>
             <li>
             <span id = "NotifiedSpan">
             <label for="Notified"></label>
-                <input type="radio" id="Notified" name="filterNotified" value="Notified" "<%=Model.FilterNotified == "Notified" ? "checked" : string.Empty%>" /><label for="notified">Notified</label>
-                <input type="radio" id="NotNotified" name="filterNotified" value="NotNotified" "<%= Model.FilterNotified == "NotNotified" ? "checked" : string.Empty %>" /><label for="notNotified">Not Notified</label>                
+                <input type="radio" id="Notified" name="filterNotified" value="<%:StaticValues.RB_Notified_Notified%>" "<%=Model.FilterNotified == StaticValues.RB_Notified_Notified ? "checked" : string.Empty%>" /><label for="notified">Notified</label>
+                <input type="radio" id="NotNotified" name="filterNotified" value="<%:StaticValues.RB_Notified_NotNotified%>" "<%= Model.FilterNotified == StaticValues.RB_Notified_NotNotified ? "checked" : string.Empty %>" /><label for="notNotified">Not Notified</label>                
                 <input type="radio" id="NotifiedAll" name="filterNotified" value="All" "<%= string.IsNullOrWhiteSpace(Model.FilterNotified) || Model.FilterNotified == "All" ? "checked" : string.Empty %>" /><label for="notifiedAll">Not Filtered</label>
             </span>
             </li>
             <li>
             <span id = "SubmittedSpan">
             <label for="Submitted"></label>
-                <input type="radio" id="Submitted" name="filterSubmitted" value="Submitted" "<%=Model.FilterSubmitted == "Submitted" ? "checked" : string.Empty%>" /><label for="submitted">Submitted</label>
-                <input type="radio" id="NotSubmitted" name="filterSubmitted" value="NotSubmitted" "<%= Model.FilterSubmitted == "NotSubmitted" ? "checked" : string.Empty %>" /><label for="notSubmitted">Not Submitted</label>                
+                <input type="radio" id="Submitted" name="filterSubmitted" value="<%: StaticValues.RB_Submitted_Submitted %>" "<%=Model.FilterSubmitted == StaticValues.RB_Submitted_Submitted ? "checked" : string.Empty%>" /><label for="submitted">Submitted</label>
+                <input type="radio" id="NotSubmitted" name="filterSubmitted" value="<%: StaticValues.RB_Submitted_NotSubmitted %>" "<%= Model.FilterSubmitted == StaticValues.RB_Submitted_NotSubmitted ? "checked" : string.Empty %>" /><label for="notSubmitted">Not Submitted</label>                
                 <input type="radio" id="SubmittedAll" name="filterSubmitted" value="All" "<%= string.IsNullOrWhiteSpace(Model.FilterSubmitted) || Model.FilterSubmitted == "All" ? "checked" : string.Empty %>" /><label for="submittedAll">Not Filtered</label>
             </span>
             </li>
             <span id = "WarnedSpan">
             <label for="Warned"></label>
-                <input type="radio" id="Warned" name="filterWarned" value="Warned" "<%=Model.FilterWarned == "Warned" ? "checked" : string.Empty%>" /><label for="warned">Warned</label>
-                <input type="radio" id="NotWarned" name="filterWarned" value="NotWarned" "<%= Model.FilterWarned == "NotWarned" ? "checked" : string.Empty %>" /><label for="notWarned">Not Warned</label>                
+                <input type="radio" id="Warned" name="filterWarned" value="<%: StaticValues.RB_Warned_Warned %>" "<%=Model.FilterWarned == StaticValues.RB_Warned_Warned ? "checked" : string.Empty%>" /><label for="warned">Warned</label>
+                <input type="radio" id="NotWarned" name="filterWarned" value="<%: StaticValues.RB_Warned_NotWarned %>" "<%= Model.FilterWarned == StaticValues.RB_Warned_NotWarned ? "checked" : string.Empty %>" /><label for="notWarned">Not Warned</label>                
                 <input type="radio" id="WarnedAll" name="filterWarned" value="All" "<%= string.IsNullOrWhiteSpace(Model.FilterWarned) || Model.FilterWarned == "All" ? "checked" : string.Empty %>" /><label for="warnedAll">Not Filtered</label>
             </span>
             </li>

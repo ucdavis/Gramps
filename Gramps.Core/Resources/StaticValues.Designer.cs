@@ -61,29 +61,11 @@ namespace Gramps.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Approved.
-        /// </summary>
-        public static string Approved {
-            get {
-                return ResourceManager.GetString("Approved", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to indexedControl.
         /// </summary>
         public static string Class_indexedControl {
             get {
                 return ResourceManager.GetString("Class_indexedControl", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Denied.
-        /// </summary>
-        public static string Denied {
-            get {
-                return ResourceManager.GetString("Denied", resourceCulture);
             }
         }
         
@@ -111,15 +93,6 @@ namespace Gramps.Core.Resources {
         public static string InitialCall {
             get {
                 return ResourceManager.GetString("InitialCall", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to NotDecided.
-        /// </summary>
-        public static string NotDecided {
-            get {
-                return ResourceManager.GetString("NotDecided", resourceCulture);
             }
         }
         
@@ -156,6 +129,87 @@ namespace Gramps.Core.Resources {
         public static string ProposalUnsubmitted {
             get {
                 return ResourceManager.GetString("ProposalUnsubmitted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Approved.
+        /// </summary>
+        public static string RB_Decission_Approved {
+            get {
+                return ResourceManager.GetString("RB_Decission_Approved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Denied.
+        /// </summary>
+        public static string RB_Decission_Denied {
+            get {
+                return ResourceManager.GetString("RB_Decission_Denied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NotDecided.
+        /// </summary>
+        public static string RB_Decission_NotDecided {
+            get {
+                return ResourceManager.GetString("RB_Decission_NotDecided", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Notified.
+        /// </summary>
+        public static string RB_Notified_Notified {
+            get {
+                return ResourceManager.GetString("RB_Notified_Notified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NotNotified.
+        /// </summary>
+        public static string RB_Notified_NotNotified {
+            get {
+                return ResourceManager.GetString("RB_Notified_NotNotified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NotSubmitted.
+        /// </summary>
+        public static string RB_Submitted_NotSubmitted {
+            get {
+                return ResourceManager.GetString("RB_Submitted_NotSubmitted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Submitted.
+        /// </summary>
+        public static string RB_Submitted_Submitted {
+            get {
+                return ResourceManager.GetString("RB_Submitted_Submitted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NotWarned.
+        /// </summary>
+        public static string RB_Warned_NotWarned {
+            get {
+                return ResourceManager.GetString("RB_Warned_NotWarned", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Warned.
+        /// </summary>
+        public static string RB_Warned_Warned {
+            get {
+                return ResourceManager.GetString("RB_Warned_Warned", resourceCulture);
             }
         }
         

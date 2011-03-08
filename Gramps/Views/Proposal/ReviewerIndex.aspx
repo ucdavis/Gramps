@@ -1,6 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/PublicSite.Master" Inherits="System.Web.Mvc.ViewPage<Gramps.Controllers.ViewModels.ProposalReviewerListViewModel>" %>
 <%@ Import Namespace="Gramps.Helpers" %>
 <%@ Import Namespace="Gramps.Controllers" %>
+<%@ Import Namespace="Gramps.Core.Resources" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
 	Reviewer Proposals Index
@@ -24,9 +25,9 @@
             <li>
             <span id = "DecissionSpan">
             <label for="Decission"></label>
-                <input type="radio" id="Approved" name="filterDecission" value="Approved" "<%=Model.FilterDecission == "Approved" ? "checked" : string.Empty%>" /><label for="approved">Approved</label>
-                <input type="radio" id="Denied" name="filterDecission" value="Denied" "<%= Model.FilterDecission == "Denied" ? "checked" : string.Empty %>" /><label for="denied">Denied</label>
-                <input type="radio" id="NotDecied" name="filterDecission" value="NotDecied" "<%= Model.FilterDecission == "NotDecied" ? "checked" : string.Empty %>" /><label for="notDecied">Not Decied</label>
+                <input type="radio" id="Approved" name="filterDecission" value="<%: StaticValues.RB_Decission_Approved %>" "<%=Model.FilterDecission == StaticValues.RB_Decission_Approved ? "checked" : string.Empty%>" /><label for="approved">Approved</label>
+                <input type="radio" id="Denied" name="filterDecission" value="<%: StaticValues.RB_Decission_Denied %>" "<%= Model.FilterDecission == StaticValues.RB_Decission_Denied ? "checked" : string.Empty %>" /><label for="denied">Denied</label>
+                <input type="radio" id="NotDecided" name="filterDecission" value="<%: StaticValues.RB_Decission_NotDecided %>" "<%= Model.FilterDecission == StaticValues.RB_Decission_NotDecided ? "checked" : string.Empty %>" /><label for="notDecided">Not Decided</label>
                 <input type="radio" id="All" name="filterDecission" value="All" "<%= string.IsNullOrWhiteSpace(Model.FilterDecission) || Model.FilterDecission == "All" ? "checked" : string.Empty %>" /><label for="all">Not Filtered</label>
             </span>
             <li>
