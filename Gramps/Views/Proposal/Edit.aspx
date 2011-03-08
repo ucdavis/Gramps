@@ -78,7 +78,7 @@
         %>
     </fieldset>
 
-    <% using (Html.BeginForm()) {%>
+    <% using (Html.BeginForm("Edit", "Proposal", FormMethod.Post, new { @enctype = "multipart/form-data"})) {%>
         <%= Html.AntiForgeryToken() %>
 
         <%: Html.Hidden("id", Model.Proposal.Guid) %>
@@ -107,15 +107,15 @@
             <% answer = Model.Proposal.Answers.Where(a => a.Question.Id == question.Id).Any() ? Model.Proposal.Answers.Where(a => a.Question.Id == question.Id).FirstOrDefault().Answer : " "; %>   
         <%}%>
             <%= Html.Hidden("proposalAnswers" + indexString + ".QuestionId", question.Id, new { @class = StaticValues.Class_indexedControl})%>
-            <div class="editor-field">
+            <div class="editor-field">            
             <% switch (question.QuestionType.Name){%>
                 <% case "Text Box" : %>
                     <div class="editor-label"><%: Html.Encode(question.Name) %></div>
-                    <%= Html.TextBox("proposalAnswers" + indexString + ".Answer", answer, new { @class = "indexedControl " + question.ValidationClasses })%>                 
+                    <%= Html.TextBox("proposalAnswers" + indexString + ".Answer", answer, new { @class = "indexedControl " + question.ValidationClasses +" BigWidth" })%>                                     
                 <% break; %>
                 <% case "Text Area" : %>
                     <div class="editor-label"><%: Html.Encode(question.Name) %></div>
-                    <%= Html.TextArea("proposalAnswers" + indexString + ".Answer", answer, new { @class = StaticValues.Class_indexedControl + " TinyMce" })%>
+                    <%= Html.TextArea("proposalAnswers" + indexString + ".Answer", answer, new { @class = StaticValues.Class_indexedControl + " BigAnswer" })%>
                 <% break; %>
                 <% case "Boolean" : %>
                     <%--<%= Html.Encode(Model.Question.Name) %>--%>
@@ -159,11 +159,26 @@
                     <%= Html.TextBox("proposalAnswers" + indexString + ".Answer", answer, new { @class = "dateForm indexedControl " + question.ValidationClasses })%>
                 <% break; %>
                 <% default: %>
-                    <div class="editor-label"><%: Html.Encode(question.Name) %></div>
+                    <div class="editor-label"><%: Html.Encode(question.Name) %></div>                   
                 <%break;%>
             <%}%>
+            <%: Html.ValidationMessage(question.Name)%>
+            
             </div>
         <%}%>
+
+        <div class="editor-field">
+            <%if (Model.Proposal != null && Model.Proposal.File != null && !string.IsNullOrWhiteSpace(Model.Proposal.File.Name))
+              {%>
+                <%: Html.Encode("Existing File: " + Model.Proposal.File.Name)%> <br />
+                <%= this.FileUpload("uploadAttachment").Label("Replace PDF Attachment")%>
+            <%}%>
+            <%else { %> 
+                <%= this.FileUpload("uploadAttachment").Label("Add PDF Attachment")%>
+            <%} %>
+            
+            <%: Html.ValidationMessageFor(model => model.Proposal.File)%>
+        </div>
 
         </fieldset>
         <br />
@@ -182,12 +197,7 @@
 
     <script type="text/javascript">
 
-        var templatecodes = [];
-
         $(document).ready(function () {
-            $(".TinyMce").each(function (index) {
-                $(this).enableTinyMce({ script_location: '<%= Url.Content("~/Scripts/tiny_mce/tiny_mce.js") %>', overrideWidth: "700" });
-            });
             $(".dateForm").each(function (index) {
                 $(this).datepicker();
             });

@@ -348,3 +348,12 @@ div.t-grid {}
     font-weight:bold;
     color:Red;
 }
+
+.BigAnswer
+{
+	width: 70em;
+	height: 300px;
+}
+.BigWidth
+{
+	width: 65em;

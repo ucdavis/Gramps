@@ -60,6 +60,8 @@ namespace Gramps.Core.Domain
         public virtual DateTime? NotifiedDate { get; set; }
         public virtual bool WasWarned { get; set; }
 
+        public virtual File File { get; set; }
+
         [NotNull]
         public virtual IList<Comment> Comments { get; set; }
         [NotNull]
@@ -115,6 +117,7 @@ namespace Gramps.Core.Domain
             Map(x => x.Sequence);
 
             References(x => x.CallForProposal).Not.Nullable();
+            References(x => x.File).Cascade.All();
             HasMany(x => x.Comments);
             HasMany(x => x.Answers).Cascade.AllDeleteOrphan();
             HasMany(x => x.Investigators).Cascade.AllDeleteOrphan();

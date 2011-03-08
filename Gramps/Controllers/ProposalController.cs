@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
@@ -15,6 +16,7 @@ using UCDArch.Web.Helpers;
 using UCDArch.Core.Utils;
 using MvcContrib;
 using System.Linq;
+using File = Gramps.Core.Domain.File;
 
 namespace Gramps.Controllers
 {
@@ -591,8 +593,7 @@ namespace Gramps.Controllers
         // POST: /Proposal/Edit/5
         [HttpPost]
         [ValidateInput(false)]
-        [PublicAuthorize]
-        public ActionResult Edit(Guid id, Proposal proposal, QuestionAnswerParameter[] proposalAnswers)
+        public ActionResult Edit(Guid id, Proposal proposal, QuestionAnswerParameter[] proposalAnswers, HttpPostedFileBase uploadAttachment)
         {
             var proposalToEdit = _proposalRepository.Queryable.Where(a => a.Guid == id).SingleOrDefault();
             if (proposalToEdit == null)
@@ -624,6 +625,22 @@ namespace Gramps.Controllers
                 ModelState.AddModelError("Call deactivated", "Call for proposal has been deactivated");
             }
 
+            if (uploadAttachment != null)
+            {
+                if (uploadAttachment.ContentType != "application/pdf")
+                {
+                    ModelState.AddModelError("Proposal.File", "Can only upload PDF files.");
+                }
+                else
+                {
+                    var reader = new BinaryReader(uploadAttachment.InputStream);
+                    proposalToEdit.File = new File();
+                    proposalToEdit.File.ContentType = uploadAttachment.ContentType;
+                    proposalToEdit.File.Contents = reader.ReadBytes(uploadAttachment.ContentLength);
+                    proposalToEdit.File.Name = uploadAttachment.FileName;
+                }
+            }
+
 
             TransferValues(proposal, proposalToEdit);
 
@@ -649,7 +666,7 @@ namespace Gramps.Controllers
                             }
                             if (!Validate(validator, answer, question.Name, out message))
                             {
-                                ModelState.AddModelError("Answer", message);
+                                ModelState.AddModelError(question.Name, message);
                             }
                         }
                     }
