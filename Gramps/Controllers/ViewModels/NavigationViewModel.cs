@@ -6,7 +6,9 @@ using Gramps.Core.Domain;
 
 namespace Gramps.Controllers.ViewModels
 {
-
+    /// <summary>
+    /// This is the view model for editing a template or call for proposals
+    /// </summary>
     public class NavigationViewModel
     {
         public bool IsTemplate = false;
@@ -26,6 +28,9 @@ namespace Gramps.Controllers.ViewModels
         }
     }
 
+    /// <summary>
+    /// This is the view model for "launch"ing call for proposal stuff.
+    /// </summary>
     public class CallNavigationViewModel
     {
         public CallForProposal CallForProposal;

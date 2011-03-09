@@ -28,4 +28,11 @@
         <li>
             <%: Html.ActionLink<QuestionController>(a => a.Index(Model.TemplateId, Model.CallForProposalId), "Questions")%>
         </li>
+        <li>
+            <%if (Model.IsTemplate){%>                        
+                <%: Html.ActionLink<ReportController>(a => a.TemplateIndex(Model.TemplateId, Model.CallForProposalId), "Reports")%>                        
+            <%}else if(Model.IsCallForProposal){%>
+                <%: Html.ActionLink<CallForProposalController>(a => a.Launch(Model.CallForProposalId.Value), "Launch") %>
+            <%}%>
+        </li>
     </ul>

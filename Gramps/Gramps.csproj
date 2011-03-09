@@ -164,6 +164,7 @@
     <Compile Include="Controllers\ProposalController.cs" />
     <Compile Include="Controllers\PublicController.cs" />
     <Compile Include="Controllers\QuestionController.cs" />
+    <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\TemplateController.cs" />
     <Compile Include="Controllers\ViewModels\CallForProposalViewModels.cs" />
     <Compile Include="Controllers\ViewModels\EditorViewModels.cs" />
@@ -173,6 +174,7 @@
     <Compile Include="Controllers\ViewModels\NavigationViewModel.cs" />
     <Compile Include="Controllers\ViewModels\ProposalViewModels.cs" />
     <Compile Include="Controllers\ViewModels\QuestionViewModels.cs" />
+    <Compile Include="Controllers\ViewModels\ReportViewModels.cs" />
     <Compile Include="Controllers\ViewModels\TemplateViewModels.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -578,6 +580,7 @@
     <Content Include="Views\Question\SharedQuestionFields.ascx" />
     <Content Include="Views\Question\SharedQuestionSample.ascx" />
     <Content Include="Views\Question\SharedQuestionSetup.ascx" />
+    <Content Include="Views\Report\TemplateIndex.aspx" />
     <Content Include="Views\Shared\CallNavigationButtons.ascx" />
     <Content Include="Views\Shared\LogOnUserControl.ascx" />
     <Content Include="Views\Shared\NavigationButtons.ascx" />
