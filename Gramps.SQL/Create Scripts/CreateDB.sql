@@ -194,11 +194,12 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_PADDING ON
 GO
-CREATE TABLE [dbo].[Templates](
+CREATE TABLE [dbo].[QuestionTypes](
 	[id] [int] IDENTITY(1,1) NOT NULL,
-	[Name] [varchar](100) NOT NULL,
-	[IsActive] [bit] NOT NULL,
- CONSTRAINT [PK_Templates] PRIMARY KEY CLUSTERED 
+	[Name] [varchar](50) NOT NULL,
+	[HasOptions] [bit] NOT NULL,
+	[ExtendedProperty] [bit] NULL,
+ CONSTRAINT [PK_QuestionTypes] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
@@ -212,12 +213,31 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_PADDING ON
 GO
-CREATE TABLE [dbo].[QuestionTypes](
+CREATE TABLE [dbo].[Files](
 	[id] [int] IDENTITY(1,1) NOT NULL,
-	[Name] [varchar](50) NOT NULL,
-	[HasOptions] [bit] NOT NULL,
-	[ExtendedProperty] [bit] NULL,
- CONSTRAINT [PK_QuestionTypes] PRIMARY KEY CLUSTERED 
+	[ContentType] [varchar](50) NULL,
+	[Name] [varchar](512) NOT NULL,
+	[DateAdded] [datetime] NOT NULL,
+	[Contents] [varbinary](max) NULL,
+ CONSTRAINT [PK_Files] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[Templates](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [varchar](100) NOT NULL,
+	[IsActive] [bit] NOT NULL,
+ CONSTRAINT [PK_Templates] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
@@ -244,6 +264,14 @@ CREATE TABLE [dbo].[Validators](
 ) ON [PRIMARY]
 GO
 SET ANSI_PADDING OFF
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+CREATE VIEW [dbo].[vw_aspnet_Applications]
+  AS SELECT [dbo].[aspnet_Applications].[ApplicationName], [dbo].[aspnet_Applications].[LoweredApplicationName], [dbo].[aspnet_Applications].[ApplicationId], [dbo].[aspnet_Applications].[Description]
+  FROM [dbo].[aspnet_Applications]
 GO
 SET ANSI_NULLS ON
 GO
@@ -376,14 +404,6 @@ End
 ' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'vApplications'
 GO
 EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPaneCount', @value=1 , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'vApplications'
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER OFF
-GO
-CREATE VIEW [dbo].[vw_aspnet_Applications]
-  AS SELECT [dbo].[aspnet_Applications].[ApplicationName], [dbo].[aspnet_Applications].[LoweredApplicationName], [dbo].[aspnet_Applications].[ApplicationId], [dbo].[aspnet_Applications].[Description]
-  FROM [dbo].[aspnet_Applications]
 GO
 SET ANSI_NULLS ON
 GO
@@ -864,33 +884,6 @@ PRIMARY KEY CLUSTERED
 GO
 SET ANSI_NULLS ON
 GO
-SET QUOTED_IDENTIFIER OFF
-GO
-CREATE PROCEDURE [dbo].[aspnet_Users_CreateUser]
-    @ApplicationId    uniqueidentifier,
-    @UserName         nvarchar(256),
-    @IsUserAnonymous  bit,
-    @LastActivityDate DATETIME,
-    @UserId           uniqueidentifier OUTPUT
-AS
-BEGIN
-    IF( @UserId IS NULL )
-        SELECT @UserId = NEWID()
-    ELSE
-    BEGIN
-        IF( EXISTS( SELECT UserId FROM dbo.aspnet_Users
-                    WHERE @UserId = UserId ) )
-            RETURN -1
-    END
-
-    INSERT dbo.aspnet_Users (ApplicationId, UserId, UserName, LoweredUserName, IsAnonymous, LastActivityDate)
-    VALUES (@ApplicationId, @UserId, @UserName, LOWER(@UserName), @IsUserAnonymous, @LastActivityDate)
-
-    RETURN 0
-END
-GO
-SET ANSI_NULLS ON
-GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_PADDING ON
@@ -1002,6 +995,7 @@ CREATE TABLE [dbo].[Proposals](
 	[NotifiedDate] [datetime] NULL,
 	[WasWarned] [bit] NOT NULL,
 	[Sequence] [int] NOT NULL,
+	[FileId] [int] NULL,
  CONSTRAINT [PK_Proposals] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
@@ -1009,6 +1003,33 @@ CREATE TABLE [dbo].[Proposals](
 ) ON [PRIMARY]
 GO
 SET ANSI_PADDING OFF
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+CREATE PROCEDURE [dbo].[aspnet_Users_CreateUser]
+    @ApplicationId    uniqueidentifier,
+    @UserName         nvarchar(256),
+    @IsUserAnonymous  bit,
+    @LastActivityDate DATETIME,
+    @UserId           uniqueidentifier OUTPUT
+AS
+BEGIN
+    IF( @UserId IS NULL )
+        SELECT @UserId = NEWID()
+    ELSE
+    BEGIN
+        IF( EXISTS( SELECT UserId FROM dbo.aspnet_Users
+                    WHERE @UserId = UserId ) )
+            RETURN -1
+    END
+
+    INSERT dbo.aspnet_Users (ApplicationId, UserId, UserName, LoweredUserName, IsAnonymous, LastActivityDate)
+    VALUES (@ApplicationId, @UserId, @UserName, LOWER(@UserName), @IsUserAnonymous, @LastActivityDate)
+
+    RETURN 0
+END
 GO
 SET ANSI_NULLS ON
 GO
@@ -1176,6 +1197,25 @@ EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPaneCount', @value=1 , @level0
 GO
 SET ANSI_NULLS ON
 GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[Reports](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [varchar](100) NOT NULL,
+	[TemplateId] [int] NULL,
+	[CallForProposalId] [int] NULL,
+ CONSTRAINT [PK_Report] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+SET ANSI_NULLS ON
+GO
 SET QUOTED_IDENTIFIER OFF
 GO
 CREATE VIEW [dbo].[vw_aspnet_Users]
@@ -1221,48 +1261,6 @@ GO
 CREATE VIEW [dbo].[vw_aspnet_UsersInRoles]
   AS SELECT [dbo].[aspnet_UsersInRoles].[UserId], [dbo].[aspnet_UsersInRoles].[RoleId]
   FROM [dbo].[aspnet_UsersInRoles]
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER OFF
-GO
-CREATE VIEW [dbo].[vw_aspnet_Profiles]
-  AS SELECT [dbo].[aspnet_Profile].[UserId], [dbo].[aspnet_Profile].[LastUpdatedDate],
-      [DataSize]=  DATALENGTH([dbo].[aspnet_Profile].[PropertyNames])
-                 + DATALENGTH([dbo].[aspnet_Profile].[PropertyValuesString])
-                 + DATALENGTH([dbo].[aspnet_Profile].[PropertyValuesBinary])
-  FROM [dbo].[aspnet_Profile]
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER OFF
-GO
-CREATE VIEW [dbo].[vw_aspnet_MembershipUsers]
-  AS SELECT [dbo].[aspnet_Membership].[UserId],
-            [dbo].[aspnet_Membership].[PasswordFormat],
-            [dbo].[aspnet_Membership].[MobilePIN],
-            [dbo].[aspnet_Membership].[Email],
-            [dbo].[aspnet_Membership].[LoweredEmail],
-            [dbo].[aspnet_Membership].[PasswordQuestion],
-            [dbo].[aspnet_Membership].[PasswordAnswer],
-            [dbo].[aspnet_Membership].[IsApproved],
-            [dbo].[aspnet_Membership].[IsLockedOut],
-            [dbo].[aspnet_Membership].[CreateDate],
-            [dbo].[aspnet_Membership].[LastLoginDate],
-            [dbo].[aspnet_Membership].[LastPasswordChangedDate],
-            [dbo].[aspnet_Membership].[LastLockoutDate],
-            [dbo].[aspnet_Membership].[FailedPasswordAttemptCount],
-            [dbo].[aspnet_Membership].[FailedPasswordAttemptWindowStart],
-            [dbo].[aspnet_Membership].[FailedPasswordAnswerAttemptCount],
-            [dbo].[aspnet_Membership].[FailedPasswordAnswerAttemptWindowStart],
-            [dbo].[aspnet_Membership].[Comment],
-            [dbo].[aspnet_Users].[ApplicationId],
-            [dbo].[aspnet_Users].[UserName],
-            [dbo].[aspnet_Users].[MobileAlias],
-            [dbo].[aspnet_Users].[IsAnonymous],
-            [dbo].[aspnet_Users].[LastActivityDate]
-  FROM [dbo].[aspnet_Membership] INNER JOIN [dbo].[aspnet_Users]
-      ON [dbo].[aspnet_Membership].[UserId] = [dbo].[aspnet_Users].[UserId]
 GO
 SET ANSI_NULLS ON
 GO
@@ -1410,6 +1408,85 @@ EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPaneCount', @value=1 , @level0
 GO
 SET ANSI_NULLS ON
 GO
+SET QUOTED_IDENTIFIER OFF
+GO
+CREATE VIEW [dbo].[vw_aspnet_Profiles]
+  AS SELECT [dbo].[aspnet_Profile].[UserId], [dbo].[aspnet_Profile].[LastUpdatedDate],
+      [DataSize]=  DATALENGTH([dbo].[aspnet_Profile].[PropertyNames])
+                 + DATALENGTH([dbo].[aspnet_Profile].[PropertyValuesString])
+                 + DATALENGTH([dbo].[aspnet_Profile].[PropertyValuesBinary])
+  FROM [dbo].[aspnet_Profile]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+CREATE VIEW [dbo].[vw_aspnet_MembershipUsers]
+  AS SELECT [dbo].[aspnet_Membership].[UserId],
+            [dbo].[aspnet_Membership].[PasswordFormat],
+            [dbo].[aspnet_Membership].[MobilePIN],
+            [dbo].[aspnet_Membership].[Email],
+            [dbo].[aspnet_Membership].[LoweredEmail],
+            [dbo].[aspnet_Membership].[PasswordQuestion],
+            [dbo].[aspnet_Membership].[PasswordAnswer],
+            [dbo].[aspnet_Membership].[IsApproved],
+            [dbo].[aspnet_Membership].[IsLockedOut],
+            [dbo].[aspnet_Membership].[CreateDate],
+            [dbo].[aspnet_Membership].[LastLoginDate],
+            [dbo].[aspnet_Membership].[LastPasswordChangedDate],
+            [dbo].[aspnet_Membership].[LastLockoutDate],
+            [dbo].[aspnet_Membership].[FailedPasswordAttemptCount],
+            [dbo].[aspnet_Membership].[FailedPasswordAttemptWindowStart],
+            [dbo].[aspnet_Membership].[FailedPasswordAnswerAttemptCount],
+            [dbo].[aspnet_Membership].[FailedPasswordAnswerAttemptWindowStart],
+            [dbo].[aspnet_Membership].[Comment],
+            [dbo].[aspnet_Users].[ApplicationId],
+            [dbo].[aspnet_Users].[UserName],
+            [dbo].[aspnet_Users].[MobileAlias],
+            [dbo].[aspnet_Users].[IsAnonymous],
+            [dbo].[aspnet_Users].[LastActivityDate]
+  FROM [dbo].[aspnet_Membership] INNER JOIN [dbo].[aspnet_Users]
+      ON [dbo].[aspnet_Membership].[UserId] = [dbo].[aspnet_Users].[UserId]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[ReportColumns](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[ReportId] [int] NOT NULL,
+	[ColumnOrder] [int] NOT NULL,
+	[Name] [varchar](500) NOT NULL,
+	[Format] [varchar](50) NULL,
+	[IsProperty] [bit] NOT NULL,
+ CONSTRAINT [PK_ReportColumns] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ReviewedProposals](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[ProposalId] [int] NOT NULL,
+	[EditorId] [int] NOT NULL,
+	[FirstViewedDate] [datetime] NOT NULL,
+	[LastViewedDate] [datetime] NOT NULL,
+ CONSTRAINT [PK_ReviewedProposals] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_NULLS ON
+GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[QuestionsXValidators](
@@ -1450,22 +1527,6 @@ CREATE TABLE [dbo].[Investigators](
 ) ON [PRIMARY]
 GO
 SET ANSI_PADDING OFF
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[ReviewedProposals](
-	[id] [int] IDENTITY(1,1) NOT NULL,
-	[ProposalId] [int] NOT NULL,
-	[EditorId] [int] NOT NULL,
-	[FirstViewedDate] [datetime] NOT NULL,
-	[LastViewedDate] [datetime] NOT NULL,
- CONSTRAINT [PK_ReviewedProposals] PRIMARY KEY CLUSTERED 
-(
-	[id] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-) ON [PRIMARY]
 GO
 SET ANSI_NULLS ON
 GO
@@ -4258,6 +4319,8 @@ ALTER TABLE [dbo].[Proposals] ADD  CONSTRAINT [DF_Proposals_WasWarned]  DEFAULT 
 GO
 ALTER TABLE [dbo].[Proposals] ADD  CONSTRAINT [DF_Proposals_Sequence]  DEFAULT ((0)) FOR [Sequence]
 GO
+ALTER TABLE [dbo].[ReportColumns] ADD  CONSTRAINT [DF_ReportColumns_IsProperty]  DEFAULT ((0)) FOR [IsProperty]
+GO
 ALTER TABLE [dbo].[Templates] ADD  CONSTRAINT [DF_Templates_IsActive]  DEFAULT ((1)) FOR [IsActive]
 GO
 ALTER TABLE [dbo].[EmailTemplates]  WITH CHECK ADD  CONSTRAINT [CK_EmailTemplates] CHECK  (([TemplateType]='ReadyForReview' OR [TemplateType]='ProposalConfirmation' OR [TemplateType]='ProposalDenied' OR [TemplateType]='ProposalApproved' OR [TemplateType]='ReminderCallIsAboutToClose' OR [TemplateType]='InitialCall' OR [TemplateType]='ProposalUnsubmitted'))
@@ -4369,6 +4432,11 @@ REFERENCES [dbo].[CallForProposals] ([id])
 GO
 ALTER TABLE [dbo].[Proposals] CHECK CONSTRAINT [FK_Proposals_CallForProposals]
 GO
+ALTER TABLE [dbo].[Proposals]  WITH CHECK ADD  CONSTRAINT [FK_Proposals_Files] FOREIGN KEY([FileId])
+REFERENCES [dbo].[Files] ([id])
+GO
+ALTER TABLE [dbo].[Proposals] CHECK CONSTRAINT [FK_Proposals_Files]
+GO
 ALTER TABLE [dbo].[QuestionOptions]  WITH CHECK ADD  CONSTRAINT [FK_QuestionOptions_Questions] FOREIGN KEY([QuestionId])
 REFERENCES [dbo].[Questions] ([id])
 GO
@@ -4398,6 +4466,21 @@ ALTER TABLE [dbo].[QuestionsXValidators]  WITH CHECK ADD  CONSTRAINT [FK_Questio
 REFERENCES [dbo].[Validators] ([id])
 GO
 ALTER TABLE [dbo].[QuestionsXValidators] CHECK CONSTRAINT [FK_QuestionXValidator_Validators]
+GO
+ALTER TABLE [dbo].[ReportColumns]  WITH CHECK ADD  CONSTRAINT [FK_ReportColumns_Reports] FOREIGN KEY([ReportId])
+REFERENCES [dbo].[Reports] ([id])
+GO
+ALTER TABLE [dbo].[ReportColumns] CHECK CONSTRAINT [FK_ReportColumns_Reports]
+GO
+ALTER TABLE [dbo].[Reports]  WITH CHECK ADD  CONSTRAINT [FK_Reports_CallForProposals] FOREIGN KEY([CallForProposalId])
+REFERENCES [dbo].[CallForProposals] ([id])
+GO
+ALTER TABLE [dbo].[Reports] CHECK CONSTRAINT [FK_Reports_CallForProposals]
+GO
+ALTER TABLE [dbo].[Reports]  WITH CHECK ADD  CONSTRAINT [FK_Reports_Templates] FOREIGN KEY([TemplateId])
+REFERENCES [dbo].[Templates] ([id])
+GO
+ALTER TABLE [dbo].[Reports] CHECK CONSTRAINT [FK_Reports_Templates]
 GO
 ALTER TABLE [dbo].[ReviewedProposals]  WITH CHECK ADD  CONSTRAINT [FK_ReviewedProposals_Editors] FOREIGN KEY([EditorId])
 REFERENCES [dbo].[Editors] ([id])
