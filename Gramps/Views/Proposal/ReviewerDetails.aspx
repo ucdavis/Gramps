@@ -18,8 +18,7 @@
     <% Html.RenderPartial("AdminReviewerProposalDetails"); %>
 
     <% if(Model.Proposal.File != null && Model.Proposal.File.Contents != null) {%> 
-        <%: Html.ActionLink<ProposalController>(a => a.ReviewerDownload(Model.Proposal.Id, Model.CallForProposal.Id), " ", new { @class = "bigpdf_button" })%>       
-        <br /><%: Html.Encode("Attached PDF") %>
+        <%: Html.ActionLink<ProposalController>(a => a.ReviewerDownload(Model.Proposal.Id, Model.CallForProposal.Id), "Submitted PDF", new { @class = "bigpdf_button" })%> 
     <%}%>
 
 

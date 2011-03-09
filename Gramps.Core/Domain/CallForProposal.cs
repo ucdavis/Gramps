@@ -59,6 +59,8 @@ namespace Gramps.Core.Domain
                     AddEmailTemplate(new EmailTemplate() { TemplateType = requiredEmailTemmplate.Key });
                 }
             }
+
+
             #endregion Copy/Add Required Email templates
 
             #region Copy Questions
@@ -70,6 +72,15 @@ namespace Gramps.Core.Domain
     
 
             #endregion Copy Questions
+
+            #region Copy Reports
+
+            foreach (var report in template.Reports)
+            {
+                AddReport(report);
+            }
+
+            #endregion Copy Reports
                       
         }
         public CallForProposal(string name)
@@ -92,6 +103,7 @@ namespace Gramps.Core.Domain
             Editors = new List<Editor>();
             Questions = new List<Question>();
             Proposals = new List<Proposal>();
+            Reports = new List<Report>();
         }
 
         #endregion Constructor
@@ -130,6 +142,9 @@ namespace Gramps.Core.Domain
         
         [NotNull]
         public virtual IList<Proposal> Proposals { get; set; }
+
+        [NotNull]
+        public virtual IList<Report> Reports { get; set; }
         #endregion Mapped Fields
 
         #region Methods
@@ -229,6 +244,24 @@ namespace Gramps.Core.Domain
                 //What happens if there is an answer?
                 Questions.Remove(question);
             }
+        }
+
+        public virtual void AddReport(Report report)
+        {
+            var newReport = new Report();
+            newReport.CallForProposal = this;
+            newReport.Template = null;
+            newReport.Name = report.Name;
+            foreach (var reportColumn in report.ReportColumns.OrderBy(a => a.ColumnOrder))
+            {
+                var newReportColumn = new ReportColumn();
+                newReportColumn.ColumnOrder = reportColumn.ColumnOrder;
+                newReportColumn.Format = reportColumn.Format;
+                newReportColumn.IsProperty = reportColumn.IsProperty;
+                newReportColumn.Name = reportColumn.Name;
+                newReport.AddReportColumn(newReportColumn);
+            }
+            Reports.Add(newReport);
         }
 
         #endregion Methods
@@ -353,6 +386,7 @@ namespace Gramps.Core.Domain
             HasMany(x => x.Editors).Inverse().Cascade.AllDeleteOrphan();
             HasMany(x => x.Questions).Inverse().Cascade.AllDeleteOrphan();
             HasMany(x => x.Proposals).Cascade.None();
+            HasMany(x => x.Reports).Inverse().Cascade.AllDeleteOrphan();
         }
     }
 }

@@ -12,7 +12,15 @@ namespace Gramps.Core.Domain
     public class Report : DomainObject
     {
         #region Constructor
+        public Report()
+        {
+            SetDefaults();
+        }
 
+        protected void SetDefaults()
+        {
+            ReportColumns = new List<ReportColumn>();
+        }
         #endregion Constructor
 
         #region Mapped Fields
@@ -21,7 +29,10 @@ namespace Gramps.Core.Domain
         public virtual string Name { get; set; }
         public virtual Template Template { get; set; }
         public virtual CallForProposal CallForProposal { get; set; }
+
+        public virtual IList<ReportColumn> ReportColumns { get; set; }
         #endregion Mapped Fields
+
         #region Validation Fields
 
         [AssertTrue(Message = "Must be related to Template or CallForProposal not both.")]
@@ -37,6 +48,16 @@ namespace Gramps.Core.Domain
             }
         }
         #endregion Validation Fields
+
+        #region Methods
+
+        public virtual void AddReportColumn(ReportColumn reportColumn)
+        {
+            reportColumn.Report = this;
+            ReportColumns.Add(reportColumn);
+        }
+
+        #endregion Methods
     }
 
     public class ReportMap : ClassMap<Report>
@@ -49,6 +70,7 @@ namespace Gramps.Core.Domain
             References(x => x.Template);
             References(x => x.CallForProposal);
 
+            HasMany(x => x.ReportColumns).Inverse().Cascade.AllDeleteOrphan();
         }
     }
 }

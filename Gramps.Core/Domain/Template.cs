@@ -27,6 +27,7 @@ namespace Gramps.Core.Domain
             Editors = new List<Editor>();
             Questions = new List<Question>();
             CallForProposals = new List<CallForProposal>();
+            Reports = new List<Report>();
         }
         #endregion Constructor
 
@@ -41,6 +42,10 @@ namespace Gramps.Core.Domain
         public virtual IList<Editor> Editors { get; set; }
         public virtual IList<Question> Questions { get; set; }
         public virtual IList<CallForProposal> CallForProposals { get; set; }
+
+        [NotNull]
+        public virtual IList<Report> Reports { get; set; }
+
 
         #endregion Mapped Fields
 
@@ -67,6 +72,7 @@ namespace Gramps.Core.Domain
             HasMany(x => x.Editors);
             HasMany(x => x.Questions);
             HasMany(x => x.CallForProposals);
+            HasMany(x => x.Reports);
         }
     }
 }
