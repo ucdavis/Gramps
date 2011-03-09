@@ -13,8 +13,11 @@
     [SubmittedDate]     DATETIME         NULL,
     [NotifiedDate]      DATETIME         NULL,
     [WasWarned]         BIT              NOT NULL,
-    [Sequence]          INT              NOT NULL
+    [Sequence]          INT              NOT NULL,
+    [FileId]            INT              NULL
 );
+
+
 
 
 
