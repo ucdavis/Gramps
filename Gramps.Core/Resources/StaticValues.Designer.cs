@@ -178,6 +178,33 @@ namespace Gramps.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SaveWithoutValidation.
+        /// </summary>
+        public static string RB_SaveOptions_SaveNoValidate {
+            get {
+                return ResourceManager.GetString("RB_SaveOptions_SaveNoValidate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SaveAndValidate.
+        /// </summary>
+        public static string RB_SaveOptions_SaveWithValidation {
+            get {
+                return ResourceManager.GetString("RB_SaveOptions_SaveWithValidation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SubmitFinal.
+        /// </summary>
+        public static string RB_SaveOptions_SubmitFinal {
+            get {
+                return ResourceManager.GetString("RB_SaveOptions_SubmitFinal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to NotSubmitted.
         /// </summary>
         public static string RB_Submitted_NotSubmitted {

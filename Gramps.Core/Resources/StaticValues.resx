@@ -209,4 +209,16 @@
     <value>Warned</value>
     <comment>RadioButton</comment>
   </data>
+  <data name="RB_SaveOptions_SaveNoValidate" xml:space="preserve">
+    <value>SaveWithoutValidation</value>
+    <comment>RadioButton</comment>
+  </data>
+  <data name="RB_SaveOptions_SaveWithValidation" xml:space="preserve">
+    <value>SaveAndValidate</value>
+    <comment>RadioButton</comment>
+  </data>
+  <data name="RB_SaveOptions_SubmitFinal" xml:space="preserve">
+    <value>SubmitFinal</value>
+    <comment>RadioButton</comment>
+  </data>
 </root>

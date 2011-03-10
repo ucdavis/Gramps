@@ -46,6 +46,7 @@ namespace Gramps.Controllers.ViewModels
         public Proposal Proposal { get; set; }
         public CallForProposal CallForProposal { get; set; }
         public string ContactEmail { get; set; }
+        public string SaveOptionChoice { get; set; }
 
         public static ProposalViewModel Create(IRepository repository, CallForProposal callForProposal)
         {

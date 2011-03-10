@@ -655,6 +655,7 @@ namespace Gramps.Controllers
 
 			var viewModel = ProposalViewModel.Create(Repository, proposal.CallForProposal);
 			viewModel.Proposal = proposal;
+            viewModel.SaveOptionChoice = StaticValues.RB_SaveOptions_SaveWithValidation;
 
 			return View(viewModel);
         }
@@ -670,7 +671,7 @@ namespace Gramps.Controllers
         // POST: /Proposal/Edit/5
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult Edit(Guid id, Proposal proposal, QuestionAnswerParameter[] proposalAnswers, HttpPostedFileBase uploadAttachment)
+        public ActionResult Edit(Guid id, Proposal proposal, QuestionAnswerParameter[] proposalAnswers, HttpPostedFileBase uploadAttachment, string saveOptions)
         {
             var proposalToEdit = _proposalRepository.Queryable.Where(a => a.Guid == id).SingleOrDefault();
             if (proposalToEdit == null)
@@ -704,7 +705,7 @@ namespace Gramps.Controllers
 
             if (uploadAttachment != null)
             {
-                if (uploadAttachment.ContentType != "application/pdf")
+                if (uploadAttachment.ContentType.ToLower() != "application/pdf".ToLower())
                 {
                     ModelState.AddModelError("Proposal.File", "Can only upload PDF files.");
                 }
@@ -716,6 +717,20 @@ namespace Gramps.Controllers
                     proposalToEdit.File.Contents = reader.ReadBytes(uploadAttachment.ContentLength);
                     proposalToEdit.File.Name = uploadAttachment.FileName;
                 }
+            }
+            var saveWithValidate = false;
+            if (saveOptions == StaticValues.RB_SaveOptions_SubmitFinal)
+            {
+                proposal.IsSubmitted = true;
+            }
+            else if(saveOptions == StaticValues.RB_SaveOptions_SaveWithValidation)
+            {
+                proposal.IsSubmitted = false;
+                saveWithValidate = true;
+            }
+            else if(saveOptions == StaticValues.RB_SaveOptions_SaveNoValidate)
+            {
+                proposal.IsSubmitted = false;
             }
 
 
@@ -729,7 +744,7 @@ namespace Gramps.Controllers
                 if (question != null)
                 {
                     var answer = CleanUpAnswer(question.QuestionType.Name, pa, question.ValidationClasses);//, question);
-                    if (proposal.IsSubmitted)
+                    if (proposal.IsSubmitted || saveWithValidate)
                     {
                         foreach (var validator in question.Validators)
                         {
@@ -762,7 +777,7 @@ namespace Gramps.Controllers
             }
 
             proposalToEdit.TransferValidationMessagesTo(ModelState);
-            if (proposalToEdit.IsSubmitted)
+            if (proposalToEdit.IsSubmitted || saveWithValidate)
             {
                 if (Repository.OfType<Investigator>().Queryable.Where(a => a.Proposal == proposalToEdit && a.IsPrimary).Count() != 1)
                 {
@@ -771,6 +786,10 @@ namespace Gramps.Controllers
                 if (proposalToEdit.RequestedAmount > proposalToEdit.CallForProposal.ProposalMaximum)
                 {
                     ModelState.AddModelError("Proposal.RequestedAmount", string.Format("Requested Amount must be {0} or less", String.Format("{0:C}", proposalToEdit.CallForProposal.ProposalMaximum)));
+                }
+                if (proposalToEdit.RequestedAmount <= 0)
+                {
+                    ModelState.AddModelError("Proposal.RequestedAmount", string.Format("Requested Amount must be entered"));
                 }
             }
 
@@ -789,6 +808,7 @@ namespace Gramps.Controllers
                     
                     var viewModel = ProposalViewModel.Create(Repository, proposalToEdit.CallForProposal);
                     viewModel.Proposal = proposalToEdit;
+                    viewModel.SaveOptionChoice = saveOptions;
 
                     return View(viewModel);
                 }
@@ -798,12 +818,12 @@ namespace Gramps.Controllers
             else
             {
 
-                Message = "Unable to submit final. Please Correct Errors";
+                Message = "Unable to save. Please Correct Errors";
 
 
                 var viewModel = ProposalViewModel.Create(Repository, proposalToEdit.CallForProposal);
                 viewModel.Proposal = proposalToEdit;
-
+                viewModel.SaveOptionChoice = saveOptions;
                 return View(viewModel);
             }
         }
