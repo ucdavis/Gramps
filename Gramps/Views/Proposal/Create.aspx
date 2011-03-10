@@ -48,6 +48,10 @@
 
     <% } %>
 
+    <div id="ContactInfo">
+        If you are having problems, you may contact <a href="<%: Html.Encode("mailto:" + Model.ContactEmail) %>"><%:Html.Encode(Model.ContactEmail) %></a>
+    </div>
+
 
 </asp:Content>
 

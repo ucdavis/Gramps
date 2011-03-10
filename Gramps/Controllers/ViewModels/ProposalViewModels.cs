@@ -45,12 +45,14 @@ namespace Gramps.Controllers.ViewModels
     {
         public Proposal Proposal { get; set; }
         public CallForProposal CallForProposal { get; set; }
+        public string ContactEmail { get; set; }
 
         public static ProposalViewModel Create(IRepository repository, CallForProposal callForProposal)
         {
             Check.Require(repository != null, "Repository must be supplied");
 
             var viewModel = new ProposalViewModel { Proposal = new Proposal(), CallForProposal = callForProposal};
+            viewModel.ContactEmail = callForProposal.Editors.Where(a => a.IsOwner).Single().User.Email;
 
             return viewModel;
         }
