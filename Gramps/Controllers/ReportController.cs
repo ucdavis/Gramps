@@ -29,6 +29,9 @@ namespace Gramps.Controllers
         // GET: /Report/
         public ActionResult TemplateIndex(int? templateId, int? callForProposalId)
         {
+            //Message = "Not Implemented yet";
+            //return this.RedirectToAction<TemplateController>(a => a.Index());
+
             if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
             {
                 Message = "You do not have access to that.";
@@ -42,6 +45,9 @@ namespace Gramps.Controllers
 
         public ActionResult CallIndex(int id)
         {
+            //Message = "Not Implemented yet";
+            //return this.RedirectToAction<CallForProposalController>(a => a.Index(null, null, null));
+
             var callforproposal = Repository.OfType<CallForProposal>().GetNullableById(id);
 
             if (callforproposal == null)
@@ -64,7 +70,7 @@ namespace Gramps.Controllers
         // GET: /Report/Create
         public ActionResult CreateForTemplate(int? templateId, int? callForProposalId)
         {
-            var viewModel = ReportViewModel.Create(Repository);
+            var viewModel = ReportViewModel.Create(Repository, templateId, callForProposalId);
 
             return View(viewModel);
         }
@@ -72,7 +78,7 @@ namespace Gramps.Controllers
         //
         // POST: /Report/Create
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult CreateForTemplate(Report report)
+        public ActionResult CreateForTemplate(Report report, int? templateId, int? callForProposalId)
         {
             var reportToCreate = new Report();
 
@@ -90,7 +96,7 @@ namespace Gramps.Controllers
             }
             else
             {
-                var viewModel = ReportViewModel.Create(Repository);
+                var viewModel = ReportViewModel.Create(Repository, templateId, callForProposalId);
                 viewModel.Report = report;
 
                 return View(viewModel);
@@ -178,6 +184,18 @@ namespace Gramps.Controllers
             throw new NotImplementedException();
         }
 
+    }
+
+    public class CreateReportParameter
+    {
+        public CreateReportParameter()
+        {
+            Property = false;
+        }
+
+        public bool Property { get; set; }
+        public int QuestionId { get; set; }
+        public string PropertyName { get; set; }
     }
 
 }

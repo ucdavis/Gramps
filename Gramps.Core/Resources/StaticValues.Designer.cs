@@ -259,6 +259,15 @@ namespace Gramps.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Submitted.
+        /// </summary>
+        public static string Report_Submitted {
+            get {
+                return ResourceManager.GetString("Report_Submitted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ApprovedAmount.
         /// </summary>
         public static string TokenApprovedAmount {

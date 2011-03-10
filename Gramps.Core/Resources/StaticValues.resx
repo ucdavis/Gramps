@@ -221,4 +221,8 @@
     <value>SubmitFinal</value>
     <comment>RadioButton</comment>
   </data>
+  <data name="Report_Submitted" xml:space="preserve">
+    <value>Submitted</value>
+    <comment>Report Column Choice</comment>
+  </data>
 </root>

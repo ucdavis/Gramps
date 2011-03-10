@@ -289,7 +289,9 @@
     <Content Include="Images\logo.jpg" />
     <Content Include="Images\plus.png" />
     <Content Include="Images\Rocket_launch.png" />
+    <Content Include="Scripts\jquery.CaesMutioptionControl.js" />
     <Content Include="Scripts\jquery.enableTinyMce.js" />
+    <Content Include="Scripts\RenameForArray.js" />
     <Content Include="Scripts\tiny_mce\jquery.tinymce.js" />
     <Content Include="Scripts\tiny_mce\langs\en.js" />
     <Content Include="Scripts\tiny_mce\license.txt" />
@@ -581,6 +583,7 @@
     <Content Include="Views\Question\SharedQuestionFields.ascx" />
     <Content Include="Views\Question\SharedQuestionSample.ascx" />
     <Content Include="Views\Question\SharedQuestionSetup.ascx" />
+    <Content Include="Views\Report\CreateForTemplate.aspx" />
     <Content Include="Views\Report\TemplateIndex.aspx" />
     <Content Include="Views\Shared\CallNavigationButtons.ascx" />
     <Content Include="Views\Shared\LogOnUserControl.ascx" />
