@@ -271,7 +271,7 @@ div.t-grid {}
 
 .button:hover
 {
-    background:url("../Content/images/ui-bg_glass_75_dadada_1x400.png") repeat-x scroll 50% 50% #DADADA;
+    background:url("../Content/images/ui-bg_glass_75.png") repeat-x scroll 50% 50% #DADADA;
     border:1px solid #999999;
     color:#212121;
     font-weight:normal;
