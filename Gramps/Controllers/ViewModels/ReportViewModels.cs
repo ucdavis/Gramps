@@ -10,12 +10,11 @@ namespace Gramps.Controllers.ViewModels
     /// <summary>
     /// ViewModel for the Report class
     /// </summary>
-    public class ReportViewModel : NavigationViewModel
+    public class ReportViewModel : NavigationViewModel 
     {
         public Report Report { get; set; }
         public IQueryable<Question> Questions { get; set; }
-        public List<Question> SelectedQuestions { get; set; }
-
+        
         public static ReportViewModel Create(IRepository repository, int? templateId, int? callForProposalId)
         {
             Check.Require(repository != null, "Repository must be supplied");
@@ -28,7 +27,31 @@ namespace Gramps.Controllers.ViewModels
                 viewModel.Questions = repository.OfType<Question>().Queryable.Where(a => a.Template.Id == templateId.Value && a.QuestionType.Name != "No Answer");
                 viewModel.TemplateId = templateId;
             }
+            if (callForProposalId != null && callForProposalId != 0)
+            {
+                viewModel.IsCallForProposal = true;
+                viewModel.Questions = repository.OfType<Question>().Queryable.Where(a => a.CallForProposal.Id == callForProposalId.Value && a.QuestionType.Name != "No Answer");
+                viewModel.CallForProposalId = callForProposalId;
+            }
             
+
+            return viewModel;
+        }
+    }
+
+
+    public class CallReportViewModel : CallNavigationViewModel
+    {
+        public Report Report { get; set; }
+        public IQueryable<Question> Questions { get; set; }
+
+        public static CallReportViewModel Create(IRepository repository, CallForProposal callForProposal)
+        {
+            Check.Require(repository != null, "Repository must be supplied");
+
+            var viewModel = new CallReportViewModel { Report = new Report(), CallForProposal = callForProposal};
+
+            viewModel.Questions = repository.OfType<Question>().Queryable.Where(a => a.CallForProposal.Id == callForProposal.Id && a.QuestionType.Name != "No Answer");
 
             return viewModel;
         }
