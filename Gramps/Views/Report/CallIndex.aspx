@@ -22,13 +22,22 @@
             .PrefixUrlParameters(false) //True if >0 sortable/pageable grids
             .Columns(col => {
             col.Template(x => {%>
-				<%: Html.ActionLink("Edit", "Edit", new { id = x.Id }) %>           
-				<%});
+				<%: Html.ActionLink<ReportController>(a => a.EditForCall(x.Id, null, Model.CallForProposal.Id), " ", new { @class = "edit_button" })%>           
+				<%}).Title("Edit");
+            col.Template(x => {%>
+                <%: Html.ActionLink<ReportController>(a => a.Launch(x.Id, Model.CallForProposal.Id), " ", new { @class = "launch_button" })%>          
+				<%}).Title("Launch");
                 col.Bound(x => x.Name);
                 col.Bound(x => x.ReportColumns.Count).Title("# of Columns");
-                col.Template(x => {%>
-				<%: Html.ActionLink("Delete", "Delete", new { id = x.Id }) %>           
-				<%});
+            col.Template(x => { %>                                                       
+                <% using (Html.BeginForm("Delete", "Report", FormMethod.Post)) { %>
+                    <%= Html.AntiForgeryToken() %>
+                    <%: Html.Hidden("ReportId", x.Id) %>
+                    <%: Html.Hidden("TemplateId", null) %>
+                    <%: Html.Hidden("CallForProposalId", Model.CallForProposal.Id) %>
+                    <%= Html.SubmitButton("Submit", " ", new {@class="remove_button"}) %>                                                                           
+                <%}%>                                       
+            <% }).Title("Delete");
             })
             .Pageable()
             .Sortable()
@@ -38,6 +47,7 @@
 </asp:Content>
 
 <asp:Content ID="Content3" ContentPlaceHolderID="HeaderContent" runat="server">
+
 </asp:Content>
 
 <asp:Content ID="Content4" ContentPlaceHolderID="logoContent" runat="server">

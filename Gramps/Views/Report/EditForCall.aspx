@@ -1,19 +1,20 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<Gramps.Controllers.ViewModels.ReportViewModel>" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<Gramps.Controllers.ViewModels.CallReportViewModel>" %>
 <%@ Import Namespace="Gramps.Core.Domain" %>
 <%@ Import Namespace="Gramps.Core.Resources" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
-	Create Report
+	Edit Report
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
-    <% Html.RenderPartial("NavigationButtons"); %>
+    <% Html.RenderPartial("CallNavigationButtons"); %>
+    <%: Html.Hidden("callForProposalId", Model.CallForProposal.Id) %>
 
-    <h2>Create Report</h2>
+    <h2>Edit Report</h2>
+    <%: Html.HiddenFor(a => a.Report.Id) %>
 
-    <% Html.RenderPartial("ReportFormForTemplate"); %>
-
+    <% Html.RenderPartial("ReportFormForCall"); %>
 
 </asp:Content>
 

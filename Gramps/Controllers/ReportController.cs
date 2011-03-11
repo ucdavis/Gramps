@@ -94,6 +94,12 @@ namespace Gramps.Controllers
 
         public ActionResult CreateForTemplate(int? templateId, int? callForProposalId)
         {
+            if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+
             var viewModel = ReportViewModel.Create(Repository, templateId, callForProposalId);
 
             return View(viewModel);
@@ -104,6 +110,11 @@ namespace Gramps.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult CreateForTemplate(Report report, int? templateId, int? callForProposalId, CreateReportParameter[] createReportParameters)
         {
+            if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
 
             var reportToCreate = CommonCreate(report, templateId, callForProposalId, createReportParameters);
 
@@ -252,83 +263,229 @@ namespace Gramps.Controllers
         }
         #endregion Creates
 
-        ////
-        //// GET: /Report/Edit/5
-        //public ActionResult Edit(int id)
-        //{
-        //    var report = _reportRepository.GetNullableById(id);
-
-        //    if (report == null) return this.RedirectToAction(a => a.Index());
-
-        //    var viewModel = ReportViewModel.Create(Repository);
-        //    viewModel.Report = report;
-
-        //    return View(viewModel);
-        //}
-        
-        ////
-        //// POST: /Report/Edit/5
-        //[AcceptVerbs(HttpVerbs.Post)]
-        //public ActionResult Edit(int id, Report report)
-        //{
-        //    var reportToEdit = _reportRepository.GetNullableById(id);
-
-        //    if (reportToEdit == null) return this.RedirectToAction(a => a.Index());
-
-        //    TransferValues(report, reportToEdit);
-
-        //    reportToEdit.TransferValidationMessagesTo(ModelState);
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        _reportRepository.EnsurePersistent(reportToEdit);
-
-        //        Message = "Report Edited Successfully";
-
-        //        return this.RedirectToAction(a => a.Index());
-        //    }
-        //    else
-        //    {
-        //        var viewModel = ReportViewModel.Create(Repository);
-        //        viewModel.Report = report;
-
-        //        return View(viewModel);
-        //    }
-        //}
-        
-        ////
-        //// GET: /Report/Delete/5 
-        //public ActionResult Delete(int id)
-        //{
-        //    var report = _reportRepository.GetNullableById(id);
-
-        //    if (report == null) return this.RedirectToAction(a => a.Index());
-
-        //    return View(report);
-        //}
-
-        ////
-        //// POST: /Report/Delete/5
-        //[AcceptVerbs(HttpVerbs.Post)]
-        //public ActionResult Delete(int id, Report report)
-        //{
-        //    var reportToDelete = _reportRepository.GetNullableById(id);
-
-        //    if (reportToDelete == null) this.RedirectToAction(a => a.Index());
-
-        //    _reportRepository.Remove(reportToDelete);
-
-        //    Message = "Report Removed Successfully";
-
-        //    return this.RedirectToAction(a => a.Index());
-        //}
-        
-        /// <summary>
-        /// Transfer editable values from source to destination
-        /// </summary>
-        private static void TransferValues(Report source, Report destination)
+        #region Edits
+        //
+        // GET: /Report/Edit/5
+        public ActionResult EditForTemplate(int id, int? templateId, int? callForProposalId)
         {
-            throw new NotImplementedException();
+            var report = _reportRepository.GetNullableById(id);
+
+            if (report == null)
+            {
+                return this.RedirectToAction(a => a.TemplateIndex(templateId, callForProposalId));
+            }
+
+            if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+
+            var viewModel = ReportViewModel.Create(Repository, templateId, callForProposalId);
+            viewModel.Report = report;
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public ActionResult EditForTemplate(int id, Report report, int? templateId, int? callForProposalId, CreateReportParameter[] createReportParameters)
+        {
+            var reportToEdit = _reportRepository.GetNullableById(id);
+
+            if (reportToEdit == null)
+            {
+                return this.RedirectToAction(a => a.TemplateIndex(templateId, callForProposalId));
+            }
+            if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+
+            var temp = CommonCreate(report, templateId, callForProposalId, createReportParameters);
+
+            reportToEdit.ReportColumns.Clear();
+            reportToEdit.Name = temp.Name;
+            foreach (var reportColumn in temp.ReportColumns)
+            {
+                reportToEdit.AddReportColumn(reportColumn);
+            }
+
+            if (ModelState.IsValid)
+            {
+                _reportRepository.EnsurePersistent(reportToEdit);
+
+                Message = "Report Edited Successfully";
+
+                return this.RedirectToAction(a => a.TemplateIndex(templateId, callForProposalId));
+            }
+            else
+            {
+                Message = "Unable to edit report";
+                var viewModel = ReportViewModel.Create(Repository, templateId, callForProposalId);
+                viewModel.Report = reportToEdit;
+                return View(viewModel);
+            }
+        }
+
+
+        public ActionResult EditForCall(int id, int? templateId, int? callForProposalId)
+        {
+            if (!callForProposalId.HasValue || callForProposalId == 0)
+            {
+                return this.RedirectToAction<CallForProposalController>(a => a.Index(null, null, null));
+            }
+            var callforProposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId.Value);
+
+            if (callforProposal == null)
+            {
+                return this.RedirectToAction<CallForProposalController>(a => a.Index(null, null, null));
+            }
+
+            if (!_accessService.HasAccess(null, callforProposal.Id, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+
+            var report = _reportRepository.GetNullableById(id);
+            if (report == null)
+            {
+                return this.RedirectToAction(a => a.CallIndex(callforProposal.Id));
+            }
+
+            var viewModel = CallReportViewModel.Create(Repository, callforProposal);
+            viewModel.Report = report;
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public ActionResult EditForCall(int id, Report report, int? templateId, int? callForProposalId, CreateReportParameter[] createReportParameters)
+        {
+
+            if (!callForProposalId.HasValue || callForProposalId == 0)
+            {
+                return this.RedirectToAction<CallForProposalController>(a => a.Index(null, null, null));
+            }
+            var callforProposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId.Value);
+
+            if (callforProposal == null)
+            {
+                return this.RedirectToAction<CallForProposalController>(a => a.Index(null, null, null));
+            }
+
+            if (!_accessService.HasAccess(null, callforProposal.Id, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+
+            var reportToEdit = _reportRepository.GetNullableById(id);
+            if (reportToEdit == null)
+            {
+                return this.RedirectToAction(a => a.CallIndex(callforProposal.Id));
+            }
+
+            var temp = CommonCreate(report, templateId, callForProposalId, createReportParameters);
+
+            reportToEdit.ReportColumns.Clear();
+            reportToEdit.Name = temp.Name;
+            foreach (var reportColumn in temp.ReportColumns)
+            {
+                reportToEdit.AddReportColumn(reportColumn);
+            }
+
+            if (ModelState.IsValid)
+            {
+                _reportRepository.EnsurePersistent(reportToEdit);
+
+                Message = "Report Edited Successfully";
+
+                return this.RedirectToAction(a => a.CallIndex(callforProposal.Id));
+            }
+            else
+            {
+                Message = "Unable to edit report";
+                var viewModel = CallReportViewModel.Create(Repository, callforProposal);
+                viewModel.Report = reportToEdit;
+                return View(viewModel);
+            }
+        }
+
+        #endregion Edits
+
+
+        [HttpPost]
+        public ActionResult Delete(int reportId, int? templateId, int? callForProposalId)
+        {
+            if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+
+            var reportToDelete = _reportRepository.GetNullableById(reportId);
+            if (reportToDelete == null)
+            {
+                Message = "Report not found.";
+                if (templateId.HasValue && templateId.Value != 0)
+                {
+                    return this.RedirectToAction(a => a.TemplateIndex(templateId, callForProposalId));
+                }
+                else
+                {
+                    return this.RedirectToAction(a => a.CallIndex(callForProposalId.Value));
+                }
+               
+            }
+            if (!_accessService.HasSameId(reportToDelete.Template, reportToDelete.CallForProposal, templateId, callForProposalId))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+
+            _reportRepository.Remove(reportToDelete);
+            Message = "Report removed";
+            if (templateId.HasValue && templateId.Value != 0)
+            {
+                return this.RedirectToAction(a => a.TemplateIndex(templateId, callForProposalId));
+            }
+            else
+            {
+                return this.RedirectToAction(a => a.CallIndex(callForProposalId.Value));
+            }
+
+        }
+        
+
+        public ActionResult Launch(int id, int? callForProposalId)
+        {
+            if (!callForProposalId.HasValue || callForProposalId == 0)
+            {
+                return this.RedirectToAction<CallForProposalController>(a => a.Index(null, null, null));
+            }
+            var callforProposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId.Value);
+
+            if (callforProposal == null)
+            {
+                return this.RedirectToAction<CallForProposalController>(a => a.Index(null, null, null));
+            }
+            if (!_accessService.HasAccess(null, callforProposal.Id, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+
+            var report = _reportRepository.GetNullableById(id);
+            if (report == null)
+            {
+                return this.RedirectToAction(a => a.CallIndex(callforProposal.Id));
+            }
+
+            var viewModel = ReportLaunchViewModel.Create(Repository, callforProposal, report);
+
+            return View(viewModel);
         }
 
     }

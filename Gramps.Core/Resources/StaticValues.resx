@@ -225,4 +225,12 @@
     <value>Submitted</value>
     <comment>Report Column Choice</comment>
   </data>
+  <data name="Report_Approved" xml:space="preserve">
+    <value>Approved</value>
+    <comment>Report Column Choice</comment>
+  </data>
+  <data name="Report_Sequence" xml:space="preserve">
+    <value>ProposalSequence</value>
+    <comment>Report Column Choice</comment>
+  </data>
 </root>

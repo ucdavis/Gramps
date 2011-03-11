@@ -22,13 +22,19 @@
             .PrefixUrlParameters(false) //True if >0 sortable/pageable grids
             .Columns(col => {
             col.Template(x => {%>
-				<%: Html.ActionLink("Edit", "Edit", new { id = x.Id }) %>           
-				<%});
+				<%: Html.ActionLink<ReportController>(a => a.EditForTemplate(x.Id, Model.TemplateId, Model.CallForProposalId), " ", new { @class = "edit_button" })%>           
+				<%}).Title("Edit");
                 col.Bound(x => x.Name);
                 col.Bound(x => x.ReportColumns.Count).Title("# of Columns");
-                col.Template(x => {%>
-				<%: Html.ActionLink("Delete", "Delete", new { id = x.Id }) %>           
-				<%});
+            col.Template(x => { %>                                                       
+                <% using (Html.BeginForm("Delete", "Report", FormMethod.Post)) { %>
+                    <%= Html.AntiForgeryToken() %>
+                    <%: Html.Hidden("ReportId", x.Id) %>
+                    <%: Html.Hidden("TemplateId", Model.TemplateId) %>
+                    <%: Html.Hidden("CallForProposalId", Model.CallForProposalId) %>
+                    <%= Html.SubmitButton("Submit", " ", new {@class="remove_button"}) %>                                                                           
+                <%}%>                                       
+            <% }).Title("Delete");
             })
             .Pageable()
             .Sortable()

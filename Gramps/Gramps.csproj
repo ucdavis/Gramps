@@ -174,6 +174,7 @@
     <Compile Include="Controllers\ViewModels\NavigationViewModel.cs" />
     <Compile Include="Controllers\ViewModels\ProposalViewModels.cs" />
     <Compile Include="Controllers\ViewModels\QuestionViewModels.cs" />
+    <Compile Include="Controllers\ViewModels\ReportLaunchViewModel.cs" />
     <Compile Include="Controllers\ViewModels\ReportViewModels.cs" />
     <Compile Include="Controllers\ViewModels\TemplateViewModels.cs" />
     <Compile Include="Global.asax.cs">
@@ -586,6 +587,12 @@
     <Content Include="Views\Report\CallIndex.aspx" />
     <Content Include="Views\Report\CreateForCall.aspx" />
     <Content Include="Views\Report\CreateForTemplate.aspx" />
+    <Content Include="Views\Report\EditForCall.aspx" />
+    <Content Include="Views\Report\EditForTemplate.aspx" />
+    <Content Include="Views\Report\Launch.aspx" />
+    <Content Include="Views\Report\ReportFormForCall.ascx" />
+    <Content Include="Views\Report\ReportFormForTemplate.ascx" />
+    <Content Include="Views\Report\ReportPropertyColumns.ascx" />
     <Content Include="Views\Report\TemplateIndex.aspx" />
     <Content Include="Views\Shared\CallNavigationButtons.ascx" />
     <Content Include="Views\Shared\LogOnUserControl.ascx" />

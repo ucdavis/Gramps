@@ -3,14 +3,14 @@
 <%@ Import Namespace="Gramps.Core.Resources" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
-	Create Report
+	Edit Report
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
     <% Html.RenderPartial("NavigationButtons"); %>
-
-    <h2>Create Report</h2>
+    <%: Html.HiddenFor(a => a.Report.Id) %>
+    <h2>Edit Report</h2>
 
     <% Html.RenderPartial("ReportFormForTemplate"); %>
 
