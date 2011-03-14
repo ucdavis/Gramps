@@ -12,6 +12,14 @@
                 <%: Html.TextBoxFor(model => model.Investigator.Name)%>
                 <%: Html.ValidationMessageFor(model => model.Investigator.Name)%>
             </div>
+
+            <div class="editor-label">
+                <%: Html.LabelFor(model => model.Investigator.Position)%>
+            </div>
+            <div class="editor-field">
+                <%: Html.TextBoxFor(model => model.Investigator.Position)%>
+                <%: Html.ValidationMessageFor(model => model.Investigator.Position)%>
+            </div>
             
             <div class="editor-label">
                 <%: Html.LabelFor(model => model.Investigator.Institution)%>

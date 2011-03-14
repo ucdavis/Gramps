@@ -68,6 +68,8 @@ namespace Gramps.Core.Domain
         public virtual string Email { get; set; }
 
         public virtual string Notes { get; set; }
+        [Length(100)]
+        public virtual string Position { get; set; } 
 
         #endregion Mapped Fields
 
@@ -93,6 +95,7 @@ namespace Gramps.Core.Domain
             Map(x => x.Phone);
             Map(x => x.Email);
             Map(x => x.Notes);
+            Map(x => x.Position);
         }
     }
 }

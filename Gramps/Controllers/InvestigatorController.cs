@@ -264,6 +264,7 @@ namespace Gramps.Controllers
             destination.Phone =         source.Phone;
             destination.State =         source.State;
             destination.Zip =           source.Zip;
+            destination.Position =      source.Position;
         }
 
     }
