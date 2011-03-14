@@ -1520,6 +1520,7 @@ CREATE TABLE [dbo].[Investigators](
 	[Phone] [varchar](50) NOT NULL,
 	[Email] [varchar](200) NOT NULL,
 	[Notes] [varchar](max) NULL,
+	[Position] [varchar](100) NULL,
  CONSTRAINT [PK_Investigators] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC

@@ -12,8 +12,11 @@
     [Zip]         VARCHAR (11)  NOT NULL,
     [Phone]       VARCHAR (50)  NOT NULL,
     [Email]       VARCHAR (200) NOT NULL,
-    [Notes]       VARCHAR (MAX) NULL
+    [Notes]       VARCHAR (MAX) NULL,
+    [Position]    VARCHAR (100) NULL
 );
+
+
 
 
 
