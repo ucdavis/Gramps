@@ -387,3 +387,8 @@ div.t-grid {}
 .BigWidth
 {
 	width: 65em;
+}
+tr.even
+{
+	background-color: #EBEFF3;
+}

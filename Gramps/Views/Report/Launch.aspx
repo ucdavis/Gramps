@@ -21,8 +21,11 @@
                 </tr>
             </thead>
             <tbody>
+                <%var rowCount = 0; %>
                 <% foreach(var row in Model.RowValues) { %>
-                    <tr>
+                    <%rowCount++; %>
+                    <% var evenOdd = rowCount % 2 == 0 ? "even" : "odd"; %>
+                    <tr class="<%= evenOdd %>">
                     <% foreach(var cell in row) { %> 
                         <td><%: Html.HtmlEncode(cell) %></td>
                     <% } %>
