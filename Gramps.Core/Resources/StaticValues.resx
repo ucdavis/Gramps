@@ -237,6 +237,10 @@
     <value>AwardAmount</value>
     <comment>Report Column Choice</comment>
   </data>
+  <data name="Report_Comments" xml:space="preserve">
+    <value>Comments</value>
+    <comment>Report Column Choice</comment>
+  </data>
   <data name="Report_Denied" xml:space="preserve">
     <value>Denied</value>
     <comment>Report Column Choice</comment>

@@ -1,28 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Web.Mvc;
-using Gramps.Controllers.ViewModels;
-using Gramps.Core.Domain;
-using Gramps.Services;
-using UCDArch.Core.PersistanceSupport;
-using UCDArch.Web.Controller;
-using UCDArch.Web.Helpers;
-using UCDArch.Core.Utils;
-using MvcContrib;
-using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using Gramps.Controllers.Filters;
 using Gramps.Controllers.ViewModels;
 using Gramps.Core.Domain;
 using Gramps.Services;
-using UCDArch.Core.PersistanceSupport;
-using UCDArch.Web.Controller;
-using UCDArch.Web.Helpers;
-using UCDArch.Core.Utils;
 using MvcContrib;
-using UCDArch.Web.Validator;
+using NPOI.HSSF.UserModel;
+using UCDArch.Core.PersistanceSupport;
+using UCDArch.Web.Helpers;
 
 namespace Gramps.Controllers
 {
@@ -486,6 +474,88 @@ namespace Gramps.Controllers
             var viewModel = ReportLaunchViewModel.Create(Repository, callforProposal, report);
 
             return View(viewModel);
+        }
+
+        public ActionResult ExportExcell(int id, int? callForProposalId)
+        {
+            if (!callForProposalId.HasValue || callForProposalId == 0)
+            {
+                return this.RedirectToAction<CallForProposalController>(a => a.Index(null, null, null));
+            }
+            var callforProposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId.Value);
+
+            if (callforProposal == null)
+            {
+                return this.RedirectToAction<CallForProposalController>(a => a.Index(null, null, null));
+            }
+            if (!_accessService.HasAccess(null, callforProposal.Id, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+            var report = _reportRepository.GetNullableById(id);
+            if (report == null)
+            {
+                return this.RedirectToAction(a => a.CallIndex(callforProposal.Id));
+            }
+
+            var viewModel = ReportLaunchViewModel.Create(Repository, callforProposal, report, true);
+
+            var fileName = string.Format("{0}-{1}.xls", callforProposal.Name.Replace(" ", string.Empty), DateTime.Now.Date.ToString("MMddyyyy"));
+
+            try
+            {
+                // Opening the Excel template...
+                var fs = new FileStream(Server.MapPath(@"~\Content\NPOITemplate.xls"), FileMode.Open, FileAccess.Read);
+
+                // Getting the complete workbook...
+                var templateWorkbook = new HSSFWorkbook(fs, true);
+
+                // Getting the worksheet by its name...
+                var sheet = templateWorkbook.GetSheetAt(0);// GetSheet("Sheet1");
+                // Getting the row... 0 is the first row.
+                var dataRow = sheet.CreateRow(0);
+                for (int i = 0; i < viewModel.ColumnNames.Count; i++)
+                {
+                    dataRow.CreateCell(i).SetCellValue(viewModel.ColumnNames.ElementAt(i));
+                    dataRow.GetCell(i).CellStyle.WrapText = true;    
+                }
+
+                var rowCount = 0;
+                foreach (var rowValue in viewModel.RowValues)
+                {
+                    rowCount++;
+                    dataRow = sheet.CreateRow(rowCount);
+                    for (int i = 0; i < rowValue.Count(); i++)
+                    {
+                        dataRow.CreateCell(i).SetCellValue(rowValue.ElementAtOrDefault(i));
+                    }
+                }
+
+                for (int i = 0; i < viewModel.ColumnNames.Count; i++)
+                {
+                    sheet.AutoSizeColumn(i);     
+                }
+
+                // Forcing formula recalculation...
+                sheet.ForceFormulaRecalculation = true;
+
+                var ms = new MemoryStream();
+
+                // Writing the workbook content to the FileStream...
+                templateWorkbook.Write(ms);
+
+                Message = "Excel report created successfully!";
+
+                // Sending the server processed data back to the user computer...
+                return File(ms.ToArray(), "application/vnd.ms-excel", fileName);
+            }
+            catch (Exception ex)
+            {
+                Message = "Error Creating Excel Report " + ex.Message;
+
+                return this.RedirectToAction(a => a.CallIndex(callforProposal.Id));
+            }
         }
 
     }

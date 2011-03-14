@@ -45,4 +45,10 @@
                 <input id="_Property" class="indexedControl" type="hidden" value="True" name="_Property" />
                 <input id="_PropertyName" class="indexedControl" type="hidden" value="<%: StaticValues.Report_AwardedAmount %>" name="_PropertyName" />                            
             </span>
+            <span id="property<%: Html.Encode(StaticValues.Report_Comments)%>" class="property">
+                <%= Html.CheckBox("_Selected", new { @class = StaticValues.Class_indexedControl })%>  
+                <label for="Selected" class="indexedControl"><%: Html.Encode(StaticValues.Report_Comments)%></label>
+                <input id="_Property" class="indexedControl" type="hidden" value="True" name="_Property" />
+                <input id="_PropertyName" class="indexedControl" type="hidden" value="<%: StaticValues.Report_Comments %>" name="_PropertyName" />                            
+            </span>
         </fieldset>

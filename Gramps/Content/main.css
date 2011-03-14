@@ -331,6 +331,19 @@ div.t-grid {}
     color:#0D548A;
 }
 
+.excell_button
+{
+	background: url("../Images/Page_excel.png") no-repeat scroll 0 0 transparent;
+    border:0;         
+    display: inline-block;
+    height: 22px;
+    width: 22px;
+}
+.excell_button:hover
+{
+    color:#0D548A;
+}
+
 .bigpdf_button
 {
     background: url("../Images/Big_pdf.png") no-repeat scroll 0 0 transparent;

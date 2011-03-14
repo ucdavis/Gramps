@@ -23,12 +23,15 @@
             .Columns(col => {
             col.Template(x => {%>
 				<%: Html.ActionLink<ReportController>(a => a.EditForCall(x.Id, null, Model.CallForProposal.Id), " ", new { @class = "edit_button" })%>           
-				<%}).Title("Edit");
+				<%}).Width(25).Title("Edit");
             col.Template(x => {%>
                 <%: Html.ActionLink<ReportController>(a => a.Launch(x.Id, Model.CallForProposal.Id), " ", new { @class = "launch_button" })%>          
-				<%}).Title("Launch");
+				<%}).Width(30).Title("Launch");
+            col.Template(x => {%>
+                <%: Html.ActionLink<ReportController>(a => a.ExportExcell(x.Id, Model.CallForProposal.Id), " ", new { @class = "excell_button" })%>          
+				<%}).Width(30).Title("Export");      
                 col.Bound(x => x.Name);
-                col.Bound(x => x.ReportColumns.Count).Title("# of Columns");
+                col.Bound(x => x.ReportColumns.Count).Width(45).Title("# of Columns");
             col.Template(x => { %>                                                       
                 <% using (Html.BeginForm("Delete", "Report", FormMethod.Post)) { %>
                     <%= Html.AntiForgeryToken() %>
@@ -37,7 +40,7 @@
                     <%: Html.Hidden("CallForProposalId", Model.CallForProposal.Id) %>
                     <%= Html.SubmitButton("Submit", " ", new {@class="remove_button"}) %>                                                                           
                 <%}%>                                       
-            <% }).Title("Delete");
+            <% }).Width(30).Title("Delete");
             })
             .Pageable()
             .Sortable()

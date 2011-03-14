@@ -277,6 +277,15 @@ namespace Gramps.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Comments.
+        /// </summary>
+        public static string Report_Comments {
+            get {
+                return ResourceManager.GetString("Report_Comments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Denied.
         /// </summary>
         public static string Report_Denied {

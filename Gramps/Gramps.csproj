@@ -88,6 +88,24 @@
     <Reference Include="NHibernate.ByteCode.Spring">
       <HintPath>..\Bin\NHibernate.ByteCode.Spring.dll</HintPath>
     </Reference>
+    <Reference Include="NPOI">
+      <HintPath>..\Bin\NPOI.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.DDF">
+      <HintPath>..\Bin\NPOI.DDF.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.HPSF">
+      <HintPath>..\Bin\NPOI.HPSF.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.HSSF">
+      <HintPath>..\Bin\NPOI.HSSF.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.POIFS">
+      <HintPath>..\Bin\NPOI.POIFS.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.Util">
+      <HintPath>..\Bin\NPOI.Util.dll</HintPath>
+    </Reference>
     <Reference Include="Recaptcha">
       <HintPath>..\Bin\Recaptcha.dll</HintPath>
     </Reference>
@@ -288,6 +306,7 @@
     <Content Include="Images\logo-caes.png" />
     <Content Include="Images\logo-ucdavis.png" />
     <Content Include="Images\logo.jpg" />
+    <Content Include="Images\Page_excel.png" />
     <Content Include="Images\plus.png" />
     <Content Include="Images\Rocket_launch.png" />
     <Content Include="Scripts\jquery.CaesMutioptionControl.js" />
@@ -694,6 +713,7 @@
     <Content Include="Web.Test.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
+    <None Include="Content\NPOITemplate.xls" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

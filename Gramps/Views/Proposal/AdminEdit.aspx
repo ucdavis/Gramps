@@ -48,7 +48,7 @@
 
             <div class="editor-label">Comments</div>
             <div class="editor-field">
-                <%= Html.TextArea("Comment.Text", Model.Comment != null ? Model.Comment.Text : string.Empty)%>
+                <%= Html.TextArea("Comment.Text", Model.Comment != null ? Model.Comment.Text : string.Empty, new { @class = "BigAnswer" })%>
                 <%= Html.ValidationMessageFor(a => a.Comment.Text)%> 
             </div>
             <p>
@@ -82,7 +82,7 @@
 </asp:Content>
 
 <asp:Content ID="Content3" ContentPlaceHolderID="HeaderContent" runat="server">
-    <script src="<%= Url.Content("~/Scripts/tiny_mce/jquery.tinymce.js") %>" type="text/javascript"></script>
+<%--    <script src="<%= Url.Content("~/Scripts/tiny_mce/jquery.tinymce.js") %>" type="text/javascript"></script>
     <script src="<%= Url.Content("~/Scripts/jquery.enableTinyMce.js") %>" type="text/javascript"></script>
 
     <script type="text/javascript">
@@ -91,7 +91,7 @@
             $("#Comment_Text").enableTinyMce({ script_location: '<%= Url.Content("~/Scripts/tiny_mce/tiny_mce.js") %>', overrideWidth: "900" });
         });
 
-   </script>
+   </script>--%>
 </asp:Content>
 
 <asp:Content ID="Content4" ContentPlaceHolderID="logoContent" runat="server">

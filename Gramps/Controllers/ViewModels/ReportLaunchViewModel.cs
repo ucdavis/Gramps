@@ -23,11 +23,12 @@ namespace Gramps.Controllers.ViewModels
         public ICollection<string[]> RowValues { get; set; }
         public Report Report { get; set; }
         public List<string> AvailableQuestions { get; set; }
+        public bool ForExport { get; set; }
 
-        public static ReportLaunchViewModel Create(IRepository repository, CallForProposal callForProposal, Report report)
+        public static ReportLaunchViewModel Create(IRepository repository, CallForProposal callForProposal, Report report, bool forExport = false)
         {
             Check.Require(repository != null, "Repository must be supplied");
-            var viewModel = new ReportLaunchViewModel { CallForProposal = callForProposal, Report = report};
+            var viewModel = new ReportLaunchViewModel { CallForProposal = callForProposal, Report = report, ForExport = forExport};
             viewModel.AvailableQuestions = callForProposal.Questions.Select(a => a.Name).ToList();
 
             return GenerateGeneric(viewModel, report, callForProposal);
@@ -52,7 +53,7 @@ namespace Gramps.Controllers.ViewModels
                 {
                     if (reportColumn.IsProperty || viewModel.AvailableQuestions.Contains(reportColumn.Name))
                     {
-                        row.Add(ExtractValue(reportColumn, proposal));
+                        row.Add(ExtractValue(reportColumn, proposal, viewModel.ForExport));
                     }
                 }
 
@@ -62,7 +63,7 @@ namespace Gramps.Controllers.ViewModels
             return viewModel;
         }
 
-        private static string ExtractValue(ReportColumn reportColumn, Proposal proposal)
+        private static string ExtractValue(ReportColumn reportColumn, Proposal proposal, bool forExport)
         {
             var result = string.Empty;
 
@@ -96,23 +97,50 @@ namespace Gramps.Controllers.ViewModels
                     foreach (var investigator in proposal.Investigators.OrderByDescending(a => a.IsPrimary))
                     {
                         var temp = new List<string>();
-                        temp.Add(investigator.Name.Replace(" ", "&nbsp;"));
+                        if(!forExport)
+                        {
+                            temp.Add(investigator.Name.Replace(" ", "&nbsp;"));
+                        }
+                        else
+                        {
+                            temp.Add(investigator.Name);
+                        }
                         if(!string.IsNullOrEmpty(investigator.Position))
                         {
-                            temp.Add(investigator.Position.Replace(" ", "&nbsp;"));
+                            if (!forExport)
+                            {
+                                temp.Add(investigator.Position.Replace(" ", "&nbsp;"));
+                            }
+                            else
+                            {
+                                temp.Add(investigator.Position);
+                            }
                         }
                         if(!string.IsNullOrEmpty(investigator.Institution))
                         {
-                            temp.Add(investigator.Institution.Replace(" ", "&nbsp;"));
+                            if (!forExport)
+                            {
+                                temp.Add(investigator.Institution.Replace(" ", "&nbsp;"));
+                            }
+                            else
+                            {
+                                temp.Add(investigator.Institution);
+                            }
                         }
                         if(investigator.IsPrimary)
                         {
                             temp.Add("Primary");
                         }
 
-                        //sb.AppendLine("<p>" + string.Join("/", temp) + "</p>");
+                        if (forExport)
+                        {
+                            sb.AppendLine(string.Join("/", temp));
+                        }
+                        else
+                        {
+                            sb.AppendLine(string.Join("/", temp));
+                        }
                         
-                        sb.AppendLine(string.Join("/", temp));
                     }
                     result = sb.ToString();
                 }
@@ -127,6 +155,14 @@ namespace Gramps.Controllers.ViewModels
                 else if (reportColumn.Name == StaticValues.Report_AwardedAmount)
                 {
                     result = proposal.ApprovedAmount.ToString();
+                }
+                else if(reportColumn.Name == StaticValues.Report_Comments)
+                {
+                    var comments = proposal.Comments.FirstOrDefault();
+                    if (comments != null)
+                    {
+                        result = comments.Text;
+                    }
                 }
             }
 
