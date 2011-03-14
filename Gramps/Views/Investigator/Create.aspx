@@ -3,7 +3,7 @@
 <%@ Import Namespace="Gramps.Controllers" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
-	Create Investigator
+	Add Investigator
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -14,7 +14,7 @@
         </li>
     </ul>
 
-    <h2>Create Investigator</h2>
+    <h2>Add Investigator</h2>
 
 	<%= Html.ClientSideValidation<Investigator>() %>
 

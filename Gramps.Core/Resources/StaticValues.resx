@@ -223,7 +223,7 @@
   </data>
   <data name="Report_Submitted" xml:space="preserve">
     <value>Submitted</value>
-    <comment>Report Column Choice</comment>
+    <comment>Report Column Choice -- Currently Not Used</comment>
   </data>
   <data name="Report_Approved" xml:space="preserve">
     <value>Approved</value>
@@ -231,6 +231,22 @@
   </data>
   <data name="Report_Sequence" xml:space="preserve">
     <value>ProposalSequence</value>
+    <comment>Report Column Choice</comment>
+  </data>
+  <data name="Report_AwardedAmount" xml:space="preserve">
+    <value>AwardAmount</value>
+    <comment>Report Column Choice</comment>
+  </data>
+  <data name="Report_Denied" xml:space="preserve">
+    <value>Denied</value>
+    <comment>Report Column Choice</comment>
+  </data>
+  <data name="Report_Investigators" xml:space="preserve">
+    <value>Investigators</value>
+    <comment>Report Column Choice</comment>
+  </data>
+  <data name="Report_RequestedAmount" xml:space="preserve">
+    <value>AmountRequested</value>
     <comment>Report Column Choice</comment>
   </data>
 </root>

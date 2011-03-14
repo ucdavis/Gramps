@@ -1,4 +1,5 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<Gramps.Controllers.ViewModels.ReportLaunchViewModel>" %>
+<%@ Import Namespace="Gramps.Helpers" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
 	Launch
@@ -23,7 +24,7 @@
                 <% foreach(var row in Model.RowValues) { %>
                     <tr>
                     <% foreach(var cell in row) { %> 
-                        <td><%= Html.Encode(cell) %></td>
+                        <td><%: Html.HtmlEncode(cell) %></td>
                     <% } %>
                     </tr>
                 <% } %>

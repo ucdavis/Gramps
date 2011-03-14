@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Gramps.Core.Domain;
 using Gramps.Core.Resources;
 using UCDArch.Core.PersistanceSupport;
@@ -39,11 +40,11 @@ namespace Gramps.Controllers.ViewModels
             {
                 if (reportColumn.IsProperty || viewModel.AvailableQuestions.Contains(reportColumn.Name))
                 {
-                    viewModel.ColumnNames.Add(reportColumn.Name);
+                    viewModel.ColumnNames.Add(Inflector.Titleize(Inflector.Humanize(Inflector.Underscore(reportColumn.Name))));
                 }
             }
 
-            foreach (var proposal in callForProposal.Proposals)
+            foreach (var proposal in callForProposal.Proposals.Where(a => a.IsSubmitted))
             {
                 var row = new List<string>();
 
@@ -87,6 +88,45 @@ namespace Gramps.Controllers.ViewModels
                 else if(reportColumn.Name == StaticValues.Report_Sequence)
                 {
                     result = proposal.Sequence.ToString();
+                }
+
+                else if (reportColumn.Name == StaticValues.Report_Investigators)
+                {
+                    var sb = new StringBuilder();
+                    foreach (var investigator in proposal.Investigators.OrderByDescending(a => a.IsPrimary))
+                    {
+                        var temp = new List<string>();
+                        temp.Add(investigator.Name.Replace(" ", "&nbsp;"));
+                        if(!string.IsNullOrEmpty(investigator.Position))
+                        {
+                            temp.Add(investigator.Position.Replace(" ", "&nbsp;"));
+                        }
+                        if(!string.IsNullOrEmpty(investigator.Institution))
+                        {
+                            temp.Add(investigator.Institution.Replace(" ", "&nbsp;"));
+                        }
+                        if(investigator.IsPrimary)
+                        {
+                            temp.Add("Primary");
+                        }
+
+                        //sb.AppendLine("<p>" + string.Join("/", temp) + "</p>");
+                        
+                        sb.AppendLine(string.Join("/", temp));
+                    }
+                    result = sb.ToString();
+                }
+                else if (reportColumn.Name == StaticValues.Report_Denied)
+                {
+                    result = proposal.IsDenied.ToString();
+                }
+                else if (reportColumn.Name == StaticValues.Report_RequestedAmount)
+                {
+                    result = proposal.RequestedAmount.ToString();
+                }
+                else if (reportColumn.Name == StaticValues.Report_AwardedAmount)
+                {
+                    result = proposal.ApprovedAmount.ToString();
                 }
             }
 

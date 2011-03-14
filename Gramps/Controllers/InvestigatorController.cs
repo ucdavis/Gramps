@@ -182,7 +182,7 @@ namespace Gramps.Controllers
 
             investigatorToEdit.TransferValidationMessagesTo(ModelState);
 
-            if (investigatorToEdit.IsPrimary && Repository.OfType<Investigator>().Queryable.Where(a => a.Proposal == proposal && a.IsPrimary).Any())
+            if (investigatorToEdit.IsPrimary && Repository.OfType<Investigator>().Queryable.Where(a => a.Proposal == proposal && a.IsPrimary && a.Id != investigatorToEdit.Id).Any())
             {
                 ModelState.AddModelError("Investigator.IsPrimary", "There can only be one primary investigator per proposal.");
             }

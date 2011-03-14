@@ -268,6 +268,42 @@ namespace Gramps.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to AwardAmount.
+        /// </summary>
+        public static string Report_AwardedAmount {
+            get {
+                return ResourceManager.GetString("Report_AwardedAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Denied.
+        /// </summary>
+        public static string Report_Denied {
+            get {
+                return ResourceManager.GetString("Report_Denied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Investigators.
+        /// </summary>
+        public static string Report_Investigators {
+            get {
+                return ResourceManager.GetString("Report_Investigators", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AmountRequested.
+        /// </summary>
+        public static string Report_RequestedAmount {
+            get {
+                return ResourceManager.GetString("Report_RequestedAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ProposalSequence.
         /// </summary>
         public static string Report_Sequence {
