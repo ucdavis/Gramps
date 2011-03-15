@@ -1206,6 +1206,7 @@ CREATE TABLE [dbo].[Reports](
 	[Name] [varchar](100) NOT NULL,
 	[TemplateId] [int] NULL,
 	[CallForProposalId] [int] NULL,
+	[ShowUnsubmitted] [bit] NOT NULL,
  CONSTRAINT [PK_Report] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
@@ -4321,6 +4322,8 @@ GO
 ALTER TABLE [dbo].[Proposals] ADD  CONSTRAINT [DF_Proposals_Sequence]  DEFAULT ((0)) FOR [Sequence]
 GO
 ALTER TABLE [dbo].[ReportColumns] ADD  CONSTRAINT [DF_ReportColumns_IsProperty]  DEFAULT ((0)) FOR [IsProperty]
+GO
+ALTER TABLE [dbo].[Reports] ADD  CONSTRAINT [DF_Reports_ShowUnsubmitted]  DEFAULT ((0)) FOR [ShowUnsubmitted]
 GO
 ALTER TABLE [dbo].[Templates] ADD  CONSTRAINT [DF_Templates_IsActive]  DEFAULT ((1)) FOR [IsActive]
 GO
