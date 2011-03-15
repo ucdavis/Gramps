@@ -290,6 +290,8 @@ div.t-grid {}
     color:#0D548A;
 }
 
+
+
 .remove_button
 {
     background: url("../Images/cancled_transparent.png") no-repeat scroll 0 0 transparent;
@@ -340,6 +342,28 @@ div.t-grid {}
     width: 22px;
 }
 .excell_button:hover
+{
+    color:#0D548A;
+}
+
+.moveUp_button
+{
+    background: url("../Images/arrow_fat_up.gif") no-repeat scroll 0 0 transparent;
+    border:0;
+    cursor:pointer;
+}
+.moveUp_button:hover
+{
+    color:#0D548A;
+}
+        
+.moveDown_button
+{
+    background: url("../Images/arrow_fat_down.gif") no-repeat scroll 0 0 transparent;
+    border:0;
+    cursor:pointer;
+}
+.moveDown_button:hover
 {
     color:#0D548A;
 }

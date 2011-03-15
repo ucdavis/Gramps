@@ -63,31 +63,6 @@
     </script>
 
 
-        <style type="text/css">
-        .moveUp_button
-        {
-            background: url("../Images/arrow_fat_up.gif") no-repeat scroll 0 0 transparent;
-            border:0;
-            cursor:pointer;
-        }
-        .moveUp_button:hover
-        {
-            color:#0D548A;
-        }
-        
-        .moveDown_button
-        {
-            background: url("../Images/arrow_fat_down.gif") no-repeat scroll 0 0 transparent;
-            border:0;
-            cursor:pointer;
-        }
-        .moveDown_button:hover
-        {
-            color:#0D548A;
-        }
-
-    </style>
-
 </asp:Content>
 
 <asp:Content ID="Content4" ContentPlaceHolderID="logoContent" runat="server">

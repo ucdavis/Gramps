@@ -74,20 +74,6 @@
          });
     </script>
  
-    <style type="text/css">
-        .launch_button
-        {
-            background: url("../Images/Rocket_launch.png") no-repeat scroll 0 0 transparent;
-            border:0;         
-            display: inline-block;
-            height: 22px;
-            width: 22px;
-        }
-        .launch_button:hover
-        {
-            color:#0D548A;
-        }
-    </style>
 
     <script type="text/javascript">
         $(document).ready(function () {
