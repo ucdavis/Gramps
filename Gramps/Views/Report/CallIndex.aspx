@@ -31,6 +31,7 @@
                 <%: Html.ActionLink<ReportController>(a => a.ExportExcell(x.Id, Model.CallForProposal.Id), " ", new { @class = "excell_button" })%>          
 				<%}).Width(30).Title("Export");      
                 col.Bound(x => x.Name);
+                col.Bound(x => x.ShowUnsubmitted).Title("Show All");
                 col.Bound(x => x.ReportColumns.Count).Width(45).Title("# of Columns");
             col.Template(x => { %>                                                       
                 <% using (Html.BeginForm("Delete", "Report", FormMethod.Post)) { %>

@@ -17,7 +17,13 @@
             <div class="editor-field">
                 <%: Html.TextBoxFor(model => model.Report.Name)%>
                 <%: Html.ValidationMessageFor(model => model.Report.Name)%>
-            </div>           
+            </div>    
+             
+            <div id = "Submittedfilter">
+            <label for="ShowSubmitted">Filter: </label>
+                <input type="radio" id="ShowAll" name="ShowSubmitted" value="ShowAll" "<%=Model.Report.ShowUnsubmitted ? "checked" : string.Empty%>" /><label for="showAll">Show All</label>
+                <input type="radio" id="ShowSubmitted" name="ShowSubmitted" value="ShowSubmitted" "<%= !Model.Report.ShowUnsubmitted ? "checked" : string.Empty %>" /><label for="showSubmitted">Show Submitted</label>                
+            </div>                   
         </fieldset>
 
         <div id="toggle_all">

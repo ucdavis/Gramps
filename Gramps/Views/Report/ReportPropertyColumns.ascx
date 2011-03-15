@@ -15,12 +15,12 @@
                 <input id="_Property" class="indexedControl" type="hidden" value="True" name="_Property" />
                 <input id="_PropertyName" class="indexedControl" type="hidden" value="<%: StaticValues.Report_Investigators %>" name="_PropertyName" />                            
             </span>
-<%--            <span id="property<%: Html.Encode(StaticValues.Report_Submitted)%>" class="property">
+            <span id="property<%: Html.Encode(StaticValues.Report_Submitted)%>" class="property">
                 <%= Html.CheckBox("_Selected", new { @class = StaticValues.Class_indexedControl })%>  
                 <label for="Selected" class="indexedControl"><%: Html.Encode(StaticValues.Report_Submitted)%></label>
                 <input id="_Property" class="indexedControl" type="hidden" value="True" name="_Property" />
                 <input id="_PropertyName" class="indexedControl" type="hidden" value="<%: StaticValues.Report_Submitted %>" name="_PropertyName" />             
-            </span> --%>
+            </span> 
             <span id="property<%: Html.Encode(StaticValues.Report_Approved)%>" class="property">
                 <%= Html.CheckBox("_Selected", new { @class = StaticValues.Class_indexedControl })%>  
                 <label for="Selected" class="indexedControl"><%: Html.Encode(StaticValues.Report_Approved)%></label>

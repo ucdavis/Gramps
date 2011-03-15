@@ -20,6 +20,7 @@ namespace Gramps.Core.Domain
         protected void SetDefaults()
         {
             ReportColumns = new List<ReportColumn>();
+            ShowUnsubmitted = false;
         }
         #endregion Constructor
 
@@ -27,6 +28,7 @@ namespace Gramps.Core.Domain
         [Required]
         [Length(100)]
         public virtual string Name { get; set; }
+        public virtual bool ShowUnsubmitted { get; set; } 
         public virtual Template Template { get; set; }
         public virtual CallForProposal CallForProposal { get; set; }
 
@@ -66,6 +68,7 @@ namespace Gramps.Core.Domain
         {
             Id(x => x.Id);
             Map(x => x.Name);
+            Map(x => x.ShowUnsubmitted);
 
             References(x => x.Template);
             References(x => x.CallForProposal);

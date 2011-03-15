@@ -45,7 +45,13 @@ namespace Gramps.Controllers.ViewModels
                 }
             }
 
-            foreach (var proposal in callForProposal.Proposals.Where(a => a.IsSubmitted))
+            var proposals = callForProposal.Proposals.AsQueryable();
+            if (!report.ShowUnsubmitted)
+            {
+                proposals = proposals.Where(a => a.IsSubmitted);
+            }
+            //foreach (var proposal in callForProposal.Proposals.Where(a => a.IsSubmitted))
+            foreach (var proposal in proposals)
             {
                 var row = new List<string>();
 

@@ -25,6 +25,7 @@
 				<%: Html.ActionLink<ReportController>(a => a.EditForTemplate(x.Id, Model.TemplateId, Model.CallForProposalId), " ", new { @class = "edit_button" })%>           
 				<%}).Title("Edit");
                 col.Bound(x => x.Name);
+                col.Bound(x => x.ShowUnsubmitted).Title("Show All");
                 col.Bound(x => x.ReportColumns.Count).Title("# of Columns");
             col.Template(x => { %>                                                       
                 <% using (Html.BeginForm("Delete", "Report", FormMethod.Post)) { %>

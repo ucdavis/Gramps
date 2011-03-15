@@ -96,7 +96,7 @@ namespace Gramps.Controllers
         //
         // POST: /Report/Create
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult CreateForTemplate(Report report, int? templateId, int? callForProposalId, CreateReportParameter[] createReportParameters)
+        public ActionResult CreateForTemplate(Report report, int? templateId, int? callForProposalId, CreateReportParameter[] createReportParameters, string showSubmitted)
         {
             if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
             {
@@ -104,7 +104,7 @@ namespace Gramps.Controllers
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
-            var reportToCreate = CommonCreate(report, templateId, callForProposalId, createReportParameters);
+            var reportToCreate = CommonCreate(report, templateId, callForProposalId, createReportParameters, showSubmitted);
 
             if (ModelState.IsValid)
             {
@@ -150,7 +150,7 @@ namespace Gramps.Controllers
         //
         // POST: /Report/Create
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult CreateForCall(Report report, int? templateId, int? callForProposalId, CreateReportParameter[] createReportParameters)
+        public ActionResult CreateForCall(Report report, int? templateId, int? callForProposalId, CreateReportParameter[] createReportParameters, string showSubmitted)
         {
 
             if (!callForProposalId.HasValue || callForProposalId == 0)
@@ -171,7 +171,7 @@ namespace Gramps.Controllers
             }
 
 
-            var reportToCreate = CommonCreate(report, templateId, callForProposalId, createReportParameters);
+            var reportToCreate = CommonCreate(report, templateId, callForProposalId, createReportParameters, showSubmitted);
             reportToCreate.CallForProposal = callforProposal;
 
             if (ModelState.IsValid)
@@ -189,10 +189,10 @@ namespace Gramps.Controllers
                 viewModel.Report = reportToCreate;
                 return View(viewModel);
             }
-        }    
+        }
 
 
-        private Report CommonCreate(Report report, int? templateId, int? callForProposalId, CreateReportParameter[] createReportParameters)
+        private Report CommonCreate(Report report, int? templateId, int? callForProposalId, CreateReportParameter[] createReportParameters, string showSubmitted)
         {
             Template template = null;
             CallForProposal callforProposal = null;
@@ -218,6 +218,7 @@ namespace Gramps.Controllers
             reportToCreate.Template = template;
             reportToCreate.CallForProposal = callforProposal;
             reportToCreate.Name = report.Name;
+            reportToCreate.ShowUnsubmitted = showSubmitted == "ShowAll" ? true:false;
 
             var count = 0;
             foreach (var createReportParameter in createReportParameters)
@@ -276,7 +277,7 @@ namespace Gramps.Controllers
         }
 
         [HttpPost]
-        public ActionResult EditForTemplate(int id, Report report, int? templateId, int? callForProposalId, CreateReportParameter[] createReportParameters)
+        public ActionResult EditForTemplate(int id, Report report, int? templateId, int? callForProposalId, CreateReportParameter[] createReportParameters, string showSubmitted)
         {
             var reportToEdit = _reportRepository.GetNullableById(id);
 
@@ -290,10 +291,11 @@ namespace Gramps.Controllers
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
-            var temp = CommonCreate(report, templateId, callForProposalId, createReportParameters);
+            var temp = CommonCreate(report, templateId, callForProposalId, createReportParameters, showSubmitted);
 
             reportToEdit.ReportColumns.Clear();
             reportToEdit.Name = temp.Name;
+            reportToEdit.ShowUnsubmitted = temp.ShowUnsubmitted;
             foreach (var reportColumn in temp.ReportColumns)
             {
                 reportToEdit.AddReportColumn(reportColumn);
@@ -349,7 +351,7 @@ namespace Gramps.Controllers
         }
 
         [HttpPost]
-        public ActionResult EditForCall(int id, Report report, int? templateId, int? callForProposalId, CreateReportParameter[] createReportParameters)
+        public ActionResult EditForCall(int id, Report report, int? templateId, int? callForProposalId, CreateReportParameter[] createReportParameters, string showSubmitted)
         {
 
             if (!callForProposalId.HasValue || callForProposalId == 0)
@@ -375,10 +377,11 @@ namespace Gramps.Controllers
                 return this.RedirectToAction(a => a.CallIndex(callforProposal.Id));
             }
 
-            var temp = CommonCreate(report, templateId, callForProposalId, createReportParameters);
+            var temp = CommonCreate(report, templateId, callForProposalId, createReportParameters, showSubmitted);
 
             reportToEdit.ReportColumns.Clear();
             reportToEdit.Name = temp.Name;
+            reportToEdit.ShowUnsubmitted = temp.ShowUnsubmitted;
             foreach (var reportColumn in temp.ReportColumns)
             {
                 reportToEdit.AddReportColumn(reportColumn);
@@ -501,7 +504,7 @@ namespace Gramps.Controllers
 
             var viewModel = ReportLaunchViewModel.Create(Repository, callforProposal, report, true);
 
-            var fileName = string.Format("{0}-{1}.xls", callforProposal.Name.Replace(" ", string.Empty), DateTime.Now.Date.ToString("MMddyyyy"));
+            var fileName = string.Format("{0}-{1}-{2}.xls", callforProposal.Name.Replace(" ", string.Empty), report.Name.Replace(" ", string.Empty), DateTime.Now.Date.ToString("MMddyyyy"));
 
             try
             {
@@ -517,8 +520,7 @@ namespace Gramps.Controllers
                 var dataRow = sheet.CreateRow(0);
                 for (int i = 0; i < viewModel.ColumnNames.Count; i++)
                 {
-                    dataRow.CreateCell(i).SetCellValue(viewModel.ColumnNames.ElementAt(i));
-                    dataRow.GetCell(i).CellStyle.WrapText = true;    
+                    dataRow.CreateCell(i).SetCellValue(viewModel.ColumnNames.ElementAt(i));   
                 }
 
                 var rowCount = 0;
@@ -529,6 +531,7 @@ namespace Gramps.Controllers
                     for (int i = 0; i < rowValue.Count(); i++)
                     {
                         dataRow.CreateCell(i).SetCellValue(rowValue.ElementAtOrDefault(i));
+                        dataRow.GetCell(i).CellStyle.WrapText = true;
                     }
                 }
 
