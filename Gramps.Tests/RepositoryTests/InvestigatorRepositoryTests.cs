@@ -121,9 +121,13 @@ namespace Gramps.Tests.RepositoryTests
             CallForProposalRepository.DbContext.CommitTransaction();
 
             ProposalRepository.DbContext.BeginTransaction();
-            var proposal = CreateValidEntities.Proposal(1);
-            proposal.CallForProposal = CallForProposalRepository.Queryable.Where(a => a.Id == 1).Single();
-            ProposalRepository.EnsurePersistent(proposal);
+            for (int i = 0; i < 3; i++)
+            {
+                var proposal = CreateValidEntities.Proposal(i+1);
+                proposal.CallForProposal = CallForProposalRepository.Queryable.Where(a => a.Id == 1).Single();
+                ProposalRepository.EnsurePersistent(proposal);
+            }
+            
             ProposalRepository.DbContext.CommitTransaction();
             InvestigatorRepository.DbContext.BeginTransaction();            
             LoadRecords(5);
@@ -2333,16 +2337,221 @@ namespace Gramps.Tests.RepositoryTests
                 throw;
             }
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(NHibernate.TransientObjectException))]
+        public void TestProposalWithNewValueDoesNotSave()
+        {
+            Investigator investigator = null;
+            try
+            {
+                #region Arrange
+                investigator = GetValid(9);
+                investigator.Proposal = CreateValidEntities.Proposal(2);
+                #endregion Arrange
+
+                #region Act
+                InvestigatorRepository.DbContext.BeginTransaction();
+                InvestigatorRepository.EnsurePersistent(investigator);
+                InvestigatorRepository.DbContext.CommitTransaction();
+                #endregion Act
+            }
+            catch (Exception ex)
+            {
+                Assert.IsNotNull(ex);
+                Assert.AreEqual("object references an unsaved transient instance - save the transient instance before flushing. Type: Gramps.Core.Domain.Proposal, Entity: Gramps.Core.Domain.Proposal", ex.Message);
+                throw;
+            }
+        }
         #endregion Invalid Tests
         #region Valid Tests
 
+        [TestMethod]
+        public void TestProposalWithExistingValueSaves()
+        {
+            #region Arrange
+            var investigator = GetValid(9);
+            investigator.Proposal = ProposalRepository.GetNullableById(3);
+            Assert.IsNotNull(investigator.Proposal);
+            #endregion Arrange
+
+            #region Act
+            InvestigatorRepository.DbContext.BeginTransaction();
+            InvestigatorRepository.EnsurePersistent(investigator);
+            InvestigatorRepository.DbContext.CommitTransaction();
+            #endregion Act
+
+            #region Assert
+            Assert.IsNotNull(investigator.Proposal);
+            Assert.AreEqual(3, investigator.Proposal.Id);
+            Assert.IsFalse(investigator.IsTransient());
+            Assert.IsTrue(investigator.IsValid());
+            #endregion Assert
+	
+        }
         #endregion Valid Tests
 
         #region Cascade Tests
-        
+
+        [TestMethod]
+        public void TestDeleteInvestigatorDoesNotCascadeToProposal()
+        {
+            #region Arrange
+            var investigator = GetValid(9);
+            var proposal = ProposalRepository.GetNullableById(3);
+            investigator.Proposal = proposal;
+            Assert.IsNotNull(proposal);
+
+            InvestigatorRepository.DbContext.BeginTransaction();
+            InvestigatorRepository.EnsurePersistent(investigator);
+            InvestigatorRepository.DbContext.CommitTransaction();
+            var saveInvestigatorId = investigator.Id;
+            NHibernateSessionManager.Instance.GetSession().Evict(proposal);
+            NHibernateSessionManager.Instance.GetSession().Evict(investigator);
+            #endregion Arrange
+
+            #region Act
+            investigator = InvestigatorRepository.GetNullableById(saveInvestigatorId);
+            Assert.IsNotNull(investigator);
+            InvestigatorRepository.DbContext.BeginTransaction();
+            InvestigatorRepository.Remove(investigator);
+            InvestigatorRepository.DbContext.CommitTransaction();
+            NHibernateSessionManager.Instance.GetSession().Evict(proposal);
+            NHibernateSessionManager.Instance.GetSession().Evict(investigator);
+            #endregion Act
+
+            #region Assert
+            Assert.IsNull(InvestigatorRepository.GetNullableById(saveInvestigatorId));
+            Assert.IsNotNull(ProposalRepository.GetNullableById(3));
+            #endregion Assert		
+        }
         #endregion Cascade Tests
         #endregion Proposal Tests
 
+        #region Constructor Tests
+
+        [TestMethod]
+        public void TestConstructorSetsExpectedValues()
+        {
+            #region Arrange
+            var record = new Investigator();
+            #endregion Arrange
+
+            #region Act
+
+            #endregion Act
+
+            #region Assert
+            Assert.IsFalse(record.IsPrimary);
+            Assert.IsNull(record.Proposal);
+            Assert.IsNull(record.Address1);
+            Assert.IsNull(record.Address2);
+            Assert.IsNull(record.Address3);
+            Assert.IsNull(record.City);
+            Assert.IsNull(record.Email);
+            Assert.IsNull(record.Institution);
+            Assert.IsNull(record.Name);
+            Assert.IsNull(record.Notes);
+            Assert.IsNull(record.Phone);
+            Assert.IsNull(record.Position);
+            Assert.IsNull(record.State);
+            Assert.IsNull(record.Zip);
+            #endregion Assert		
+        }
+        #endregion Constructor Tests
+
+        #region Fluent Mapping Tests
+        [TestMethod]
+        public void TestCanCorrectlyMapInvestigator1()
+        {
+            #region Arrange
+            var id = InvestigatorRepository.Queryable.Max(x => x.Id) + 1;
+            var session = NHibernateSessionManager.Instance.GetSession();
+            var proposal = Repository.OfType<Proposal>().GetNullableById(1);
+            #endregion Arrange
+
+            #region Act/Assert
+            new PersistenceSpecification<Investigator>(session)
+                .CheckProperty(c => c.Id, id)
+                .CheckProperty(c => c.Address1, "Address1")
+                .CheckProperty(c => c.Address2, "Address2")
+                .CheckProperty(c => c.Address3, "Address3")
+                .CheckProperty(c => c.City, "City")
+                .CheckProperty(c => c.Email, "ema@test.com")
+                .CheckProperty(c => c.Institution, "Institution")
+                .CheckProperty(c => c.IsPrimary, true)
+                .CheckProperty(c => c.Name, "Name")
+                .CheckProperty(c => c.Notes, "Notes")
+                .CheckProperty(c => c.Phone, "555 555-5555")
+                .CheckProperty(c => c.Position, "Position")
+                .CheckProperty(c => c.State, "CA")
+                .CheckProperty(c => c.Zip, "95616")
+                .CheckProperty(c => c.Proposal, proposal)    
+                .VerifyTheMappings();
+            #endregion Act/Assert
+        }
+
+        [TestMethod]
+        public void TestCanCorrectlyMapInvestigator2()
+        {
+            #region Arrange
+            var id = InvestigatorRepository.Queryable.Max(x => x.Id) + 1;
+            var session = NHibernateSessionManager.Instance.GetSession();
+            var proposal = Repository.OfType<Proposal>().GetNullableById(1);
+            #endregion Arrange
+
+            #region Act/Assert
+            new PersistenceSpecification<Investigator>(session)
+                .CheckProperty(c => c.Id, id)
+                .CheckProperty(c => c.Address1, "Address1")
+                .CheckProperty(c => c.Address2, "Address2")
+                .CheckProperty(c => c.Address3, "Address3")
+                .CheckProperty(c => c.City, "City")
+                .CheckProperty(c => c.Email, "ema@test.com")
+                .CheckProperty(c => c.Institution, "Institution")
+                .CheckProperty(c => c.IsPrimary, false)
+                .CheckProperty(c => c.Name, "Name")
+                .CheckProperty(c => c.Notes, "Notes")
+                .CheckProperty(c => c.Phone, "555 555-5555")
+                .CheckProperty(c => c.Position, "Position")
+                .CheckProperty(c => c.State, "CA")
+                .CheckProperty(c => c.Zip, "95616")
+                .CheckProperty(c => c.Proposal, proposal)
+                .VerifyTheMappings();
+            #endregion Act/Assert
+        }
+
+        [TestMethod]
+        public void TestCanCorrectlyMapInvestigator3()
+        {
+            #region Arrange
+            var id = InvestigatorRepository.Queryable.Max(x => x.Id) + 1;
+            var session = NHibernateSessionManager.Instance.GetSession();
+            var proposal = Repository.OfType<Proposal>().GetNullableById(1);
+            #endregion Arrange
+
+            #region Act/Assert
+            new PersistenceSpecification<Investigator>(session)
+                .CheckProperty(c => c.Id, id)
+                .CheckProperty(c => c.Address1, "Address1")
+                .CheckProperty(c => c.Address2, "Address2")
+                .CheckProperty(c => c.Address3, "Address3")
+                .CheckProperty(c => c.City, "City")
+                .CheckProperty(c => c.Email, "ema@test.com")
+                .CheckProperty(c => c.Institution, "Institution")
+                .CheckProperty(c => c.IsPrimary, true)
+                .CheckProperty(c => c.Name, "Name")
+                .CheckProperty(c => c.Notes, null)
+                .CheckProperty(c => c.Phone, "555 555-5555")
+                .CheckProperty(c => c.Position, null)
+                .CheckProperty(c => c.State, "CA")
+                .CheckProperty(c => c.Zip, "95616")
+                .CheckProperty(c => c.Proposal, proposal)
+                .VerifyTheMappings();
+            #endregion Act/Assert
+        }
+
+        #endregion Fluent Mapping Tests
 
         #region Reflection of Database.
 
@@ -2375,8 +2584,9 @@ namespace Gramps.Tests.RepositoryTests
             }));
             expectedFields.Add(new NameAndType("Email", "System.String", new List<string>
             {
-                 "[NHibernate.Validator.Constraints.LengthAttribute((Int32)200)]", 
-                 "[UCDArch.Core.NHibernateValidator.Extensions.RequiredAttribute()]"
+                "[NHibernate.Validator.Constraints.EmailAttribute()]", 
+                "[NHibernate.Validator.Constraints.LengthAttribute((Int32)200)]", 
+                "[UCDArch.Core.NHibernateValidator.Extensions.RequiredAttribute()]"                 
             }));
             expectedFields.Add(new NameAndType("Id", "System.Int32", new List<string>
             {
@@ -2403,6 +2613,10 @@ namespace Gramps.Tests.RepositoryTests
             expectedFields.Add(new NameAndType("Position", "System.String", new List<string>
             {
                  "[NHibernate.Validator.Constraints.LengthAttribute((Int32)100)]"
+            }));
+            expectedFields.Add(new NameAndType("Proposal", "Gramps.Core.Domain.Proposal", new List<string>
+            {
+                 "[NHibernate.Validator.Constraints.NotNullAttribute()]"
             }));
             expectedFields.Add(new NameAndType("State", "System.String", new List<string>
             {
