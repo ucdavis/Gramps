@@ -1,5 +1,6 @@
 ﻿using System;
 using Gramps.Core.Domain;
+using Gramps.Tests.Core.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 
@@ -84,6 +85,129 @@ namespace Gramps.Tests.RepositoryTests.CallForProposalRepositoryTests
             #endregion Assert
         }
         #endregion CreatedDate Tests
+
+        #region Description Tests
+
+        #region Valid Tests
+
+        /// <summary>
+        /// Tests the Description with null value saves.
+        /// </summary>
+        [TestMethod]
+        public void TestDescriptionWithNullValueSaves()
+        {
+            #region Arrange
+            var callForProposal = GetValid(9);
+            callForProposal.Description = null;
+            #endregion Arrange
+
+            #region Act
+            CallForProposalRepository.DbContext.BeginTransaction();
+            CallForProposalRepository.EnsurePersistent(callForProposal);
+            CallForProposalRepository.DbContext.CommitTransaction();
+            #endregion Act
+
+            #region Assert
+            Assert.IsFalse(callForProposal.IsTransient());
+            Assert.IsTrue(callForProposal.IsValid());
+            #endregion Assert
+        }
+
+        /// <summary>
+        /// Tests the Description with empty string saves.
+        /// </summary>
+        [TestMethod]
+        public void TestDescriptionWithEmptyStringSaves()
+        {
+            #region Arrange
+            var callForProposal = GetValid(9);
+            callForProposal.Description = string.Empty;
+            #endregion Arrange
+
+            #region Act
+            CallForProposalRepository.DbContext.BeginTransaction();
+            CallForProposalRepository.EnsurePersistent(callForProposal);
+            CallForProposalRepository.DbContext.CommitTransaction();
+            #endregion Act
+
+            #region Assert
+            Assert.IsFalse(callForProposal.IsTransient());
+            Assert.IsTrue(callForProposal.IsValid());
+            #endregion Assert
+        }
+
+        /// <summary>
+        /// Tests the Description with one space saves.
+        /// </summary>
+        [TestMethod]
+        public void TestDescriptionWithOneSpaceSaves()
+        {
+            #region Arrange
+            var callForProposal = GetValid(9);
+            callForProposal.Description = " ";
+            #endregion Arrange
+
+            #region Act
+            CallForProposalRepository.DbContext.BeginTransaction();
+            CallForProposalRepository.EnsurePersistent(callForProposal);
+            CallForProposalRepository.DbContext.CommitTransaction();
+            #endregion Act
+
+            #region Assert
+            Assert.IsFalse(callForProposal.IsTransient());
+            Assert.IsTrue(callForProposal.IsValid());
+            #endregion Assert
+        }
+
+        /// <summary>
+        /// Tests the Description with one character saves.
+        /// </summary>
+        [TestMethod]
+        public void TestDescriptionWithOneCharacterSaves()
+        {
+            #region Arrange
+            var callForProposal = GetValid(9);
+            callForProposal.Description = "x";
+            #endregion Arrange
+
+            #region Act
+            CallForProposalRepository.DbContext.BeginTransaction();
+            CallForProposalRepository.EnsurePersistent(callForProposal);
+            CallForProposalRepository.DbContext.CommitTransaction();
+            #endregion Act
+
+            #region Assert
+            Assert.IsFalse(callForProposal.IsTransient());
+            Assert.IsTrue(callForProposal.IsValid());
+            #endregion Assert
+        }
+
+        /// <summary>
+        /// Tests the Description with long value saves.
+        /// </summary>
+        [TestMethod]
+        public void TestDescriptionWithLongValueSaves()
+        {
+            #region Arrange
+            var callForProposal = GetValid(9);
+            callForProposal.Description = "x".RepeatTimes(999);
+            #endregion Arrange
+
+            #region Act
+            CallForProposalRepository.DbContext.BeginTransaction();
+            CallForProposalRepository.EnsurePersistent(callForProposal);
+            CallForProposalRepository.DbContext.CommitTransaction();
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual(999, callForProposal.Description.Length);
+            Assert.IsFalse(callForProposal.IsTransient());
+            Assert.IsTrue(callForProposal.IsValid());
+            #endregion Assert
+        }
+
+        #endregion Valid Tests
+        #endregion Description Tests
 
         #region EndDate Tests
 

@@ -127,6 +127,7 @@ namespace Gramps.Tests.RepositoryTests.CallForProposalRepositoryTests
             {
                 "[NHibernate.Validator.Constraints.NotNullAttribute()]"
             }));
+            expectedFields.Add(new NameAndType("Description", "System.String", new List<string>()));
             expectedFields.Add(new NameAndType("Editors", "System.Collections.Generic.IList`1[Gramps.Core.Domain.Editor]", new List<string>
             {
                 "[NHibernate.Validator.Constraints.NotNullAttribute()]"
@@ -187,6 +188,10 @@ namespace Gramps.Tests.RepositoryTests.CallForProposalRepositoryTests
             expectedFields.Add(new NameAndType("QuestionsList", "System.Boolean", new List<string>
             {
                  "[NHibernate.Validator.Constraints.AssertTrueAttribute(Message = \"One or more invalid questions detected\")]"
+            }));
+            expectedFields.Add(new NameAndType("Reports", "System.Collections.Generic.IList`1[Gramps.Core.Domain.Report]", new List<string>
+            {
+                "[NHibernate.Validator.Constraints.NotNullAttribute()]"
             }));
             expectedFields.Add(new NameAndType("TemplateGeneratedFrom", "Gramps.Core.Domain.Template", new List<string>()));
             #endregion Arrange

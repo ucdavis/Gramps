@@ -289,5 +289,195 @@ namespace Gramps.Tests.RepositoryTests.CallForProposalRepositoryTests
 
         #endregion Cascade Tests
         #endregion EmailTemplates Tests
+
+        #region Reports Tests
+        #region Invalid Tests
+        /// <summary>
+        /// Tests the Reports with A value of null does not save.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(ApplicationException))]
+        public void TestReportsWithAValueOfNullDoesNotSave()
+        {
+            CallForProposal callForProposal = null;
+            try
+            {
+                #region Arrange
+                callForProposal = GetValid(9);
+                callForProposal.Reports = null;
+                #endregion Arrange
+
+                #region Act
+                CallForProposalRepository.DbContext.BeginTransaction();
+                CallForProposalRepository.EnsurePersistent(callForProposal);
+                CallForProposalRepository.DbContext.CommitTransaction();
+                #endregion Act
+            }
+            catch (Exception)
+            {
+                Assert.IsNotNull(callForProposal);
+                Assert.AreEqual(callForProposal.Reports, null);
+                var results = callForProposal.ValidationResults().AsMessageList();
+                results.AssertErrorsAre("Reports: may not be null");
+                Assert.IsTrue(callForProposal.IsTransient());
+                Assert.IsFalse(callForProposal.IsValid());
+                throw;
+            }
+        }
+
+
+        #endregion Invalid Tests
+        #region Valid Tests
+
+
+        [TestMethod]
+        public void TestReportsWithAnEmptyListSaves()
+        {
+            #region Arrange
+            var record = GetValid(99);
+            record.Reports = new List<Report>();
+            #endregion Arrange
+
+            #region Act
+            CallForProposalRepository.DbContext.BeginTransaction();
+            CallForProposalRepository.EnsurePersistent(record);
+            CallForProposalRepository.DbContext.CommitChanges();
+            #endregion Act
+
+            #region Assert
+            Assert.IsFalse(record.IsTransient());
+            Assert.IsTrue(record.IsValid());
+            Assert.IsNotNull(record.Reports);
+            Assert.AreEqual(0, record.Reports.Count);
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestReportsWithValidPopulatedListSaves()
+        {
+            #region Arrange
+            var record = GetValid(99);
+            record.Reports = new List<Report>();
+            record.AddReport(CreateValidEntities.Report(1));
+            record.AddReport(CreateValidEntities.Report(2));
+            record.AddReport(CreateValidEntities.Report(3));
+            #endregion Arrange
+
+            #region Act
+            CallForProposalRepository.DbContext.BeginTransaction();
+            CallForProposalRepository.EnsurePersistent(record);
+            CallForProposalRepository.DbContext.CommitChanges();
+            #endregion Act
+
+            #region Assert
+            Assert.IsFalse(record.IsTransient());
+            Assert.IsTrue(record.IsValid());
+            Assert.IsNotNull(record.Reports);
+            Assert.AreEqual(3, record.Reports.Count);
+            #endregion Assert
+        }
+
+
+
+        #endregion Valid Tests
+        #region Cascade Tests
+
+        [TestMethod]
+        public void TestReportsCascadesSave()
+        {
+            #region Arrange
+            var reportRepository = new Repository<Report>();
+            var reportCount = reportRepository.Queryable.Count();
+            var record = GetValid(99);
+            record.Reports = new List<Report>();
+            record.AddReport(CreateValidEntities.Report(1));
+            record.AddReport(CreateValidEntities.Report(2));
+            record.AddReport(CreateValidEntities.Report(3));
+            #endregion Arrange
+
+            #region Act
+            CallForProposalRepository.DbContext.BeginTransaction();
+            CallForProposalRepository.EnsurePersistent(record);
+            CallForProposalRepository.DbContext.CommitChanges();
+            var saveId = record.Id;
+            NHibernateSessionManager.Instance.GetSession().Evict(record);
+            record = CallForProposalRepository.GetNullableById(saveId);
+            #endregion Act
+
+            #region Assert
+            Assert.IsFalse(record.IsTransient());
+            Assert.IsTrue(record.IsValid());
+            Assert.IsNotNull(record.Reports);
+            Assert.AreEqual(3, record.Reports.Count);
+            Assert.AreEqual(3 + reportCount, reportRepository.Queryable.Count());
+            #endregion Assert
+        }
+
+
+
+        [TestMethod]
+        public void TestReportCascadesDelete1()
+        {
+            #region Arrange
+            var reportRepository = new Repository<Report>();
+            var reportCount = reportRepository.Queryable.Count();
+            var record = GetValid(99);
+            record.Reports = new List<Report>();
+            record.AddReport(CreateValidEntities.Report(1));
+            record.AddReport(CreateValidEntities.Report(2));
+            record.AddReport(CreateValidEntities.Report(3));
+            CallForProposalRepository.DbContext.BeginTransaction();
+            CallForProposalRepository.EnsurePersistent(record);
+            CallForProposalRepository.DbContext.CommitChanges();
+            #endregion Arrange
+
+            #region Act
+            record.Reports.RemoveAt(1);
+            CallForProposalRepository.DbContext.BeginTransaction();
+            CallForProposalRepository.EnsurePersistent(record);
+            CallForProposalRepository.DbContext.CommitChanges();
+            #endregion Act
+
+            #region Assert
+            Assert.IsFalse(record.IsTransient());
+            Assert.IsTrue(record.IsValid());
+            Assert.IsNotNull(record.EmailTemplates);
+            Assert.AreEqual(2, record.Reports.Count);
+            Assert.AreEqual(2 + reportCount, reportRepository.Queryable.Count());
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestReportCascadesDelete2()
+        {
+            #region Arrange
+            var reportRepository = new Repository<Report>();
+            var reportCount = reportRepository.Queryable.Count();
+            var record = GetValid(99);
+            record.Reports = new List<Report>();
+            record.AddReport(CreateValidEntities.Report(1));
+            record.AddReport(CreateValidEntities.Report(2));
+            record.AddReport(CreateValidEntities.Report(3));
+            CallForProposalRepository.DbContext.BeginTransaction();
+            CallForProposalRepository.EnsurePersistent(record);
+            CallForProposalRepository.DbContext.CommitChanges();
+            var saveId = record.Id;
+            #endregion Arrange
+
+            #region Act
+
+            CallForProposalRepository.DbContext.BeginTransaction();
+            CallForProposalRepository.Remove(record);
+            CallForProposalRepository.DbContext.CommitChanges();
+            #endregion Act
+
+            #region Assert
+            Assert.IsNull(CallForProposalRepository.GetNullableById(saveId));
+            Assert.AreEqual(reportCount, reportRepository.Queryable.Count());
+            #endregion Assert
+        }
+
+        #endregion Cascade Tests
+        #endregion EmailTemplates Tests
     }
 }

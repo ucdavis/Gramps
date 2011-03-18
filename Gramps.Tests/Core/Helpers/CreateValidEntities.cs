@@ -153,5 +153,13 @@ namespace Gramps.Tests.Core.Helpers
 
             return rtValue;
         }
+
+        public static Report Report(int? counter)
+        {
+            var rtValue = new Report();
+            rtValue.Name = "Name" + counter.Extra();
+
+            return rtValue;
+        }
     }
 }
