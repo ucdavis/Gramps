@@ -169,5 +169,17 @@ namespace Gramps.Tests.Core.Helpers
 
             return rtValue;
         }
+
+        public static Question Question(int? counter, Template template = null, CallForProposal callForProposal = null)
+        {
+            var rtValue = new Question();
+            rtValue.Name = "Name" + counter.Extra();
+            rtValue.Order = counter.HasValue ? counter.Value : 0;
+            rtValue.Template = template;
+            rtValue.CallForProposal = callForProposal;
+            rtValue.QuestionType = new QuestionType();
+
+            return rtValue;
+        }
     }
 }
