@@ -124,6 +124,7 @@
     <Compile Include="RepositoryTests\EmailQueueRepositoryTests.cs" />
     <Compile Include="RepositoryTests\EmailsForCallRepositoryTests.cs" />
     <Compile Include="RepositoryTests\EmailTemplateRepositoryTests.cs" />
+    <Compile Include="RepositoryTests\FileRepositoryTests.cs" />
     <Compile Include="RepositoryTests\InvestigatorRepositoryTests.cs" />
     <Compile Include="RepositoryTests\ProposalRepositoryTests.cs" />
     <Compile Include="RepositoryTests\ReviewedProposalRepositoryTests.cs" />
