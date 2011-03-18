@@ -712,7 +712,14 @@ namespace Gramps.Controllers
                 else
                 {
                     var reader = new BinaryReader(uploadAttachment.InputStream);
-                    proposalToEdit.File = new File();
+                    if(proposalToEdit.File == null)
+                    {
+                        proposalToEdit.File = new File();
+                    }
+                    else
+                    {
+                        proposalToEdit.File.DateAdded = DateTime.Now;
+                    }
                     proposalToEdit.File.ContentType = uploadAttachment.ContentType;
                     proposalToEdit.File.Contents = reader.ReadBytes(uploadAttachment.ContentLength);
                     proposalToEdit.File.Name = uploadAttachment.FileName;

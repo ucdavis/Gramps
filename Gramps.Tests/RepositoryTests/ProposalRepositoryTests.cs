@@ -138,7 +138,7 @@ namespace Gramps.Tests.RepositoryTests
             {
                 Assert.IsNotNull(proposal);
                 Assert.IsNotNull(ex);
-                Assert.AreEqual("could not insert: [Gramps.Core.Domain.Proposal][SQL: INSERT INTO Proposals (Guid, Email, IsApproved, IsDenied, IsNotified, RequestedAmount, ApprovedAmount, IsSubmitted, CreatedDate, SubmittedDate, NotifiedDate, WasWarned, Sequence, CallForProposalID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?); select last_insert_rowid()]", ex.Message);
+                Assert.AreEqual("could not insert: [Gramps.Core.Domain.Proposal][SQL: INSERT INTO Proposals (Guid, Email, IsApproved, IsDenied, IsNotified, RequestedAmount, ApprovedAmount, IsSubmitted, CreatedDate, SubmittedDate, NotifiedDate, WasWarned, Sequence, CallForProposalID, FileID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?); select last_insert_rowid()]", ex.Message);
                 throw;
             }	
         }
@@ -1973,6 +1973,324 @@ namespace Gramps.Tests.RepositoryTests
 
         #endregion WasWarned Tests
 
+        #region File Tests
+        #region Valid Tests
+
+        [TestMethod]
+        public void TestProposalWithANullFileSaves()
+        {
+            #region Arrange
+            Proposal proposal = GetValid(9);
+            proposal.File = null;
+            #endregion Arrange
+
+            #region Act
+            ProposalRepository.DbContext.BeginTransaction();
+            ProposalRepository.EnsurePersistent(proposal);
+            ProposalRepository.DbContext.CommitTransaction();
+            #endregion Act
+
+            #region Assert
+            Assert.IsNull(proposal.File);
+            Assert.IsFalse(proposal.IsTransient());
+            Assert.IsTrue(proposal.IsValid());
+            #endregion Assert	
+        }
+
+        [TestMethod]
+        public void TestProposalWithANewFileSaves()
+        {
+            #region Arrange
+            Proposal proposal = GetValid(9);
+            proposal.File = CreateValidEntities.File(1);
+            #endregion Arrange
+
+            #region Act
+            ProposalRepository.DbContext.BeginTransaction();
+            ProposalRepository.EnsurePersistent(proposal);
+            ProposalRepository.DbContext.CommitTransaction();
+            #endregion Act
+
+            #region Assert
+            Assert.IsNotNull(proposal.File);
+            Assert.IsFalse(proposal.IsTransient());
+            Assert.IsTrue(proposal.IsValid());
+            #endregion Assert
+        }
+        #endregion Valid Tests
+        #region Cascade Tests
+        [TestMethod]
+        public void TestProposaCascadesSaveToFile()
+        {
+            #region Arrange
+            Proposal record = GetValid(99);
+            record.File = CreateValidEntities.File(99);
+            #endregion Arrange
+
+            #region Act
+            ProposalRepository.DbContext.BeginTransaction();
+            ProposalRepository.EnsurePersistent(record);
+            ProposalRepository.DbContext.CommitChanges();
+            NHibernateSessionManager.Instance.GetSession().Evict(record);
+            #endregion Act
+
+            #region Assert
+            var file = Repository.OfType<File>().Queryable.First();
+            Assert.AreEqual("Name99", file.Name);
+            #endregion Assert
+        }
+
+
+        [TestMethod, Ignore] //This does not happen automatically, the controller does it.
+        public void TestProposaCascadesUpdateToFile()
+        {
+            #region Arrange
+            Proposal record = GetValid(99);
+            record.File = CreateValidEntities.File(99);
+            ProposalRepository.DbContext.BeginTransaction();
+            ProposalRepository.EnsurePersistent(record);
+            ProposalRepository.DbContext.CommitChanges();
+            var fileId = record.File.Id;
+            var recordId = record.Id;
+            NHibernateSessionManager.Instance.GetSession().Evict(record);
+            Assert.AreEqual("Name99", Repository.OfType<File>().GetNullableById(fileId).Name);
+            record = ProposalRepository.GetNullableById(recordId);
+            #endregion Arrange
+
+            #region Act
+            record.File = CreateValidEntities.File(33);
+            ProposalRepository.DbContext.BeginTransaction();
+            ProposalRepository.EnsurePersistent(record);
+            ProposalRepository.DbContext.CommitChanges();
+            NHibernateSessionManager.Instance.GetSession().Evict(record);
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual("Name33", Repository.OfType<File>().GetNullableById(fileId).Name);
+            #endregion Assert
+        }
+
+        [TestMethod] 
+        public void TestProposaCascadesUpdateToFileWithoutNewFile()
+        {
+            #region Arrange
+            Proposal record = GetValid(99);
+            record.File = CreateValidEntities.File(99);
+            ProposalRepository.DbContext.BeginTransaction();
+            ProposalRepository.EnsurePersistent(record);
+            ProposalRepository.DbContext.CommitChanges();
+            var fileId = record.File.Id;
+            var recordId = record.Id;
+            NHibernateSessionManager.Instance.GetSession().Evict(record);
+            Assert.AreEqual("Name99", Repository.OfType<File>().GetNullableById(fileId).Name);
+            record = ProposalRepository.GetNullableById(recordId);
+            #endregion Arrange
+
+            #region Act
+            record.File.Name = "Updated";
+            ProposalRepository.DbContext.BeginTransaction();
+            ProposalRepository.EnsurePersistent(record);
+            ProposalRepository.DbContext.CommitChanges();
+            NHibernateSessionManager.Instance.GetSession().Evict(record);
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual("Updated", Repository.OfType<File>().GetNullableById(fileId).Name);
+            #endregion Assert
+        }
+
+
+        [TestMethod]
+        public void TestProposalDeleteCascadesToFile()
+        {
+            #region Arrange
+            Proposal record = GetValid(99);
+            record.File = CreateValidEntities.File(99);
+            ProposalRepository.DbContext.BeginTransaction();
+            ProposalRepository.EnsurePersistent(record);
+            ProposalRepository.DbContext.CommitChanges();
+            var fileId = record.File.Id;
+            var recordId = record.Id;
+            NHibernateSessionManager.Instance.GetSession().Evict(record);
+            Assert.AreEqual("Name99", Repository.OfType<File>().GetNullableById(fileId).Name);
+            record = ProposalRepository.GetNullableById(recordId);
+            #endregion Arrange
+
+            #region Act
+            ProposalRepository.DbContext.BeginTransaction();
+            ProposalRepository.Remove(record);
+            ProposalRepository.DbContext.CommitChanges();
+            NHibernateSessionManager.Instance.GetSession().Evict(record);
+            #endregion Act
+
+            #region Assert
+            Assert.IsNull(Repository.OfType<File>().GetNullableById(fileId));
+            Assert.IsNull(ProposalRepository.GetNullableById(recordId));
+            #endregion Assert	
+        }
+
+        #endregion Cascade Tests
+        #endregion File Tests
+
+        #region Investigators Tests
+        #region Invalid Tests
+        [TestMethod]
+        [ExpectedException(typeof(ApplicationException))]
+        public void TestInvestigatorsWithAValueOfNullDoesNotSave()
+        {
+            Proposal proposal = null;
+            try
+            {
+                #region Arrange
+                proposal = GetValid(9);
+                proposal.Investigators = null;
+                #endregion Arrange
+
+                #region Act
+                ProposalRepository.DbContext.BeginTransaction();
+                ProposalRepository.EnsurePersistent(proposal);
+                ProposalRepository.DbContext.CommitTransaction();
+                #endregion Act
+            }
+            catch (Exception)
+            {
+                Assert.IsNotNull(proposal);
+                Assert.AreEqual(proposal.Investigators, null);
+                var results = proposal.ValidationResults().AsMessageList();
+                results.AssertErrorsAre("Investigators: may not be null");
+                Assert.IsTrue(proposal.IsTransient());
+                Assert.IsFalse(proposal.IsValid());
+                throw;
+            }
+        }
+
+        #endregion Invalid Tests
+        #region Valid Tests
+        [TestMethod]
+        public void TestInvestigatorsWithExistingPopulatedValidValuesWillSave()
+        {
+            #region Arrange
+            var record = ProposalRepository.GetNullableById(1);
+            Repository.OfType<Investigator>().DbContext.BeginTransaction();
+            var investigators = new List<Investigator>();
+            investigators.Add(CreateValidEntities.Investigator(1));
+            investigators.Add(CreateValidEntities.Investigator(2));
+            investigators.Add(CreateValidEntities.Investigator(3));
+            foreach (var investigator in investigators)
+            {
+                investigator.Proposal = record;
+                Repository.OfType<Investigator>().EnsurePersistent(investigator);
+            }
+            Repository.OfType<Investigator>().DbContext.CommitTransaction();
+            NHibernateSessionManager.Instance.GetSession().Evict(record);
+            Assert.AreEqual(0, record.Investigators.Count);
+            record = ProposalRepository.GetNullableById(1);
+            Assert.AreEqual(3, record.Investigators.Count);
+            #endregion Arrange
+
+            #region Act
+            record.IsNotified = true;
+            record.IsDenied = true;
+            ProposalRepository.DbContext.BeginTransaction();
+            ProposalRepository.EnsurePersistent(record);
+            ProposalRepository.DbContext.CommitChanges();
+            #endregion Act
+
+            #region Assert
+            Assert.IsFalse(record.IsTransient());
+            Assert.IsTrue(record.IsValid());
+            Assert.AreEqual(3, record.Investigators.Count);
+            #endregion Assert
+        }
+        #endregion Valid Tests
+        #region Cascade Tests
+
+        [TestMethod]
+        public void TestDeleteProposalCascadesToInvestigators()
+        {
+            #region Arrange
+            var record = ProposalRepository.GetNullableById(1);
+            Repository.OfType<Investigator>().DbContext.BeginTransaction();
+            var investigators = new List<Investigator>();
+            investigators.Add(CreateValidEntities.Investigator(1));
+            investigators.Add(CreateValidEntities.Investigator(2));
+            investigators.Add(CreateValidEntities.Investigator(3));
+            foreach (var investigator in investigators)
+            {
+                investigator.Proposal = record;
+                Repository.OfType<Investigator>().EnsurePersistent(investigator);
+            }
+            Repository.OfType<Investigator>().DbContext.CommitTransaction();
+            NHibernateSessionManager.Instance.GetSession().Evict(record);
+            var count = Repository.OfType<Investigator>().Queryable.Count();
+            record = ProposalRepository.GetNullableById(1);
+            #endregion Arrange
+
+            #region Act
+            ProposalRepository.DbContext.BeginTransaction();
+            ProposalRepository.Remove(record);
+            ProposalRepository.DbContext.CommitChanges();
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual(count-3, Repository.OfType<Investigator>().Queryable.Count());
+            #endregion Assert		
+        }
+        #endregion Cascade Tests
+        #endregion Investigators Tests
+
+        #region Sequence Tests
+
+        /// <summary>
+        /// Tests the Sequence with max int value saves.
+        /// </summary>
+        [TestMethod]
+        public void TestSequenceWithMaxIntValueSaves()
+        {
+            #region Arrange
+            var record = GetValid(9);
+            record.Sequence = int.MaxValue;
+            #endregion Arrange
+
+            #region Act
+            ProposalRepository.DbContext.BeginTransaction();
+            ProposalRepository.EnsurePersistent(record);
+            ProposalRepository.DbContext.CommitTransaction();
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual(int.MaxValue, record.Sequence);
+            Assert.IsFalse(record.IsTransient());
+            Assert.IsTrue(record.IsValid());
+            #endregion Assert
+        }
+
+        /// <summary>
+        /// Tests the Sequence with min int value saves.
+        /// </summary>
+        [TestMethod]
+        public void TestSequenceWithMinIntValueSaves()
+        {
+            #region Arrange
+            var record = GetValid(9);
+            record.Sequence = int.MinValue;
+            #endregion Arrange
+
+            #region Act
+            ProposalRepository.DbContext.BeginTransaction();
+            ProposalRepository.EnsurePersistent(record);
+            ProposalRepository.DbContext.CommitTransaction();
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual(int.MinValue, record.Sequence);
+            Assert.IsFalse(record.IsTransient());
+            Assert.IsTrue(record.IsValid());
+            #endregion Assert
+        }
+
+        #endregion Sequence Tests
+
 
         #region Constructor Tests
 
@@ -1990,6 +2308,7 @@ namespace Gramps.Tests.RepositoryTests
             Assert.AreEqual(0m, record.ApprovedAmount);
             Assert.IsNotNull(record.Comments);
             Assert.IsNotNull(record.Answers);
+            Assert.IsNotNull(record.Investigators);
             Assert.IsFalse(record.IsApproved);
             Assert.IsFalse(record.IsDenied);
             Assert.IsFalse(record.IsNotified);
@@ -2292,11 +2611,16 @@ namespace Gramps.Tests.RepositoryTests
                 "[NHibernate.Validator.Constraints.LengthAttribute((Int32)100)]", 
                 "[UCDArch.Core.NHibernateValidator.Extensions.RequiredAttribute()]"
             }));
+            expectedFields.Add(new NameAndType("File", "Gramps.Core.Domain.File", new List<string>()));
             expectedFields.Add(new NameAndType("Guid", "System.Guid", new List<string>()));
             expectedFields.Add(new NameAndType("Id", "System.Int32", new List<string>
             {
                 "[Newtonsoft.Json.JsonPropertyAttribute()]", 
                 "[System.Xml.Serialization.XmlIgnoreAttribute()]"
+            }));
+            expectedFields.Add(new NameAndType("Investigators", "System.Collections.Generic.IList`1[Gramps.Core.Domain.Investigator]", new List<string>
+            {
+                "[NHibernate.Validator.Constraints.NotNullAttribute()]"
             }));
             expectedFields.Add(new NameAndType("IsApproved", "System.Boolean", new List<string>()));
             expectedFields.Add(new NameAndType("IsDenied", "System.Boolean", new List<string>()));
@@ -2304,13 +2628,15 @@ namespace Gramps.Tests.RepositoryTests
             expectedFields.Add(new NameAndType("IsSubmitted", "System.Boolean", new List<string>()));
             expectedFields.Add(new NameAndType("NotifiedDate", "System.Nullable`1[System.DateTime]", new List<string>()));
             expectedFields.Add(new NameAndType("RequestedAmount", "System.Decimal", new List<string>
-            {
+            {                
+                "[System.ComponentModel.DataAnnotations.DisplayFormatAttribute(DataFormatString = \"{0:C}\", ApplyFormatInEditMode = True)]",
                 "[UCDArch.Core.NHibernateValidator.Extensions.RangeDoubleAttribute(Min = 0, Message = \"Minimum amount is zero\")]"
             }));
             expectedFields.Add(new NameAndType("ReviewedByEditors", "System.Collections.Generic.IList`1[Gramps.Core.Domain.ReviewedProposal]", new List<string>
             {
                 "[NHibernate.Validator.Constraints.NotNullAttribute()]"
             }));
+            expectedFields.Add(new NameAndType("Sequence", "System.Int32", new List<string>()));
             expectedFields.Add(new NameAndType("SubmittedDate", "System.Nullable`1[System.DateTime]", new List<string>()));
             expectedFields.Add(new NameAndType("WasWarned", "System.Boolean", new List<string>()));
             #endregion Arrange

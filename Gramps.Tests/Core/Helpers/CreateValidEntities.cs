@@ -161,5 +161,13 @@ namespace Gramps.Tests.Core.Helpers
 
             return rtValue;
         }
+
+        public static File File(int? counter)
+        {
+            var rtValue = new File();
+            rtValue.Name = "Name" + counter.Extra();
+
+            return rtValue;
+        }
     }
 }
