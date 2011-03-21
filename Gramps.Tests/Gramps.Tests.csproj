@@ -127,7 +127,12 @@
     <Compile Include="RepositoryTests\FileRepositoryTests.cs" />
     <Compile Include="RepositoryTests\InvestigatorRepositoryTests.cs" />
     <Compile Include="RepositoryTests\ProposalRepositoryTests.cs" />
-    <Compile Include="RepositoryTests\QuestionRepositoryTests.cs" />
+    <Compile Include="RepositoryTests\QuestionRepositoryTests\QuestionRepositoryTestsPart01.cs" />
+    <Compile Include="RepositoryTests\QuestionRepositoryTests\QuestionRepositoryTestsInit.cs" />
+    <Compile Include="RepositoryTests\QuestionRepositoryTests\QuestionRepositoryTestsPart02.cs" />
+    <Compile Include="RepositoryTests\QuestionRepositoryTests\QuestionRepositoryTestsPart03.cs" />
+    <Compile Include="RepositoryTests\QuestionRepositoryTests\QuestionRepositoryTestsPart04.cs" />
+    <Compile Include="RepositoryTests\QuestionRepositoryTests\QuestionRepositoryTestsPart05.cs" />
     <Compile Include="RepositoryTests\ReviewedProposalRepositoryTests.cs" />
   </ItemGroup>
   <ItemGroup>
