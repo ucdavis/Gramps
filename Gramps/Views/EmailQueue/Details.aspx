@@ -13,28 +13,34 @@
 
     <fieldset>
         <legend>Fields</legend>
-                
-        <div class="display-label">Pending</div>
-        <div class="display-field"><%: Model.EmailQueue.Pending%></div>
-
-        <div class="display-label">Immediate</div>
-        <div class="display-field"><%: Model.EmailQueue.Immediate%></div>
-
-        <div class="display-label">EmailAddress</div>
-        <div class="display-field"><%: Model.EmailQueue.EmailAddress %></div>
-        
-        <div class="display-label">Created</div>
-        <div class="display-field"><%: String.Format("{0:g}", Model.EmailQueue.Created)%></div>       
-        
-        <div class="display-label">SentDateTime</div>
-        <div class="display-field"><%: String.Format("{0:g}", Model.EmailQueue.SentDateTime)%></div>
-        
-        <div class="display-label">Subject</div>
-        <div class="display-field"><%: Model.EmailQueue.Subject%></div>
-        
-        <div class="display-label">Body</div>
-        <div class="display-field"><%: Html.HtmlEncode(Model.EmailQueue.Body)%></div>
-
+        <ul>
+        <li>
+            <%= Html.CheckBox("Pending", Model.EmailQueue.Pending, new { @disabled = "True" })%> <%: Html.Encode("Pending") %>
+        </li>
+        <li>
+            <%= Html.CheckBox("Immediate", Model.EmailQueue.Immediate, new { @disabled = "True" })%> <%: Html.Encode("Immediate")%>
+        </li>
+        <li>
+            <%: Html.Label("Email Address:")%>
+            <%: Model.EmailQueue.EmailAddress %>
+        </li>
+        <li>
+            <%: Html.Label("Created:")%>
+            <%: String.Format("{0:g}", Model.EmailQueue.Created)%>   
+        </li>
+        <li>
+            <%: Html.Label("Sent Date Time:")%>
+            <%: String.Format("{0:g}", Model.EmailQueue.SentDateTime)%>
+        </li>
+        <li>
+            <%: Html.Label("Subject:")%>
+            <%: Model.EmailQueue.Subject%>
+        </li>
+        <li>
+            <%: Html.Label("Body:")%>
+            <%: Html.HtmlEncode(Model.EmailQueue.Body)%>
+        </li>
+        </ul>
     </fieldset>
 
 </asp:Content>

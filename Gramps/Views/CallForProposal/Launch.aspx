@@ -18,21 +18,23 @@
 
     <fieldset>
         <legend>Details</legend>
-        
-        <div class="display-field"><%: Html.CheckBoxFor(a => a.CallForProposal.IsActive, new {@disabled = "true"}) %> <%: Html.Encode("Active") %></div>
-        
-        <div class="display-label">CreatedDate</div>
-        <div class="display-field"><%: String.Format("{0:g}", Model.CallForProposal.CreatedDate)%></div>
-        
-        <div class="display-label">EndDate</div>
-        <div class="display-field"><%: String.Format("{0:g}", Model.CallForProposal.EndDate)%></div>
-        
-        <div class="display-label">CallsSentDate</div>
-        <div class="display-field"><%: String.Format("{0:g}", Model.CallForProposal.CallsSentDate)%></div>
-        
-        <div class="display-label">Id</div>
-        <div class="display-field"><%: Model.CallForProposal.Id%></div>
-        
+        <ul>
+        <li>
+            <%: Html.CheckBoxFor(a => a.CallForProposal.IsActive, new {@disabled = "true"}) %> <%: Html.Encode("Active") %>
+        </li>
+        <li>
+            <%: Html.Label("Created Date:")%>
+            <%: String.Format("{0:g}", Model.CallForProposal.CreatedDate)%>
+        </li>
+        <li>
+            <%: Html.Label("End Date:")%>
+            <%: String.Format("{0:g}", Model.CallForProposal.EndDate)%>
+        </li>
+        <li>
+            <%: Html.Label("Calls Sent Date:")%>
+            <%: String.Format("{0:g}", Model.CallForProposal.CallsSentDate)%>
+        </li>
+        </ul>
     </fieldset>
 
 

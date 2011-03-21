@@ -19,20 +19,16 @@
 
         <fieldset>
             <legend>Fields</legend>
-            <div class="editor-label">
-                <%: Html.LabelFor(model => model.Template.Name) %>
-            </div>
-            <div class="editor-field">
-                <%: Html.TextBoxFor(model => model.Template.Name)%>
+            <ul>
+            <li>
+                <%:Html.Label("Name:") %>
+                <%: Html.TextBoxFor(model => model.Template.Name, new { @class = "BigWidth" })%>
                 <%: Html.ValidationMessageFor(model => model.Template.Name)%>
-            </div>
-            <div class="editor-label">
-                <%: Html.LabelFor(model => model.Template.IsActive)%>
-            </div>
-            <div class="editor-field">
-                <%: Html.CheckBoxFor(model => model.Template.IsActive)%>
-                <%: Html.ValidationMessageFor(model => model.Template.IsActive)%>
-            </div>
+            </li>
+            <li>
+                <%: Html.CheckBoxFor(a => a.Template.IsActive) %> <%: Html.Encode("Active") %>
+            </li>
+            </ul>
             <p>
                 <input type="submit" value="Save" />
             </p>

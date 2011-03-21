@@ -9,12 +9,12 @@
                     <li id="SampleTextBox" style="display:none;" class="hideAndShow">
                         <%=Html.Encode(Model.Question != null && !string.IsNullOrWhiteSpace(Model.Question.Name) ? Model.Question.Name : "Sample of a TextBox Question?")%>
                         <br />
-                        <%= Html.TextBox("TextBoxQuestion", "") %>
+                        <%= Html.TextBox("TextBoxQuestion", "", new { @class = "BigWidth" })%>
                     </li>
                     <li id="SampleTextArea"style="display:none;" class="hideAndShow">
                         <%=Html.Encode(Model.Question != null && !string.IsNullOrWhiteSpace(Model.Question.Name) ? Model.Question.Name : "Sample of a TextArea Question?")%>
                         <br />
-                        <%= Html.TextArea("TextArea", "") %>
+                        <%= Html.TextArea("TextArea", "", new { @class = " BigAnswer" })%>
                     </li>
                     <li id="SampleBoolean"style="display:none;" class="hideAndShow">
                         <%= Html.CheckBox(".Answer", true, new {@class="BooleanSample"})%> Sample of a Boolean Question?

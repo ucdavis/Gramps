@@ -32,9 +32,6 @@
 </asp:Content>
 
 <asp:Content ID="Content3" ContentPlaceHolderID="HeaderContent" runat="server">
-
-    <script src="<%= Url.Content("~/Scripts/tiny_mce/jquery.tinymce.js") %>" type="text/javascript"></script>
-    <script src="<%= Url.Content("~/Scripts/jquery.enableTinyMce.js") %>" type="text/javascript"></script>
     
     <script type="text/javascript">
        $(document).ready(function () {
@@ -57,8 +54,7 @@
 
             $(".hideAndShow").hide();
             var myText = $("select#Question_QuestionType").find("option:selected").text().replace(" ", "");
-            $("li#Sample" + myText).show();
-            $("#TextArea").enableTinyMce({ script_location: '<%= Url.Content("~/Scripts/tiny_mce/tiny_mce.js") %>', overrideWidth: "700" });
+            $("li#Sample" + myText).show();            
         });
 
         function AddOptionInput(obj) {

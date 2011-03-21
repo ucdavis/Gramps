@@ -10,20 +10,20 @@
 
         <fieldset>
             <legend>Report</legend>
-            
-            <div class="editor-label">
-                <%: Html.LabelFor(model => model.Report.Name) %>
-            </div>
-            <div class="editor-field">
+            <ul>
+            <li>
+                <%: Html.Label("Name:") %>
                 <%: Html.TextBoxFor(model => model.Report.Name)%>
-                <%: Html.ValidationMessageFor(model => model.Report.Name)%>
-            </div>    
-             
-            <div id = "Submittedfilter">
-            <label for="ShowSubmitted">Filter: </label>
-                <input type="radio" id="ShowAll" name="ShowSubmitted" value="ShowAll" "<%=Model.Report.ShowUnsubmitted ? "checked" : string.Empty%>" /><label for="showAll">Show All</label>
-                <input type="radio" id="ShowSubmitted" name="ShowSubmitted" value="ShowSubmitted" "<%= !Model.Report.ShowUnsubmitted ? "checked" : string.Empty %>" /><label for="showSubmitted">Show Submitted</label>                
-            </div>                   
+                <%: Html.ValidationMessageFor(model => model.Report.Name)%>   
+            </li>
+            <li> 
+                <div id = "Submittedfilter">
+                <label for="ShowSubmitted">Filter: </label>
+                    <input type="radio" id="ShowAll" name="ShowSubmitted" value="ShowAll" "<%=Model.Report.ShowUnsubmitted ? "checked" : string.Empty%>" /><label for="showAll">Show All</label>
+                    <input type="radio" id="ShowSubmitted" name="ShowSubmitted" value="ShowSubmitted" "<%= !Model.Report.ShowUnsubmitted ? "checked" : string.Empty %>" /><label for="showSubmitted">Show Submitted</label>                
+                </div> 
+            </li>     
+            </ul>             
         </fieldset>
 
         <div id="toggle_all">

@@ -18,49 +18,36 @@
         <%:Html.HiddenFor(a => a.CallForProposal.Id) %>
 
         <fieldset>
-            <legend>Fields</legend>
-            <div class="editor-label">
-                <%: Html.LabelFor(model => model.CallForProposal.Name) %>
-            </div>
-            <div class="editor-field">
-                <%: Html.TextBoxFor(model => model.CallForProposal.Name)%>
+            <legend>Details</legend>
+            <ul>
+            <li>
+                <%: Html.Label("Name:") %>
+                <%: Html.TextBoxFor(model => model.CallForProposal.Name, new { @class = "BigWidth" })%>
                 <%: Html.ValidationMessageFor(model => model.CallForProposal.Name)%>
-            </div>
-            
-            <div class="editor-label">
-                <%: Html.LabelFor(model => model.CallForProposal.IsActive)%>
-            </div>
-            <div class="editor-field">
-                <%: Html.CheckBoxFor(model => model.CallForProposal.IsActive)%>
-                <%: Html.ValidationMessageFor(model => model.CallForProposal.IsActive)%>
-            </div>           
-            
-            <div class="editor-label">
-                <%: Html.LabelFor(model => model.CallForProposal.EndDate)%>
-            </div>
-            <div class="editor-field">
+            </li>
+            <li>
+                <%: Html.CheckBoxFor(model => model.CallForProposal.IsActive)%> <%: Html.Label("Active") %>
+                <%: Html.ValidationMessageFor(model => model.CallForProposal.IsActive)%>          
+            </li>
+            <li>
+                <%: Html.Label("End Date:") %>
                 <%: Html.EditorFor(model => model.CallForProposal.EndDate, Model.CallForProposal.EndDate.Date) %>
                  <%--<%: Html.TextBoxFor(model => model.CallForProposal.EndDate, Model.CallForProposal.EndDate.Date)%> --%>               
                 <%--<%: Html.TextBox("CallForProposal.EndDate", Model.CallForProposal.EndDate.ToString("d")) %>--%>
-                <%: Html.ValidationMessageFor(model => model.CallForProposal.EndDate)%>
-            </div>          
-            
-            <div class="editor-label">
-                <%: Html.LabelFor(model => model.CallForProposal.ProposalMaximum) %>
-            </div>
-            <div class="editor-field">
+                <%: Html.ValidationMessageFor(model => model.CallForProposal.EndDate)%>      
+            </li>
+            <li>
+                <%: Html.Label("Proposal Maximum:")%>
                 <%: Html.TextBoxFor(model => model.CallForProposal.ProposalMaximum, String.Format("{0:F}", Model.CallForProposal.ProposalMaximum))%>
                 <%: Html.ValidationMessageFor(model => model.CallForProposal.ProposalMaximum)%>
-            </div> 
-
-            <div class="editor-label">
+            </li>
+            <li>
                 <%: Html.LabelFor(model => model.CallForProposal.Description) %>
                 <%: Html.ValidationMessageFor(model => model.CallForProposal.Description)%>
-            </div>
-            <div class="editor-field">
                 <%: Html.TextAreaFor(model => model.CallForProposal.Description)%>                
-            </div> 
-            
+
+            </li>
+            </ul>
             <p>
                 <input type="submit" value="Save" />
             </p>
