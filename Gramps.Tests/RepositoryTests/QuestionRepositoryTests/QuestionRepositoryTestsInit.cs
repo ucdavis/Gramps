@@ -145,15 +145,38 @@ namespace Gramps.Tests.RepositoryTests.QuestionRepositoryTests
                  "[NHibernate.Validator.Constraints.LengthAttribute((Int32)500)]", 
                  "[UCDArch.Core.NHibernateValidator.Extensions.RequiredAttribute()]"
             }));
-            
-            expectedFields.Add(new NameAndType("Options", "System.Collections.Generic.IList`1[Gramps.Core.Domain.QuestionOption]", new List<string>()));
+            expectedFields.Add(new NameAndType("OptionChoices", "System.String", new List<string>()));
+            expectedFields.Add(new NameAndType("Options", "System.Collections.Generic.IList`1[Gramps.Core.Domain.QuestionOption]", new List<string>
+            { 
+                 "[NHibernate.Validator.Constraints.NotNullAttribute()]"
+            }));
+            expectedFields.Add(new NameAndType("OptionsNames", "System.Boolean", new List<string>
+            { 
+                 "[NHibernate.Validator.Constraints.AssertTrueAttribute(Message = \"One or more options is invalid\")]"
+            }));
+            expectedFields.Add(new NameAndType("OptionsNotAllowed", "System.Boolean", new List<string>
+            { 
+                 "[NHibernate.Validator.Constraints.AssertTrueAttribute(Message = \"Options not allowed\")]"
+            }));
+            expectedFields.Add(new NameAndType("OptionsRequired", "System.Boolean", new List<string>
+            { 
+                 "[NHibernate.Validator.Constraints.AssertTrueAttribute(Message = \"The question type requires at least one option.\")]"
+            }));
             expectedFields.Add(new NameAndType("Order", "System.Int32", new List<string>()));
             expectedFields.Add(new NameAndType("QuestionType", "Gramps.Core.Domain.QuestionType", new List<string>
             { 
-                 ""
+                 "[NHibernate.Validator.Constraints.NotNullAttribute()]"
+            }));
+            expectedFields.Add(new NameAndType("RelatedTable", "System.Boolean", new List<string>
+            { 
+                 "[NHibernate.Validator.Constraints.AssertTrueAttribute(Message = \"Must be related to Template or CallForProposal not both.\")]"
             }));
             expectedFields.Add(new NameAndType("Template", "Gramps.Core.Domain.Template", new List<string>()));
-            expectedFields.Add(new NameAndType("Validators", "System.Collections.Generic.IList`1[Gramps.Core.Domain.Validator]", new List<string>()));
+            expectedFields.Add(new NameAndType("ValidationClasses", "System.String", new List<string>()));
+            expectedFields.Add(new NameAndType("Validators", "System.Collections.Generic.IList`1[Gramps.Core.Domain.Validator]", new List<string>
+            { 
+                 "[NHibernate.Validator.Constraints.NotNullAttribute()]"
+            }));
             #endregion Arrange
 
             AttributeAndFieldValidation.ValidateFieldsAndAttributes(expectedFields, typeof(Question));
