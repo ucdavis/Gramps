@@ -20,37 +20,35 @@
         <%: Html.HiddenFor(a => a.CallForProposal.Id) %>
 
         <fieldset>
-            <legend>Fields</legend>
+            <legend><strong>Editable</strong></legend>
+            <ul>
+            <li>
             <span id = "ApprovedSpan">
             <label for="Approved">Decision: </label>
                 <input type="radio" id="IsApproved" name="ApprovedDenied" value="<%:StaticValues.RB_Decission_Approved%>" "<%=Model.Proposal.IsApproved ? "checked" : string.Empty%>" /><label for="approved">Approved</label>
                 <input type="radio" id="IsDenied" name="ApprovedDenied" value="<%:StaticValues.RB_Decission_Denied%>" "<%= Model.Proposal.IsDenied ? "checked" : string.Empty %>" /><label for="denied">Denied</label>
                 <input type="radio" id="IsNotDecied" name="ApprovedDenied" value="<%:StaticValues.RB_Decission_NotDecided%>" "<%= !Model.Proposal.IsDenied && !Model.Proposal.IsApproved ? "checked" : string.Empty %>" /><label for="notDecieded">Not Decided</label>
             </span>
-
-            <div class="editor-label">Is Notified</div>
-            <div class="editor-field">
-                <%: Html.CheckBoxFor(a => a.Proposal.IsNotified)%>
+            </li>
+            <li>
+                <%: Html.CheckBoxFor(a => a.Proposal.IsNotified)%> <%:Html.Label("Is Notified") %>
                 <%: Html.ValidationMessageFor(a => a.Proposal.IsNotified)%>
-            </div>
-
-            <div class="editor-label">Is Submitted</div>
-            <div class="editor-field">
-                <%: Html.CheckBoxFor(a => a.Proposal.IsSubmitted)%>
+            </li>
+            <li>
+                <%: Html.CheckBoxFor(a => a.Proposal.IsSubmitted)%> <%:Html.Label("Is Submitted")%>
                 <%: Html.ValidationMessageFor(a => a.Proposal.IsSubmitted) %>
-            </div>
-
-            <div class="editor-label">Approved Amount</div>
-            <div class="editor-field">
+            </li>
+            <li>
+                <%: Html.Label("Approved Amount:")%>
                 <%: Html.TextBoxFor(model => model.Proposal.ApprovedAmount, String.Format("{0:F}", Model.Proposal.ApprovedAmount))%>
                 <%: Html.ValidationMessageFor(model => model.Proposal.ApprovedAmount)%>
-            </div>
-
-            <div class="editor-label">Comments</div>
-            <div class="editor-field">
+            </li>
+            <li>
+                <%: Html.Label("Comments:") %>
                 <%= Html.TextArea("Comment.Text", Model.Comment != null ? Model.Comment.Text : string.Empty, new { @class = "BigAnswer" })%>
                 <%= Html.ValidationMessageFor(a => a.Comment.Text)%> 
-            </div>
+            </li>
+            </ul>
             <p>
                 <input type="submit" value="Save" />
             </p>
@@ -60,22 +58,31 @@
 
     <fieldset>
     <legend><strong>Details</strong></legend>
-        <div class="display-label">CreatedDate</div>
-        <div class="display-field"><%: String.Format("{0:g}", Model.Proposal.CreatedDate)%></div>
-        
-        <div class="display-label">SubmittedDate</div>
-        <div class="display-field"><%: String.Format("{0:g}", Model.Proposal.SubmittedDate)%></div>
-        
-        <div class="display-label">NotifiedDate</div>
-        <div class="display-field"><%: String.Format("{0:g}", Model.Proposal.NotifiedDate)%></div>
+        <ul>
+        <li>
+           <%: Html.Label("Create Date:") %>
+           <%: String.Format("{0:g}", Model.Proposal.CreatedDate)%>
+        </li>
+        <li>
+            <%: Html.Label("Submitted Date:")%>
+            <%: String.Format("{0:g}", Model.Proposal.SubmittedDate)%>
+        </li>
+        <li>
+            <%: Html.Label("Notified Date:")%>
+            <%: String.Format("{0:g}", Model.Proposal.NotifiedDate)%>
+        </li>
+        </ul>
     </fieldset>
 
     <fieldset>
     <legend><strong>Answers</strong></legend>
-        <div class="display-label">RequestedAmount</div>
-        <div class="display-field"><%: String.Format("{0:F}", Model.Proposal.RequestedAmount)%></div>
-            
+        <ul>
+        <li>
+            <%: Html.Label("Requested Amount:")%>
+            <%: String.Format("{0:F}", Model.Proposal.RequestedAmount)%>
+        </li>            
         <%Html.RenderPartial("ProposalAnswerDetails"); %>
+        </ul>
     </fieldset>
 
 
