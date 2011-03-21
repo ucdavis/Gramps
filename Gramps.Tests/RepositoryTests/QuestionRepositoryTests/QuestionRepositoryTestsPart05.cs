@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Gramps.Core.Domain;
-using Gramps.Tests.Core;
-using Gramps.Tests.Core.Extensions;
 using Gramps.Tests.Core.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using UCDArch.Core.PersistanceSupport;
 using UCDArch.Data.NHibernate;
 using UCDArch.Testing.Extensions;
 
@@ -255,7 +252,7 @@ namespace Gramps.Tests.RepositoryTests.QuestionRepositoryTests
         }
 
         [TestMethod]
-        public void TestSaveQuestionCascadesDeleteToQuestionOptions()
+        public void TestSaveQuestionCascadesDeleteToQuestionOptions1()
         {
             #region Arrange
             var count = Repository.OfType<QuestionOption>().Queryable.Count();
@@ -294,6 +291,120 @@ namespace Gramps.Tests.RepositoryTests.QuestionRepositoryTests
             Assert.AreEqual(2, record.Options.Count);
             Assert.AreEqual("Name1", record.Options[0].Name);
             Assert.AreEqual("Name3", record.Options[1].Name);
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestSaveQuestionCascadesDeleteToQuestionOptions2()
+        {
+            #region Arrange
+            var count = Repository.OfType<QuestionOption>().Queryable.Count();
+            var record = GetValid(9);
+            record.QuestionType = Repository.OfType<QuestionType>().Queryable.Where(a => a.Name == "Radio Buttons").Single();
+            record.AddQuestionOption(CreateValidEntities.QuestionOption(1));
+            record.AddQuestionOption(CreateValidEntities.QuestionOption(2));
+            record.AddQuestionOption(CreateValidEntities.QuestionOption(3));
+
+            QuestionRepository.DbContext.BeginTransaction();
+            QuestionRepository.EnsurePersistent(record);
+            QuestionRepository.DbContext.CommitTransaction();
+            var saveId = record.Id;
+            NHibernateSessionManager.Instance.GetSession().Evict(record);
+            #endregion Arrange
+
+            #region Act
+            record = QuestionRepository.GetNullableById(saveId);
+            Assert.IsNotNull(record);
+            record.QuestionType = Repository.OfType<QuestionType>().Queryable.Where(a => a.Name == "Text Area").Single();
+            record.Options.Clear();
+
+            QuestionRepository.DbContext.BeginTransaction();
+            QuestionRepository.EnsurePersistent(record);
+            QuestionRepository.DbContext.CommitTransaction();
+            NHibernateSessionManager.Instance.GetSession().Evict(record);
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual(count, Repository.OfType<QuestionOption>().Queryable.Count());
+            record = QuestionRepository.GetNullableById(saveId);
+            Assert.IsNotNull(record);
+            Assert.AreEqual(0, record.Options.Count);
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestSaveQuestionCascadesDeleteToQuestionOptions3()
+        {
+            #region Arrange
+            var count = Repository.OfType<QuestionOption>().Queryable.Count();
+            var record = GetValid(9);
+            record.QuestionType = Repository.OfType<QuestionType>().Queryable.Where(a => a.Name == "Radio Buttons").Single();
+            record.AddQuestionOption(CreateValidEntities.QuestionOption(1));
+            record.AddQuestionOption(CreateValidEntities.QuestionOption(2));
+            record.AddQuestionOption(CreateValidEntities.QuestionOption(3));
+
+            QuestionRepository.DbContext.BeginTransaction();
+            QuestionRepository.EnsurePersistent(record);
+            QuestionRepository.DbContext.CommitTransaction();
+            var saveId = record.Id;
+            NHibernateSessionManager.Instance.GetSession().Evict(record);
+            #endregion Arrange
+
+            #region Act
+            record = QuestionRepository.GetNullableById(saveId);
+            Assert.IsNotNull(record);
+            var saveOptions = new List<QuestionOption>();
+            saveOptions.Add(record.Options[0]);
+            //saveOptions.Add(record.Options[2]);
+            record.Options.Clear();
+            record.Options.Add(saveOptions[0]);
+            record.AddQuestionOption(CreateValidEntities.QuestionOption(99));
+            QuestionRepository.DbContext.BeginTransaction();
+            QuestionRepository.EnsurePersistent(record);
+            QuestionRepository.DbContext.CommitTransaction();
+            NHibernateSessionManager.Instance.GetSession().Evict(record);
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual(count + 2, Repository.OfType<QuestionOption>().Queryable.Count());
+            record = QuestionRepository.GetNullableById(saveId);
+            Assert.IsNotNull(record);
+            Assert.AreEqual(2, record.Options.Count);
+            Assert.AreEqual("Name1", record.Options[0].Name);
+            Assert.AreEqual("Name99", record.Options[1].Name);
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestDeleteQuestionCascadesDeleteToQuestionOptions()
+        {
+            #region Arrange
+            var count = Repository.OfType<QuestionOption>().Queryable.Count();
+            var record = GetValid(9);
+            record.QuestionType = Repository.OfType<QuestionType>().Queryable.Where(a => a.Name == "Radio Buttons").Single();
+            record.AddQuestionOption(CreateValidEntities.QuestionOption(1));
+            record.AddQuestionOption(CreateValidEntities.QuestionOption(2));
+            record.AddQuestionOption(CreateValidEntities.QuestionOption(3));
+
+            QuestionRepository.DbContext.BeginTransaction();
+            QuestionRepository.EnsurePersistent(record);
+            QuestionRepository.DbContext.CommitTransaction();
+            var saveId = record.Id;
+            NHibernateSessionManager.Instance.GetSession().Evict(record);
+            #endregion Arrange
+
+            #region Act
+            record = QuestionRepository.GetNullableById(saveId);
+            QuestionRepository.DbContext.BeginTransaction();
+            QuestionRepository.Remove(record);
+            QuestionRepository.DbContext.CommitTransaction();
+            NHibernateSessionManager.Instance.GetSession().Evict(record);
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual(count, Repository.OfType<QuestionOption>().Queryable.Count());
+            record = QuestionRepository.GetNullableById(saveId);
+            Assert.IsNull(record);
             #endregion Assert
         }
         #endregion Cascade Tests

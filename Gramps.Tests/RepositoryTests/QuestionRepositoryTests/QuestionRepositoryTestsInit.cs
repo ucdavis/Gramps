@@ -109,6 +109,7 @@ namespace Gramps.Tests.RepositoryTests.QuestionRepositoryTests
         {
             Repository.OfType<QuestionType>().DbContext.BeginTransaction();
             LoadQuestionTypes();
+            LoadValidators();
             LoadUsers(3);
             LoadTemplates(3);
             LoadCallForProposals(2);
@@ -144,12 +145,15 @@ namespace Gramps.Tests.RepositoryTests.QuestionRepositoryTests
                  "[NHibernate.Validator.Constraints.LengthAttribute((Int32)500)]", 
                  "[UCDArch.Core.NHibernateValidator.Extensions.RequiredAttribute()]"
             }));
+            
+            expectedFields.Add(new NameAndType("Options", "System.Collections.Generic.IList`1[Gramps.Core.Domain.QuestionOption]", new List<string>()));
             expectedFields.Add(new NameAndType("Order", "System.Int32", new List<string>()));
             expectedFields.Add(new NameAndType("QuestionType", "Gramps.Core.Domain.QuestionType", new List<string>
             { 
                  ""
             }));
             expectedFields.Add(new NameAndType("Template", "Gramps.Core.Domain.Template", new List<string>()));
+            expectedFields.Add(new NameAndType("Validators", "System.Collections.Generic.IList`1[Gramps.Core.Domain.Validator]", new List<string>()));
             #endregion Arrange
 
             AttributeAndFieldValidation.ValidateFieldsAndAttributes(expectedFields, typeof(Question));
