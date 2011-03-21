@@ -1,6 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<Gramps.Controllers.ViewModels.ProposalAdminViewModel>" %>
 <%@ Import Namespace="Gramps.Core.Domain" %>
 <%@ Import Namespace="Gramps.Core.Resources" %>
+<%@ Import Namespace="Gramps.Controllers" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
 	Admin Edit
@@ -84,6 +85,14 @@
         <%Html.RenderPartial("ProposalAnswerDetails"); %>
         </ul>
     </fieldset>
+
+    <% if(Model.Proposal.File != null && Model.Proposal.File.Contents != null) {%> 
+        <ul>
+        <li>
+        <%: Html.ActionLink<ProposalController>(a => a.AdminDownload(Model.Proposal.Id, Model.CallForProposal.Id), "Submitted PDF", new { @class = "bigpdf_button" })%>        
+        </li>
+        </ul>
+    <%}%>
 
 
 </asp:Content>
