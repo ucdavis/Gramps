@@ -13,40 +13,56 @@
 
     <fieldset>
         <legend><strong>Details</strong></legend>
+        <ul>
+        <li>
+            <%: Html.Label("Proposal Unique ID:") %>
+            <%: Model.Proposal.Guid %>
+        </li>
         
-        <div class="display-label">Guid</div>
-        <div class="display-field"><%: Model.Proposal.Guid %></div>
-        
-        <div class="display-label">Email</div>
-        <div class="display-field"><%: Model.Proposal.Email%></div>
-        
+        <li>
+            <%: Html.Label("Email:") %>
+            <%: Model.Proposal.Email%>
+        </li>
+        <li>
         <span id = "ApprovedSpan">
             <label for="Approved">Decision: </label>
                 <input type="radio" id="IsApproved" name="ApprovedDenied" disabled="true" value="<%:StaticValues.RB_Decission_Approved%>" "<%=Model.Proposal.IsApproved ? "checked" : string.Empty%>" /><label for="approved">Approved</label>
                 <input type="radio" id="IsDenied" name="ApprovedDenied" disabled="true" value="<%:StaticValues.RB_Decission_Denied%>" "<%= Model.Proposal.IsDenied ? "checked" : string.Empty %>" /><label for="denied">Denied</label>
                 <input type="radio" id="IsNotDecied" name="ApprovedDenied" disabled="true" value="<%:StaticValues.RB_Decission_NotDecided%>" "<%= !Model.Proposal.IsDenied && !Model.Proposal.IsApproved ? "checked" : string.Empty %>" /><label for="notDecieded">Not Decided</label>
         </span>  
-        
-        <div class="display-field">
+        </li>
+        <li>
             <%= Html.CheckBox("IsSubmitted", Model.Proposal.IsSubmitted, new { @disabled = "True" })%> <%: Html.Encode("Submitted") %>
-        </div>
+        </li>
         
-        <div class="display-label">RequestedAmount</div>
-        <div class="display-field"><%: String.Format("{0:F}", Model.Proposal.RequestedAmount)%></div>
-        
-        <div class="display-label">ApprovedAmount</div>
-        <div class="display-field"><%: String.Format("{0:F}", Model.Proposal.ApprovedAmount)%></div>
-        
-        <div class="display-label">CreatedDate</div>
-        <div class="display-field"><%: String.Format("{0:g}", Model.Proposal.CreatedDate)%></div>
-        
-        <div class="display-label">SubmittedDate</div>
-        <div class="display-field"><%: String.Format("{0:g}", Model.Proposal.SubmittedDate)%></div>
+        <li>
+            <%: Html.Label("Requested Amount:")%>
+            <%: String.Format("{0:F}", Model.Proposal.RequestedAmount)%>
+        </li>
+        <%if(Model.Proposal.IsApproved) {%>
+        <li>
+            <%: Html.Label("Approved Amount:")%>
+            <%: String.Format("{0:F}", Model.Proposal.ApprovedAmount)%>
+        </li>
+        <%}%>
+        <li>
+            <%: Html.Label("Created Date:")%>
+            <%: String.Format("{0:g}", Model.Proposal.CreatedDate)%>
+        </li>
+        <li>
+            <%: Html.Label("Submitted Date:")%>
+            <%: String.Format("{0:g}", Model.Proposal.SubmittedDate)%>
+        </li>
+        </ul>
     </fieldset>
 
-    <fieldset>
-        <legend>Investigators</legend>
+    <ul>
+    <li>
+    <fieldset>       
+        <legend><strong>Investigators</strong></legend>
+        <ul>
         <%foreach (var investigator in Model.Proposal.Investigators.Where(a => a.IsPrimary)){%>
+            <li>
             <fieldset>
             <legend><strong>Primary Investigator</strong></legend>
                 <%: Html.Encode(investigator.Name) %> <br />
@@ -62,8 +78,10 @@
                 <%: Html.Encode(investigator.Phone) %> <br />
                 <%: Html.Encode(investigator.Email) %> <br />
             </fieldset>
+            </li>
         <%}%>
         <%foreach (var investigator in Model.Proposal.Investigators.Where(a => !a.IsPrimary)){%>
+            <li>
             <fieldset>
             <legend>Investigator</legend>
                 <%: Html.Encode(investigator.Name) %> <br />
@@ -79,15 +97,20 @@
                 <%: Html.Encode(investigator.Phone) %> <br />
                 <%: Html.Encode(investigator.Email) %> <br />
             </fieldset>
+            </li>
         <%}%>
-        </fieldset>
+        </ul>
+    </fieldset>
+    </li>
+    </ul>
 
     <fieldset>
         <legend><strong>Answers</strong></legend>
+        <ul>
         <% var index = 0;%>
         <%foreach (var question in Model.Proposal.CallForProposal.Questions.OrderBy(a => a.Order)){%>
-        <div class="display-label"><%: Html.Encode(question.Name) %></div>
-
+        <li>
+            <%: Html.Encode(question.Name) %>        
         <%
             var answer = "";
             var indexString = string.Format("[{0}]", index);
@@ -150,8 +173,9 @@
                     </fieldset> 
                 <% break; %>
             <%}%>
+        </li>
     <%}%>
-         
+    </ul>     
     </fieldset>
     <%if (!Model.Proposal.IsSubmitted){%>
     <p>

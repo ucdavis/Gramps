@@ -14,13 +14,15 @@
             <%: Html.ActionLink<ProposalController>(a => a.ReviewerIndex(Model.CallForProposal.Id, null, null), "Proposals")%>            
         </li>
     </ul>
-
+    <ul>
     <% Html.RenderPartial("AdminReviewerProposalDetails"); %>
 
     <% if(Model.Proposal.File != null && Model.Proposal.File.Contents != null) {%> 
-        <%: Html.ActionLink<ProposalController>(a => a.ReviewerDownload(Model.Proposal.Id, Model.CallForProposal.Id), "Submitted PDF", new { @class = "bigpdf_button" })%> 
+        <li>
+            <%: Html.ActionLink<ProposalController>(a => a.ReviewerDownload(Model.Proposal.Id, Model.CallForProposal.Id), "Submitted PDF", new { @class = "bigpdf_button" })%> 
+        </li>
     <%}%>
-
+    <ul>
 
 </asp:Content>
 

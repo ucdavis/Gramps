@@ -44,6 +44,11 @@ namespace Gramps.Controllers
                 Message = "Cannot edit proposal once submitted.";
                 return this.RedirectToAction<ProposalController>(a => a.Details(id));
             }
+            if (!proposal.CallForProposal.IsActive || proposal.CallForProposal.EndDate < DateTime.Now.Date)
+            {
+                Message = "Proposal is not active are end date has passed. Cannot add investigator.";
+                return this.RedirectToAction<ProposalController>(a => a.Edit(id));
+            }
 
 			var viewModel = InvestigatorViewModel.Create(Repository, proposal);
             
@@ -70,6 +75,11 @@ namespace Gramps.Controllers
             {
                 Message = "Cannot edit proposal once submitted.";
                 return this.RedirectToAction<ProposalController>(a => a.Details(id));
+            }
+            if (!proposal.CallForProposal.IsActive || proposal.CallForProposal.EndDate < DateTime.Now.Date)
+            {
+                Message = "Proposal is not active are end date has passed. Cannot add investigator.";
+                return this.RedirectToAction<ProposalController>(a => a.Edit(id));
             }
 
 
@@ -122,6 +132,11 @@ namespace Gramps.Controllers
                 Message = "Cannot edit proposal once submitted.";
                 return this.RedirectToAction<ProposalController>(a => a.Details(proposalId));
             }
+            if (!proposal.CallForProposal.IsActive || proposal.CallForProposal.EndDate < DateTime.Now.Date)
+            {
+                Message = "Proposal is not active are end date has passed. Cannot add investigator.";
+                return this.RedirectToAction<ProposalController>(a => a.Edit(proposalId));
+            }
 
 
             var investigator = _investigatorRepository.GetNullableById(id);
@@ -163,6 +178,11 @@ namespace Gramps.Controllers
             {
                 Message = "Cannot edit proposal once submitted.";
                 return this.RedirectToAction<ProposalController>(a => a.Details(proposalId));
+            }
+            if (!proposal.CallForProposal.IsActive || proposal.CallForProposal.EndDate < DateTime.Now.Date)
+            {
+                Message = "Proposal is not active are end date has passed. Cannot add investigator.";
+                return this.RedirectToAction<ProposalController>(a => a.Edit(proposalId));
             }
 
             var investigatorToEdit = _investigatorRepository.GetNullableById(id);
@@ -225,6 +245,11 @@ namespace Gramps.Controllers
             {
                 Message = "Cannot edit proposal once submitted.";
                 return this.RedirectToAction<ProposalController>(a => a.Details(proposalId));
+            }
+            if (!proposal.CallForProposal.IsActive || proposal.CallForProposal.EndDate < DateTime.Now.Date)
+            {
+                Message = "Proposal is not active are end date has passed. Cannot remove investigator.";
+                return this.RedirectToAction<ProposalController>(a => a.Edit(proposalId));
             }
 
             var investigatorToDelete = _investigatorRepository.GetNullableById(investigatorId);

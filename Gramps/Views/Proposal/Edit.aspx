@@ -11,39 +11,55 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
     <h2>Edit Proposal</h2>
-
-     <fieldset>
-    <legend><%: Html.Encode(Model.CallForProposal.Name) %> </legend>
-        <%: Html.HtmlEncode(Model.CallForProposal.Description) %>
-    </fieldset>
-
+    
+        
+        <fieldset>        
+        <legend><%: Html.Encode(Model.CallForProposal.Name) %> </legend>
+        <ul>
+        <li>
+            <%: Html.HtmlEncode(Model.CallForProposal.Description) %>
+         </li>
+         </ul>
+        </fieldset>
+        <br />
+        
+    
 	<%= Html.ClientSideValidation<Proposal>() %>
 
     <%: Html.ValidationSummary("There were validation Errors.") %>
-
+    
     <fieldset>
     <legend>Non Editable</legend>
-        <div class="display-label">Proposal Id</div>
-        <div class="display-field"><%: Model.Proposal.Guid %></div>
+    <ul>
+        <li>
+            <%: Html.Label("Proposal Unique ID:") %>
+            <%: Model.Proposal.Guid %>
+        </li>
         
-        <div class="display-label">Email</div>
-        <div class="display-field"><%: Model.Proposal.Email%></div>
-
+        <li>
+            <%: Html.Label("Email:") %>
+            <%: Model.Proposal.Email%>
+        </li>
+        <li>
         <span id = "ApprovedSpan">
             <label for="Approved">Decision: </label>
                 <input type="radio" id="IsApproved" name="ApprovedDenied" disabled="true" value="<%:StaticValues.RB_Decission_Approved%>" "<%=Model.Proposal.IsApproved ? "checked" : string.Empty%>" /><label for="approved">Approved</label>
                 <input type="radio" id="IsDenied" name="ApprovedDenied" disabled="true" value="<%:StaticValues.RB_Decission_Denied%>" "<%= Model.Proposal.IsDenied ? "checked" : string.Empty %>" /><label for="denied">Denied</label>
                 <input type="radio" id="IsNotDecied" name="ApprovedDenied" disabled="true" value="<%:StaticValues.RB_Decission_NotDecided%>" "<%= !Model.Proposal.IsDenied && !Model.Proposal.IsApproved ? "checked" : string.Empty %>" /><label for="notDecieded">Not Decided</label>
-        </span>        
+        </span>  
+        </li>       
         
-        <div class="display-field">
+        <li>
             <%= Html.CheckBox("IsSubmitted", Model.Proposal.IsSubmitted, new { @disabled = "True" })%> <%: Html.Encode("Submitted") %>
-        </div>
-
-        <div class="display-label">CreatedDate</div>
-        <div class="display-field"><%: String.Format("{0:g}", Model.Proposal.CreatedDate)%></div>
-            
+        </li>
+        <li>
+            <%: Html.Label("Created Date:")%>
+            <%: String.Format("{0:g}", Model.Proposal.CreatedDate)%>
+        </li>
+    </ul>
     </fieldset>
+   <br />
+    
 
     <fieldset>
     <legend>Investigators</legend>
@@ -77,6 +93,7 @@
             .Render(); 
         %>
     </fieldset>
+    <br />
 
     <% using (Html.BeginForm("Edit", "Proposal", FormMethod.Post, new { @enctype = "multipart/form-data"})) {%>
         <%= Html.AntiForgeryToken() %>
@@ -85,16 +102,17 @@
 
 
         <fieldset>
-            <legend>Fields</legend>
-            <div class="display-label">Proposal Maximum Amount</div>
-            <div class="display-field"><%: String.Format("{0:C}", Model.CallForProposal.ProposalMaximum)%></div>
-            <div class="editor-label">
-                <%: Html.LabelFor(model => model.Proposal.RequestedAmount) %>
-            </div>
-            <div class="editor-field">
+            <legend>Edit Proposal Details</legend>
+            <ul>
+            <li>
+                <%: Html.Label("Proposal Maximum Amount:")%>
+                <%: String.Format("{0:C}", Model.CallForProposal.ProposalMaximum)%>
+            </li>  
+            <li>
+                <%: Html.Label("Requested Amount:")%>  
                 <%: Html.TextBoxFor(model => model.Proposal.RequestedAmount, String.Format("{0:F}", Model.Proposal.RequestedAmount))%>
                 <%: Html.ValidationMessageFor(model => model.Proposal.RequestedAmount)%>
-            </div>
+            </li>
 
         <% var index = 0;%>
         <%foreach (var question in Model.Proposal.CallForProposal.Questions.OrderBy(a => a.Order)){%>        
@@ -103,23 +121,24 @@
              var indexString = string.Format("[{0}]", index);
             index++;  
         %>
+        <li>
         <%if(Model.Proposal.Answers.Where(a => a.Question.Id == question.Id).Any()){%>
+            
             <% answer = Model.Proposal.Answers.Where(a => a.Question.Id == question.Id).Any() ? Model.Proposal.Answers.Where(a => a.Question.Id == question.Id).FirstOrDefault().Answer : " "; %>   
         <%}%>
             <%= Html.Hidden("proposalAnswers" + indexString + ".QuestionId", question.Id, new { @class = StaticValues.Class_indexedControl})%>
-            <div class="editor-field">            
+           
             <% switch (question.QuestionType.Name){%>
                 <% case "Text Box" : %>
-                    <div class="editor-label"><%: Html.Encode(question.Name) %></div>
+                    <%: Html.Encode(question.Name) %>
                     <%= Html.TextBox("proposalAnswers" + indexString + ".Answer", answer, new { @class = "indexedControl " + question.ValidationClasses +" BigWidth" })%>                                     
                 <% break; %>
                 <% case "Text Area" : %>
-                    <div class="editor-label"><%: Html.Encode(question.Name) %></div>
+                    <%: Html.Encode(question.Name) %>
                     <%= Html.TextArea("proposalAnswers" + indexString + ".Answer", answer, new { @class = StaticValues.Class_indexedControl + " BigAnswer" })%>
                 <% break; %>
                 <% case "Boolean" : %>
                     <%--<%= Html.Encode(Model.Question.Name) %>--%>
-                    <div class="editor-label"><%: Html.Encode(" ") %></div>
                     <%
                         var ans = false;
                         if (!Boolean.TryParse(answer, out ans)) {
@@ -127,7 +146,7 @@
                     <%= Html.CheckBox("proposalAnswers" + indexString + ".Answer", ans, new { @class = "indexedControl " + question.ValidationClasses })%> <%= Html.Encode(question.Name) %>
                 <% break; %>
                 <% case "Radio Buttons" : %>  
-                    <div class="editor-label"><%: Html.Encode(question.Name) %></div>
+                    <%: Html.Encode(question.Name) %>
                     <% var option = !string.IsNullOrEmpty(answer) ? answer.Trim().ToLower() : string.Empty;%>            
                     <% foreach (var o in question.Options){ %> 
                         <%var isChecked = option == o.Name.Trim().ToLower();%>
@@ -136,7 +155,7 @@
                     <% } %>
                 <% break; %>
                 <% case "Checkbox List" : %>
-                    <div class="editor-label"><%: Html.Encode(question.Name) %></div>
+                    <%: Html.Encode(question.Name) %>
                     <% var options = !string.IsNullOrEmpty(answer) ? answer.Split(',') : new string[1]; %>
                     <%--<%= Html.Encode(Model.Answer) %>--%>
      
@@ -149,25 +168,25 @@
                     <% } %>
                 <% break; %>
                 <% case "Drop Down" : %>
-                    <div class="editor-label"><%: Html.Encode(question.Name) %></div>
+                    <%: Html.Encode(question.Name) %>
                     <%= this.Select("proposalAnswers" + indexString + ".Answer").Options(question.Options.OrderBy(a => a.Name), x => x.Name, x => x.Name).Class("indexedControl " + question.ValidationClasses)
                             .Selected(answer ?? string.Empty)
                             .FirstOption("--Not Selected--")%>
                 <% break; %>
                 <% case "Date" : %>
-                    <div class="editor-label"><%: Html.Encode(question.Name) %></div>
+                    <%: Html.Encode(question.Name) %>
                     <%= Html.TextBox("proposalAnswers" + indexString + ".Answer", answer, new { @class = "dateForm indexedControl " + question.ValidationClasses })%>
                 <% break; %>
                 <% default: %>
-                    <div class="editor-label"><%: Html.Encode(question.Name) %></div>                   
+                    <li>
+                    <%: Html.Encode(question.Name) %>                 
                 <%break;%>
             <%}%>
             <%: Html.ValidationMessage(question.Name)%>
-            
-            </div>
+            </li>
         <%}%>
 
-        <div class="editor-field">
+        <li>
             <%if (Model.Proposal != null && Model.Proposal.File != null && !string.IsNullOrWhiteSpace(Model.Proposal.File.Name))
               {%>
                 <%: Html.Encode("Existing File: " + Model.Proposal.File.Name)%> <br />
@@ -178,8 +197,8 @@
             <%} %>
             
             <%: Html.ValidationMessageFor(model => model.Proposal.File)%>
-        </div>
-
+        </li>
+        </ul>
         </fieldset>
         <br />
 
