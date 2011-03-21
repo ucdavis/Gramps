@@ -181,5 +181,14 @@ namespace Gramps.Tests.Core.Helpers
 
             return rtValue;
         }
+
+        public static QuestionOption QuestionOption(int? counter)
+        {
+            var rtValue = new QuestionOption();
+            rtValue.Name = "Name" + counter.Extra();
+            rtValue.Question = new Question();
+
+            return rtValue;
+        }
     }
 }

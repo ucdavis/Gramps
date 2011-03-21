@@ -709,9 +709,380 @@ namespace Gramps.Tests.RepositoryTests
         }
 
         #endregion Order Tests
-       
-        
-        
+
+        #region Template Tests
+        #region Invalid Tests
+        [TestMethod]
+        [ExpectedException(typeof(NHibernate.TransientObjectException))]
+        public void TestTemplateWithANewValueDoesNotSave()
+        {
+            Question record = null;
+            try
+            {
+                #region Arrange
+                record = GetValid(9);
+                record.Template = CreateValidEntities.Template(9);
+                #endregion Arrange
+
+                #region Act
+                QuestionRepository.DbContext.BeginTransaction();
+                QuestionRepository.EnsurePersistent(record);
+                QuestionRepository.DbContext.CommitTransaction();
+                #endregion Act
+            }
+            catch (Exception ex)
+            {
+                Assert.IsNotNull(record);
+                Assert.IsNotNull(ex);
+                Assert.AreEqual("object references an unsaved transient instance - save the transient instance before flushing. Type: Gramps.Core.Domain.Template, Entity: Gramps.Core.Domain.Template", ex.Message);
+                throw;
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ApplicationException))]
+        public void TestTemplateAndCallForProposalWithNullValueDoesNotSave()
+        {
+            Question record = null;
+            try
+            {
+                #region Arrange
+                record = GetValid(9);
+                record.Template = null;
+                record.CallForProposal = null;
+                #endregion Arrange
+
+                #region Act
+                QuestionRepository.DbContext.BeginTransaction();
+                QuestionRepository.EnsurePersistent(record);
+                QuestionRepository.DbContext.CommitTransaction();
+                #endregion Act
+            }
+            catch (Exception)
+            {
+                Assert.IsNotNull(record);
+                var results = record.ValidationResults().AsMessageList();
+                results.AssertErrorsAre("RelatedTable: Must be related to Template or CallForProposal not both.");
+                Assert.IsTrue(record.IsTransient());
+                Assert.IsFalse(record.IsValid());
+                throw;
+            }
+        }
+        [TestMethod]
+        [ExpectedException(typeof(ApplicationException))]
+        public void TestTemplateAndCallForProposalWithNeitherNullDoesNotSave()
+        {
+            Question record = null;
+            try
+            {
+                #region Arrange
+                record = GetValid(9);
+                record.Template = Repository.OfType<Template>().GetNullableById(1);
+                record.CallForProposal = Repository.OfType<CallForProposal>().GetNullableById(1);
+                Assert.IsNotNull(record.CallForProposal);
+                Assert.IsNotNull(record.Template);
+                #endregion Arrange
+
+                #region Act
+                QuestionRepository.DbContext.BeginTransaction();
+                QuestionRepository.EnsurePersistent(record);
+                QuestionRepository.DbContext.CommitTransaction();
+                #endregion Act
+            }
+            catch (Exception)
+            {
+                Assert.IsNotNull(record);
+                var results = record.ValidationResults().AsMessageList();
+                results.AssertErrorsAre("RelatedTable: Must be related to Template or CallForProposal not both.");
+                Assert.IsTrue(record.IsTransient());
+                Assert.IsFalse(record.IsValid());
+                throw;
+            }
+        }
+        #endregion Invalid Tests
+        #region Valid Tests
+        [TestMethod]
+        public void TestTemplateWithNullValueSaves()
+        {
+            #region Arrange
+            var record = GetValid(9);
+            record.Template = null;
+            record.CallForProposal = Repository.OfType<CallForProposal>().GetNullableById(1);
+            Assert.IsNotNull(record.CallForProposal);
+            #endregion Arrange
+
+            #region Act
+            QuestionRepository.DbContext.BeginTransaction();
+            QuestionRepository.EnsurePersistent(record);
+            QuestionRepository.DbContext.CommitTransaction();
+            #endregion Act
+
+            #region Assert
+            Assert.IsFalse(record.IsTransient());
+            Assert.IsTrue(record.IsValid());
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestTemplateWithNonNullValueSaves()
+        {
+            #region Arrange
+            var record = GetValid(9);
+            record.Template = Repository.OfType<Template>().GetNullableById(1);
+            record.CallForProposal = null;
+            #endregion Arrange
+
+            #region Act
+            QuestionRepository.DbContext.BeginTransaction();
+            QuestionRepository.EnsurePersistent(record);
+            QuestionRepository.DbContext.CommitTransaction();
+            #endregion Act
+
+            #region Assert
+            Assert.IsNotNull(record.Template);
+            Assert.IsFalse(record.IsTransient());
+            Assert.IsTrue(record.IsValid());
+            #endregion Assert
+        }
+        #endregion Valid Tests
+        #region Cascade Tests
+
+        [TestMethod]
+        public void TestDeleteDoesNotCascadeToTemplate()
+        {
+            #region Arrange
+            var record = GetValid(9);
+            record.Template = Repository.OfType<Template>().GetNullableById(1);
+            record.CallForProposal = null;
+
+            QuestionRepository.DbContext.BeginTransaction();
+            QuestionRepository.EnsurePersistent(record);
+            QuestionRepository.DbContext.CommitTransaction();
+
+            var templateCount = Repository.OfType<Template>().Queryable.Count();
+            #endregion Arrange
+
+            #region Act
+            QuestionRepository.DbContext.BeginTransaction();
+            QuestionRepository.Remove(record);
+            QuestionRepository.DbContext.CommitTransaction();
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual(templateCount, Repository.OfType<Template>().Queryable.Count());
+            #endregion Assert
+        }
+        #endregion Cascade Tests
+        #endregion Template Tests
+
+        #region CallForProposal Tests
+        #region Invalid Tests
+        [TestMethod]
+        [ExpectedException(typeof(NHibernate.TransientObjectException))]
+        public void TestCallForProposalWithANewValueDoesNotSave()
+        {
+            Question record = null;
+            try
+            {
+                #region Arrange
+                record = GetValid(9);
+                record.Template = null;
+                record.CallForProposal = CreateValidEntities.CallForProposal(9);
+                #endregion Arrange
+
+                #region Act
+                QuestionRepository.DbContext.BeginTransaction();
+                QuestionRepository.EnsurePersistent(record);
+                QuestionRepository.DbContext.CommitTransaction();
+                #endregion Act
+            }
+            catch (Exception ex)
+            {
+                Assert.IsNotNull(record);
+                Assert.IsNotNull(ex);
+                Assert.AreEqual("object references an unsaved transient instance - save the transient instance before flushing. Type: Gramps.Core.Domain.CallForProposal, Entity: Gramps.Core.Domain.CallForProposal", ex.Message);
+                throw;
+            }
+        }
+
+
+        #endregion Invalid Tests
+        #region Valid Tests
+        [TestMethod]
+        public void TestCallForProposalWithNullValueSaves()
+        {
+            #region Arrange
+            var record = GetValid(9);
+            record.Template = Repository.OfType<Template>().GetNullableById(1);
+            record.CallForProposal = null;
+            Assert.IsNotNull(record.Template);
+            #endregion Arrange
+
+            #region Act
+            QuestionRepository.DbContext.BeginTransaction();
+            QuestionRepository.EnsurePersistent(record);
+            QuestionRepository.DbContext.CommitTransaction();
+            #endregion Act
+
+            #region Assert
+            Assert.IsFalse(record.IsTransient());
+            Assert.IsTrue(record.IsValid());
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestCallForProposalWithNonNullValueSaves()
+        {
+            #region Arrange
+            var record = GetValid(9);
+            record.CallForProposal = Repository.OfType<CallForProposal>().GetNullableById(1);
+            record.Template = null;
+            #endregion Arrange
+
+            #region Act
+            QuestionRepository.DbContext.BeginTransaction();
+            QuestionRepository.EnsurePersistent(record);
+            QuestionRepository.DbContext.CommitTransaction();
+            #endregion Act
+
+            #region Assert
+            Assert.IsNotNull(record.CallForProposal);
+            Assert.IsFalse(record.IsTransient());
+            Assert.IsTrue(record.IsValid());
+            #endregion Assert
+        }
+        #endregion Valid Tests
+        #region Cascade Tests
+
+        [TestMethod]
+        public void TestDeleteDoesNotCascadeToCallForProposals()
+        {
+            #region Arrange
+            var record = GetValid(9);
+            record.Template = null;
+            record.CallForProposal = Repository.OfType<CallForProposal>().GetNullableById(1);
+
+            QuestionRepository.DbContext.BeginTransaction();
+            QuestionRepository.EnsurePersistent(record);
+            QuestionRepository.DbContext.CommitTransaction();
+
+            var callForProposalCount = Repository.OfType<CallForProposal>().Queryable.Count();
+            #endregion Arrange
+
+            #region Act
+            QuestionRepository.DbContext.BeginTransaction();
+            QuestionRepository.Remove(record);
+            QuestionRepository.DbContext.CommitTransaction();
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual(callForProposalCount, Repository.OfType<CallForProposal>().Queryable.Count());
+            #endregion Assert
+        }
+        #endregion Cascade Tests
+        #endregion CallForProposals Tests
+
+        #region Options Tests
+        #region Invalid Tests
+        [TestMethod]
+        [ExpectedException(typeof(ApplicationException))]
+        public void TestOptionsWithNullValueDoesNotSave()
+        {
+            Question question = null;
+            try
+            {
+                #region Arrange
+                question = GetValid(9);
+                question.Options = null;
+                #endregion Arrange
+
+                #region Act
+                QuestionRepository.DbContext.BeginTransaction();
+                QuestionRepository.EnsurePersistent(question);
+                QuestionRepository.DbContext.CommitTransaction();
+                #endregion Act
+            }
+            catch (Exception)
+            {
+                Assert.IsNotNull(question);
+                var results = question.ValidationResults().AsMessageList();
+                results.AssertErrorsAre("Options: may not be null");
+                Assert.IsTrue(question.IsTransient());
+                Assert.IsFalse(question.IsValid());
+                throw;
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ApplicationException))]
+        public void TestOptionsWithEmptyListDoesNotSaveWhenQuestionTypeRequiresOptions()
+        {
+            Question question = null;
+            try
+            {
+                #region Arrange
+                question = GetValid(9);
+                question.QuestionType = Repository.OfType<QuestionType>().Queryable.Where(a => a.Name == "Radio Buttons").Single();
+                question.Options = new List<QuestionOption>();
+                #endregion Arrange
+
+                #region Act
+                QuestionRepository.DbContext.BeginTransaction();
+                QuestionRepository.EnsurePersistent(question);
+                QuestionRepository.DbContext.CommitTransaction();
+                #endregion Act
+            }
+            catch (Exception)
+            {
+                Assert.IsNotNull(question);
+                var results = question.ValidationResults().AsMessageList();
+                results.AssertErrorsAre("OptionsRequired: The question type requires at least one option.");
+                Assert.IsTrue(question.IsTransient());
+                Assert.IsFalse(question.IsValid());
+                throw;
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ApplicationException))]
+        public void TestOptionsWithPopulatedListDoesNotSaveWhenQuestionTypeDoesNotRequireOptions()
+        {
+            Question question = null;
+            try
+            {
+                #region Arrange
+                question = GetValid(9);
+                question.QuestionType = Repository.OfType<QuestionType>().Queryable.Where(a => a.Name == "Text Area").Single();
+                question.AddQuestionOption(CreateValidEntities.QuestionOption(1));
+                question.AddQuestionOption(CreateValidEntities.QuestionOption(2));
+                #endregion Arrange
+
+                #region Act
+                QuestionRepository.DbContext.BeginTransaction();
+                QuestionRepository.EnsurePersistent(question);
+                QuestionRepository.DbContext.CommitTransaction();
+                #endregion Act
+            }
+            catch (Exception)
+            {
+                Assert.IsNotNull(question);
+                var results = question.ValidationResults().AsMessageList();
+                results.AssertErrorsAre("OptionsRequired: The question type requires at least one option.");
+                Assert.IsTrue(question.IsTransient());
+                Assert.IsFalse(question.IsValid());
+                throw;
+            }
+        }
+        #endregion Invalid Tests
+        #region Valid Tests
+
+        #endregion Valid Tests
+
+        #region Cascade Tests
+
+        #endregion Cascade Tests
+        #endregion Options Tests
+
         #region Reflection of Database.
 
         /// <summary>
@@ -723,7 +1094,7 @@ namespace Gramps.Tests.RepositoryTests
         {
             #region Arrange
             var expectedFields = new List<NameAndType>();
-
+            expectedFields.Add(new NameAndType("CallForProposal", "Gramps.Core.Domain.CallForProposal", new List<string>()));
             expectedFields.Add(new NameAndType("Id", "System.Int32", new List<string>
             {
                 "[Newtonsoft.Json.JsonPropertyAttribute()]", 
@@ -739,6 +1110,7 @@ namespace Gramps.Tests.RepositoryTests
             { 
                  ""
             }));
+            expectedFields.Add(new NameAndType("Template", "Gramps.Core.Domain.Template", new List<string>()));
             #endregion Arrange
 
             AttributeAndFieldValidation.ValidateFieldsAndAttributes(expectedFields, typeof(Question));

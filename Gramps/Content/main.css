@@ -90,6 +90,14 @@ body .content {font: 12px/22px Verdana, Arial, sans-serif;}
 .registration_form input {}
 .registration_form li strong {width:200px; display:inline-block;}
 
+/* -------------------- */
+/*  fieldset formatting */
+/* -------------------- */
+fieldset li 
+{
+	padding-bottom: 10px;
+}
+
 
 
 /* ---------------- */
