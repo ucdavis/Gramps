@@ -9,12 +9,12 @@
   </DataSources>
   <Reports>
     <ProjectItem>
-      <Name>Proposal.rdl</Name>
-      <FullPath>Proposal.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
       <Name>CallReport.rdl</Name>
       <FullPath>CallReport.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Proposal.rdl</Name>
+      <FullPath>Proposal.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>
@@ -22,7 +22,7 @@
       <Name>Debug</Name>
       <Platform>Win32</Platform>
       <Options>
-        <TargetServerURL>http://devreports.caes.ucdavis.edu/reportserver</TargetServerURL>
+        <TargetServerURL>http://testreports.caes.ucdavis.edu/reportserver</TargetServerURL>
         <TargetFolder>Gramps.Report</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
         <StartItem>CallReport.rdl</StartItem>
@@ -32,16 +32,20 @@
       <Name>DebugLocal</Name>
       <Platform>Win32</Platform>
       <Options>
+        <TargetServerURL>http://devreports.caes.ucdavis.edu/reportserver</TargetServerURL>
         <TargetFolder>Gramps.Report</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
+        <StartItem>CallReport.rdl</StartItem>
       </Options>
     </Configuration>
     <Configuration>
       <Name>Release</Name>
       <Platform>Win32</Platform>
       <Options>
+        <TargetServerURL>http://reports.caes.ucdavis.edu/reportserver</TargetServerURL>
         <TargetFolder>Gramps.Report</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
+        <StartItem>CallReport.rdl</StartItem>
       </Options>
     </Configuration>
   </Configurations>

@@ -58,11 +58,16 @@
           <DataField>SubmittedDate</DataField>
           <rd:TypeName>System.DateTime</rd:TypeName>
         </Field>
+        <Field Name="Email">
+          <DataField>Email</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
       </Fields>
       <Query>
         <DataSourceName>DataSource</DataSourceName>
         <CommandText>SELECT     CallForProposals.Name, CallForProposals.EndDate, CallForProposals.Description, CallForProposals.ProposalMaximum, Proposals.Sequence, Proposals.IsApproved, 
-                      Proposals.IsDenied, Proposals.RequestedAmount, Proposals.ApprovedAmount, Proposals.IsSubmitted, Proposals.CreatedDate, Proposals.SubmittedDate
+                      Proposals.IsDenied, Proposals.RequestedAmount, Proposals.ApprovedAmount, Proposals.IsSubmitted, Proposals.CreatedDate, Proposals.SubmittedDate, 
+                      Proposals.Email
 FROM         Proposals INNER JOIN
                       CallForProposals ON Proposals.CallForProposalId = CallForProposals.id
 WHERE     (Proposals.id = @ProposalId)</CommandText>
@@ -491,7 +496,7 @@ WHERE     (ProposalId = @ProposalId) AND (@ShowComments = 'true')</CommandText>
           </TablixMembers>
         </TablixRowHierarchy>
         <DataSetName>Investigators</DataSetName>
-        <Top>2.35084in</Top>
+        <Top>1.85084in</Top>
         <Height>0.5in</Height>
         <Width>6.25522in</Width>
         <Style>
@@ -525,7 +530,7 @@ WHERE     (ProposalId = @ProposalId) AND (@ShowComments = 'true')</CommandText>
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Text</rd:DefaultName>
-        <Top>4.06958in</Top>
+        <Top>3.56958in</Top>
         <Height>0.25in</Height>
         <Width>6.25522in</Width>
         <ZIndex>1</ZIndex>
@@ -557,7 +562,7 @@ WHERE     (ProposalId = @ProposalId) AND (@ShowComments = 'true')</CommandText>
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>ShowComments</rd:DefaultName>
-        <Top>3.81958in</Top>
+        <Top>3.31958in</Top>
         <Height>0.25in</Height>
         <Width>1in</Width>
         <ZIndex>2</ZIndex>
@@ -714,7 +719,7 @@ WHERE     (ProposalId = @ProposalId) AND (@ShowComments = 'true')</CommandText>
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>ApprovedAmount</rd:DefaultName>
-            <Top>1.14597in</Top>
+            <Top>0.89597in</Top>
             <Height>0.25in</Height>
             <Width>3.09376in</Width>
             <Style>
@@ -748,7 +753,7 @@ WHERE     (ProposalId = @ProposalId) AND (@ShowComments = 'true')</CommandText>
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>CreatedDate</rd:DefaultName>
-            <Top>1.40292in</Top>
+            <Top>1.15292in</Top>
             <Height>0.25in</Height>
             <Width>4.05209in</Width>
             <ZIndex>1</ZIndex>
@@ -783,7 +788,7 @@ WHERE     (ProposalId = @ProposalId) AND (@ShowComments = 'true')</CommandText>
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>SubmittedDate</rd:DefaultName>
-            <Top>1.72237in</Top>
+            <Top>1.34737in</Top>
             <Height>0.25in</Height>
             <Width>4.05209in</Width>
             <ZIndex>2</ZIndex>
@@ -821,7 +826,7 @@ WHERE     (ProposalId = @ProposalId) AND (@ShowComments = 'true')</CommandText>
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>RequestedAmount</rd:DefaultName>
-            <Top>0.84042in</Top>
+            <Top>0.71542in</Top>
             <Height>0.25in</Height>
             <Width>3.09376in</Width>
             <ZIndex>3</ZIndex>
@@ -948,9 +953,44 @@ WHERE     (ProposalId = @ProposalId) AND (@ShowComments = 'true')</CommandText>
               <PaddingBottom>2pt</PaddingBottom>
             </Style>
           </Textbox>
+          <Textbox Name="Email">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Submitter's Email: </Value>
+                    <Style />
+                  </TextRun>
+                  <TextRun>
+                    <Label>Email</Label>
+                    <Value>=First(Fields!Email.Value, "Proposal")</Value>
+                    <Style />
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Email</rd:DefaultName>
+            <Top>0.03486in</Top>
+            <Left>2.18403in</Left>
+            <Height>0.25in</Height>
+            <Width>3.9375in</Width>
+            <ZIndex>7</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
         </ReportItems>
         <KeepTogether>true</KeepTogether>
-        <Height>2.14598in</Height>
+        <Height>1.7189in</Height>
         <Width>6.25522in</Width>
         <ZIndex>4</ZIndex>
         <Style>
@@ -960,7 +1000,7 @@ WHERE     (ProposalId = @ProposalId) AND (@ShowComments = 'true')</CommandText>
         </Style>
       </Rectangle>
     </ReportItems>
-    <Height>4.5175in</Height>
+    <Height>3.93417in</Height>
     <Style />
   </Body>
   <ReportParameters>
