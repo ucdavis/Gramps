@@ -45,7 +45,8 @@
             .Columns(col => {
 			col.Template(x => {%>
 				<%: Html.ActionLink<ProposalController>(a => a.ReviewerDetails(x.Id, Model.CallForProposal.Id), " ", new { @class = "details_button" })%>           
-				<%}).Title("Details");
+                <%: Html.ActionLink<PrintController>(a => a.ProposalReviewer(Model.CallForProposal.Id, x.Id), " ", new { @class = "small_print_button" })%>
+				<%}).Title("Actions");
             col.Bound(x => x.Seq);    
             col.Bound(x => x.Email);
             col.Bound(x => x.LastViewedDate).Title("Viewed Date");
@@ -59,6 +60,10 @@
             .Sortable(s => s.OrderBy(a => a.Add(b => b.LastViewedDate)))
             .Render(); 
         %>
+    <br />
+    <div>
+        <%: Html.ActionLink<PrintController>(a => a.ProposalReviewer(Model.CallForProposal.Id, null), " ", new { @class = "big_print_button" })%>
+    </div>
 
 </asp:Content>
 

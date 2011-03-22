@@ -329,6 +329,21 @@ div.t-grid {}
     color:#0D548A;
 }
 
+.small_print_button
+{
+    background: url("../Images/small_print.png") no-repeat scroll 0 0 transparent;
+    border:0;
+    float: left;
+    cursor:pointer;
+    width: 22px;
+    height: 22px;
+}
+.small_print_button:hover
+{
+    color:#0D548A;
+}
+
+
 .launch_button
 {
     background: url("../Images/Rocket_launch.png") no-repeat scroll 0 0 transparent;
@@ -389,6 +404,21 @@ div.t-grid {}
     text-align: center;
 }
 .bigpdf_button:hover
+{
+    color:#0D548A;
+}
+.big_print_button
+{
+    background: url("../Images/big_print.png") no-repeat scroll 0 0 transparent;
+    border:0;
+    float: left;
+    cursor:pointer;
+    width: 96px;
+    height: 10px;
+    padding-top: 3em;
+    text-align: center;
+}
+.big_print_button:hover
 {
     color:#0D548A;
 }

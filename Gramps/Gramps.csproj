@@ -298,6 +298,7 @@
     <Content Include="Images\arrow_fat_down.gif" />
     <Content Include="Images\arrow_fat_up.gif" />
     <Content Include="Images\Big_pdf.png" />
+    <Content Include="Images\big_print.png" />
     <Content Include="Images\branding.jpg" />
     <Content Include="Images\Cancel-1.png" />
     <Content Include="Images\Cancel.png" />
@@ -312,6 +313,7 @@
     <Content Include="Images\Page_excel.png" />
     <Content Include="Images\plus.png" />
     <Content Include="Images\Rocket_launch.png" />
+    <Content Include="Images\small_print.png" />
     <Content Include="Scripts\jquery.CaesMutioptionControl.js" />
     <Content Include="Scripts\jquery.enableTinyMce.js" />
     <Content Include="Scripts\RenameForArray.js" />

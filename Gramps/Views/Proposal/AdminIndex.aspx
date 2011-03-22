@@ -64,11 +64,12 @@
             .PrefixUrlParameters(false) //True if >0 sortable/pageable grids
             .Columns(col => {
             col.Template(x => {%>
-				<%: Html.ActionLink<ProposalController>(a => a.AdminEdit(x.Id, Model.CallForProposal.Id), " ", new { @class = "edit_button" })%>           
-				<%}).Title("Edit");
-			col.Template(x => {%>
-				<%: Html.ActionLink<ProposalController>(a => a.AdminDetails(x.Id, Model.CallForProposal.Id), " ", new { @class = "details_button" })%>           
-				<%}).Title("Details");
+				<%: Html.ActionLink<ProposalController>(a => a.AdminEdit(x.Id, Model.CallForProposal.Id), " ", new { @class = "edit_button" })%>        
+                <%: Html.ActionLink<ProposalController>(a => a.AdminDetails(x.Id, Model.CallForProposal.Id), " ", new { @class = "details_button" })%>
+               <%if(x.Submitted) {%>
+				    <%: Html.ActionLink<PrintController>(a => a.ProposalAdmin(Model.CallForProposal.Id, x.Id, true), " ", new { @class = "small_print_button" })%>           
+                <%}%>
+				<%}).Title("Actions");
             col.Bound(x => x.Seq);
             col.Bound(x => x.Email);
             col.Bound(x => x.LastViewedDate).Title("Viewed Date");
@@ -98,6 +99,9 @@
         <%:Html.AntiForgeryToken()%>          
         <%= Html.SubmitButton("Submit", "Send Decision")%>        
     <%}%> 
+    </div>
+    <div>
+        <%: Html.ActionLink<PrintController>(a => a.ProposalAdmin(Model.CallForProposal.Id, null, true), " ", new { @class = "big_print_button" })%>
     </div>
 </asp:Content>
 

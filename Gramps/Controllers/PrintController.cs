@@ -29,7 +29,7 @@ namespace Gramps.Controllers
         }
 
         [UserOnly]
-        public ActionResult AdminPrint(int callForProposalId)
+        public ActionResult ProposalAdmin(int callForProposalId, int? proposalId, bool showComments = false)
         {
             var callForProposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId);
 
@@ -43,15 +43,75 @@ namespace Gramps.Controllers
                 Message = "You do not have access to that.";
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
+            if (proposalId.HasValue && proposalId.Value > 0)
+            {
+                var proposal = Repository.OfType<Proposal>().GetNullableById(proposalId.Value);
+                if(proposal == null)
+                {
+                    Message = "Proposal Not found";
+                    return this.RedirectToAction<ErrorController>(a => a.Index());
+                }
+                if (!callForProposal.Proposals.Contains(proposal))
+                {
+                    Message = "Proposal Not found with call";
+                    return this.RedirectToAction<ErrorController>(a => a.Index());
+                }
+            }
 
+            return CommonPrint(callForProposal.Id, proposalId, showComments);
+        }
+
+        [PublicAuthorize]
+        public ActionResult ProposalReviewer(int callForProposalId, int? proposalId)
+        {
+            var callForProposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId);
+
+            if (callForProposal == null)
+            {
+                return this.RedirectToAction<ProposalController>(a => a.Home());
+            }
+            if (!callForProposal.IsReviewer(CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<ProposalController>(a => a.Home());
+            }
+
+            if (!_accessService.HasSameId(null, callForProposal, null, callForProposalId))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<ProposalController>(a => a.Home());
+            }
+
+            if (proposalId.HasValue && proposalId.Value > 0)
+            {
+                var proposal = Repository.OfType<Proposal>().GetNullableById(proposalId.Value);
+                if (proposal == null)
+                {
+                    Message = "Proposal Not found";
+                    return this.RedirectToAction<ErrorController>(a => a.Index());
+                }
+                if (!callForProposal.Proposals.Contains(proposal))
+                {
+                    Message = "Proposal Not found with call";
+                    return this.RedirectToAction<ErrorController>(a => a.Index());
+                }
+            }
+
+            return CommonPrint(callForProposal.Id, proposalId, false);
+        }
+
+        private ActionResult CommonPrint(int callForProposalId, int? proposalId, bool showComments = false)
+        {
             var rview = new Microsoft.Reporting.WebForms.ReportViewer();
             rview.ServerReport.ReportServerUrl = new Uri(System.Web.Configuration.WebConfigurationManager.AppSettings["ReportServer"]);
 
-            rview.ServerReport.ReportPath = @"/Gramps/ProposalList";
+            rview.ServerReport.ReportPath = @"/Gramps.Report/CallReport";
 
             var paramList = new List<Microsoft.Reporting.WebForms.ReportParameter>();
 
-            paramList.Add(new Microsoft.Reporting.WebForms.ReportParameter("CallId", callForProposal.Id.ToString()));
+            paramList.Add(new Microsoft.Reporting.WebForms.ReportParameter("CallId", callForProposalId.ToString()));
+            paramList.Add(new Microsoft.Reporting.WebForms.ReportParameter("ProposalId", proposalId != null && proposalId.Value > 0 ? proposalId.Value.ToString() : string.Empty));
+            paramList.Add(new Microsoft.Reporting.WebForms.ReportParameter("ShowComments", showComments.ToString().ToLower()));
 
             rview.ServerReport.SetParameters(paramList);
 
@@ -70,7 +130,6 @@ namespace Gramps.Controllers
 
             return File(bytes, "application/pdf");
         }
-
 
     }
 

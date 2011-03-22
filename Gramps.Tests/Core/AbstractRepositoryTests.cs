@@ -452,7 +452,26 @@ namespace Gramps.Tests.Core
         }
         #endregion Utilities
 
+        protected void LoadProposals(int entriesToAdd)
+        {
+            for (int i = 0; i < entriesToAdd; i++)
+            {
+                var validEntity = CreateValidEntities.Proposal(i + 1);
+                validEntity.CallForProposal = Repository.OfType<CallForProposal>().Queryable.First();
+                Repository.OfType<Proposal>().EnsurePersistent(validEntity);
+            }
+        }
 
+        protected void LoadQuestions(int entriesToAdd)
+        {
+            for (int i = 0; i < entriesToAdd; i++)
+            {
+                var validEntity = CreateValidEntities.Question(i + 1);
+                validEntity.CallForProposal = Repository.OfType<CallForProposal>().Queryable.First();
+                validEntity.QuestionType = Repository.OfType<QuestionType>().Queryable.Where(a => a.Name == "Text Box").Single();
+                Repository.OfType<Question>().EnsurePersistent(validEntity);
+            }
+        }
 
         protected void LoadTemplates(int entriesToAdd)
         {
