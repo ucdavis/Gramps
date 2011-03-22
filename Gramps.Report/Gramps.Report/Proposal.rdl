@@ -170,6 +170,32 @@ FROM         CallForProposals INNER JOIN
                       Proposals ON CallForProposals.id = Proposals.CallForProposalId</CommandText>
       </Query>
     </DataSet>
+    <DataSet Name="Comments">
+      <Fields>
+        <Field Name="ProposalId">
+          <DataField>ProposalId</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Text">
+          <DataField>Text</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource</DataSourceName>
+        <CommandText>SELECT     ProposalId, Text
+FROM         Comments
+WHERE     (ProposalId = @ProposalId) AND (@ShowComments = 'true')</CommandText>
+        <QueryParameters>
+          <QueryParameter Name="@ProposalId">
+            <Value>=Parameters!ProposalId.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@ShowComments">
+            <Value>=Parameters!ShowComments.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+      </Query>
+    </DataSet>
   </DataSets>
   <Body>
     <ReportItems>
@@ -193,8 +219,8 @@ FROM         CallForProposals INNER JOIN
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Sequence</rd:DefaultName>
-        <Top>0.16333in</Top>
-        <Left>1.24667in</Left>
+        <Top>0.03833in</Top>
+        <Left>0.87167in</Left>
         <Height>0.25in</Height>
         <Width>0.85417in</Width>
         <Style>
@@ -230,8 +256,7 @@ FROM         CallForProposals INNER JOIN
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>ProposalMaximum</rd:DefaultName>
-        <Top>1.02791in</Top>
-        <Left>0.31958in</Left>
+        <Top>0.90291in</Top>
         <Height>0.25in</Height>
         <Width>3.09376in</Width>
         <ZIndex>1</ZIndex>
@@ -268,8 +293,7 @@ FROM         CallForProposals INNER JOIN
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>ApprovedAmount</rd:DefaultName>
-        <Top>1.64944in</Top>
-        <Left>0.31958in</Left>
+        <Top>1.52444in</Top>
         <Height>0.25in</Height>
         <Width>3.09376in</Width>
         <ZIndex>2</ZIndex>
@@ -290,6 +314,10 @@ FROM         CallForProposals INNER JOIN
           <Paragraph>
             <TextRuns>
               <TextRun>
+                <Value>Create Date: </Value>
+                <Style />
+              </TextRun>
+              <TextRun>
                 <Label>ProposalCreatedDate</Label>
                 <Value>=First(Fields!CreatedDate.Value, "Proposal")</Value>
                 <Style />
@@ -299,10 +327,9 @@ FROM         CallForProposals INNER JOIN
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>CreatedDate</rd:DefaultName>
-        <Top>2.03139in</Top>
-        <Left>0.31958in</Left>
+        <Top>1.90639in</Top>
         <Height>0.25in</Height>
-        <Width>1in</Width>
+        <Width>4.05209in</Width>
         <ZIndex>3</ZIndex>
         <Style>
           <Border>
@@ -321,6 +348,10 @@ FROM         CallForProposals INNER JOIN
           <Paragraph>
             <TextRuns>
               <TextRun>
+                <Value>Submitted Date: </Value>
+                <Style />
+              </TextRun>
+              <TextRun>
                 <Label>SubmittedDate</Label>
                 <Value>=First(Fields!SubmittedDate.Value, "Proposal")</Value>
                 <Style />
@@ -330,10 +361,9 @@ FROM         CallForProposals INNER JOIN
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>SubmittedDate</rd:DefaultName>
-        <Top>2.03139in</Top>
-        <Left>1.68417in</Left>
+        <Top>2.22584in</Top>
         <Height>0.25in</Height>
-        <Width>1in</Width>
+        <Width>4.05209in</Width>
         <ZIndex>4</ZIndex>
         <Style>
           <Border>
@@ -352,13 +382,13 @@ FROM         CallForProposals INNER JOIN
               <Width>0.85417in</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>1.88542in</Width>
+              <Width>1.51042in</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>1.39583in</Width>
+              <Width>2.33334in</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>1in</Width>
+              <Width>1.55729in</Width>
             </TablixColumn>
           </TablixColumns>
           <TablixRows>
@@ -637,10 +667,9 @@ FROM         CallForProposals INNER JOIN
           </TablixMembers>
         </TablixRowHierarchy>
         <DataSetName>Investigators</DataSetName>
-        <Top>2.35084in</Top>
-        <Left>0.31958in</Left>
+        <Top>2.60084in</Top>
         <Height>0.5in</Height>
-        <Width>5.13542in</Width>
+        <Width>6.25522in</Width>
         <ZIndex>5</ZIndex>
         <Style>
           <Border>
@@ -652,10 +681,10 @@ FROM         CallForProposals INNER JOIN
         <TablixBody>
           <TablixColumns>
             <TablixColumn>
-              <Width>1.78125in</Width>
+              <Width>1.78126in</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>3.94792in</Width>
+              <Width>4.47396in</Width>
             </TablixColumn>
           </TablixColumns>
           <TablixRows>
@@ -810,10 +839,9 @@ FROM         CallForProposals INNER JOIN
           </TablixMembers>
         </TablixRowHierarchy>
         <DataSetName>QandA</DataSetName>
-        <Top>3.08in</Top>
-        <Left>0.31958in</Left>
+        <Top>3.33in</Top>
         <Height>0.5in</Height>
-        <Width>5.72917in</Width>
+        <Width>6.25522in</Width>
         <ZIndex>6</ZIndex>
         <Style>
           <Border>
@@ -836,8 +864,7 @@ FROM         CallForProposals INNER JOIN
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox31</rd:DefaultName>
-        <Top>0.16333in</Top>
-        <Left>0.31958in</Left>
+        <Top>0.03833in</Top>
         <Height>0.25in</Height>
         <Width>0.85417in</Width>
         <ZIndex>7</ZIndex>
@@ -874,8 +901,7 @@ FROM         CallForProposals INNER JOIN
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>RequestedAmount</rd:DefaultName>
-        <Top>1.34389in</Top>
-        <Left>0.31958in</Left>
+        <Top>1.21889in</Top>
         <Height>0.25in</Height>
         <Width>3.09376in</Width>
         <ZIndex>8</ZIndex>
@@ -908,8 +934,7 @@ FROM         CallForProposals INNER JOIN
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox2</rd:DefaultName>
-        <Top>0.66333in</Top>
-        <Left>0.31958in</Left>
+        <Top>0.53833in</Top>
         <Height>0.25in</Height>
         <Width>3.09376in</Width>
         <ZIndex>9</ZIndex>
@@ -923,8 +948,82 @@ FROM         CallForProposals INNER JOIN
           <PaddingBottom>2pt</PaddingBottom>
         </Style>
       </Textbox>
+      <Textbox Name="Text">
+        <CanGrow>true</CanGrow>
+        <CanShrink>true</CanShrink>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Comments:</Value>
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>=First(Fields!Text.Value, "Comments")</Value>
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Text</rd:DefaultName>
+        <Top>4.31958in</Top>
+        <Height>0.25in</Height>
+        <Width>6.25522in</Width>
+        <ZIndex>10</ZIndex>
+        <Visibility>
+          <Hidden>=Parameters!ShowComments.Value &lt;&gt; "true"</Hidden>
+        </Visibility>
+        <Style>
+          <Border>
+            <Style>Solid</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="ShowComments">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>=Parameters!ShowComments.Value</Value>
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>ShowComments</rd:DefaultName>
+        <Top>4.06958in</Top>
+        <Height>0.25in</Height>
+        <Width>1in</Width>
+        <ZIndex>11</ZIndex>
+        <Visibility>
+          <Hidden>true</Hidden>
+        </Visibility>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
     </ReportItems>
-    <Height>6.77792in</Height>
+    <Height>4.79875in</Height>
     <Style />
   </Body>
   <ReportParameters>
@@ -932,8 +1031,13 @@ FROM         CallForProposals INNER JOIN
       <DataType>String</DataType>
       <Prompt>ProposalId</Prompt>
     </ReportParameter>
+    <ReportParameter Name="ShowComments">
+      <DataType>String</DataType>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>ShowComments</Prompt>
+    </ReportParameter>
   </ReportParameters>
-  <Width>6.5in</Width>
+  <Width>6.32292in</Width>
   <Page>
     <LeftMargin>1in</LeftMargin>
     <RightMargin>1in</RightMargin>
