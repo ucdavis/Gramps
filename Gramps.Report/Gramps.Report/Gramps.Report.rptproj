@@ -22,10 +22,10 @@
       <Name>Debug</Name>
       <Platform>Win32</Platform>
       <Options>
-        <TargetServerURL>http://testreports.caes.ucdavis.edu/reportserver</TargetServerURL>
+        <TargetServerURL>http://devreports.caes.ucdavis.edu/reportserver</TargetServerURL>
         <TargetFolder>Gramps.Report</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
-        <StartItem>Report1.rdl</StartItem>
+        <StartItem>CallReport.rdl</StartItem>
       </Options>
     </Configuration>
     <Configuration>
