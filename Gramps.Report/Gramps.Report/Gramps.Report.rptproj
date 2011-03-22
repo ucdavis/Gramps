@@ -12,6 +12,10 @@
       <Name>Proposal.rdl</Name>
       <FullPath>Proposal.rdl</FullPath>
     </ProjectItem>
+    <ProjectItem>
+      <Name>CallReport.rdl</Name>
+      <FullPath>CallReport.rdl</FullPath>
+    </ProjectItem>
   </Reports>
   <Configurations>
     <Configuration>
