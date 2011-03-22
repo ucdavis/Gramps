@@ -190,7 +190,6 @@ ORDER BY Proposals.Sequence</CommandText>
                         </Border>
                       </Style>
                     </Rectangle>
-                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
               </TablixCells>
@@ -368,7 +367,7 @@ ORDER BY Proposals.Sequence</CommandText>
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>College Of Agricultural And Environmental Science</Value>
+                  <Value>College Of Agricultural And Environmental Science</Value>
                   <Style>
                     <FontStyle>Normal</FontStyle>
                     <FontFamily>Lucida Console</FontFamily>
@@ -404,6 +403,10 @@ ORDER BY Proposals.Sequence</CommandText>
             <Paragraph>
               <TextRuns>
                 <TextRun>
+                  <Value>Page:</Value>
+                  <Style />
+                </TextRun>
+                <TextRun>
                   <Value>=Globals!PageNumber</Value>
                   <Style />
                 </TextRun>
@@ -415,9 +418,9 @@ ORDER BY Proposals.Sequence</CommandText>
           </Paragraphs>
           <rd:DefaultName>PageNumber</rd:DefaultName>
           <Top>0.61458in</Top>
-          <Left>5.21875in</Left>
+          <Left>4.6875in</Left>
           <Height>0.25in</Height>
-          <Width>1in</Width>
+          <Width>1.53125in</Width>
           <ZIndex>1</ZIndex>
           <Style>
             <Border>
