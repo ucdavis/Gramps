@@ -207,68 +207,6 @@ FROM         CallForProposals INNER JOIN
           <PaddingBottom>2pt</PaddingBottom>
         </Style>
       </Textbox>
-      <Textbox Name="IsApproved">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Label>IsApproved</Label>
-                <Value>=First(Fields!IsApproved.Value, "Proposal")</Value>
-                <Style />
-              </TextRun>
-            </TextRuns>
-            <Style />
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>IsApproved</rd:DefaultName>
-        <Top>2.28833in</Top>
-        <Left>0.31958in</Left>
-        <Height>0.25in</Height>
-        <Width>1in</Width>
-        <ZIndex>1</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="IsDenied">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Label>IsDenied</Label>
-                <Value>=First(Fields!IsDenied.Value, "Proposal")</Value>
-                <Style />
-              </TextRun>
-            </TextRuns>
-            <Style />
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>IsDenied</rd:DefaultName>
-        <Top>2.28833in</Top>
-        <Left>1.68417in</Left>
-        <Height>0.25in</Height>
-        <Width>1in</Width>
-        <ZIndex>2</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
       <Textbox Name="ProposalMaximum">
         <CanGrow>true</CanGrow>
         <KeepTogether>true</KeepTogether>
@@ -276,51 +214,27 @@ FROM         CallForProposals INNER JOIN
           <Paragraph>
             <TextRuns>
               <TextRun>
+                <Value>Proposal Maximum:  </Value>
+                <Style />
+              </TextRun>
+              <TextRun>
                 <Label>ProposalMaximum</Label>
                 <Value>=First(Fields!ProposalMaximum.Value, "Proposal")</Value>
-                <Style />
+                <Style>
+                  <Format>'$'0.00;('$'0.00)</Format>
+                  <rd:FormatSymbolCulture>en-US</rd:FormatSymbolCulture>
+                </Style>
               </TextRun>
             </TextRuns>
             <Style />
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>ProposalMaximum</rd:DefaultName>
-        <Top>2.75708in</Top>
+        <Top>1.02791in</Top>
         <Left>0.31958in</Left>
         <Height>0.25in</Height>
-        <Width>1in</Width>
-        <ZIndex>3</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="RequestedAmount">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Label>RequestedAmount</Label>
-                <Value>=First(Fields!RequestedAmount.Value, "Proposal")</Value>
-                <Style />
-              </TextRun>
-            </TextRuns>
-            <Style />
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>RequestedAmount</rd:DefaultName>
-        <Top>2.75708in</Top>
-        <Left>1.68417in</Left>
-        <Height>0.25in</Height>
-        <Width>1in</Width>
-        <ZIndex>4</ZIndex>
+        <Width>3.09376in</Width>
+        <ZIndex>1</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -338,51 +252,27 @@ FROM         CallForProposals INNER JOIN
           <Paragraph>
             <TextRuns>
               <TextRun>
+                <Value>Approved Amount:    </Value>
+                <Style />
+              </TextRun>
+              <TextRun>
                 <Label>ApprovedAmount</Label>
                 <Value>=First(Fields!ApprovedAmount.Value, "Proposal")</Value>
-                <Style />
+                <Style>
+                  <Format>'$'0.00;('$'0.00)</Format>
+                  <rd:FormatSymbolCulture>en-US</rd:FormatSymbolCulture>
+                </Style>
               </TextRun>
             </TextRuns>
             <Style />
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>ApprovedAmount</rd:DefaultName>
-        <Top>2.75708in</Top>
-        <Left>2.93417in</Left>
+        <Top>1.64944in</Top>
+        <Left>0.31958in</Left>
         <Height>0.25in</Height>
-        <Width>1in</Width>
-        <ZIndex>5</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="IsSubmitted">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Label>IsSubmitted</Label>
-                <Value>=First(Fields!IsSubmitted.Value, "Proposal")</Value>
-                <Style />
-              </TextRun>
-            </TextRuns>
-            <Style />
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>IsSubmitted</rd:DefaultName>
-        <Top>2.28833in</Top>
-        <Left>2.93417in</Left>
-        <Height>0.25in</Height>
-        <Width>1in</Width>
-        <ZIndex>6</ZIndex>
+        <Width>3.09376in</Width>
+        <ZIndex>2</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -409,11 +299,11 @@ FROM         CallForProposals INNER JOIN
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>CreatedDate</rd:DefaultName>
-        <Top>3.28833in</Top>
+        <Top>2.03139in</Top>
         <Left>0.31958in</Left>
         <Height>0.25in</Height>
         <Width>1in</Width>
-        <ZIndex>7</ZIndex>
+        <ZIndex>3</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -440,11 +330,11 @@ FROM         CallForProposals INNER JOIN
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>SubmittedDate</rd:DefaultName>
-        <Top>3.28833in</Top>
+        <Top>2.03139in</Top>
         <Left>1.68417in</Left>
         <Height>0.25in</Height>
         <Width>1in</Width>
-        <ZIndex>8</ZIndex>
+        <ZIndex>4</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -484,7 +374,7 @@ FROM         CallForProposals INNER JOIN
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>Is Primary</Value>
+                              <Value />
                               <Style />
                             </TextRun>
                           </TextRuns>
@@ -613,7 +503,7 @@ FROM         CallForProposals INNER JOIN
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!IsPrimary.Value</Value>
+                              <Value>=IIf(Fields!IsPrimary.Value = True, "Primary", "")</Value>
                               <Style />
                             </TextRun>
                           </TextRuns>
@@ -747,11 +637,11 @@ FROM         CallForProposals INNER JOIN
           </TablixMembers>
         </TablixRowHierarchy>
         <DataSetName>Investigators</DataSetName>
-        <Top>3.87167in</Top>
+        <Top>2.35084in</Top>
         <Left>0.31958in</Left>
         <Height>0.5in</Height>
         <Width>5.13542in</Width>
-        <ZIndex>9</ZIndex>
+        <ZIndex>5</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -920,11 +810,11 @@ FROM         CallForProposals INNER JOIN
           </TablixMembers>
         </TablixRowHierarchy>
         <DataSetName>QandA</DataSetName>
-        <Top>4.67375in</Top>
+        <Top>3.08in</Top>
         <Left>0.31958in</Left>
         <Height>0.5in</Height>
         <Width>5.72917in</Width>
-        <ZIndex>10</ZIndex>
+        <ZIndex>6</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -950,7 +840,79 @@ FROM         CallForProposals INNER JOIN
         <Left>0.31958in</Left>
         <Height>0.25in</Height>
         <Width>0.85417in</Width>
-        <ZIndex>11</ZIndex>
+        <ZIndex>7</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="RequestedAmount">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Requested Amount:  </Value>
+                <Style />
+              </TextRun>
+              <TextRun>
+                <Label>RequestedAmount</Label>
+                <Value>=Sum(Fields!RequestedAmount.Value, "Proposal")</Value>
+                <Style>
+                  <Format>'$'0.00;('$'0.00)</Format>
+                  <rd:FormatSymbolCulture>en-US</rd:FormatSymbolCulture>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>RequestedAmount</rd:DefaultName>
+        <Top>1.34389in</Top>
+        <Left>0.31958in</Left>
+        <Height>0.25in</Height>
+        <Width>3.09376in</Width>
+        <ZIndex>8</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox2">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Decision: </Value>
+                <Style />
+              </TextRun>
+              <TextRun>
+                <Value>=Switch(First(Fields!IsApproved.Value, "Proposal") = true,"Approved",First(Fields!IsDenied.Value, "Proposal") = true,"Denied", First(Fields!IsApproved.Value, "Proposal")=First(Fields!IsDenied.Value, "Proposal"), "No Decision")</Value>
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox2</rd:DefaultName>
+        <Top>0.66333in</Top>
+        <Left>0.31958in</Left>
+        <Height>0.25in</Height>
+        <Width>3.09376in</Width>
+        <ZIndex>9</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
