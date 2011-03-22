@@ -196,7 +196,14 @@ namespace Gramps.Controllers
                 Message = "You do not have access to that.";
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
-            //TODO: Add a check to see if there are answers (not needed for a template)
+            if (callForProposalId.HasValue && callForProposalId.Value > 0)
+            {
+                if (Repository.OfType<QuestionAnswer>().Queryable.Where(a => a.Question.Id == questionToDelete.Id).Any())
+                {
+                    Message = "Question has a related answer. Unable to Delete";
+                    return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
+                }
+            }
 
             _questionRepository.Remove(questionToDelete);
             Message = "Question removed";
