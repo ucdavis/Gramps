@@ -22,7 +22,7 @@
       <Name>Debug</Name>
       <Platform>Win32</Platform>
       <Options>
-        <TargetServerURL>http://localhost/ReportServer</TargetServerURL>
+        <TargetServerURL>http://testreports.caes.ucdavis.edu/reportserver</TargetServerURL>
         <TargetFolder>Gramps.Report</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
         <StartItem>Report1.rdl</StartItem>
