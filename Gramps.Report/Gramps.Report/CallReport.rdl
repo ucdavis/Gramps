@@ -87,7 +87,7 @@ ORDER BY Proposals.Sequence</CommandText>
           </TablixColumns>
           <TablixRows>
             <TablixRow>
-              <Height>0.8125in</Height>
+              <Height>0.88542in</Height>
               <TablixCells>
                 <TablixCell>
                   <CellContents>
@@ -135,8 +135,8 @@ ORDER BY Proposals.Sequence</CommandText>
                               <Value>=Parameters!ShowComments.Value</Value>
                             </Parameter>
                           </Parameters>
-                          <Top>0.46875in</Top>
-                          <Height>0.32292in</Height>
+                          <Top>0.14583in</Top>
+                          <Height>0.64584in</Height>
                           <Width>6.39583in</Width>
                           <ZIndex>1</ZIndex>
                           <Style>
@@ -190,6 +190,7 @@ ORDER BY Proposals.Sequence</CommandText>
                         </Border>
                       </Style>
                     </Rectangle>
+                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
               </TablixCells>
@@ -210,7 +211,7 @@ ORDER BY Proposals.Sequence</CommandText>
         </TablixRowHierarchy>
         <DataSetName>CallDataSet</DataSetName>
         <Top>1.72583in</Top>
-        <Height>0.8125in</Height>
+        <Height>0.88542in</Height>
         <Width>6.39583in</Width>
         <Style>
           <Border>
@@ -275,7 +276,7 @@ ORDER BY Proposals.Sequence</CommandText>
             <Top>0.7882in</Top>
             <Left>0.15292in</Left>
             <Height>0.51042in</Height>
-            <Width>6.22208in</Width>
+            <Width>6.06583in</Width>
             <ZIndex>1</ZIndex>
             <Style>
               <Border>
@@ -306,7 +307,7 @@ ORDER BY Proposals.Sequence</CommandText>
             <Top>0.42362in</Top>
             <Left>0.15292in</Left>
             <Height>0.25in</Height>
-            <Width>6.22208in</Width>
+            <Width>6.06583in</Width>
             <ZIndex>2</ZIndex>
             <Style>
               <Border>
@@ -322,7 +323,7 @@ ORDER BY Proposals.Sequence</CommandText>
         <KeepTogether>true</KeepTogether>
         <Top>0.08in</Top>
         <Height>1.39931in</Height>
-        <Width>6.39583in</Width>
+        <Width>6.21875in</Width>
         <ZIndex>1</ZIndex>
         <Style>
           <Border>
@@ -332,7 +333,7 @@ ORDER BY Proposals.Sequence</CommandText>
         </Style>
       </Rectangle>
     </ReportItems>
-    <Height>5.86125in</Height>
+    <Height>2.80917in</Height>
     <Style>
       <Border />
     </Style>

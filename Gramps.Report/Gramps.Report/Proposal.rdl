@@ -199,182 +199,6 @@ WHERE     (ProposalId = @ProposalId) AND (@ShowComments = 'true')</CommandText>
   </DataSets>
   <Body>
     <ReportItems>
-      <Textbox Name="Sequence">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Label>Sequence</Label>
-                <Value>=First(Fields!Sequence.Value, "Proposal")</Value>
-                <Style>
-                  <Format>0;(0)</Format>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Left</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Sequence</rd:DefaultName>
-        <Top>0.03833in</Top>
-        <Left>0.87167in</Left>
-        <Height>0.25in</Height>
-        <Width>0.85417in</Width>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="ProposalMaximum">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>Proposal Maximum:  </Value>
-                <Style />
-              </TextRun>
-              <TextRun>
-                <Label>ProposalMaximum</Label>
-                <Value>=First(Fields!ProposalMaximum.Value, "Proposal")</Value>
-                <Style>
-                  <Format>'$'0.00;('$'0.00)</Format>
-                  <rd:FormatSymbolCulture>en-US</rd:FormatSymbolCulture>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style />
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>ProposalMaximum</rd:DefaultName>
-        <Top>0.90291in</Top>
-        <Height>0.25in</Height>
-        <Width>3.09376in</Width>
-        <ZIndex>1</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="ApprovedAmount">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>Approved Amount:    </Value>
-                <Style />
-              </TextRun>
-              <TextRun>
-                <Label>ApprovedAmount</Label>
-                <Value>=First(Fields!ApprovedAmount.Value, "Proposal")</Value>
-                <Style>
-                  <Format>'$'0.00;('$'0.00)</Format>
-                  <rd:FormatSymbolCulture>en-US</rd:FormatSymbolCulture>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style />
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>ApprovedAmount</rd:DefaultName>
-        <Top>1.52444in</Top>
-        <Height>0.25in</Height>
-        <Width>3.09376in</Width>
-        <ZIndex>2</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="CreatedDate">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>Create Date: </Value>
-                <Style />
-              </TextRun>
-              <TextRun>
-                <Label>ProposalCreatedDate</Label>
-                <Value>=First(Fields!CreatedDate.Value, "Proposal")</Value>
-                <Style />
-              </TextRun>
-            </TextRuns>
-            <Style />
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>CreatedDate</rd:DefaultName>
-        <Top>1.90639in</Top>
-        <Height>0.25in</Height>
-        <Width>4.05209in</Width>
-        <ZIndex>3</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="SubmittedDate">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>Submitted Date: </Value>
-                <Style />
-              </TextRun>
-              <TextRun>
-                <Label>SubmittedDate</Label>
-                <Value>=First(Fields!SubmittedDate.Value, "Proposal")</Value>
-                <Style />
-              </TextRun>
-            </TextRuns>
-            <Style />
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>SubmittedDate</rd:DefaultName>
-        <Top>2.22584in</Top>
-        <Height>0.25in</Height>
-        <Width>4.05209in</Width>
-        <ZIndex>4</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
       <Tablix Name="Tablix1">
         <TablixBody>
           <TablixColumns>
@@ -667,115 +491,15 @@ WHERE     (ProposalId = @ProposalId) AND (@ShowComments = 'true')</CommandText>
           </TablixMembers>
         </TablixRowHierarchy>
         <DataSetName>Investigators</DataSetName>
-        <Top>2.60084in</Top>
+        <Top>2.35084in</Top>
         <Height>0.5in</Height>
         <Width>6.25522in</Width>
-        <ZIndex>5</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
           </Border>
         </Style>
       </Tablix>
-      <Textbox Name="Textbox31">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>Proposal #:</Value>
-                <Style />
-              </TextRun>
-            </TextRuns>
-            <Style />
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox31</rd:DefaultName>
-        <Top>0.03833in</Top>
-        <Height>0.25in</Height>
-        <Width>0.85417in</Width>
-        <ZIndex>6</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="RequestedAmount">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>Requested Amount:  </Value>
-                <Style />
-              </TextRun>
-              <TextRun>
-                <Label>RequestedAmount</Label>
-                <Value>=Sum(Fields!RequestedAmount.Value, "Proposal")</Value>
-                <Style>
-                  <Format>'$'0.00;('$'0.00)</Format>
-                  <rd:FormatSymbolCulture>en-US</rd:FormatSymbolCulture>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style />
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>RequestedAmount</rd:DefaultName>
-        <Top>1.21889in</Top>
-        <Height>0.25in</Height>
-        <Width>3.09376in</Width>
-        <ZIndex>7</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="Textbox2">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>Decision: </Value>
-                <Style />
-              </TextRun>
-              <TextRun>
-                <Value>=Switch(First(Fields!IsApproved.Value, "Proposal") = true,"Approved",First(Fields!IsDenied.Value, "Proposal") = true,"Denied", First(Fields!IsApproved.Value, "Proposal")=First(Fields!IsDenied.Value, "Proposal"), "No Decision")</Value>
-                <Style />
-              </TextRun>
-            </TextRuns>
-            <Style />
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox2</rd:DefaultName>
-        <Top>0.53833in</Top>
-        <Height>0.25in</Height>
-        <Width>3.09376in</Width>
-        <ZIndex>8</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
       <Textbox Name="Text">
         <CanGrow>true</CanGrow>
         <CanShrink>true</CanShrink>
@@ -801,10 +525,10 @@ WHERE     (ProposalId = @ProposalId) AND (@ShowComments = 'true')</CommandText>
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Text</rd:DefaultName>
-        <Top>4.31958in</Top>
+        <Top>4.06958in</Top>
         <Height>0.25in</Height>
         <Width>6.25522in</Width>
-        <ZIndex>9</ZIndex>
+        <ZIndex>1</ZIndex>
         <Visibility>
           <Hidden>=Parameters!ShowComments.Value &lt;&gt; "true"</Hidden>
         </Visibility>
@@ -833,10 +557,10 @@ WHERE     (ProposalId = @ProposalId) AND (@ShowComments = 'true')</CommandText>
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>ShowComments</rd:DefaultName>
-        <Top>4.06958in</Top>
+        <Top>3.81958in</Top>
         <Height>0.25in</Height>
         <Width>1in</Width>
-        <ZIndex>10</ZIndex>
+        <ZIndex>2</ZIndex>
         <Visibility>
           <Hidden>true</Hidden>
         </Visibility>
@@ -935,7 +659,6 @@ WHERE     (ProposalId = @ProposalId) AND (@ShowComments = 'true')</CommandText>
                         </Border>
                       </Style>
                     </Rectangle>
-                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
               </TablixCells>
@@ -955,18 +678,289 @@ WHERE     (ProposalId = @ProposalId) AND (@ShowComments = 'true')</CommandText>
           </TablixMembers>
         </TablixRowHierarchy>
         <DataSetName>QandA</DataSetName>
-        <Top>3.2432in</Top>
+        <Top>2.9932in</Top>
         <Height>0.70139in</Height>
         <Width>6.25522in</Width>
-        <ZIndex>11</ZIndex>
+        <ZIndex>3</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
           </Border>
         </Style>
       </Tablix>
+      <Rectangle Name="Rectangle2">
+        <ReportItems>
+          <Textbox Name="ApprovedAmount">
+            <CanGrow>true</CanGrow>
+            <CanShrink>true</CanShrink>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Approved Amount:    </Value>
+                    <Style />
+                  </TextRun>
+                  <TextRun>
+                    <Label>ApprovedAmount</Label>
+                    <Value>=First(Fields!ApprovedAmount.Value, "Proposal")</Value>
+                    <Style>
+                      <Format>'$'0.00;('$'0.00)</Format>
+                      <rd:FormatSymbolCulture>en-US</rd:FormatSymbolCulture>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>ApprovedAmount</rd:DefaultName>
+            <Top>1.14597in</Top>
+            <Height>0.25in</Height>
+            <Width>3.09376in</Width>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="CreatedDate">
+            <CanGrow>true</CanGrow>
+            <CanShrink>true</CanShrink>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Create Date: </Value>
+                    <Style />
+                  </TextRun>
+                  <TextRun>
+                    <Label>ProposalCreatedDate</Label>
+                    <Value>=First(Fields!CreatedDate.Value, "Proposal")</Value>
+                    <Style />
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>CreatedDate</rd:DefaultName>
+            <Top>1.40292in</Top>
+            <Height>0.25in</Height>
+            <Width>4.05209in</Width>
+            <ZIndex>1</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="SubmittedDate">
+            <CanGrow>true</CanGrow>
+            <CanShrink>true</CanShrink>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Submitted Date: </Value>
+                    <Style />
+                  </TextRun>
+                  <TextRun>
+                    <Label>SubmittedDate</Label>
+                    <Value>=First(Fields!SubmittedDate.Value, "Proposal")</Value>
+                    <Style />
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>SubmittedDate</rd:DefaultName>
+            <Top>1.72237in</Top>
+            <Height>0.25in</Height>
+            <Width>4.05209in</Width>
+            <ZIndex>2</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="RequestedAmount">
+            <CanGrow>true</CanGrow>
+            <CanShrink>true</CanShrink>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Requested Amount:  </Value>
+                    <Style />
+                  </TextRun>
+                  <TextRun>
+                    <Label>RequestedAmount</Label>
+                    <Value>=Sum(Fields!RequestedAmount.Value, "Proposal")</Value>
+                    <Style>
+                      <Format>'$'0.00;('$'0.00)</Format>
+                      <rd:FormatSymbolCulture>en-US</rd:FormatSymbolCulture>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>RequestedAmount</rd:DefaultName>
+            <Top>0.84042in</Top>
+            <Height>0.25in</Height>
+            <Width>3.09376in</Width>
+            <ZIndex>3</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="ProposalMaximum">
+            <CanGrow>true</CanGrow>
+            <CanShrink>true</CanShrink>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Proposal Maximum:  </Value>
+                    <Style />
+                  </TextRun>
+                  <TextRun>
+                    <Label>ProposalMaximum</Label>
+                    <Value>=First(Fields!ProposalMaximum.Value, "Proposal")</Value>
+                    <Style>
+                      <Format>'$'0.00;('$'0.00)</Format>
+                      <rd:FormatSymbolCulture>en-US</rd:FormatSymbolCulture>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>ProposalMaximum</rd:DefaultName>
+            <Top>0.52444in</Top>
+            <Height>0.25in</Height>
+            <Width>3.09376in</Width>
+            <ZIndex>4</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox2">
+            <CanGrow>true</CanGrow>
+            <CanShrink>true</CanShrink>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Decision: </Value>
+                    <Style />
+                  </TextRun>
+                  <TextRun>
+                    <Value>=Switch(First(Fields!IsApproved.Value, "Proposal") = true,"Approved",First(Fields!IsDenied.Value, "Proposal") = true,"Denied", First(Fields!IsApproved.Value, "Proposal")=First(Fields!IsDenied.Value, "Proposal"), "No Decision")</Value>
+                    <Style />
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox2</rd:DefaultName>
+            <Top>0.28486in</Top>
+            <Height>0.25in</Height>
+            <Width>3.09376in</Width>
+            <ZIndex>5</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Sequence">
+            <CanGrow>true</CanGrow>
+            <CanShrink>true</CanShrink>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Proposal # </Value>
+                    <Style>
+                      <Format>0;(0)</Format>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Label>Sequence</Label>
+                    <Value>=First(Fields!Sequence.Value, "Proposal")</Value>
+                    <Style>
+                      <Format>0;(0)</Format>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Sequence</rd:DefaultName>
+            <Top>0.03486in</Top>
+            <Height>0.25in</Height>
+            <Width>2.11459in</Width>
+            <ZIndex>6</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+        </ReportItems>
+        <KeepTogether>true</KeepTogether>
+        <Height>2.14598in</Height>
+        <Width>6.25522in</Width>
+        <ZIndex>4</ZIndex>
+        <Style>
+          <Border>
+            <Style>Solid</Style>
+          </Border>
+        </Style>
+      </Rectangle>
     </ReportItems>
-    <Height>4.79875in</Height>
+    <Height>4.5175in</Height>
     <Style />
   </Body>
   <ReportParameters>
