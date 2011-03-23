@@ -200,5 +200,15 @@ namespace Gramps.Tests.Core.Helpers
 
             return rtValue;
         }
+
+        public static QuestionType QuestionType(int? counter)
+        {
+            var rtValue = new QuestionType();
+            rtValue.Name = "Name" + counter.Extra();
+            rtValue.HasOptions = false;
+            rtValue.ExtendedProperty = false;
+
+            return rtValue;
+        }
     }
 }
