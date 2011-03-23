@@ -172,11 +172,29 @@ namespace Gramps.Tests.RepositoryTests.CallForProposalRepositoryTests
             {
                  "[NHibernate.Validator.Constraints.AssertTrueAttribute(Message = \"Owner is required\")]"
             }));
-            expectedFields.Add(new NameAndType("ProposalMaximum", "System.Decimal", new List<string>
+
+
+            List<AttributeList> attributeList;
+            attributeList = new List<AttributeList>();
+            attributeList.Add(new AttributeList("[System.ComponentModel.DataAnnotations.DisplayFormatAttribute(", new List<string>
             {
-                 "[System.ComponentModel.DataAnnotations.DisplayFormatAttribute(ApplyFormatInEditMode = True, DataFormatString = \"{0:C}\")]", 
-                 "[UCDArch.Core.NHibernateValidator.Extensions.RangeDoubleAttribute(Min = 0, Message = \"Minimum amount is one cent\")]"
+                "DataFormatString = \"{0:C}\"",
+                "ApplyFormatInEditMode = True"                                                          
             }));
+            attributeList.Add(new AttributeList("[UCDArch.Core.NHibernateValidator.Extensions.RangeDoubleAttribute(", new List<string>
+            {
+                "Min = 0",
+                "Message = \"Minimum amount is one cent\""                                      
+            }));
+            expectedFields.Add(new NameAndType("ProposalMaximum", "System.Decimal", new List<AttributeList>(attributeList)));
+
+            //expectedFields.Add(new NameAndType("ProposalMaximum", "System.Decimal", new List<string>
+            //{
+            //     "[System.ComponentModel.DataAnnotations.DisplayFormatAttribute(DataFormatString = \"{0:C}\", ApplyFormatInEditMode = True)]",
+            //     "[UCDArch.Core.NHibernateValidator.Extensions.RangeDoubleAttribute(Min = 0, Message = \"Minimum amount is one cent\")]"
+            //}));
+
+
             expectedFields.Add(new NameAndType("Proposals", "System.Collections.Generic.IList`1[Gramps.Core.Domain.Proposal]", new List<string>
             {
                 "[NHibernate.Validator.Constraints.NotNullAttribute()]"
