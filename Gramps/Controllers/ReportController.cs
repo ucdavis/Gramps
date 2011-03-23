@@ -35,14 +35,12 @@ namespace Gramps.Controllers
         // GET: /Report/
         public ActionResult TemplateIndex(int? templateId, int? callForProposalId)
         {
-            //Message = "Not Implemented yet";
-            //return this.RedirectToAction<TemplateController>(a => a.Index());
 
             if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
             {
                 Message = "You do not have access to that.";
                 return this.RedirectToAction<HomeController>(a => a.Index());
-            }
+            }   
 
             var viewModel = TemplateReportListViewModel.Create(Repository, templateId, callForProposalId);
 
@@ -62,6 +60,11 @@ namespace Gramps.Controllers
             }
 
             if (!_accessService.HasAccess(null, id, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+            if (!_accessService.HasSameId(null, callforproposal, null, id))
             {
                 Message = "You do not have access to that.";
                 return this.RedirectToAction<HomeController>(a => a.Index());
@@ -269,6 +272,12 @@ namespace Gramps.Controllers
                 Message = "You do not have access to that.";
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
+            if (!_accessService.HasSameId(report.Template, null, templateId, null))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+
 
             var viewModel = ReportViewModel.Create(Repository, templateId, callForProposalId);
             viewModel.Report = report;
@@ -286,6 +295,11 @@ namespace Gramps.Controllers
                 return this.RedirectToAction(a => a.TemplateIndex(templateId, callForProposalId));
             }
             if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+            if (!_accessService.HasSameId(reportToEdit.Template, null, templateId, null))
             {
                 Message = "You do not have access to that.";
                 return this.RedirectToAction<HomeController>(a => a.Index());
@@ -338,6 +352,12 @@ namespace Gramps.Controllers
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
+            if (!_accessService.HasSameId(null, callforProposal, null, callForProposalId))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+
             var report = _reportRepository.GetNullableById(id);
             if (report == null)
             {
@@ -366,6 +386,11 @@ namespace Gramps.Controllers
             }
 
             if (!_accessService.HasAccess(null, callforProposal.Id, CurrentUser.Identity.Name))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+            if (!_accessService.HasSameId(null, callforProposal, null, callForProposalId))
             {
                 Message = "You do not have access to that.";
                 return this.RedirectToAction<HomeController>(a => a.Index());
@@ -473,6 +498,11 @@ namespace Gramps.Controllers
             {
                 return this.RedirectToAction(a => a.CallIndex(callforProposal.Id));
             }
+            if (report.CallForProposal.Id != callforProposal.Id)
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
 
             var viewModel = ReportLaunchViewModel.Create(Repository, callforProposal, report);
 
@@ -500,6 +530,11 @@ namespace Gramps.Controllers
             if (report == null)
             {
                 return this.RedirectToAction(a => a.CallIndex(callforProposal.Id));
+            }
+            if (report.CallForProposal.Id != callforProposal.Id)
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
             var viewModel = ReportLaunchViewModel.Create(Repository, callforProposal, report, true);
