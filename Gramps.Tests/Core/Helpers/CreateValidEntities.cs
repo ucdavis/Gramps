@@ -210,5 +210,13 @@ namespace Gramps.Tests.Core.Helpers
 
             return rtValue;
         }
+
+        public static ReportColumn ReportColumn(int? counter)
+        {
+            var rtValue = new ReportColumn();
+            rtValue.Name = "Name" + counter.Extra();
+            rtValue.ColumnOrder = counter.HasValue ? counter.Value : 0;
+            return rtValue;
+        }
     }
 }

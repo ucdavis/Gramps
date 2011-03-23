@@ -409,7 +409,27 @@ namespace Gramps.Tests.RepositoryTests
 
         #endregion Cascade Tests
         #endregion Question Tests
-        
+
+        #region Fluent Mapping Tests
+        [TestMethod]
+        public void TestCanCorrectlyMapQuestionOption()
+        {
+            #region Arrange
+            var id = QuestionOptionRepository.Queryable.Max(x => x.Id) + 1;
+            var session = NHibernateSessionManager.Instance.GetSession();
+            var question = Repository.OfType<Question>().GetNullableById(1);
+            #endregion Arrange
+
+            #region Act/Assert
+            new PersistenceSpecification<QuestionOption>(session)
+                .CheckProperty(c => c.Id, id)
+                .CheckProperty(c => c.Name, "Name")
+                .CheckProperty(c => c.Question, question)
+                .VerifyTheMappings();
+            #endregion Act/Assert
+        }
+
+        #endregion Fluent Mapping Tests
         
         #region Reflection of Database.
 

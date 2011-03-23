@@ -31,7 +31,7 @@ namespace Gramps.Core.Domain
         public virtual bool ShowUnsubmitted { get; set; } 
         public virtual Template Template { get; set; }
         public virtual CallForProposal CallForProposal { get; set; }
-
+        [NotNull]
         public virtual IList<ReportColumn> ReportColumns { get; set; }
         #endregion Mapped Fields
 
