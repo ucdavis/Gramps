@@ -588,7 +588,7 @@ WHERE     (ProposalId = @ProposalId) AND (@ShowComments = 'true')</CommandText>
           </TablixColumns>
           <TablixRows>
             <TablixRow>
-              <Height>0.70139in</Height>
+              <Height>0.69096in</Height>
               <TablixCells>
                 <TablixCell>
                   <CellContents>
@@ -683,8 +683,8 @@ WHERE     (ProposalId = @ProposalId) AND (@ShowComments = 'true')</CommandText>
           </TablixMembers>
         </TablixRowHierarchy>
         <DataSetName>QandA</DataSetName>
-        <Top>2.9932in</Top>
-        <Height>0.70139in</Height>
+        <Top>2.4932in</Top>
+        <Height>0.69096in</Height>
         <Width>6.25522in</Width>
         <ZIndex>3</ZIndex>
         <Style>
