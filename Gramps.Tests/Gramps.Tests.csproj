@@ -138,6 +138,7 @@
     <Compile Include="RepositoryTests\QuestionRepositoryTests\QuestionRepositoryTestsPart06.cs" />
     <Compile Include="RepositoryTests\QuestionRepositoryTests\QuestionRepositoryTestsPart07.cs" />
     <Compile Include="RepositoryTests\QuestionTypeRepositoryTests.cs" />
+    <Compile Include="RepositoryTests\ReportColumnRepositoryTests.cs" />
     <Compile Include="RepositoryTests\ReportRepositoryTests.cs" />
     <Compile Include="RepositoryTests\ReviewedProposalRepositoryTests.cs" />
   </ItemGroup>

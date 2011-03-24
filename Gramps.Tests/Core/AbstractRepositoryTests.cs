@@ -462,6 +462,16 @@ namespace Gramps.Tests.Core
             }
         }
 
+        protected void LoadReports(int entriesToAdd)
+        {
+            for (int i = 0; i < entriesToAdd; i++)
+            {
+                var validEntity = CreateValidEntities.Report(i + 1);
+                validEntity.CallForProposal = Repository.OfType<CallForProposal>().Queryable.First();
+                Repository.OfType<Report>().EnsurePersistent(validEntity);
+            }
+        }
+
         protected void LoadQuestions(int entriesToAdd)
         {
             for (int i = 0; i < entriesToAdd; i++)
