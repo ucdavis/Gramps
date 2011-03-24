@@ -37,12 +37,16 @@ namespace Gramps.Core.Domain
         public virtual string Name { get; set; }
         public virtual bool IsActive { get; set; }
 
+        [NotNull]
         public virtual IList<EmailsForCall> Emails { get; set; }
+        [NotNull]
         public virtual IList<EmailTemplate> EmailTemplates { get; set; }
+        [NotNull]
         public virtual IList<Editor> Editors { get; set; }
+        [NotNull]
         public virtual IList<Question> Questions { get; set; }
+        [NotNull]
         public virtual IList<CallForProposal> CallForProposals { get; set; }
-
         [NotNull]
         public virtual IList<Report> Reports { get; set; }
 
@@ -67,12 +71,12 @@ namespace Gramps.Core.Domain
             Map(x => x.Name);
             Map(x => x.IsActive);
 
-            HasMany(x => x.Emails);
-            HasMany(x => x.EmailTemplates);
-            HasMany(x => x.Editors);
-            HasMany(x => x.Questions);
-            HasMany(x => x.CallForProposals);
-            HasMany(x => x.Reports);
+            HasMany(x => x.Emails).Cascade.DeleteOrphan();
+            HasMany(x => x.EmailTemplates).Cascade.DeleteOrphan();
+            HasMany(x => x.Editors).Cascade.DeleteOrphan();
+            HasMany(x => x.Questions).Cascade.DeleteOrphan();
+            HasMany(x => x.CallForProposals).Cascade.DeleteOrphan();
+            HasMany(x => x.Reports).Cascade.DeleteOrphan();
         }
     }
 }

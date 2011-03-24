@@ -359,7 +359,7 @@ namespace Gramps.Tests.RepositoryTests
         #region Valid Tests
 
         /// <summary>
-        /// Note this test saves a comment where the editor belongs to a different callforproposal compared to the proposal. 
+        /// FYI this test saves a comment where the editor belongs to a different callforproposal compared to the proposal. 
         /// This isn't valid from a conseptual point of view
         /// </summary>
         [TestMethod]
@@ -368,7 +368,7 @@ namespace Gramps.Tests.RepositoryTests
             #region Arrange
             Repository.OfType<CallForProposal>().DbContext.BeginTransaction();
             var callForProposal = CreateValidEntities.CallForProposal(9);
-            callForProposal.AddEditor(new Editor() { IsOwner = true, User = Repository.OfType<User>().GetNullableById(1) });
+            callForProposal.AddEditor(new Editor { IsOwner = true, User = Repository.OfType<User>().GetNullableById(1) });
             callForProposal.AddEditor(CreateValidEntities.Editor(2));
             callForProposal.AddEditor(CreateValidEntities.Editor(3));
             callForProposal.AddEditor(CreateValidEntities.Editor(4));

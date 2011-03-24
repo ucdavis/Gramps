@@ -790,9 +790,7 @@ namespace Gramps.Tests.RepositoryTests
         {
             #region Arrange
             Report report = GetValid(9);
-            report.AddReportColumn(CreateValidEntities.ReportColumn(1));
-            report.AddReportColumn(CreateValidEntities.ReportColumn(2));
-            report.AddReportColumn(CreateValidEntities.ReportColumn(3));
+            
             #endregion Arrange
 
             #region Act
@@ -803,7 +801,7 @@ namespace Gramps.Tests.RepositoryTests
 
             #region Assert
             Assert.IsNotNull(report.ReportColumns);
-            Assert.AreEqual(3, report.ReportColumns.Count);
+            Assert.AreEqual(0, report.ReportColumns.Count);
             Assert.IsFalse(report.IsTransient());
             Assert.IsTrue(report.IsValid());
             #endregion Assert
