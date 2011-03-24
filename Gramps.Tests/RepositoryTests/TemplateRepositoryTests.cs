@@ -98,6 +98,7 @@ namespace Gramps.Tests.RepositoryTests
         protected override void LoadData()
         {
             TemplateRepository.DbContext.BeginTransaction();
+            LoadQuestionTypes();
             LoadRecords(5);
             TemplateRepository.DbContext.CommitTransaction();
         }
@@ -664,7 +665,7 @@ namespace Gramps.Tests.RepositoryTests
         }
 
         #endregion Cascade Tests
-        #endregion ReportColumns Tests
+        #endregion Emails Tests
 
         #region EmailTemplates Tests
         #region Invalid Tests
@@ -947,7 +948,7 @@ namespace Gramps.Tests.RepositoryTests
 
 
         #endregion Cascade Tests
-        #endregion ReportColumns Tests
+        #endregion EmailTemplates Tests
 
         #region Editors Tests
         #region Invalid Tests
@@ -1223,12 +1224,589 @@ namespace Gramps.Tests.RepositoryTests
             Assert.IsNull(relatedRecord2);
             #endregion Assert
         }
+
+        #endregion Cascade Tests
+
+        #endregion Editors Tests
+
+        #region Questions Tests
+        #region Invalid Tests
+        [TestMethod]
+        [ExpectedException(typeof(ApplicationException))]
+        public void TestQuestionsWithAValueOfNullDoesNotSave()
+        {
+            Template record = null;
+            try
+            {
+                #region Arrange
+                record = GetValid(9);
+                record.Questions = null;
+                #endregion Arrange
+
+                #region Act
+                TemplateRepository.DbContext.BeginTransaction();
+                TemplateRepository.EnsurePersistent(record);
+                TemplateRepository.DbContext.CommitTransaction();
+                #endregion Act
+            }
+            catch (Exception)
+            {
+                Assert.IsNotNull(record);
+                Assert.AreEqual(record.Questions, null);
+                var results = record.ValidationResults().AsMessageList();
+                results.AssertErrorsAre("Questions: may not be null");
+                Assert.IsTrue(record.IsTransient());
+                Assert.IsFalse(record.IsValid());
+                throw;
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(NHibernate.TransientObjectException))]
+        public void TestQuestionsWithANewValueDoesNotSave()
+        {
+            Template record = null;
+            try
+            {
+                #region Arrange
+                record = GetValid(9);
+                record.Questions.Add(CreateValidEntities.Question(1));
+                record.Questions[0].QuestionType = Repository.OfType<QuestionType>().Queryable.Where(a => a.Name == "Text Box").Single();
+                #endregion Arrange
+
+                #region Act
+                TemplateRepository.DbContext.BeginTransaction();
+                TemplateRepository.EnsurePersistent(record);
+                TemplateRepository.DbContext.CommitTransaction();
+                #endregion Act
+            }
+            catch (Exception ex)
+            {
+                Assert.IsNotNull(record);
+                Assert.IsNotNull(ex);
+                Assert.AreEqual("object references an unsaved transient instance - save the transient instance before flushing. Type: Gramps.Core.Domain.Question, Entity: Gramps.Core.Domain.Question", ex.Message);
+                throw;
+            }
+        }
+
+        #endregion Invalid Tests
+        #region Valid Tests
+
+        [TestMethod]
+        public void TestQuestionsWithPopulatedExistingListWillSave()
+        {
+            #region Arrange
+            Template record = GetValid(9);
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.EnsurePersistent(record);
+            TemplateRepository.DbContext.CommitTransaction();
+
+            const int addedCount = 3;
+            var relatedRecords = new List<Question>();
+            for (int i = 0; i < addedCount; i++)
+            {
+                relatedRecords.Add(CreateValidEntities.Question(i + 1));
+                relatedRecords[i].Template = record;
+                relatedRecords[i].QuestionType = Repository.OfType<QuestionType>().Queryable.Where(a => a.Name == "Text Box").Single();
+                Repository.OfType<Question>().EnsurePersistent(relatedRecords[i]);
+            }
+            #endregion Arrange
+
+            #region Act
+
+            foreach (var relatedRecord in relatedRecords)
+            {
+                record.Questions.Add(relatedRecord);
+            }
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.EnsurePersistent(record);
+            TemplateRepository.DbContext.CommitTransaction();
+            #endregion Act
+
+            #region Assert
+            Assert.IsNotNull(record.Questions);
+            Assert.AreEqual(addedCount, record.Questions.Count);
+            Assert.IsFalse(record.IsTransient());
+            Assert.IsTrue(record.IsValid());
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestQuestionsWithEmptyListWillSave()
+        {
+            #region Arrange
+            Template record = GetValid(9);
+            #endregion Arrange
+
+            #region Act
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.EnsurePersistent(record);
+            TemplateRepository.DbContext.CommitTransaction();
+            #endregion Act
+
+            #region Assert
+            Assert.IsNotNull(record.Questions);
+            Assert.AreEqual(0, record.Questions.Count);
+            Assert.IsFalse(record.IsTransient());
+            Assert.IsTrue(record.IsValid());
+            #endregion Assert
+        }
+        #endregion Valid Tests
+        #region Cascade Tests
+
+        [TestMethod]
+        public void TestTemplateCascadesUpdateToQuestion2()
+        {
+            #region Arrange
+            var count = Repository.OfType<Question>().Queryable.Count();
+            Template record = GetValid(9);
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.EnsurePersistent(record);
+            TemplateRepository.DbContext.CommitTransaction();
+
+
+            const int addedCount = 3;
+            var relatedRecords = new List<Question>();
+            for (int i = 0; i < addedCount; i++)
+            {
+                relatedRecords.Add(CreateValidEntities.Question(i + 1));
+                relatedRecords[i].Template = record;
+                relatedRecords[i].QuestionType = Repository.OfType<QuestionType>().Queryable.Where(a => a.Name == "Text Box").Single();
+                Repository.OfType<Question>().EnsurePersistent(relatedRecords[i]);
+            }
+            foreach (var relatedRecord in relatedRecords)
+            {
+                record.Questions.Add(relatedRecord);
+            }
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.EnsurePersistent(record);
+            TemplateRepository.DbContext.CommitTransaction();
+            var saveId = record.Id;
+            var saveRelatedId = record.Questions[1].Id;
+            NHibernateSessionManager.Instance.GetSession().Evict(record);
+            foreach (var relatedRecord in relatedRecords)
+            {
+                NHibernateSessionManager.Instance.GetSession().Evict(relatedRecord);
+            }
+            #endregion Arrange
+
+            #region Act
+            record = TemplateRepository.GetNullableById(saveId);
+            record.Questions[1].Name = "Updated";
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.EnsurePersistent(record);
+            TemplateRepository.DbContext.CommitTransaction();
+            NHibernateSessionManager.Instance.GetSession().Evict(record);
+            foreach (var relatedRecord in relatedRecords)
+            {
+                NHibernateSessionManager.Instance.GetSession().Evict(relatedRecord);
+            }
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual(count + addedCount, Repository.OfType<Question>().Queryable.Count());
+            var relatedRecord2 = Repository.OfType<Question>().GetNullableById(saveRelatedId);
+            Assert.IsNotNull(relatedRecord2);
+            Assert.AreEqual("Updated", relatedRecord2.Name);
+            #endregion Assert
+        }
+
+        /// <summary>
+        /// Does Remove it (Delete this test, or the one below)
+        /// </summary>
+        [TestMethod]
+        public void TestTemplateCascadesUpdateRemoveQuestion()
+        {
+            #region Arrange
+            var count = Repository.OfType<Question>().Queryable.Count();
+            Template record = GetValid(9);
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.EnsurePersistent(record);
+            TemplateRepository.DbContext.CommitTransaction();
+
+
+            const int addedCount = 3;
+            var relatedRecords = new List<Question>();
+            for (int i = 0; i < addedCount; i++)
+            {
+                relatedRecords.Add(CreateValidEntities.Question(i + 1));
+                relatedRecords[i].Template = record;
+                relatedRecords[i].QuestionType = Repository.OfType<QuestionType>().Queryable.Where(a => a.Name == "Text Box").Single();
+                Repository.OfType<Question>().EnsurePersistent(relatedRecords[i]);
+            }
+            foreach (var relatedRecord in relatedRecords)
+            {
+                record.Questions.Add(relatedRecord);
+            }
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.EnsurePersistent(record);
+            TemplateRepository.DbContext.CommitTransaction();
+            var saveId = record.Id;
+            var saveRelatedId = record.Questions[1].Id;
+            NHibernateSessionManager.Instance.GetSession().Evict(record);
+            #endregion Arrange
+
+            #region Act
+            record = TemplateRepository.GetNullableById(saveId);
+            record.Questions.RemoveAt(1);
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.EnsurePersistent(record);
+            TemplateRepository.DbContext.CommitTransaction();
+            NHibernateSessionManager.Instance.GetSession().Evict(record);
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual(count + (addedCount-1), Repository.OfType<Question>().Queryable.Count());
+            var relatedRecord2 = Repository.OfType<Question>().GetNullableById(saveRelatedId);
+            Assert.IsNull(relatedRecord2);
+            #endregion Assert
+        }
+
+
+        [TestMethod]
+        public void TestTemplateCascadesDeleteToQuestion()
+        {
+            #region Arrange
+            var count = Repository.OfType<ReportColumn>().Queryable.Count();
+            Template record = GetValid(9);
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.EnsurePersistent(record);
+            TemplateRepository.DbContext.CommitTransaction();
+
+
+            const int addedCount = 3;
+            var relatedRecords = new List<Question>();
+            for (int i = 0; i < addedCount; i++)
+            {
+                relatedRecords.Add(CreateValidEntities.Question(i + 1));
+                relatedRecords[i].Template = record;
+                relatedRecords[i].QuestionType = Repository.OfType<QuestionType>().Queryable.Where(a => a.Name == "Text Box").Single();
+                Repository.OfType<Question>().EnsurePersistent(relatedRecords[i]);
+            }
+            foreach (var relatedRecord in relatedRecords)
+            {
+                record.Questions.Add(relatedRecord);
+            }
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.EnsurePersistent(record);
+            TemplateRepository.DbContext.CommitTransaction();
+            var saveId = record.Id;
+            var saveRelatedId = record.Questions[1].Id;
+            NHibernateSessionManager.Instance.GetSession().Evict(record);
+            #endregion Arrange
+
+            #region Act
+            record = TemplateRepository.GetNullableById(saveId);
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.Remove(record);
+            TemplateRepository.DbContext.CommitTransaction();
+            NHibernateSessionManager.Instance.GetSession().Evict(record);
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual(count, Repository.OfType<Question>().Queryable.Count());
+            var relatedRecord2 = Repository.OfType<Question>().GetNullableById(saveRelatedId);
+            Assert.IsNull(relatedRecord2);
+            #endregion Assert
+        }
+        #endregion Cascade Tests
+        #endregion Questions Tests
+
+        #region CallForProposals Tests
+        #region Invalid Tests
+        [TestMethod]
+        [ExpectedException(typeof(ApplicationException))]
+        public void TestCallForProposalsWithAValueOfNullDoesNotSave()
+        {
+            Template record = null;
+            try
+            {
+                #region Arrange
+                record = GetValid(9);
+                record.CallForProposals = null;
+                #endregion Arrange
+
+                #region Act
+                TemplateRepository.DbContext.BeginTransaction();
+                TemplateRepository.EnsurePersistent(record);
+                TemplateRepository.DbContext.CommitTransaction();
+                #endregion Act
+            }
+            catch (Exception)
+            {
+                Assert.IsNotNull(record);
+                Assert.AreEqual(record.CallForProposals, null);
+                var results = record.ValidationResults().AsMessageList();
+                results.AssertErrorsAre("CallForProposals: may not be null");
+                Assert.IsTrue(record.IsTransient());
+                Assert.IsFalse(record.IsValid());
+                throw;
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(NHibernate.TransientObjectException))]
+        public void TestCallForProposalsWithANewValueDoesNotSave()
+        {
+            Template record = null;
+            try
+            {
+                #region Arrange
+                record = GetValid(9);
+                record.CallForProposals.Add(CreateValidEntities.CallForProposal(1));
+                #endregion Arrange
+
+                #region Act
+                TemplateRepository.DbContext.BeginTransaction();
+                TemplateRepository.EnsurePersistent(record);
+                TemplateRepository.DbContext.CommitTransaction();
+                #endregion Act
+            }
+            catch (Exception ex)
+            {
+                Assert.IsNotNull(record);
+                Assert.IsNotNull(ex);
+                Assert.AreEqual("object references an unsaved transient instance - save the transient instance before flushing. Type: Gramps.Core.Domain.CallForProposal, Entity: Gramps.Core.Domain.CallForProposal", ex.Message);
+                throw;
+            }
+        }
+
+        #endregion Invalid Tests
+        #region Valid Tests
+
+        [TestMethod]
+        public void TestCallForProposalsWithPopulatedExistingListWillSave()
+        {
+            Repository.OfType<CallForProposal>().DbContext.BeginTransaction();
+            LoadUsers(3);
+            LoadCallForProposals(3);
+            Repository.OfType<CallForProposal>().DbContext.CommitTransaction();
+            #region Arrange
+            Template record = GetValid(9);
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.EnsurePersistent(record);
+            TemplateRepository.DbContext.CommitTransaction();
+
+            const int addedCount = 3;
+            var relatedRecords = new List<CallForProposal>();
+            for (int i = 0; i < addedCount; i++)
+            {
+                relatedRecords.Add(Repository.OfType<CallForProposal>().GetNullableById(i+1));
+                relatedRecords[i].TemplateGeneratedFrom = record;
+                Repository.OfType<CallForProposal>().EnsurePersistent(relatedRecords[i]);
+            }
+            #endregion Arrange
+
+            #region Act
+
+            foreach (var relatedRecord in relatedRecords)
+            {
+                record.CallForProposals.Add(relatedRecord);
+            }
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.EnsurePersistent(record);
+            TemplateRepository.DbContext.CommitTransaction();
+            #endregion Act
+
+            #region Assert
+            Assert.IsNotNull(record.CallForProposals);
+            Assert.AreEqual(addedCount, record.CallForProposals.Count);
+            Assert.IsFalse(record.IsTransient());
+            Assert.IsTrue(record.IsValid());
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestCallForProposalsWithEmptyListWillSave()
+        {
+            #region Arrange
+            Template record = GetValid(9);
+            #endregion Arrange
+
+            #region Act
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.EnsurePersistent(record);
+            TemplateRepository.DbContext.CommitTransaction();
+            #endregion Act
+
+            #region Assert
+            Assert.IsNotNull(record.CallForProposals);
+            Assert.AreEqual(0, record.CallForProposals.Count);
+            Assert.IsFalse(record.IsTransient());
+            Assert.IsTrue(record.IsValid());
+            #endregion Assert
+        }
+        #endregion Valid Tests
+        #region Cascade Tests
+
+
+        [TestMethod]
+        public void TestTemplateCascadesUpdateToCallForProposal2()
+        {
+            #region Arrange
+            var count = Repository.OfType<CallForProposal>().Queryable.Count();
+            Repository.OfType<CallForProposal>().DbContext.BeginTransaction();
+            LoadUsers(3);
+            LoadCallForProposals(3);
+            Repository.OfType<CallForProposal>().DbContext.CommitTransaction();
+            Template record = GetValid(9);
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.EnsurePersistent(record);
+            TemplateRepository.DbContext.CommitTransaction();
+
+            const int addedCount = 3;
+            var relatedRecords = new List<CallForProposal>();
+            for (int i = 0; i < addedCount; i++)
+            {
+                relatedRecords.Add(Repository.OfType<CallForProposal>().GetNullableById(i + 1));
+                relatedRecords[i].TemplateGeneratedFrom = record;
+                Repository.OfType<CallForProposal>().EnsurePersistent(relatedRecords[i]);
+            }
+
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.EnsurePersistent(record);
+            TemplateRepository.DbContext.CommitTransaction();
+            var saveId = record.Id;
+            var saveRelatedId = relatedRecords[1].Id;
+            NHibernateSessionManager.Instance.GetSession().Evict(record);
+            foreach (var relatedRecord in relatedRecords)
+            {
+                NHibernateSessionManager.Instance.GetSession().Evict(relatedRecord);
+            }
+            #endregion Arrange
+
+            #region Act
+            record = TemplateRepository.GetNullableById(saveId);
+            record.CallForProposals[1].Name = "Updated";
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.EnsurePersistent(record);
+            TemplateRepository.DbContext.CommitTransaction();
+            NHibernateSessionManager.Instance.GetSession().Evict(record);
+            foreach (var relatedRecord in relatedRecords)
+            {
+                NHibernateSessionManager.Instance.GetSession().Evict(relatedRecord);
+            }
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual(count + addedCount, Repository.OfType<CallForProposal>().Queryable.Count());
+            var relatedRecord2 = Repository.OfType<CallForProposal>().GetNullableById(saveRelatedId);
+            Assert.IsNotNull(relatedRecord2);
+            Assert.AreEqual("Updated", relatedRecord2.Name);
+            #endregion Assert
+        }
+
+        /// <summary>
+        /// Does NOT Remove it
+        /// </summary>
+        [TestMethod]
+        public void TestTemplateDoesNotCascadesUpdateRemoveCallForProposal()
+        {
+            #region Arrange
+            var count = Repository.OfType<CallForProposal>().Queryable.Count();
+
+            Repository.OfType<CallForProposal>().DbContext.BeginTransaction();
+            LoadUsers(3);
+            LoadCallForProposals(3);
+            Repository.OfType<CallForProposal>().DbContext.CommitTransaction();
+
+            Template record = GetValid(9);
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.EnsurePersistent(record);
+            TemplateRepository.DbContext.CommitTransaction();
+
+            const int addedCount = 3;
+            var relatedRecords = new List<CallForProposal>();
+            for (int i = 0; i < addedCount; i++)
+            {
+                relatedRecords.Add(Repository.OfType<CallForProposal>().GetNullableById(i + 1));
+                relatedRecords[i].TemplateGeneratedFrom = record;
+                Repository.OfType<CallForProposal>().EnsurePersistent(relatedRecords[i]);
+            }
+            foreach (var relatedRecord in relatedRecords)
+            {
+                record.CallForProposals.Add(relatedRecord);
+            }
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.EnsurePersistent(record);
+            TemplateRepository.DbContext.CommitTransaction();
+            var saveId = record.Id;
+            var saveRelatedId = record.CallForProposals[1].Id;
+            NHibernateSessionManager.Instance.GetSession().Evict(record);
+            #endregion Arrange
+
+            #region Act
+            record = TemplateRepository.GetNullableById(saveId);
+            record.CallForProposals.RemoveAt(1);
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.EnsurePersistent(record);
+            TemplateRepository.DbContext.CommitTransaction();
+            NHibernateSessionManager.Instance.GetSession().Evict(record);
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual(count + (addedCount), Repository.OfType<CallForProposal>().Queryable.Count());
+            var relatedRecord2 = Repository.OfType<CallForProposal>().GetNullableById(saveRelatedId);
+            Assert.IsNotNull(relatedRecord2);
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestTemplateDoesNotCascadesDeleteToCallForProposal()
+        {
+            #region Arrange
+            var count = Repository.OfType<ReportColumn>().Queryable.Count();
+            const int addedCount = 3;
+            Repository.OfType<CallForProposal>().DbContext.BeginTransaction();
+            LoadUsers(addedCount);
+            LoadCallForProposals(3);
+            Repository.OfType<CallForProposal>().DbContext.CommitTransaction();
+            
+            Template record = GetValid(9);
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.EnsurePersistent(record);
+            TemplateRepository.DbContext.CommitTransaction();
+
+
+            
+            var relatedRecords = new List<CallForProposal>();
+            for (int i = 0; i < addedCount; i++)
+            {
+                relatedRecords.Add(Repository.OfType<CallForProposal>().GetNullableById(i+1));
+                relatedRecords[i].TemplateGeneratedFrom = record;
+                Repository.OfType<CallForProposal>().EnsurePersistent(relatedRecords[i]);
+            }
+            foreach (var relatedRecord in relatedRecords)
+            {
+                record.CallForProposals.Add(relatedRecord);
+            }
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.EnsurePersistent(record);
+            TemplateRepository.DbContext.CommitTransaction();
+            var saveId = record.Id;
+            var saveRelatedId = record.CallForProposals[1].Id;
+            NHibernateSessionManager.Instance.GetSession().Evict(record);
+            #endregion Arrange
+
+            #region Act
+            record = TemplateRepository.GetNullableById(saveId);
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.Remove(record);
+            TemplateRepository.DbContext.CommitTransaction();
+            NHibernateSessionManager.Instance.GetSession().Evict(record);
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual(count + addedCount, Repository.OfType<CallForProposal>().Queryable.Count());
+            var relatedRecord2 = Repository.OfType<CallForProposal>().GetNullableById(saveRelatedId);
+            Assert.IsNotNull(relatedRecord2);
+            #endregion Assert
+        }
 		
 
 
         #endregion Cascade Tests
-
-        #endregion ReportColumns Tests
+        #endregion CallForProposals Tests
 
 
 
@@ -1248,6 +1826,10 @@ namespace Gramps.Tests.RepositoryTests
         {
             #region Arrange
             var expectedFields = new List<NameAndType>();
+            expectedFields.Add(new NameAndType("CallForProposals", "System.Collections.Generic.IList`1[Gramps.Core.Domain.CallForProposal]", new List<string>
+            {
+                "[NHibernate.Validator.Constraints.NotNullAttribute()]"
+            }));
             expectedFields.Add(new NameAndType("Editors", "System.Collections.Generic.IList`1[Gramps.Core.Domain.Editor]", new List<string>
             {
                 "[NHibernate.Validator.Constraints.NotNullAttribute()]"
@@ -1270,6 +1852,10 @@ namespace Gramps.Tests.RepositoryTests
             {
                  "[NHibernate.Validator.Constraints.LengthAttribute((Int32)100)]", 
                  "[UCDArch.Core.NHibernateValidator.Extensions.RequiredAttribute()]"
+            }));
+            expectedFields.Add(new NameAndType("Questions", "System.Collections.Generic.IList`1[Gramps.Core.Domain.Question]", new List<string>
+            {
+                "[NHibernate.Validator.Constraints.NotNullAttribute()]"
             }));
             #endregion Arrange
 

@@ -75,7 +75,7 @@ namespace Gramps.Core.Domain
             HasMany(x => x.EmailTemplates).Cascade.DeleteOrphan();
             HasMany(x => x.Editors).Cascade.DeleteOrphan();
             HasMany(x => x.Questions).Cascade.DeleteOrphan();
-            HasMany(x => x.CallForProposals).Cascade.DeleteOrphan();
+            HasMany(x => x.CallForProposals).Cascade.None();
             HasMany(x => x.Reports).Cascade.DeleteOrphan();
         }
     }
