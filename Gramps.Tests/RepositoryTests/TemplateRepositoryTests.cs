@@ -949,6 +949,287 @@ namespace Gramps.Tests.RepositoryTests
         #endregion Cascade Tests
         #endregion ReportColumns Tests
 
+        #region Editors Tests
+        #region Invalid Tests
+        [TestMethod]
+        [ExpectedException(typeof(ApplicationException))]
+        public void TestEditorsWithAValueOfNullDoesNotSave()
+        {
+            Template record = null;
+            try
+            {
+                #region Arrange
+                record = GetValid(9);
+                record.Editors = null;
+                #endregion Arrange
+
+                #region Act
+                TemplateRepository.DbContext.BeginTransaction();
+                TemplateRepository.EnsurePersistent(record);
+                TemplateRepository.DbContext.CommitTransaction();
+                #endregion Act
+            }
+            catch (Exception)
+            {
+                Assert.IsNotNull(record);
+                Assert.AreEqual(record.Editors, null);
+                var results = record.ValidationResults().AsMessageList();
+                results.AssertErrorsAre("Editors: may not be null");
+                Assert.IsTrue(record.IsTransient());
+                Assert.IsFalse(record.IsValid());
+                throw;
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(NHibernate.TransientObjectException))]
+        public void TestEditorsWithANewValueDoesNotSave()
+        {
+            Template record = null;
+            try
+            {
+                #region Arrange
+                record = GetValid(9);
+                record.Editors.Add(CreateValidEntities.Editor(1));
+                #endregion Arrange
+
+                #region Act
+                TemplateRepository.DbContext.BeginTransaction();
+                TemplateRepository.EnsurePersistent(record);
+                TemplateRepository.DbContext.CommitTransaction();
+                #endregion Act
+            }
+            catch (Exception ex)
+            {
+                Assert.IsNotNull(record);
+                Assert.IsNotNull(ex);
+                Assert.AreEqual("object references an unsaved transient instance - save the transient instance before flushing. Type: Gramps.Core.Domain.Editor, Entity: Gramps.Core.Domain.Editor", ex.Message);
+                throw;
+            }
+        }
+
+        #endregion Invalid Tests
+        #region Valid Tests
+
+        [TestMethod]
+        public void TestEditorsWithPopulatedExistingListWillSave()
+        {
+            #region Arrange
+            Template record = GetValid(9);
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.EnsurePersistent(record);
+            TemplateRepository.DbContext.CommitTransaction();
+
+            const int addedCount = 3;
+            var relatedRecords = new List<Editor>();
+            for (int i = 0; i < addedCount; i++)
+            {
+                relatedRecords.Add(CreateValidEntities.Editor(i + 1));
+                relatedRecords[i].Template = record;
+                Repository.OfType<Editor>().EnsurePersistent(relatedRecords[i]);
+            }
+            #endregion Arrange
+
+            #region Act
+
+            foreach (var relatedRecord in relatedRecords)
+            {
+                record.Editors.Add(relatedRecord);
+            }
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.EnsurePersistent(record);
+            TemplateRepository.DbContext.CommitTransaction();
+            #endregion Act
+
+            #region Assert
+            Assert.IsNotNull(record.Editors);
+            Assert.AreEqual(addedCount, record.Editors.Count);
+            Assert.IsFalse(record.IsTransient());
+            Assert.IsTrue(record.IsValid());
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestEditorsWithEmptyListWillSave()
+        {
+            #region Arrange
+            Template record = GetValid(9);
+            #endregion Arrange
+
+            #region Act
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.EnsurePersistent(record);
+            TemplateRepository.DbContext.CommitTransaction();
+            #endregion Act
+
+            #region Assert
+            Assert.IsNotNull(record.Editors);
+            Assert.AreEqual(0, record.Editors.Count);
+            Assert.IsFalse(record.IsTransient());
+            Assert.IsTrue(record.IsValid());
+            #endregion Assert
+        }
+        #endregion Valid Tests
+        #region Cascade Tests
+
+        [TestMethod]
+        public void TestTemplateCascadesUpdateToEditor2()
+        {
+            #region Arrange
+            var count = Repository.OfType<Editor>().Queryable.Count();
+            Template record = GetValid(9);
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.EnsurePersistent(record);
+            TemplateRepository.DbContext.CommitTransaction();
+
+
+            const int addedCount = 3;
+            var relatedRecords = new List<Editor>();
+            for (int i = 0; i < addedCount; i++)
+            {
+                relatedRecords.Add(CreateValidEntities.Editor(i + 1));
+                relatedRecords[i].Template = record;
+                Repository.OfType<Editor>().EnsurePersistent(relatedRecords[i]);
+            }
+            foreach (var relatedRecord in relatedRecords)
+            {
+                record.Editors.Add(relatedRecord);
+            }
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.EnsurePersistent(record);
+            TemplateRepository.DbContext.CommitTransaction();
+            var saveId = record.Id;
+            var saveRelatedId = record.Editors[1].Id;
+            NHibernateSessionManager.Instance.GetSession().Evict(record);
+            foreach (var relatedRecord in relatedRecords)
+            {
+                NHibernateSessionManager.Instance.GetSession().Evict(relatedRecord);
+            }
+            #endregion Arrange
+
+            #region Act
+            record = TemplateRepository.GetNullableById(saveId);
+            record.Editors[1].ReviewerEmail = "Updated";
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.EnsurePersistent(record);
+            TemplateRepository.DbContext.CommitTransaction();
+            NHibernateSessionManager.Instance.GetSession().Evict(record);
+            foreach (var relatedRecord in relatedRecords)
+            {
+                NHibernateSessionManager.Instance.GetSession().Evict(relatedRecord);
+            }
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual(count + addedCount, Repository.OfType<Editor>().Queryable.Count());
+            var relatedRecord2 = Repository.OfType<Editor>().GetNullableById(saveRelatedId);
+            Assert.IsNotNull(relatedRecord2);
+            Assert.AreEqual("Updated", relatedRecord2.ReviewerEmail);
+            #endregion Assert
+        }
+
+        /// <summary>
+        /// Does Remove it
+        /// </summary>
+        [TestMethod]
+        public void TestTemplateCascadesUpdateRemoveEditor()
+        {
+            #region Arrange
+            var count = Repository.OfType<Editor>().Queryable.Count();
+            Template record = GetValid(9);
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.EnsurePersistent(record);
+            TemplateRepository.DbContext.CommitTransaction();
+
+
+            const int addedCount = 3;
+            var relatedRecords = new List<Editor>();
+            for (int i = 0; i < addedCount; i++)
+            {
+                relatedRecords.Add(CreateValidEntities.Editor(i + 1));
+                relatedRecords[i].Template = record;
+                Repository.OfType<Editor>().EnsurePersistent(relatedRecords[i]);
+            }
+            foreach (var relatedRecord in relatedRecords)
+            {
+                record.Editors.Add(relatedRecord);
+            }
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.EnsurePersistent(record);
+            TemplateRepository.DbContext.CommitTransaction();
+            var saveId = record.Id;
+            var saveRelatedId = record.Editors[1].Id;
+            NHibernateSessionManager.Instance.GetSession().Evict(record);
+            #endregion Arrange
+
+            #region Act
+            record = TemplateRepository.GetNullableById(saveId);
+            record.Editors.RemoveAt(1);
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.EnsurePersistent(record);
+            TemplateRepository.DbContext.CommitTransaction();
+            NHibernateSessionManager.Instance.GetSession().Evict(record);
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual(count + (addedCount-1), Repository.OfType<Editor>().Queryable.Count());
+            var relatedRecord2 = Repository.OfType<Editor>().GetNullableById(saveRelatedId);
+            Assert.IsNull(relatedRecord2);
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestTemplateCascadesDeleteToEditor()
+        {
+            #region Arrange
+            var count = Repository.OfType<ReportColumn>().Queryable.Count();
+            Template record = GetValid(9);
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.EnsurePersistent(record);
+            TemplateRepository.DbContext.CommitTransaction();
+
+
+            const int addedCount = 3;
+            var relatedRecords = new List<Editor>();
+            for (int i = 0; i < addedCount; i++)
+            {
+                relatedRecords.Add(CreateValidEntities.Editor(i + 1));
+                relatedRecords[i].Template = record;
+                Repository.OfType<Editor>().EnsurePersistent(relatedRecords[i]);
+            }
+            foreach (var relatedRecord in relatedRecords)
+            {
+                record.Editors.Add(relatedRecord);
+            }
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.EnsurePersistent(record);
+            TemplateRepository.DbContext.CommitTransaction();
+            var saveId = record.Id;
+            var saveRelatedId = record.Editors[1].Id;
+            NHibernateSessionManager.Instance.GetSession().Evict(record);
+            #endregion Arrange
+
+            #region Act
+            record = TemplateRepository.GetNullableById(saveId);
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.Remove(record);
+            TemplateRepository.DbContext.CommitTransaction();
+            NHibernateSessionManager.Instance.GetSession().Evict(record);
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual(count, Repository.OfType<Editor>().Queryable.Count());
+            var relatedRecord2 = Repository.OfType<Editor>().GetNullableById(saveRelatedId);
+            Assert.IsNull(relatedRecord2);
+            #endregion Assert
+        }
+		
+
+
+        #endregion Cascade Tests
+
+        #endregion ReportColumns Tests
+
 
 
 
@@ -967,6 +1248,10 @@ namespace Gramps.Tests.RepositoryTests
         {
             #region Arrange
             var expectedFields = new List<NameAndType>();
+            expectedFields.Add(new NameAndType("Editors", "System.Collections.Generic.IList`1[Gramps.Core.Domain.Editor]", new List<string>
+            {
+                "[NHibernate.Validator.Constraints.NotNullAttribute()]"
+            }));
             expectedFields.Add(new NameAndType("Emails", "System.Collections.Generic.IList`1[Gramps.Core.Domain.EmailsForCall]", new List<string>
             {
                 "[NHibernate.Validator.Constraints.NotNullAttribute()]"
