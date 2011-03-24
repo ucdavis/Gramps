@@ -666,7 +666,290 @@ namespace Gramps.Tests.RepositoryTests
         #endregion Cascade Tests
         #endregion ReportColumns Tests
 
-  
+        #region EmailTemplates Tests
+        #region Invalid Tests
+        [TestMethod]
+        [ExpectedException(typeof(ApplicationException))]
+        public void TestEmailTemplatesWithAValueOfNullDoesNotSave()
+        {
+            Template record = null;
+            try
+            {
+                #region Arrange
+                record = GetValid(9);
+                record.EmailTemplates = null;
+                #endregion Arrange
+
+                #region Act
+                TemplateRepository.DbContext.BeginTransaction();
+                TemplateRepository.EnsurePersistent(record);
+                TemplateRepository.DbContext.CommitTransaction();
+                #endregion Act
+            }
+            catch (Exception)
+            {
+                Assert.IsNotNull(record);
+                Assert.AreEqual(record.EmailTemplates, null);
+                var results = record.ValidationResults().AsMessageList();
+                results.AssertErrorsAre("EmailTemplates: may not be null");
+                Assert.IsTrue(record.IsTransient());
+                Assert.IsFalse(record.IsValid());
+                throw;
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(NHibernate.TransientObjectException))]
+        public void TestEmailTemplatesWithANewValueDoesNotSave()
+        {
+            Template record = null;
+            try
+            {
+                #region Arrange
+                record = GetValid(9);
+                record.EmailTemplates.Add(CreateValidEntities.EmailTemplate(1));
+                #endregion Arrange
+
+                #region Act
+                TemplateRepository.DbContext.BeginTransaction();
+                TemplateRepository.EnsurePersistent(record);
+                TemplateRepository.DbContext.CommitTransaction();
+                #endregion Act
+            }
+            catch (Exception ex)
+            {
+                Assert.IsNotNull(record);
+                Assert.IsNotNull(ex);
+                Assert.AreEqual("object references an unsaved transient instance - save the transient instance before flushing. Type: Gramps.Core.Domain.EmailTemplate, Entity: Gramps.Core.Domain.EmailTemplate", ex.Message);
+                throw;
+            }
+        }
+
+        #endregion Invalid Tests
+        #region Valid Tests
+
+
+        [TestMethod]
+        public void TestEmailTemplatesWithPopulatedExistingListWillSave()
+        {
+            #region Arrange
+            Template record = GetValid(9);
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.EnsurePersistent(record);
+            TemplateRepository.DbContext.CommitTransaction();
+
+            const int addedCount = 3;
+            var relatedRecords = new List<EmailTemplate>();
+            for (int i = 0; i < addedCount; i++)
+            {
+                relatedRecords.Add(CreateValidEntities.EmailTemplate(i + 1));
+                relatedRecords[i].Template = record;
+                Repository.OfType<EmailTemplate>().EnsurePersistent(relatedRecords[i]);
+            }
+            #endregion Arrange
+
+            #region Act
+
+            foreach (var relatedRecord in relatedRecords)
+            {
+                record.EmailTemplates.Add(relatedRecord);
+            }
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.EnsurePersistent(record);
+            TemplateRepository.DbContext.CommitTransaction();
+            #endregion Act
+
+            #region Assert
+            Assert.IsNotNull(record.EmailTemplates);
+            Assert.AreEqual(addedCount, record.EmailTemplates.Count);
+            Assert.IsFalse(record.IsTransient());
+            Assert.IsTrue(record.IsValid());
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestEmailTemplatesWithEmptyListWillSave()
+        {
+            #region Arrange
+            Template record = GetValid(9);
+            #endregion Arrange
+
+            #region Act
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.EnsurePersistent(record);
+            TemplateRepository.DbContext.CommitTransaction();
+            #endregion Act
+
+            #region Assert
+            Assert.IsNotNull(record.EmailTemplates);
+            Assert.AreEqual(0, record.EmailTemplates.Count);
+            Assert.IsFalse(record.IsTransient());
+            Assert.IsTrue(record.IsValid());
+            #endregion Assert
+        }
+        #endregion Valid Tests
+        #region Cascade Tests
+
+
+        [TestMethod]
+        public void TestTemplateCascadesUpdateToEmailTemplate2()
+        {
+            #region Arrange
+            var count = Repository.OfType<EmailTemplate>().Queryable.Count();
+            Template record = GetValid(9);
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.EnsurePersistent(record);
+            TemplateRepository.DbContext.CommitTransaction();
+
+
+            const int addedCount = 3;
+            var relatedRecords = new List<EmailTemplate>();
+            for (int i = 0; i < addedCount; i++)
+            {
+                relatedRecords.Add(CreateValidEntities.EmailTemplate(i + 1));
+                relatedRecords[i].Template = record;
+                Repository.OfType<EmailTemplate>().EnsurePersistent(relatedRecords[i]);
+            }
+            foreach (var relatedRecord in relatedRecords)
+            {
+                record.EmailTemplates.Add(relatedRecord);
+            }
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.EnsurePersistent(record);
+            TemplateRepository.DbContext.CommitTransaction();
+            var saveId = record.Id;
+            var saveRelatedId = record.EmailTemplates[1].Id;
+            NHibernateSessionManager.Instance.GetSession().Evict(record);
+            foreach (var relatedRecord in relatedRecords)
+            {
+                NHibernateSessionManager.Instance.GetSession().Evict(relatedRecord);
+            }
+            #endregion Arrange
+
+            #region Act
+            record = TemplateRepository.GetNullableById(saveId);
+            record.EmailTemplates[1].Subject = "Updated";
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.EnsurePersistent(record);
+            TemplateRepository.DbContext.CommitTransaction();
+            NHibernateSessionManager.Instance.GetSession().Evict(record);
+            foreach (var relatedRecord in relatedRecords)
+            {
+                NHibernateSessionManager.Instance.GetSession().Evict(relatedRecord);
+            }
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual(count + addedCount, Repository.OfType<EmailTemplate>().Queryable.Count());
+            var relatedRecord2 = Repository.OfType<EmailTemplate>().GetNullableById(saveRelatedId);
+            Assert.IsNotNull(relatedRecord2);
+            Assert.AreEqual("Updated", relatedRecord2.Subject);
+            #endregion Assert
+        }
+
+        /// <summary>
+        /// Does Remove it 
+        /// </summary>
+        [TestMethod]
+        public void TestTemplateCascadesUpdateRemoveEmailTemplate()
+        {
+            #region Arrange
+            var count = Repository.OfType<EmailTemplate>().Queryable.Count();
+            Template record = GetValid(9);
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.EnsurePersistent(record);
+            TemplateRepository.DbContext.CommitTransaction();
+
+
+            const int addedCount = 3;
+            var relatedRecords = new List<EmailTemplate>();
+            for (int i = 0; i < addedCount; i++)
+            {
+                relatedRecords.Add(CreateValidEntities.EmailTemplate(i + 1));
+                relatedRecords[i].Template = record;
+                Repository.OfType<EmailTemplate>().EnsurePersistent(relatedRecords[i]);
+            }
+            foreach (var relatedRecord in relatedRecords)
+            {
+                record.EmailTemplates.Add(relatedRecord);
+            }
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.EnsurePersistent(record);
+            TemplateRepository.DbContext.CommitTransaction();
+            var saveId = record.Id;
+            var saveRelatedId = record.EmailTemplates[1].Id;
+            NHibernateSessionManager.Instance.GetSession().Evict(record);
+            #endregion Arrange
+
+            #region Act
+            record = TemplateRepository.GetNullableById(saveId);
+            record.EmailTemplates.RemoveAt(1);
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.EnsurePersistent(record);
+            TemplateRepository.DbContext.CommitTransaction();
+            NHibernateSessionManager.Instance.GetSession().Evict(record);
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual(count + (addedCount-1), Repository.OfType<EmailTemplate>().Queryable.Count());
+            var relatedRecord2 = Repository.OfType<EmailTemplate>().GetNullableById(saveRelatedId);
+            Assert.IsNull(relatedRecord2);
+            #endregion Assert
+        }
+    
+
+        [TestMethod]
+        public void TestTemplateCascadesDeleteToEmailTemplate()
+        {
+            #region Arrange
+            var count = Repository.OfType<ReportColumn>().Queryable.Count();
+            Template record = GetValid(9);
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.EnsurePersistent(record);
+            TemplateRepository.DbContext.CommitTransaction();
+
+
+            const int addedCount = 3;
+            var relatedRecords = new List<EmailTemplate>();
+            for (int i = 0; i < addedCount; i++)
+            {
+                relatedRecords.Add(CreateValidEntities.EmailTemplate(i + 1));
+                relatedRecords[i].Template = record;
+                Repository.OfType<EmailTemplate>().EnsurePersistent(relatedRecords[i]);
+            }
+            foreach (var relatedRecord in relatedRecords)
+            {
+                record.EmailTemplates.Add(relatedRecord);
+            }
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.EnsurePersistent(record);
+            TemplateRepository.DbContext.CommitTransaction();
+            var saveId = record.Id;
+            var saveRelatedId = record.EmailTemplates[1].Id;
+            NHibernateSessionManager.Instance.GetSession().Evict(record);
+            #endregion Arrange
+
+            #region Act
+            record = TemplateRepository.GetNullableById(saveId);
+            TemplateRepository.DbContext.BeginTransaction();
+            TemplateRepository.Remove(record);
+            TemplateRepository.DbContext.CommitTransaction();
+            NHibernateSessionManager.Instance.GetSession().Evict(record);
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual(count, Repository.OfType<EmailTemplate>().Queryable.Count());
+            var relatedRecord2 = Repository.OfType<EmailTemplate>().GetNullableById(saveRelatedId);
+            Assert.IsNull(relatedRecord2);
+            #endregion Assert
+        }
+		
+
+
+        #endregion Cascade Tests
+        #endregion ReportColumns Tests
+
+
 
 
 
@@ -685,6 +968,10 @@ namespace Gramps.Tests.RepositoryTests
             #region Arrange
             var expectedFields = new List<NameAndType>();
             expectedFields.Add(new NameAndType("Emails", "System.Collections.Generic.IList`1[Gramps.Core.Domain.EmailsForCall]", new List<string>
+            {
+                "[NHibernate.Validator.Constraints.NotNullAttribute()]"
+            }));
+            expectedFields.Add(new NameAndType("EmailTemplates", "System.Collections.Generic.IList`1[Gramps.Core.Domain.EmailTemplate]", new List<string>
             {
                 "[NHibernate.Validator.Constraints.NotNullAttribute()]"
             }));
