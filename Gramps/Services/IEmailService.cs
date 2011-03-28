@@ -177,7 +177,7 @@ namespace Gramps.Services
 
         private string GetAbsoluteUrl(HttpRequestBase request, UrlHelper url, string relative)
         {
-            return string.Format("{0}://{1}:{2}{3}", request.Url.Scheme, request.Url.Host, request.Url.Port, url.Content(relative));
+            return string.Format("{0}://{1}{2}", request.Url.Scheme, request.Url.Host, url.Content(relative));
         }
     }
 }

@@ -33,6 +33,7 @@ namespace Gramps.Helpers
             return htmlWriter.InnerWriter.ToString();
         }
 
+
         public static CustomGridBuilder<T> Grid<T>(this HtmlHelper htmlHelper, IEnumerable<T> dataModel) where T : class
         {
             var builder = htmlHelper.Telerik().Grid(dataModel);

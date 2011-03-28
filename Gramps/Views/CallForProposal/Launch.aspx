@@ -34,6 +34,10 @@
             <%: Html.Label("Calls Sent Date:")%>
             <%: String.Format("{0:g}", Model.CallForProposal.CallsSentDate)%>
         </li>
+        <li>
+            <%: Html.Label("Link to Create a new Proposal:") %>
+            <%: String.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Host, Url.Content("~/Proposal/Create/" + Model.CallForProposal.Id))%>
+        </li>
         </ul>
     </fieldset>
 

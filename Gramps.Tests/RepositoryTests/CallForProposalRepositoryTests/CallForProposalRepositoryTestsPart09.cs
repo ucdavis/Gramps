@@ -16,21 +16,37 @@ namespace Gramps.Tests.RepositoryTests.CallForProposalRepositoryTests
     {
         #region Constructor Tests
 
+
         [TestMethod]
-        public void TestToDoConstructorTests()
+        public void TestConstructorWithNoParametersSetsExpectedValues()
         {
             #region Arrange
-            Assert.Inconclusive("Once Template tests are done, add the constructor tests for Call For Proposals");
-            
-
+            var record = new CallForProposal();
             #endregion Arrange
 
-            #region Act
-
-            #endregion Act
-
             #region Assert
+            Assert.IsTrue(record.IsActive);
+            Assert.AreEqual(DateTime.Now.Date, record.CreatedDate.Date);
+            Assert.IsNotNull(record.Emails);
+            Assert.AreEqual(0, record.Emails.Count);
 
+            Assert.IsNotNull(record.EmailTemplates);
+            Assert.AreEqual(0, record.EmailTemplates.Count);
+
+            Assert.IsNotNull(record.Editors);
+            Assert.AreEqual(0, record.Editors.Count);
+
+            Assert.IsNotNull(record.Questions);
+            Assert.AreEqual(0, record.Questions.Count);
+
+            Assert.IsNotNull(record.Proposals);
+            Assert.AreEqual(0, record.Proposals.Count);
+
+            Assert.IsNotNull(record.Reports);
+            Assert.AreEqual(0, record.Reports.Count);
+ 
+            Assert.IsNull(record.Name);
+            Assert.IsNull(record.TemplateGeneratedFrom);
             #endregion Assert		
         }
         #endregion Constructor Tests
