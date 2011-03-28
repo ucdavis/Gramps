@@ -21,7 +21,7 @@
 				<%: Html.ActionLink<ProposalController>(a => a.ReviewerIndex(x.Id, null, null), " ", new { @class = "details_button" })%>           
 				<%}).Title("Details");
                                 col.Bound(x => x.Name);
-                                col.Bound(x => x.CreatedDate);
+                                col.Bound(x => x.CreatedDate).Format("{0:d/M/yyyy hh:mm tt}");
                                 col.Bound(x => x.EndDate);
             })
             .Pageable()
@@ -48,7 +48,7 @@
                 <%: Html.ActionLink<ProposalController>(a => a.Details(x.Guid), " ", new { @class = "details_button" })%>
                 <%}%>
                 <%}).Title("Details");
-                                col.Bound(x => x.CreatedDate);
+                col.Bound(x => x.CreatedDate).Format("{0:d/M/yyyy hh:mm tt}");
                                 col.Bound(x => x.IsSubmitted);
                                 col.Bound(x => x.Guid).Title("Proposal Id");
                                 col.Bound(x => x.CallForProposal.EndDate);

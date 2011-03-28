@@ -72,14 +72,14 @@
 				<%}).Title("Actions");
             col.Bound(x => x.Seq);
             col.Bound(x => x.Email);
-            col.Bound(x => x.LastViewedDate).Title("Viewed Date");
+            col.Bound(x => x.LastViewedDate).Format("{0:d/M/yyyy hh:mm tt}").Title("Viewed Date");
             col.Bound(x => x.Approved).Title("Aprv.");
             col.Bound(x => x.Denied);
             col.Bound(x => x.NotifiedOfDecission).Title("Notified");
             col.Bound(x => x.Submitted).Title("Sub.");
-            col.Bound(x => x.WarnedOfClosing).Title("Warned");                
-            col.Bound(x => x.SubmittedDate);
-            col.Bound(x => x.CreatedDate);  
+            col.Bound(x => x.WarnedOfClosing).Title("Warned");
+            col.Bound(x => x.SubmittedDate).Format("{0:d/M/yyyy hh:mm tt}");
+            col.Bound(x => x.CreatedDate).Format("{0:d/M/yyyy hh:mm tt}");  
             })
             .DataBinding(binding => binding.Server().Select<ProposalController>(a => a.AdminIndex(Model.CallForProposal.Id, Model.FilterDecission, Model.FilterNotified, Model.FilterSubmitted, Model.FilterWarned, Model.FilterEmail)))
             .Pageable()

@@ -23,11 +23,11 @@
 			col.Template(x => {%>
 				<%: Html.ActionLink<EmailQueueController>(a => a.Details(x.Id, Model.CallForProposal.Id), " ", new { @class = "details_button" })%>           
 				<%}).Title("Details");
-            col.Bound(x => x.Created);
+                col.Bound(x => x.Created).Format("{0:d/M/yyyy hh:mm tt}");
             col.Bound(x => x.EmailAddress);
             col.Bound(x => x.Subject);
             col.Bound(x => x.Pending);
-            col.Bound(x => x.SentDateTime);
+            col.Bound(x => x.SentDateTime).Format("{0:d/M/yyyy hh:mm tt}");
             col.Template(x => {%>
                 <% using (Html.BeginForm<EmailQueueController>(b => b.Delete(x.Id, Model.CallForProposal.Id), FormMethod.Post, new { name = "DeleteEmailForm" })){%>
                     <%:Html.AntiForgeryToken()%>  

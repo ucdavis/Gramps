@@ -20,7 +20,7 @@
                 col.Bound(x => x.ReviewerName);
                 col.Bound(x => x.ReviewerEmail);
                 col.Bound(x => x.HasBeenNotified);
-                col.Bound(x => x.NotifiedDate);
+                col.Bound(x => x.NotifiedDate).Format("{0:d/M/yyyy hh:mm tt}");
             })
             .Pageable()
             .Sortable()

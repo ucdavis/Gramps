@@ -55,7 +55,7 @@
 				<%}).Title("Launch");
 			            col.Bound(x => x.Name);
                         col.Bound(x => x.IsActive);
-                        col.Bound(x => x.CreatedDate);
+                        col.Bound(x => x.CreatedDate).Format("{0:d/M/yyyy hh:mm tt}");
                         col.Bound(x => x.EndDate);
                         col.Bound(x => x.CallsSentDate);
                         })

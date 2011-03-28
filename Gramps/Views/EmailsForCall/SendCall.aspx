@@ -19,7 +19,7 @@
             .Columns(col => {
                 col.Bound(x => x.Email);
                 col.Bound(x => x.HasBeenEmailed);
-                col.Bound(x => x.EmailedOnDate);
+                col.Bound(x => x.EmailedOnDate).Format("{0:d/M/yyyy hh:mm tt}");
             })
                       
             .Pageable()

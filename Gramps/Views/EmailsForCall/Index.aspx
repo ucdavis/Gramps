@@ -28,7 +28,7 @@
             col.Bound(x => x.Email);
             if(!Model.IsTemplate){
             col.Bound(x => x.HasBeenEmailed);
-            col.Bound(x => x.EmailedOnDate);
+            col.Bound(x => x.EmailedOnDate).Format("{0:d/M/yyyy hh:mm tt}");
             }
             col.Template(x => { %>                                                       
                 <% using (Html.BeginForm("Delete", "EmailsForCall", FormMethod.Post)) { %>

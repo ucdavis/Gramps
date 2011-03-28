@@ -46,7 +46,7 @@
                         if (Model.IsCallForProposal)
                         {
                             col.Bound(x => x.HasBeenNotified).Title("Notified");
-                            col.Bound(x => x.NotifiedDate);
+                            col.Bound(x => x.NotifiedDate).Format("{0:d/M/yyyy hh:mm tt}");
                         }
                         col.Template(x => { %>  
                             <% if (x.IsOwner == false){%>                                      
