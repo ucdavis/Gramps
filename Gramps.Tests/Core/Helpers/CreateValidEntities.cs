@@ -218,5 +218,13 @@ namespace Gramps.Tests.Core.Helpers
             rtValue.ColumnOrder = counter.HasValue ? counter.Value : 0;
             return rtValue;
         }
+
+        public static Validator Validator(int? counter)
+        {
+            var rtValue = new Validator();
+            rtValue.Name = "Name" + counter.Extra();
+
+            return rtValue;
+        }
     }
 }
