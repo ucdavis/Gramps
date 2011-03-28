@@ -142,6 +142,7 @@
     <Compile Include="RepositoryTests\ReportRepositoryTests.cs" />
     <Compile Include="RepositoryTests\ReviewedProposalRepositoryTests.cs" />
     <Compile Include="RepositoryTests\TemplateRepositoryTests.cs" />
+    <Compile Include="RepositoryTests\UserRepositoryTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />
