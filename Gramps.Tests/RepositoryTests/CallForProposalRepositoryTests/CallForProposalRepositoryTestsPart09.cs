@@ -37,7 +37,7 @@ namespace Gramps.Tests.RepositoryTests.CallForProposalRepositoryTests
 
         #region Fluent Mapping Tests
         [TestMethod]
-        public void TestCanCorrectlyMapTicket1()
+        public void TestCanCorrectlyMapCallForProposal1()
         {
             #region Arrange
             var id = CallForProposalRepository.Queryable.Max(x => x.Id) + 1;
@@ -59,7 +59,7 @@ namespace Gramps.Tests.RepositoryTests.CallForProposalRepositoryTests
         }
 
         [TestMethod]
-        public void TestCanCorrectlyMapTicket2()
+        public void TestCanCorrectlyMapCallForProposal2()
         {
             #region Arrange
             var id = CallForProposalRepository.Queryable.Max(x => x.Id) + 1;
@@ -82,7 +82,7 @@ namespace Gramps.Tests.RepositoryTests.CallForProposalRepositoryTests
         }
 
         [TestMethod]
-        public void TestCanCorrectlyMapTicket3()
+        public void TestCanCorrectlyMapCallForProposal3()
         {
             #region Arrange
             var id = CallForProposalRepository.Queryable.Max(x => x.Id) + 1;
@@ -98,7 +98,7 @@ namespace Gramps.Tests.RepositoryTests.CallForProposalRepositoryTests
         }
 
         [TestMethod]
-        public void TestCanCorrectlyMapTicket4()
+        public void TestCanCorrectlyMapCallForProposal4()
         {
             #region Arrange
             var id = CallForProposalRepository.Queryable.Max(x => x.Id) + 1;
@@ -118,7 +118,7 @@ namespace Gramps.Tests.RepositoryTests.CallForProposalRepositoryTests
         }
 
         [TestMethod]
-        public void TestCanCorrectlyMapTicket5()
+        public void TestCanCorrectlyMapCallForProposal5()
         {
             #region Arrange
             var id = CallForProposalRepository.Queryable.Max(x => x.Id) + 1;

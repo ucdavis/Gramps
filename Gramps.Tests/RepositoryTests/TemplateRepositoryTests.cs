@@ -2,15 +2,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using FluentNHibernate.Testing;
 using Gramps.Core.Domain;
 using Gramps.Tests.Core;
 using Gramps.Tests.Core.Extensions;
 using Gramps.Tests.Core.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using FluentNHibernate.Testing;
-using NHibernate;
 using UCDArch.Core.PersistanceSupport;
 using UCDArch.Data.NHibernate;
+using UCDArch.Testing;
 using UCDArch.Testing.Extensions;
 
 namespace Gramps.Tests.RepositoryTests
@@ -2090,25 +2090,199 @@ namespace Gramps.Tests.RepositoryTests
 
         #endregion Reports Tests
 
+        #region Constructor Tests
 
         [TestMethod]
-        public void TestDescription()
+        public void TestTemplateConstructorWithParametersSetsExpectedValues()
         {
             #region Arrange
-
-            Assert.Inconclusive("Write constructor and fluent tests");
-
+            var record = new Template("Template Name");
             #endregion Arrange
 
-            #region Act
-
-            #endregion Act
-
             #region Assert
-
+            Assert.AreEqual("Template Name", record.Name);
+            Assert.IsTrue(record.IsActive);
+            Assert.IsNotNull(record.CallForProposals);
+            Assert.AreEqual(0, record.CallForProposals.Count);
+            Assert.IsNotNull(record.Emails);
+            Assert.AreEqual(0, record.Emails.Count);
+            Assert.IsNotNull(record.EmailTemplates);
+            Assert.AreEqual(0, record.EmailTemplates.Count);
+            Assert.IsNotNull(record.Editors);
+            Assert.AreEqual(0, record.Editors.Count);
+            Assert.IsNotNull(record.Questions);
+            Assert.AreEqual(0, record.Questions.Count);
+            Assert.IsNotNull(record.Reports);
+            Assert.AreEqual(0, record.Reports.Count);
             #endregion Assert		
         }
 
+        [TestMethod]
+        public void TestTemplateConstructorWithoutParametersSetsExpectedValues()
+        {
+            #region Arrange
+            var record = new Template();
+            #endregion Arrange
+
+            #region Assert
+            Assert.IsNull(record.Name);
+            Assert.IsTrue(record.IsActive);
+            Assert.IsNotNull(record.CallForProposals);
+            Assert.AreEqual(0, record.CallForProposals.Count);
+            Assert.IsNotNull(record.Emails);
+            Assert.AreEqual(0, record.Emails.Count);
+            Assert.IsNotNull(record.EmailTemplates);
+            Assert.AreEqual(0, record.EmailTemplates.Count);
+            Assert.IsNotNull(record.Editors);
+            Assert.AreEqual(0, record.Editors.Count);
+            Assert.IsNotNull(record.Questions);
+            Assert.AreEqual(0, record.Questions.Count);
+            Assert.IsNotNull(record.Reports);
+            Assert.AreEqual(0, record.Reports.Count);
+            #endregion Assert
+        }
+        #endregion Constructor Tests
+
+        #region Fluent Mapping Tests
+        [TestMethod]
+        public void TestCanCorrectlyMapTemplate1()
+        {
+            #region Arrange
+            var id = TemplateRepository.Queryable.Max(x => x.Id) + 1;
+            var session = NHibernateSessionManager.Instance.GetSession();
+            #endregion Arrange
+
+            #region Act/Assert
+            new PersistenceSpecification<Template>(session)
+                .CheckProperty(c => c.Id, id)
+                .CheckProperty(c => c.Name, "Name")
+                .CheckProperty(c => c.IsActive, true)
+                .VerifyTheMappings();
+            #endregion Act/Assert
+        }
+
+        [TestMethod]
+        public void TestCanCorrectlyMapTemplate2()
+        {
+            #region Arrange
+            var id = TemplateRepository.Queryable.Max(x => x.Id) + 1;
+            var session = NHibernateSessionManager.Instance.GetSession();
+            #endregion Arrange
+
+            #region Act/Assert
+            new PersistenceSpecification<Template>(session)
+                .CheckProperty(c => c.Id, id)
+                .CheckProperty(c => c.Name, "Name")
+                .CheckProperty(c => c.IsActive, false)
+                .VerifyTheMappings();
+            #endregion Act/Assert
+        }
+
+        [TestMethod]
+        public void TestCanCorrectlyMapTemplate3()
+        {
+            #region Arrange
+            var id = TemplateRepository.Queryable.Max(x => x.Id) + 1;
+            var session = NHibernateSessionManager.Instance.GetSession();
+            #endregion Arrange
+
+            #region Act/Assert
+            new PersistenceSpecification<Template>(session)
+                .CheckProperty(c => c.Id, id)
+                .VerifyTheMappings();
+            #endregion Act/Assert
+        }
+
+        [TestMethod]
+        public void TestCanCorrectlyMapTemplate4()
+        {
+            #region Arrange
+            var id = TemplateRepository.Queryable.Max(x => x.Id) + 1;
+            var dummyTemplate = CreateValidEntities.Template(1);
+            var session = NHibernateSessionManager.Instance.GetSession();
+
+            #region Emails
+            var emails = new List<EmailsForCall>();
+            emails.Add(new EmailsForCall("test1@testy.com"));
+            emails.Add(new EmailsForCall("test2@testy.com"));
+
+            dummyTemplate.SetIdTo(id);
+            emails[0].Template = dummyTemplate;
+            emails[1].Template = dummyTemplate;
+            emails[0].CallForProposal = null;
+            emails[1].CallForProposal = null;
+            Repository.OfType<EmailsForCall>().DbContext.BeginTransaction();
+            Repository.OfType<EmailsForCall>().EnsurePersistent(emails[0]);
+            Repository.OfType<EmailsForCall>().EnsurePersistent(emails[1]);
+            Repository.OfType<EmailsForCall>().DbContext.CommitTransaction();
+            #endregion Emails
+            #region Email Templates
+            var emailTemplates = new List<EmailTemplate>();
+            emailTemplates.Add(CreateValidEntities.EmailTemplate(1));
+            emailTemplates.Add(CreateValidEntities.EmailTemplate(2));
+            emailTemplates[0].Template = dummyTemplate;
+            emailTemplates[1].Template = dummyTemplate;
+            emailTemplates[0].CallForProposal = null;
+            emailTemplates[1].CallForProposal = null;
+            Repository.OfType<EmailTemplate>().DbContext.BeginTransaction();
+            Repository.OfType<EmailTemplate>().EnsurePersistent(emailTemplates[0]);
+            Repository.OfType<EmailTemplate>().EnsurePersistent(emailTemplates[1]);
+            Repository.OfType<EmailTemplate>().DbContext.CommitTransaction();
+            #endregion Email Templates
+            #region Editors
+            var editors = new List<Editor>();
+            editors.Add(CreateValidEntities.Editor(1));
+            editors.Add(CreateValidEntities.Editor(2));
+            editors[0].Template = dummyTemplate;
+            editors[1].Template = dummyTemplate;
+            editors[0].CallForProposal = null;
+            editors[1].CallForProposal = null;
+            Repository.OfType<Editor>().DbContext.BeginTransaction();
+            Repository.OfType<Editor>().EnsurePersistent(editors[0]);
+            Repository.OfType<Editor>().EnsurePersistent(editors[1]);
+            Repository.OfType<Editor>().DbContext.CommitTransaction();
+            #endregion Editors
+            #region Questions
+            Repository.OfType<QuestionType>().DbContext.BeginTransaction();
+            LoadQuestionTypes();
+            Repository.OfType<QuestionType>().DbContext.CommitTransaction();
+            var questions = new List<Question>();
+            questions.Add(new Question { Name = "Name1", Template = dummyTemplate, QuestionType = Repository.OfType<QuestionType>().Queryable.Where(a => a.Name == "Text Box").First()});
+            questions.Add(new Question { Name = "Name2", Template = dummyTemplate, QuestionType = Repository.OfType<QuestionType>().Queryable.Where(a => a.Name == "Text Box").First() });
+            Repository.OfType<Question>().DbContext.BeginTransaction();
+            Repository.OfType<Question>().EnsurePersistent(questions[0]);
+            Repository.OfType<Question>().EnsurePersistent(questions[1]);
+            Repository.OfType<Question>().DbContext.CommitTransaction();
+            #endregion Questions
+            #region Reports
+            var reports = new List<Report>();
+            reports.Add(CreateValidEntities.Report(1));
+            reports.Add(CreateValidEntities.Report(1));
+            reports[0].Template = dummyTemplate;
+            reports[1].Template = dummyTemplate;
+            reports[0].CallForProposal = null;
+            reports[1].CallForProposal = null;
+            Repository.OfType<Report>().DbContext.BeginTransaction();
+            Repository.OfType<Report>().EnsurePersistent(reports[0]);
+            Repository.OfType<Report>().EnsurePersistent(reports[1]);
+            Repository.OfType<Report>().DbContext.CommitTransaction();
+            #endregion Reports
+
+
+            #endregion Arrange
+
+            #region Act/Assert
+            new PersistenceSpecification<Template>(session, new TemplateEqualityComparer())
+                .CheckProperty(c => c.Id, id)
+                .CheckProperty(c => c.Emails, emails)
+                .CheckProperty(c => c.EmailTemplates, emailTemplates)
+                .CheckProperty(c => c.Editors, editors)
+                .CheckProperty(c => c.Questions, questions)
+                .CheckProperty(c => c.Reports, reports)
+                .VerifyTheMappings();
+            #endregion Act/Assert
+        }
+        #endregion Fluent Mapping Tests
 
         #region Reflection of Database.
 
@@ -2164,6 +2338,85 @@ namespace Gramps.Tests.RepositoryTests
 
         #endregion Reflection of Database.	
 		
-		
+        public class TemplateEqualityComparer : IEqualityComparer
+        {
+            /// <summary>
+            /// Determines whether the specified objects are equal.
+            /// </summary>
+            /// <returns>
+            /// true if the specified objects are equal; otherwise, false.
+            /// </returns>
+            /// <param name="x">The first object to compare.</param><param name="y">The second object to compare.</param><exception cref="T:System.ArgumentException"><paramref name="x"/> and <paramref name="y"/> are of different types and neither one can handle comparisons with the other.</exception>
+            bool IEqualityComparer.Equals(object x, object y)
+            {
+                if (x == null || y == null)
+                {
+                    return false;
+                }
+
+                if (x is IList<EmailsForCall> && y is IList<EmailsForCall>)
+                {
+                    var xVal = (IList<EmailsForCall>)x;
+                    var yVal = (IList<EmailsForCall>)y;
+                    Assert.AreEqual(xVal.Count, yVal.Count);
+                    for (int i = 0; i < xVal.Count; i++)
+                    {
+                        Assert.AreEqual(xVal[i].Email, yVal[i].Email);
+                    }
+                    return true;
+                }
+                if (x is IList<EmailTemplate> && y is IList<EmailTemplate>)
+                {
+                    var xVal = (IList<EmailTemplate>)x;
+                    var yVal = (IList<EmailTemplate>)y;
+                    Assert.AreEqual(xVal.Count, yVal.Count);
+                    for (int i = 0; i < xVal.Count; i++)
+                    {
+                        Assert.AreEqual(xVal[i].Subject, yVal[i].Subject);
+                    }
+                    return true;
+                }
+                if (x is IList<Editor> && y is IList<Editor>)
+                {
+                    var xVal = (IList<Editor>)x;
+                    var yVal = (IList<Editor>)y;
+                    Assert.AreEqual(xVal.Count, yVal.Count);
+                    for (int i = 0; i < xVal.Count; i++)
+                    {
+                        Assert.AreEqual(xVal[i].ReviewerName, yVal[i].ReviewerName);
+                    }
+                    return true;
+                }
+                if (x is IList<Question> && y is IList<Question>)
+                {
+                    var xVal = (IList<Question>)x;
+                    var yVal = (IList<Question>)y;
+                    Assert.AreEqual(xVal.Count, yVal.Count);
+                    for (int i = 0; i < xVal.Count; i++)
+                    {
+                        Assert.AreEqual(xVal[i].Name, yVal[i].Name);
+                    }
+                    return true;
+                }
+
+                if (x is IList<Report> && y is IList<Report>)
+                {
+                    var xVal = (IList<Report>)x;
+                    var yVal = (IList<Report>)y;
+                    Assert.AreEqual(xVal.Count, yVal.Count);
+                    for (int i = 0; i < xVal.Count; i++)
+                    {
+                        Assert.AreEqual(xVal[i].Name, yVal[i].Name);
+                    }
+                    return true;
+                }
+                return x.Equals(y);
+            }
+
+            public int GetHashCode(object obj)
+            {
+                throw new NotImplementedException();
+            }
+        }
     }
 }
