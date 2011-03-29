@@ -1,6 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<Gramps.Controllers.ViewModels.CallForProposalListViewModel>" %>
 <%@ Import Namespace="Gramps.Helpers" %>
 <%@ Import Namespace="Gramps.Controllers" %>
+<%@ Import Namespace="Gramps.Core.Resources" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
 	Calls Index
@@ -23,8 +24,8 @@
             <li>
             <span id = "IsActiveSpan">
             <label for="Approved"></label>
-                <input type="radio" id="Active" name="filterActive" value="Active" "<%=Model.FilterActive == "Active" ? "checked" : string.Empty%>" /><label for="active">Active</label>
-                <input type="radio" id="InActive" name="filterActive" value="InActive" "<%= Model.FilterActive == "InActive" ? "checked" : string.Empty %>" /><label for="inactive">InActive</label>
+                <input type="radio" id="Active" name="filterActive" value="<%:StaticValues.Filter_Active%>" "<%=Model.FilterActive == StaticValues.Filter_Active ? "checked" : string.Empty%>" /><label for="active">Active</label>
+                <input type="radio" id="InActive" name="filterActive" value="<%:StaticValues.Filter_Not_Active%>" "<%= Model.FilterActive == StaticValues.Filter_Not_Active ? "checked" : string.Empty %>" /><label for="inactive">InActive</label>
                 <input type="radio" id="Both" name="filterActive" value="Both" "<%= string.IsNullOrWhiteSpace(Model.FilterActive) || Model.FilterActive == "Both" ? "checked" : string.Empty %>" /><label for="both">Both</label>
             </span>
             </li>
@@ -33,7 +34,7 @@
                 <%: Html.TextBoxFor(a => a.FilterStartCreate) %>
             </li>
             <li>
-                <%: Html.Label("Create Date is Before:") %>
+                <%: Html.Label("Create Date Before:") %>
                 <%: Html.TextBoxFor(a => a.FilterEndCreate) %>
             </li>
 
@@ -55,7 +56,7 @@
 				<%}).Title("Launch");
 			            col.Bound(x => x.Name);
                         col.Bound(x => x.IsActive);
-                        col.Bound(x => x.CreatedDate).Format("{0:d/M/yyyy hh:mm tt}");
+                        col.Bound(x => x.CreatedDate).Format("{0:M/d/yyyy hh:mm tt}");
                         col.Bound(x => x.EndDate);
                         col.Bound(x => x.CallsSentDate);
                         })

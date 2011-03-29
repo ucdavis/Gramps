@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Gramps.Core.Domain;
+using Gramps.Core.Resources;
 using UCDArch.Core.PersistanceSupport;
 using UCDArch.Core.Utils;
 
@@ -62,16 +63,17 @@ namespace Gramps.Controllers.ViewModels
                     a.User.LoginId == loginId)
                 .Select(x => x.CallForProposal.Id).ToList();
             viewModel.CallForProposals = repository.OfType<CallForProposal>().Queryable.Where(a => callForProposalIds.Contains(a.Id));
-            if (filterActive == "Active")
+            if (filterActive == StaticValues.Filter_Active)
             {
                 viewModel.CallForProposals = viewModel.CallForProposals.Where(a => a.IsActive);
             }
-            if (filterActive == "InActive")
+            if (filterActive == StaticValues.Filter_Not_Active)
             {
                 viewModel.CallForProposals = viewModel.CallForProposals.Where(a => !a.IsActive);
             }
             if (filterStartCreate != null)
             {
+                filterStartCreate = filterStartCreate.Value.Date.AddDays(1).AddMinutes(-1);
                 viewModel.CallForProposals = viewModel.CallForProposals.Where(a => a.CreatedDate > filterStartCreate);
             }
             if (filterEndCreate != null)

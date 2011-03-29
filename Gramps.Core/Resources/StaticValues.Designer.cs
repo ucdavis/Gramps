@@ -88,6 +88,24 @@ namespace Gramps.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Active.
+        /// </summary>
+        public static string Filter_Active {
+            get {
+                return ResourceManager.GetString("Filter_Active", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to InActive.
+        /// </summary>
+        public static string Filter_Not_Active {
+            get {
+                return ResourceManager.GetString("Filter_Not_Active", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Email sent out to list for proposals.
         /// </summary>
         public static string InitialCall {

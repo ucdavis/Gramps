@@ -253,4 +253,12 @@
     <value>AmountRequested</value>
     <comment>Report Column Choice</comment>
   </data>
+  <data name="Filter_Active" xml:space="preserve">
+    <value>Active</value>
+    <comment>View Filter</comment>
+  </data>
+  <data name="Filter_Not_Active" xml:space="preserve">
+    <value>InActive</value>
+    <comment>View Filter</comment>
+  </data>
 </root>
