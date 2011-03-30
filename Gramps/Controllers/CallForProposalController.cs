@@ -29,8 +29,14 @@ namespace Gramps.Controllers
             _accessService = accessService;
         }
 
-        //
-        // GET: /CallForProposal/
+        /// <summary>
+        /// #1
+        /// GET: /CallForProposal/
+        /// </summary>
+        /// <param name="filterActive"></param>
+        /// <param name="filterStartCreate"></param>
+        /// <param name="filterEndCreate"></param>
+        /// <returns></returns>
         public ActionResult Index(string filterActive, DateTime? filterStartCreate, DateTime? filterEndCreate)
         {
             //var callforproposalList = Repository.OfType<Editor>().Queryable.Where(a => a.CallForProposal != null && a.User != null && a.User.LoginId == CurrentUser.Identity.Name).Select(x => x.CallForProposal).Distinct();
@@ -39,8 +45,10 @@ namespace Gramps.Controllers
             return View(viewModel);
         }
 
+      
         /// <summary>
-        /// A User
+        /// #2
+        /// Launch
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -61,22 +69,13 @@ namespace Gramps.Controllers
 
         }
 
-        ////
-        //// GET: /CallForProposal/Details/5
-        //public ActionResult Details(int id)
-        //{
-        //    var callforproposal = _callforproposalRepository.GetNullableById(id);
-
-        //    if (callforproposal == null) return this.RedirectToAction(a => a.Index());
-
-        //    return View(callforproposal);
-        //}
-
-        //
-        // GET: /CallForProposal/Create
+        /// <summary>
+        /// #3
+        /// GET: /CallForProposal/Create
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Create()
         {
-
 			var viewModel = CallForProposalCreateViewModel.Create(Repository, CurrentUser.Identity.Name);
             
             return View(viewModel);
