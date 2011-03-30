@@ -73,6 +73,54 @@ namespace Gramps.Tests.ControllerTests.CallForProposalControllerTests
         #endregion Create Get Tests
         #region Create Post Tests
 
+        /// <summary>
+        /// Tests the FieldToTest with A value of TestValue does not save.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void TestFieldToTestWithAValueOfTestValueDoesNotSave()
+        {
+            var thisFar = false;
+            try
+            {
+                #region Arrange
+                Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "NotFound");
+                var fakeUsers = new FakeUsers();
+                fakeUsers.Records(3, UserRepository);
+                #endregion Arrange
+
+                #region Act
+                thisFar = true;
+                Controller.Create(99);
+                #endregion Act
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(thisFar);
+                Assert.IsNotNull(ex);
+                Assert.AreEqual("Sequence contains no elements", ex.Message);
+                throw;
+            }	
+        }
+
+
+        [TestMethod]
+        public void TestDescription()
+        {
+            #region Arrange
+
+            Assert.Inconclusive("Continue these tests");
+
+            #endregion Arrange
+
+            #region Act
+
+            #endregion Act
+
+            #region Assert
+
+            #endregion Assert		
+        }
         
 
         #endregion Create Post Tests

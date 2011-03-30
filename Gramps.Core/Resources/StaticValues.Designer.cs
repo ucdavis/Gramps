@@ -115,7 +115,7 @@ namespace Gramps.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You do not have access to that..
+        ///   Looks up a localized string similar to You do not have access to {0}..
         /// </summary>
         public static string Message_NoAccess {
             get {

@@ -60,7 +60,7 @@ namespace Gramps.Controllers
 
             if (!_accessService.HasAccess(null, callforproposal.Id, CurrentUser.Identity.Name))
             {
-                Message = StaticValues.Message_NoAccess;
+                Message = string.Format(StaticValues.Message_NoAccess, "that");
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
             var viewModel = CallNavigationViewModel.Create(callforproposal);
@@ -89,7 +89,7 @@ namespace Gramps.Controllers
             var user = Repository.OfType<User>().Queryable.Where(a => a.LoginId == CurrentUser.Identity.Name).Single();
             if (!_accessService.HasAccess(templateId, null, CurrentUser.Identity.Name))
             {
-                Message = "You do not have access to that template.";
+                Message = string.Format(StaticValues.Message_NoAccess, "that template");
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
             var template = Repository.OfType<Template>().GetNullableById(templateId);

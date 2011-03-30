@@ -27,6 +27,7 @@ namespace Gramps.Tests.ControllerTests.CallForProposalControllerTests
         public IAccessService AccessService;
 
         public IRepository<Editor> EditorRepository;
+        public IRepository<User> UserRepository;
 
         #region Init
         /// <summary>
@@ -48,6 +49,9 @@ namespace Gramps.Tests.ControllerTests.CallForProposalControllerTests
         {
             EditorRepository = FakeRepository<Editor>();
             Controller.Repository.Expect(a => a.OfType<Editor>()).Return(EditorRepository).Repeat.Any();
+
+            UserRepository = FakeRepository<User>();
+            Controller.Repository.Expect(a => a.OfType<User>()).Return(UserRepository).Repeat.Any();
 
             //CallforproposalRepository = FakeRepository<CallForProposal>();
             Controller.Repository.Expect(a => a.OfType<CallForProposal>()).Return(CallforproposalRepository).Repeat.Any();

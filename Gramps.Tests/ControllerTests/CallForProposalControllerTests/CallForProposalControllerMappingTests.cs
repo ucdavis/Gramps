@@ -1,4 +1,5 @@
 ﻿using Gramps.Controllers;
+using Gramps.Tests.Core.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MvcContrib.TestHelper;
 
@@ -32,6 +33,15 @@ namespace Gramps.Tests.ControllerTests.CallForProposalControllerTests
         public void TestCreateGetMapping()
         {
             "~/CallForProposal/Create".ShouldMapTo<CallForProposalController>(a => a.Create());
+        }
+
+        /// <summary>
+        /// #4
+        /// </summary>
+        [TestMethod]
+        public void TestCreatePostMapping()
+        {
+            "~/CallForProposal/Create/?templateId=3".ShouldMapTo<CallForProposalController>(a => a.Create(3), true);
         }
 
         #endregion Mapping Tests
