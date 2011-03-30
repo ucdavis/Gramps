@@ -115,6 +115,15 @@ namespace Gramps.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You do not have access to that..
+        /// </summary>
+        public static string Message_NoAccess {
+            get {
+                return ResourceManager.GetString("Message_NoAccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Email sent out to applicant if proposal is approved.
         /// </summary>
         public static string ProposalApproved {

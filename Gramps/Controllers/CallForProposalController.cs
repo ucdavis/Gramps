@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using Gramps.Controllers.Filters;
 using Gramps.Controllers.ViewModels;
 using Gramps.Core.Domain;
+using Gramps.Core.Resources;
 using Gramps.Services;
 using UCDArch.Core.PersistanceSupport;
 using UCDArch.Web.Controller;
@@ -51,7 +52,7 @@ namespace Gramps.Controllers
 
             if (!_accessService.HasAccess(null, callforproposal.Id, CurrentUser.Identity.Name))
             {
-                Message = "You do not have access to that.";
+                Message = StaticValues.Message_NoAccess;
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
             var viewModel = CallNavigationViewModel.Create(callforproposal);

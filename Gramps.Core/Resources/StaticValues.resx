@@ -261,4 +261,7 @@
     <value>InActive</value>
     <comment>View Filter</comment>
   </data>
+  <data name="Message_NoAccess" xml:space="preserve">
+    <value>You do not have access to that.</value>
+  </data>
 </root>

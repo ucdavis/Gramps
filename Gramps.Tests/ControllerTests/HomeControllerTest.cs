@@ -8,7 +8,7 @@ using Gramps;
 using Gramps.Controllers;
 
 
-namespace Gramps.Tests.Controllers
+namespace Gramps.Tests.ControllerTests
 {
     [TestClass]
     public class HomeControllerTest

@@ -8,7 +8,7 @@ using MvcContrib.TestHelper;
 using UCDArch.Testing;
 using UCDArch.Web.Attributes;
 
-namespace Gramps.Tests.Controllers
+namespace Gramps.Tests.ControllerTests
 {
     [TestClass]
     public class AccountControllerTests : ControllerTestBase<AccountController>

@@ -17,7 +17,7 @@ using UCDArch.Core.PersistanceSupport;
 using UCDArch.Testing;
 using UCDArch.Web.Attributes;
 
-namespace Gramps.Tests.Controllers
+namespace Gramps.Tests.ControllerTests
 {
     [TestClass]
     public class CallForProposalControllerTests : ControllerTestBase<CallForProposalController>
@@ -49,7 +49,7 @@ namespace Gramps.Tests.Controllers
             EditorRepository = FakeRepository<Editor>();
             Controller.Repository.Expect(a => a.OfType<Editor>()).Return(EditorRepository).Repeat.Any();
 
-            CallforproposalRepository = FakeRepository<CallForProposal>();
+            //CallforproposalRepository = FakeRepository<CallForProposal>();
             Controller.Repository.Expect(a => a.OfType<CallForProposal>()).Return(CallforproposalRepository).Repeat.Any();
         }
         #endregion Init
@@ -63,6 +63,16 @@ namespace Gramps.Tests.Controllers
         {
             "~/CallForProposal/Index/".ShouldMapTo<CallForProposalController>(a => a.Index(null, null, null));
         }
+
+        /// <summary>
+        /// #2
+        /// </summary>
+        [TestMethod]
+        public void TestLaunchMapping()
+        {
+            "~/CallForProposal/Launch/5".ShouldMapTo<CallForProposalController>(a => a.Launch(5));
+        }
+
         #endregion Mapping Tests
 
         #region Method Tests
@@ -305,6 +315,85 @@ namespace Gramps.Tests.Controllers
         }
         #endregion Index Tests
 
+        #region Launch Tests
+
+
+        [TestMethod]
+        public void TestLaunchRedirectsToIdexIfCallNotFound()
+        {
+            #region Arrange
+            SetupDataForTests();
+            Assert.IsNull(CallforproposalRepository.GetNullableById(8));
+            #endregion Arrange
+
+            #region Act
+            Controller.Launch(8)
+                .AssertActionRedirect()
+                .ToAction<CallForProposalController>(a => a.Index(null, null, null));
+            #endregion Act
+
+            #region Assert
+            Assert.IsNull(Controller.Message);
+            #endregion Assert		
+        }
+
+        [TestMethod]
+        public void TestLaunchRedirectsToHomeIndexIfNotAnEditor()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] {""}, "Me");
+            SetupDataForTests();
+            AccessService.Expect(a => a.HasAccess(null, 5, "Me")).Return(false).Repeat.Any();
+            Assert.IsNotNull(CallforproposalRepository.GetNullableById(5));
+            #endregion Arrange
+
+            #region Act
+            Controller.Launch(5)
+                .AssertActionRedirect()
+                .ToAction<HomeController>(a => a.Index());
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual("You do not have access to that.", Controller.Message);
+            AccessService.AssertWasCalled(a => a.HasAccess(Arg<int?>.Is.Anything, Arg<int?>.Is.Anything, Arg<string>.Is.Anything));
+            var args = AccessService.GetArgumentsForCallsMadeOn(a => a.HasAccess(Arg<int?>.Is.Anything, Arg<int?>.Is.Anything, Arg<string>.Is.Anything))[0]; 
+            Assert.IsNull(args[0]);
+            Assert.AreEqual(5, args[1]);
+            Assert.AreEqual("Me", args[2]);
+            #endregion Assert		
+        }
+
+
+        [TestMethod]
+        public void TestLaunchReturnsViewWhenCallFoundWithAccess()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "Me");
+            SetupDataForTests();
+            AccessService.Expect(a => a.HasAccess(null, 5, "Me")).Return(true).Repeat.Any();
+            Assert.IsNotNull(CallforproposalRepository.GetNullableById(5));
+            #endregion Arrange
+
+            #region Act
+            var result = Controller.Launch(5)
+                .AssertViewRendered()
+                .WithViewData<CallNavigationViewModel>();
+            #endregion Act
+
+            #region Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual("Name5", result.CallForProposal.Name);
+
+            Assert.IsNull(Controller.Message);
+            AccessService.AssertWasCalled(a => a.HasAccess(Arg<int?>.Is.Anything, Arg<int?>.Is.Anything, Arg<string>.Is.Anything));
+            var args = AccessService.GetArgumentsForCallsMadeOn(a => a.HasAccess(Arg<int?>.Is.Anything, Arg<int?>.Is.Anything, Arg<string>.Is.Anything))[0];
+            Assert.IsNull(args[0]);
+            Assert.AreEqual(5, args[1]);
+            Assert.AreEqual("Me", args[2]);
+            #endregion Assert			
+        }
+        #endregion Launch Tests
+
 
         #endregion Method Tests
 
@@ -437,7 +526,7 @@ namespace Gramps.Tests.Controllers
 
             #region Assert
             Assert.Inconclusive("Tests are still being written. When done, remove this line.");
-            Assert.AreEqual(1, result.Count(), "It looks like a method was added or removed from the controller.");
+            Assert.AreEqual(2, result.Count(), "It looks like a method was added or removed from the controller.");
             #endregion Assert
         }
 
@@ -447,6 +536,25 @@ namespace Gramps.Tests.Controllers
             #region Arrange
             var controllerClass = _controllerClass;
             var controllerMethod = controllerClass.GetMethod("Index");
+            #endregion Arrange
+
+            #region Act
+            //var expectedAttribute = controllerMethod.GetCustomAttributes(true).OfType<UserOnlyAttribute>();
+            var allAttributes = controllerMethod.GetCustomAttributes(true);
+            #endregion Act
+
+            #region Assert
+            //Assert.AreEqual(1, expectedAttribute.Count(), "UserOnlyAttribute not found");
+            Assert.AreEqual(0, allAttributes.Count());
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestControllerMethodLaunchContainsExpectedAttributes()
+        {
+            #region Arrange
+            var controllerClass = _controllerClass;
+            var controllerMethod = controllerClass.GetMethod("Launch");
             #endregion Arrange
 
             #region Act
