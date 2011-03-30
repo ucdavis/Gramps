@@ -264,4 +264,10 @@
   <data name="Message_NoAccess" xml:space="preserve">
     <value>You do not have access to {0}.</value>
   </data>
+  <data name="Message_CreatedSuccessfully" xml:space="preserve">
+    <value>{0} Created Successfully.</value>
+  </data>
+  <data name="Message_ProblemSelecting" xml:space="preserve">
+    <value>There was a problem selecting {0}.</value>
+  </data>
 </root>

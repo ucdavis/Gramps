@@ -79,4 +79,12 @@ namespace Gramps.Tests.Core.Helpers
             return CreateValidEntities.User(i);
         }
     }
+
+    public class FakeTemplates : ControllerRecordFakes<Template>
+    {
+        protected override Template CreateValid(int i)
+        {
+            return CreateValidEntities.Template(i);
+        }
+    }
 }

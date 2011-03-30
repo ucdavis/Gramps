@@ -27,7 +27,7 @@ namespace Gramps.Core.Domain
             AddEditor(owner);
             foreach (var editor in template.Editors)
             {
-                if (!editor.IsOwner)
+                if (editor.User == null || editor.User.LoginId != user.LoginId)
                 {
                     AddEditor(editor);
                 }

@@ -18,7 +18,7 @@ namespace Gramps.Tests.ControllerTests.CallForProposalControllerTests
         {
             #region Arrange
             SetupDataForTests();
-            Assert.IsNull(CallforproposalRepository.GetNullableById(8));
+            Assert.IsNull(CallForProposalRepository.GetNullableById(8));
             #endregion Arrange
 
             #region Act
@@ -39,7 +39,7 @@ namespace Gramps.Tests.ControllerTests.CallForProposalControllerTests
             Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "Me");
             SetupDataForTests();
             AccessService.Expect(a => a.HasAccess(null, 5, "Me")).Return(false).Repeat.Any();
-            Assert.IsNotNull(CallforproposalRepository.GetNullableById(5));
+            Assert.IsNotNull(CallForProposalRepository.GetNullableById(5));
             #endregion Arrange
 
             #region Act
@@ -66,7 +66,7 @@ namespace Gramps.Tests.ControllerTests.CallForProposalControllerTests
             Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "Me");
             SetupDataForTests();
             AccessService.Expect(a => a.HasAccess(null, 5, "Me")).Return(true).Repeat.Any();
-            Assert.IsNotNull(CallforproposalRepository.GetNullableById(5));
+            Assert.IsNotNull(CallForProposalRepository.GetNullableById(5));
             #endregion Arrange
 
             #region Act

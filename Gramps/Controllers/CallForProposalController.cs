@@ -104,13 +104,13 @@ namespace Gramps.Controllers
             {
                 _callforproposalRepository.EnsurePersistent(callforproposalToCreate);
 
-                Message = "CallForProposal Created Successfully";
+                Message = string.Format(StaticValues.Message_CreatedSuccessfully, "Call For Proposal");
 
                 return this.RedirectToAction(a => a.Edit(callforproposalToCreate.Id));
             }
             else
             {
-                Message = "There was a problem selecting that template";
+                Message = string.Format(StaticValues.Message_ProblemSelecting, "that template");
 				var viewModel = CallForProposalCreateViewModel.Create(Repository, CurrentUser.Identity.Name);
 
                 return View(viewModel);

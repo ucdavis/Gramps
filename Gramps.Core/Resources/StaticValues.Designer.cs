@@ -115,11 +115,29 @@ namespace Gramps.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} Created Successfully..
+        /// </summary>
+        public static string Message_CreatedSuccessfully {
+            get {
+                return ResourceManager.GetString("Message_CreatedSuccessfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You do not have access to {0}..
         /// </summary>
         public static string Message_NoAccess {
             get {
                 return ResourceManager.GetString("Message_NoAccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There was a problem selecting {0}..
+        /// </summary>
+        public static string Message_ProblemSelecting {
+            get {
+                return ResourceManager.GetString("Message_ProblemSelecting", resourceCulture);
             }
         }
         
