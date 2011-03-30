@@ -81,9 +81,13 @@ namespace Gramps.Controllers
             return View(viewModel);
         } 
 
-        //
-        // POST: /CallForProposal/Create
-        [AcceptVerbs(HttpVerbs.Post)]
+        /// <summary>
+        /// #4
+        /// POST: /CallForProposal/Create
+        /// </summary>
+        /// <param name="templateId"></param>
+        /// <returns></returns>
+        [HttpPost]
         public ActionResult Create(int templateId)
         {
             var user = Repository.OfType<User>().Queryable.Where(a => a.LoginId == CurrentUser.Identity.Name).Single();
