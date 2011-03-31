@@ -270,4 +270,7 @@
   <data name="Message_ProblemSelecting" xml:space="preserve">
     <value>There was a problem selecting {0}.</value>
   </data>
+  <data name="Message_EditedSuccessfully" xml:space="preserve">
+    <value>{0} Edited Successfully.</value>
+  </data>
 </root>

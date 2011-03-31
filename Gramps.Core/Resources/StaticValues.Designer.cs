@@ -124,6 +124,15 @@ namespace Gramps.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} Edited Successfully..
+        /// </summary>
+        public static string Message_EditedSuccessfully {
+            get {
+                return ResourceManager.GetString("Message_EditedSuccessfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You do not have access to {0}..
         /// </summary>
         public static string Message_NoAccess {

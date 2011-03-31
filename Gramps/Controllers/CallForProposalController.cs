@@ -121,8 +121,12 @@ namespace Gramps.Controllers
             }
         }
 
-        //
-        // GET: /CallForProposal/Edit/5
+        /// <summary>
+        /// #5
+        /// GET: /CallForProposal/Edit/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public ActionResult Edit(int id)
         {
             var callforproposal = _callforproposalRepository.GetNullableById(id);
@@ -131,7 +135,7 @@ namespace Gramps.Controllers
 
             if (!_accessService.HasAccess(null, callforproposal.Id, CurrentUser.Identity.Name))
             {
-                Message = "You do not have access to that.";
+                Message = string.Format(StaticValues.Message_NoAccess, "that");
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
@@ -143,15 +147,29 @@ namespace Gramps.Controllers
 			return View(viewModel);
         }
         
-        //
-        // POST: /CallForProposal/Edit/5
+        /// <summary>
+        /// #6
+        /// POST: /CallForProposal/Edit/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="callforproposal"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateInput(false)]
         public ActionResult Edit(int id, CallForProposal callforproposal)
         {
             var callforproposalToEdit = _callforproposalRepository.GetNullableById(id);
 
-            if (callforproposalToEdit == null) return this.RedirectToAction(a => a.Index(null, null, null));
+            if (callforproposalToEdit == null)
+            {
+                return this.RedirectToAction(a => a.Index(null, null, null));
+            }
+
+            if (!_accessService.HasAccess(null, callforproposalToEdit.Id, CurrentUser.Identity.Name))
+            {
+                Message = string.Format(StaticValues.Message_NoAccess, "that");
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
 
             TransferValues(callforproposal, callforproposalToEdit);
 
@@ -171,14 +189,16 @@ namespace Gramps.Controllers
             {
                 _callforproposalRepository.EnsurePersistent(callforproposalToEdit);
 
-                Message = "CallForProposal Edited Successfully";
+                Message = string.Format(StaticValues.Message_EditedSuccessfully, "Call For Proposal");//"CallForProposal Edited Successfully";
 
                 return this.RedirectToAction(a => a.Edit(callforproposalToEdit.Id));
             }
             else
             {
 				var viewModel = CallForProposalViewModel.Create(Repository);
-                viewModel.CallForProposal = callforproposal;
+                viewModel.CallForProposal = callforproposalToEdit;
+                viewModel.CallForProposalId = callforproposalToEdit.Id;
+                viewModel.TemplateId = null;
 
                 return View(viewModel);
             }

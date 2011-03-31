@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
 using Gramps.Controllers.Filters;
 using UCDArch.Web.Attributes;
 
@@ -11,8 +12,6 @@ namespace Gramps.Controllers
         [UserOnly]
         public ActionResult Index()
         {
-            
-
             return View();
         }
         

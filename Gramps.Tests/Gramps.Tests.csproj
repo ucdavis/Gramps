@@ -101,11 +101,13 @@
     <Compile Include="ContinuousDeploymentIntegrationHack.cs" />
     <Compile Include="ControllerTests\AccountControllerTests.cs" />
     <Compile Include="ControllerTests\ApplicationControllerTests.cs" />
-    <Compile Include="ControllerTests\CallForProposalControllerTests\CallForProposalControllerInitTests.cs" />
-    <Compile Include="ControllerTests\CallForProposalControllerTests\CallForProposalControllerMappingTests.cs" />
+    <Compile Include="ControllerTests\CallForProposalControllerTests\CallForProposalControllerTestsInit.cs" />
+    <Compile Include="ControllerTests\CallForProposalControllerTests\CallForProposalControllerTestsMapping.cs" />
     <Compile Include="ControllerTests\CallForProposalControllerTests\CallForProposalControllerTestsPart01.cs" />
     <Compile Include="ControllerTests\CallForProposalControllerTests\CallForProposalControllerTestsPart02.cs" />
     <Compile Include="ControllerTests\CallForProposalControllerTests\CallForProposalControllerTestsPart03.cs" />
+    <Compile Include="ControllerTests\CallForProposalControllerTests\CallForProposalControllerTestsPart04.cs" />
+    <Compile Include="ControllerTests\CallForProposalControllerTests\CallForProposalControllerTestsReflection.cs" />
     <Compile Include="Core\AbstractRepositoryTests.cs" />
     <Compile Include="Core\Extensions\AssertExtensions.cs" />
     <Compile Include="Core\Extensions\RouteTestingExtensions.cs" />
