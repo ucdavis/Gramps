@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
+using System.Web;
 using System.Web.Mvc;
 using Gramps.Controllers.Filters;
 using Gramps.Core.Resources;
@@ -53,15 +54,32 @@ namespace Gramps.Controllers
         
         [HttpPost]
         [ValidateInput(false)]
-        public JsonResult SendTestEmail(string subject, string message)
+        public JsonResult SendTestEmail(string subject, string message, string footerText)
         {
             var user = Repository.OfType<User>().Queryable.Where(a => a.LoginId == CurrentUser.Identity.Name).FirstOrDefault();
-            var mail = new MailMessage("automatedemail@caes.ucdavis.edu", user.Email, subject, message);
+            var mail = new MailMessage("automatedemail@caes.ucdavis.edu", user.Email, subject, message + "<br />" + footerText);
             mail.IsBodyHtml = true;
+            mail.Body = mail.Body.Replace(Token(StaticValues.TokenProposalMaximum), String.Format("{0:C}", 99999.98));
+            mail.Body = mail.Body.Replace(Token(StaticValues.TokenCloseDate), String.Format("{0:D}", DateTime.Now.Date.AddMonths(1)));
+            mail.Body = mail.Body.Replace(Token(StaticValues.TokenApprovedAmount), String.Format("{0:C}", 99999.98));
+            mail.Body = mail.Body.Replace(Token(StaticValues.TokenReviewerName), "Jonny Appleseed");
+            mail.Body = mail.Body.Replace(Token(StaticValues.TokenProposalLink), GetAbsoluteUrl(Request, Url, "~/Proposal/Edit/" + Guid.NewGuid()));
+            mail.Body = mail.Body.Replace(Token(StaticValues.TokenCreateProposalLink), GetAbsoluteUrl(Request, Url, "~/Proposal/Create/123"));
+ 
             var client = new SmtpClient();
             client.Send(mail);
 
             return Json(true, JsonRequestBehavior.AllowGet);
+        }
+
+        private static string Token(string token)
+        {
+            return string.Format("{{{0}}}", token);
+        }
+
+        private string GetAbsoluteUrl(HttpRequestBase request, UrlHelper url, string relative)
+        {
+            return string.Format("{0}://{1}{2}", request.Url.Scheme, request.Url.Host, url.Content(relative));
         }
 
         //
@@ -91,6 +109,7 @@ namespace Gramps.Controllers
 
                 viewModel.Tokens.Add(StaticValues.TokenProposalMaximum);
                 viewModel.Tokens.Add(StaticValues.TokenCloseDate);
+                viewModel.Tokens.Add(StaticValues.TokenCreateProposalLink);
             }
             else if (emailtemplate.TemplateType == EmailTemplateType.ReadyForReview)
             {               

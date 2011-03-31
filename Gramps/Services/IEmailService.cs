@@ -52,6 +52,9 @@ namespace Gramps.Services
                 emailQueue.Body = emailQueue.Body.Replace(Token(StaticValues.TokenCloseDate),
                                                           String.Format("{0:D}", callForProposal.EndDate));
 
+                emailQueue.Body = emailQueue.Body.Replace(Token(StaticValues.TokenCreateProposalLink),
+                                                          GetAbsoluteUrl(request, url, "~/Proposal/Create/" + callForProposal.Id));
+
 
                 emailQueue.Body = emailQueue.Body + "<br />" + StaticValues.EmailCreateProposal + "<br />";
                 emailQueue.Body = string.Format("{0}<p>{1}</p>", emailQueue.Body, GetAbsoluteUrl(request, url, "~/Proposal/Create/" + callForProposal.Id));

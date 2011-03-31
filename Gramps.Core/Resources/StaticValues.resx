@@ -273,4 +273,8 @@
   <data name="Message_EditedSuccessfully" xml:space="preserve">
     <value>{0} Edited Successfully.</value>
   </data>
+  <data name="TokenCreateProposalLink" xml:space="preserve">
+    <value>CreateProposalLink</value>
+    <comment>Initial Call</comment>
+  </data>
 </root>

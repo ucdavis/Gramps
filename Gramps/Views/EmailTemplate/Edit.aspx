@@ -76,8 +76,9 @@
                 var url = '<%: Url.Action("SendTestEmail", "EmailTemplate") %>';
                 var subject = $("#EmailTemplate_Subject").val();
                 var txt = tinyMCE.get("EmailTemplate_Text").getContent();
+                var footTxt = '<%: Html.HtmlEncode(Model.FooterText) %>'
                 var antiForgeryToken = $("input[name='__RequestVerificationToken']").val();
-                $.post(url, { subject: subject, message: txt, __RequestVerificationToken: antiForgeryToken }, function (result) {
+                $.post(url, { subject: subject, message: txt, footerText: footTxt, __RequestVerificationToken: antiForgeryToken }, function (result) {
                     if (result) alert("Message has been mailed to you.");
                     else alert("there was an error sending test email");
                 });

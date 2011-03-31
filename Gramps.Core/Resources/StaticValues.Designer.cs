@@ -403,6 +403,15 @@ namespace Gramps.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to CreateProposalLink.
+        /// </summary>
+        public static string TokenCreateProposalLink {
+            get {
+                return ResourceManager.GetString("TokenCreateProposalLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ProposalLink.
         /// </summary>
         public static string TokenProposalLink {
