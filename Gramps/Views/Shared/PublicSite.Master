@@ -27,6 +27,7 @@
     </script>
     <script src="https://ajax.microsoft.com/ajax/jquery.validate/1.5.5/jquery.validate.min.js" type="text/javascript"></script>
     <script src="<%= Url.Script("xVal.jquery.validate.js") %>" type="text/javascript"></script>
+    <script src="<%= Url.Content("~/Scripts/jquery.bt.min.js") %>" type="text/javascript"></script>
 
     <asp:ContentPlaceHolder ID="HeaderContent" runat="server">
     </asp:ContentPlaceHolder>
