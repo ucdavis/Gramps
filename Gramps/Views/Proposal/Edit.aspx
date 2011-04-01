@@ -205,9 +205,15 @@
         <fieldset>
         <legend>Save Options</legend>
             <span id = "SaveOptions">
+                <span id = "SFWithV">
                 <input type="radio" id="SubmitFinalWithValidation" name="SaveOptions" value="<%:StaticValues.RB_SaveOptions_SubmitFinal%>" "<%= Model.SaveOptionChoice == StaticValues.RB_SaveOptions_SubmitFinal ? "checked" : string.Empty%>" /><label for="SubmitFinalWithValidation">Submit Final With Validation</label><br />
+                </span>     
+                <span id="SWithV">        
                 <input type="radio" id="SaveWithValidation" name="SaveOptions" value="<%:StaticValues.RB_SaveOptions_SaveWithValidation%>" "<%= Model.SaveOptionChoice == StaticValues.RB_SaveOptions_SaveWithValidation ? "checked" : string.Empty %>" /><label for="SaveWithValidation">Save Draft With Validation</label><br />
+                </span>  
+                <span id ="SWithoutV">
                 <input type="radio" id="SaveWithoutValidation" name="SaveOptions" value="<%:StaticValues.RB_SaveOptions_SaveNoValidate%>" "<%= Model.SaveOptionChoice == StaticValues.RB_SaveOptions_SaveNoValidate ? "checked" : string.Empty %>" /><label for="SaveWithoutValidation">Save Draft Without Validation</label><br />
+                </span>
             </span> 
             <p>
                 <input type="submit" value="Save" />
@@ -229,6 +235,9 @@
             $(".dateForm").each(function (index) {
                 $(this).datepicker();
             });
+            $("#SFWithV").bt("Save and submit your final version. It will no longer be editable.");
+            $("#SWithV").bt("Save a draft version and validate that required fields are completed. If there are validation errors it will not be saved.");
+            $("#SWithoutV").bt("Save a draft version without checking which fields are required.");
         });
 
    </script>
