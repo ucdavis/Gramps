@@ -135,7 +135,15 @@
                 <% break; %>
                 <% case "Text Area" : %>
                     <%: Html.Encode(question.Name) %>
-                    <%= Html.TextArea("proposalAnswers" + indexString + ".Answer", answer, new { @class = StaticValues.Class_indexedControl + " BigAnswer" })%>
+                    <%--<%= Html.TextArea("proposalAnswers" + indexString + ".Answer", answer, new {@class = StaticValues.Class_indexedControl + " BigAnswer" })%>--%>
+                    <%--name="proposalAnswers[1].Answer" --%>
+                    <%if (question.MaxCharacters != null && question.MaxCharacters > 0){%>
+                    <textarea data-maxlength="<%=question.MaxCharacters %>" class="<%=StaticValues.Class_indexedControl%> BigAnswer LimitCharacters" id="proposalAnswers<%=indexString%>.Answer" name="proposalAnswers<%=indexString%>.Answer" ><%=answer%></textarea>
+                    <div class="jqEasyCounterMsg" style="font-size: 12px; font-family: Arial; color: rgb(0, 0, 0); text-align: right; width: 259px; opacity: 0;">&nbsp;</div>
+                    <%}%> 
+                    <%  else{%>
+                    <textarea class="<%=StaticValues.Class_indexedControl%> BigAnswer " id="Textarea1" name="proposalAnswers<%=indexString%>.Answer" ><%=answer%></textarea>
+                    <%}%>
                 <% break; %>
                 <% case "Boolean" : %>
                     <%--<%= Html.Encode(Model.Question.Name) %>--%>
@@ -228,6 +236,7 @@
 <asp:Content ID="Content3" ContentPlaceHolderID="HeaderContent" runat="server">
     <script src="<%= Url.Content("~/Scripts/tiny_mce/jquery.tinymce.js") %>" type="text/javascript"></script>
     <script src="<%= Url.Content("~/Scripts/jquery.enableTinyMce.js") %>" type="text/javascript"></script>
+    <script src="<%= Url.Content("~/Scripts/jquery.jqEasyCharCounter.js") %>" type="text/javascript"></script>
 
     <script type="text/javascript">
 
@@ -238,6 +247,12 @@
             $("#SFWithV").bt("Save and submit your final version. It will no longer be editable.");
             $("#SWithV").bt("Save a draft version and validate that required fields are completed. If there are validation errors it will not be saved.");
             $("#SWithoutV").bt("Save a draft version without checking which fields are required.");
+
+            $(".LimitCharacters").each(function (index, item) {
+                var length = $(item).data("maxlength");
+                var warnLength = length - 10;
+                $(item).jqEasyCounter({ maxChars: length, maxCharsWarning: warnLength });
+            });
         });
 
    </script>

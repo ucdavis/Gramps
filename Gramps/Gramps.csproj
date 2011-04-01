@@ -323,6 +323,8 @@
     <Content Include="Scripts\jquery.bt.min.js" />
     <Content Include="Scripts\jquery.CaesMutioptionControl.js" />
     <Content Include="Scripts\jquery.enableTinyMce.js" />
+    <Content Include="Scripts\jquery.jqEasyCharCounter.js" />
+    <Content Include="Scripts\jquery.jqEasyCharCounter.min.js" />
     <Content Include="Scripts\RenameForArray.js" />
     <Content Include="Scripts\tiny_mce\jquery.tinymce.js" />
     <Content Include="Scripts\tiny_mce\langs\en.js" />

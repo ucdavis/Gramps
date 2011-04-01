@@ -40,6 +40,8 @@ namespace Gramps.Core.Domain
         [NotNull]
         public virtual IList<Validator> Validators { get; set; }
 
+        public virtual int? MaxCharacters { get; set; }
+
         //public virtual IList<QuestionAnswer> Answers { get; set; } //We only care about it from the proposal 
 
         #endregion Mapped Fields
@@ -152,6 +154,7 @@ namespace Gramps.Core.Domain
             Id(x => x.Id);
             Map(x => x.Name);
             Map(x => x.Order).Column("`Order`");
+            Map(x => x.MaxCharacters);
 
             References(x => x.QuestionType);
             References(x => x.Template);
