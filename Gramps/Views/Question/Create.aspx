@@ -50,6 +50,13 @@
                   <%}%>
                   $("p#Option").show();
             <%}%>
+            <%if(Model.Question != null && Model.Question.QuestionType != null && Model.Question.QuestionType.Name == "Text Area" ) {%>
+                $("span#ShowMaxCharacters").show();
+            <%}%>
+            <%else {%> 
+                $("span#ShowMaxCharacters").hide();
+                $("#Question_MaxCharacters").val(null);
+            <%} %>
            
         });
 
@@ -67,6 +74,15 @@
         function QuestionTypeChange(obj) {
             var selectedId = $(obj).find("option:selected").val();
             var typesWithOptions = $("span#TypesWithOptions").html().split(",");
+            
+            if(selectedId == 2){
+                $("span#ShowMaxCharacters").show();
+            }
+            else
+            {
+                $("span#ShowMaxCharacters").hide();
+                $("#Question_MaxCharacters").val(null);
+            }
 
             if ($.inArray(selectedId, typesWithOptions) >= 0) {
                 // it's in the array, it has options

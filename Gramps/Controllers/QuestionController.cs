@@ -382,6 +382,7 @@ namespace Gramps.Controllers
             destination.Name = source.Name;
             destination.QuestionType = source.QuestionType;
             destination.Validators = source.Validators;
+            destination.MaxCharacters = source.MaxCharacters;
 
             destination.Options.Clear();
             if (source.QuestionType != null && source.QuestionType.HasOptions && questionOptions != null)
