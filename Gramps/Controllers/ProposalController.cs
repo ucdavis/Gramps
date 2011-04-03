@@ -768,6 +768,13 @@ namespace Gramps.Controllers
                                 ModelState.AddModelError(question.Name, message);
                             }
                         }
+                        if (question.MaxCharacters != null && question.MaxCharacters > 0)
+                        {
+                            if (answer.Trim().Length > question.MaxCharacters)
+                            {
+                                ModelState.AddModelError(question.Name, string.Format("{0} must be less than {1} characters long.", question.Name, question.MaxCharacters));
+                            }
+                        }
                     }
                     var pteAnswers = proposalToEdit.Answers.Where(a => a.Question.Id == question.Id).FirstOrDefault();
                     if(pteAnswers != null)
