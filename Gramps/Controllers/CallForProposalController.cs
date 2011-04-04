@@ -202,34 +202,7 @@ namespace Gramps.Controllers
 
                 return View(viewModel);
             }
-        }
-        
-        //
-        // GET: /CallForProposal/Delete/5 
-        //public ActionResult Delete(int id)
-        //{
-        //    var callforproposal = _callforproposalRepository.GetNullableById(id);
-
-        //    if (callforproposal == null) return this.RedirectToAction(a => a.Index());
-
-        //    return View(callforproposal);
-        //}
-
-        //
-        // POST: /CallForProposal/Delete/5
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Delete(int id, CallForProposal callforproposal)
-        {
-			var callforproposalToDelete = _callforproposalRepository.GetNullableById(id);
-
-            if (callforproposalToDelete == null) this.RedirectToAction(a => a.Index(null, null, null));
-
-            _callforproposalRepository.Remove(callforproposalToDelete);
-
-            Message = "CallForProposal Removed Successfully";
-
-            return this.RedirectToAction(a => a.Index(null, null, null));
-        }
+        }       
         
         /// <summary>
         /// Transfer editable values from source to destination
