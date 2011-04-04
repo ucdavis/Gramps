@@ -218,6 +218,7 @@ namespace Gramps.Core.Domain
             newQuestion.QuestionType = question.QuestionType;
             newQuestion.Name = question.Name;
             newQuestion.Order = question.Order;
+            newQuestion.MaxCharacters = question.MaxCharacters;
             newQuestion.Template = null;
             if (question.Options != null)
             {
