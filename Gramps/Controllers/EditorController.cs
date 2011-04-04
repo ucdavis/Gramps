@@ -51,6 +51,13 @@ namespace Gramps.Controllers
             return View(viewModel);
         }
 
+        /// <summary>
+        /// #2
+        /// Get: /Editor/AddEditor/?templateId=5
+        /// </summary>
+        /// <param name="templateId"></param>
+        /// <param name="callForProposalId"></param>
+        /// <returns></returns>
         public ActionResult AddEditor(int? templateId, int? callForProposalId)
         {
             Template template = null;
