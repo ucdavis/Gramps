@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Gramps.Controllers;
 using Gramps.Controllers.ViewModels;
 using Gramps.Core.Domain;
@@ -247,6 +248,33 @@ namespace Gramps.Tests.ControllerTests.EditorControllerTests
             Assert.AreEqual(null, args[1]);
             Assert.AreEqual("Me", args[2]);
             #endregion Assert
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(UCDArch.Core.Utils.PreconditionException))]
+        public void TestAddEditorExceptionIsThrownIfBothIdsAreNull()
+        {
+            var thisFar = false;
+            try
+            {
+                #region Arrange
+                Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "Me");
+                AccessService.Expect(a => a.HasAccess(null, null, "Me")).Return(true).Repeat.Any();
+                SetupDataForTests();
+                #endregion Arrange
+
+                #region Act
+                thisFar = true;
+                Controller.AddEditor(null, null);
+                #endregion Act
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(thisFar);
+                Assert.IsNotNull(ex);
+                Assert.AreEqual("Must have either a template or a call for proposal", ex.Message);
+                throw;
+            }
         }
         #endregion AddedEditor Get Tests
         #region AddEditor Post Tests

@@ -155,6 +155,9 @@ namespace Gramps.Tests.ControllerTests.EditorControllerTests
             #endregion Assert
         }
 
+        /// <summary>
+        /// #1
+        /// </summary>
         [TestMethod]
         public void TestControllerMethodIndexContainsExpectedAttributes()
         {
@@ -174,6 +177,9 @@ namespace Gramps.Tests.ControllerTests.EditorControllerTests
             #endregion Assert
         }
 
+        /// <summary>
+        /// #2
+        /// </summary>
         [TestMethod]
         public void TestControllerMethodAddEditorContainsExpectedAttributes1()
         {
@@ -193,6 +199,9 @@ namespace Gramps.Tests.ControllerTests.EditorControllerTests
             #endregion Assert
         }
 
+        /// <summary>
+        /// #3
+        /// </summary>
         [TestMethod]
         public void TestControllerMethodAddEditorContainsExpectedAttributes2()
         {
@@ -209,6 +218,28 @@ namespace Gramps.Tests.ControllerTests.EditorControllerTests
             #region Assert
             Assert.AreEqual(1, expectedAttribute.Count(), "HttpPostAttribute not found");
             Assert.AreEqual(1, allAttributes.Count());
+            #endregion Assert
+        }
+
+        /// <summary>
+        /// #4
+        /// </summary>
+        [TestMethod]
+        public void TestControllerMethodCreateReviewerContainsExpectedAttributes1()
+        {
+            #region Arrange
+            var controllerClass = _controllerClass;
+            var controllerMethod = controllerClass.GetMethods().Where(a => a.Name == "CreateReviewer");
+            #endregion Arrange
+
+            #region Act
+            //var expectedAttribute = controllerMethod.ElementAt(0).GetCustomAttributes(true).OfType<UserOnlyAttribute>();
+            var allAttributes = controllerMethod.ElementAt(0).GetCustomAttributes(true);
+            #endregion Act
+
+            #region Assert
+            //Assert.AreEqual(1, expectedAttribute.Count(), "UserOnlyAttribute not found");
+            Assert.AreEqual(0, allAttributes.Count());
             #endregion Assert
         }
 

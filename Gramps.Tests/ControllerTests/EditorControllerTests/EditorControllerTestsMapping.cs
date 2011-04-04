@@ -35,6 +35,15 @@ namespace Gramps.Tests.ControllerTests.EditorControllerTests
         {
             "~/Editor/AddEditor/5".ShouldMapTo<EditorController>(a => a.AddEditor(null, null, 5), true);
         }
+
+        /// <summary>
+        /// #4
+        /// </summary>
+        [TestMethod]
+        public void TestAddCreateReviewerGetMapping()
+        {
+            "~/Editor/CreateReviewer/".ShouldMapTo<EditorController>(a => a.CreateReviewer(null, null));
+        }
         #endregion Mapping Tests
     }
 }
