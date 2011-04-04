@@ -140,6 +140,7 @@ namespace Gramps.Tests.RepositoryTests.QuestionRepositoryTests
                 "[Newtonsoft.Json.JsonPropertyAttribute()]", 
                 "[System.Xml.Serialization.XmlIgnoreAttribute()]"
             }));
+            expectedFields.Add(new NameAndType("MaxCharacters", "System.Nullable`1[System.Int32]", new List<string>()));
             expectedFields.Add(new NameAndType("Name", "System.String", new List<string>
             {
                  "[NHibernate.Validator.Constraints.LengthAttribute((Int32)500)]", 

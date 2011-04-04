@@ -7,8 +7,11 @@
     [SentDateTime]      DATETIME      NULL,
     [Subject]           VARCHAR (200) NOT NULL,
     [Body]              VARCHAR (MAX) NOT NULL,
-    [Immediate]         BIT           NOT NULL
+    [Immediate]         BIT           NOT NULL,
+    [ErrorCode]         INT           NULL
 );
+
+
 
 
 

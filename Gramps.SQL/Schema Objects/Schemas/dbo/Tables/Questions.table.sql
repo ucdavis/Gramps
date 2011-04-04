@@ -4,8 +4,11 @@
     [Name]              VARCHAR (500) NOT NULL,
     [Order]             INT           NOT NULL,
     [TemplateId]        INT           NULL,
-    [CallForProposalId] INT           NULL
+    [CallForProposalId] INT           NULL,
+    [MaxCharacters]     INT           NULL
 );
+
+
 
 
 

@@ -940,6 +940,7 @@ CREATE TABLE [dbo].[EmailQueue](
 	[Subject] [varchar](200) NOT NULL,
 	[Body] [varchar](max) NOT NULL,
 	[Immediate] [bit] NOT NULL,
+	[ErrorCode] [int] NULL,
  CONSTRAINT [PK_EmailQueues] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
@@ -1044,6 +1045,7 @@ CREATE TABLE [dbo].[Questions](
 	[Order] [int] NOT NULL,
 	[TemplateId] [int] NULL,
 	[CallForProposalId] [int] NULL,
+	[MaxCharacters] [int] NULL,
  CONSTRAINT [PK_Questions] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC

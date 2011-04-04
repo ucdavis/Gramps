@@ -948,6 +948,11 @@
     </Build>
     <Build Include="Create Scripts\usp_ProcessMailing.proc.sql">
       <SubType>Code</SubType>
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
+    </Build>
+    <Build Include="Schema Objects\Database Level Objects\Security\Users\devapp.user.sql">
+      <SubType>Code</SubType>
     </Build>
   </ItemGroup>
   <ItemGroup>

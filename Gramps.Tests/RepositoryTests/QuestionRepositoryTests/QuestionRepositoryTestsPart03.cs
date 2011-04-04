@@ -62,6 +62,83 @@ namespace Gramps.Tests.RepositoryTests.QuestionRepositoryTests
 
         #endregion Order Tests
 
+        #region MaxCharacters Tests
+
+        /// <summary>
+        /// Tests the MaxCharacters with null value saves.
+        /// </summary>
+        [TestMethod]
+        public void TestMaxCharactersWithNullValueSaves()
+        {
+            #region Arrange
+            Question record = GetValid(9);
+            record.MaxCharacters = null;
+            #endregion Arrange
+
+            #region Act
+            QuestionRepository.DbContext.BeginTransaction();
+            QuestionRepository.EnsurePersistent(record);
+            QuestionRepository.DbContext.CommitTransaction();
+            #endregion Act
+
+            #region Assert
+            Assert.IsNull(record.MaxCharacters);
+            Assert.IsFalse(record.IsTransient());
+            Assert.IsTrue(record.IsValid());
+            #endregion Assert		
+        }
+
+        /// <summary>
+        /// Tests the MaxCharacters with max int value saves.
+        /// </summary>
+        [TestMethod]
+        public void TestMaxCharactersWithMaxIntValueSaves()
+        {
+            #region Arrange
+            var record = GetValid(9);
+            record.MaxCharacters = int.MaxValue;
+            #endregion Arrange
+
+            #region Act
+            QuestionRepository.DbContext.BeginTransaction();
+            QuestionRepository.EnsurePersistent(record);
+            QuestionRepository.DbContext.CommitTransaction();
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual(int.MaxValue, record.MaxCharacters);
+            Assert.IsFalse(record.IsTransient());
+            Assert.IsTrue(record.IsValid());
+            #endregion Assert
+        }
+
+        /// <summary>
+        /// Tests the MaxCharacters with min int value saves.
+        /// </summary>
+        [TestMethod]
+        public void TestMaxCharactersWithMinIntValueSaves()
+        {
+            #region Arrange
+            var record = GetValid(9);
+            record.MaxCharacters = int.MinValue;
+            #endregion Arrange
+
+            #region Act
+            QuestionRepository.DbContext.BeginTransaction();
+            QuestionRepository.EnsurePersistent(record);
+            QuestionRepository.DbContext.CommitTransaction();
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual(int.MinValue, record.MaxCharacters);
+            Assert.IsFalse(record.IsTransient());
+            Assert.IsTrue(record.IsValid());
+            #endregion Assert
+        }
+
+        #endregion MaxCharacters Tests
+
+
         #region Template Tests
         #region Invalid Tests
         [TestMethod]
