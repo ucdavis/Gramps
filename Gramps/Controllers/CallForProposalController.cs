@@ -1,16 +1,14 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using Gramps.Controllers.Filters;
 using Gramps.Controllers.ViewModels;
 using Gramps.Core.Domain;
 using Gramps.Core.Resources;
 using Gramps.Services;
-using UCDArch.Core.PersistanceSupport;
-using UCDArch.Web.Controller;
-using UCDArch.Web.Helpers;
-using UCDArch.Core.Utils;
 using MvcContrib;
-using System.Linq;
+using UCDArch.Core.PersistanceSupport;
+using UCDArch.Web.Helpers;
 
 namespace Gramps.Controllers
 {

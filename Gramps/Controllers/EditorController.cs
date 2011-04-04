@@ -4,13 +4,12 @@ using System.Web.Mvc;
 using Gramps.Controllers.Filters;
 using Gramps.Controllers.ViewModels;
 using Gramps.Core.Domain;
+using Gramps.Core.Resources;
 using Gramps.Models;
 using Gramps.Services;
-using UCDArch.Core.PersistanceSupport;
-using UCDArch.Web.Controller;
-using UCDArch.Web.Helpers;
-using UCDArch.Core.Utils;
 using MvcContrib;
+using UCDArch.Core.PersistanceSupport;
+using UCDArch.Web.Helpers;
 
 namespace Gramps.Controllers
 {
@@ -31,13 +30,18 @@ namespace Gramps.Controllers
             _emailService = emailService;
         }
     
-        //
-        // GET: /Editor/
+        /// <summary>
+        /// #1
+        /// GET: /Editor/
+        /// </summary>
+        /// <param name="templateId"></param>
+        /// <param name="callForProposalId"></param>
+        /// <returns></returns>
         public ActionResult Index(int? templateId, int? callForProposalId)
         {
             if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
             {
-                Message = "You do not have access to that.";
+                Message = string.Format(StaticValues.Message_NoAccess, "that");
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
@@ -47,18 +51,6 @@ namespace Gramps.Controllers
             return View(viewModel);
         }
 
-        //
-        // GET: /Editor/Details/5
-        public ActionResult Details(int id)
-        {
-            //todo: show all editors, emails, etc.
-            var editor = _editorRepository.GetNullableById(id);
-
-            if (editor == null) return this.RedirectToAction(a => a.Index(null, null));
-
-            return View(editor);
-        }
-
         public ActionResult AddEditor(int? templateId, int? callForProposalId)
         {
             Template template = null;
@@ -66,7 +58,7 @@ namespace Gramps.Controllers
 
             if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
             {
-                Message = "You do not have access to that.";
+                Message = string.Format(StaticValues.Message_NoAccess, "that");
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
 

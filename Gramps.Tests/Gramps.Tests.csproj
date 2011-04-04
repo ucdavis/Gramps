@@ -108,6 +108,7 @@
     <Compile Include="ControllerTests\CallForProposalControllerTests\CallForProposalControllerTestsPart03.cs" />
     <Compile Include="ControllerTests\CallForProposalControllerTests\CallForProposalControllerTestsPart04.cs" />
     <Compile Include="ControllerTests\CallForProposalControllerTests\CallForProposalControllerTestsReflection.cs" />
+    <Compile Include="ControllerTests\EditorControllerTests.cs" />
     <Compile Include="Core\AbstractRepositoryTests.cs" />
     <Compile Include="Core\Extensions\AssertExtensions.cs" />
     <Compile Include="Core\Extensions\RouteTestingExtensions.cs" />
