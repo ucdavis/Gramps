@@ -27,8 +27,18 @@ namespace Gramps.Tests.ControllerTests.EditorControllerTests
         {
             "~/Editor/AddEditor/".ShouldMapTo<EditorController>(a => a.AddEditor(null, null));
         }
+
         /// <summary>
         /// #3
+        /// </summary>
+        [TestMethod]
+        public void TestAddCreateReviewerGetMapping()
+        {
+            "~/Editor/CreateReviewer/".ShouldMapTo<EditorController>(a => a.CreateReviewer(null, null));
+        }
+
+        /// <summary>
+        /// #4
         /// </summary>
         [TestMethod]
         public void TestAddEditorPostMapping()
@@ -37,12 +47,12 @@ namespace Gramps.Tests.ControllerTests.EditorControllerTests
         }
 
         /// <summary>
-        /// #4
+        /// #5
         /// </summary>
         [TestMethod]
-        public void TestAddCreateReviewerGetMapping()
+        public void TestAddEditReviewerGetMapping()
         {
-            "~/Editor/CreateReviewer/".ShouldMapTo<EditorController>(a => a.CreateReviewer(null, null));
+            "~/Editor/EditReviewer/5".ShouldMapTo<EditorController>(a => a.EditReviewer(5, null, null));
         }
         #endregion Mapping Tests
     }

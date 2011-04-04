@@ -236,13 +236,19 @@ namespace Gramps.Controllers
             }
         }
 
-        //
-        // GET: /Editor/Edit/5
+        /// <summary>
+        /// #6
+        /// GET: /Editor/Edit/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="templateId"></param>
+        /// <param name="callForProposalId"></param>
+        /// <returns></returns>
         public ActionResult EditReviewer(int id, int? templateId, int? callForProposalId)
         {
             if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
             {
-                Message = "You do not have access to that.";
+                Message = string.Format(StaticValues.Message_NoAccess, "that");
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
@@ -250,7 +256,7 @@ namespace Gramps.Controllers
 
             if (editor == null)
             {
-                Message = "Reviewer not found";
+                Message = string.Format(StaticValues.Message_NotFound, "Reviewer");
                 return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
             }
             else if (editor.User != null)
@@ -260,7 +266,7 @@ namespace Gramps.Controllers
             }
             if (!_accessService.HasSameId(editor.Template, editor.CallForProposal, templateId, callForProposalId))
             {
-                Message = "You do not have access to that.";
+                Message = string.Format(StaticValues.Message_NoAccess, "that");
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
 

@@ -142,6 +142,15 @@ namespace Gramps.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} not found..
+        /// </summary>
+        public static string Message_NotFound {
+            get {
+                return ResourceManager.GetString("Message_NotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to There was a problem selecting {0}..
         /// </summary>
         public static string Message_ProblemSelecting {

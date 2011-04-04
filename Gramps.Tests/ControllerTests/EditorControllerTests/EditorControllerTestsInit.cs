@@ -131,6 +131,7 @@ namespace Gramps.Tests.ControllerTests.EditorControllerTests
             var fakeEditors = new FakeEditors();
             fakeEditors.Records(0, EditorRepository, editors);
         }
+
         #endregion Helpers
     }
 }
