@@ -14,7 +14,7 @@
 
 <p>
     <%: Html.ActionLink<EditorController>(a => a.CreateReviewer(Model.TemplateId, Model.CallForProposalId), "Create Reviewer", new {@class="button"}) %>
-    <%: Html.ActionLink<EditorController>(a => a.AddEditor(Model.TemplateId, Model.CallForProposalId), "Create Editor", new {@class="button"}) %>
+    <%: Html.ActionLink<EditorController>(a => a.AddEditor(Model.TemplateId, Model.CallForProposalId), "Add Editor", new {@class="button"}) %>
 </p>
 
 <% Html.Grid(Model.EditorList) 

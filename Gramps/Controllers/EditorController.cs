@@ -152,7 +152,7 @@ namespace Gramps.Controllers
 
         /// <summary>
         /// #4
-        /// GET: /Editor/Create
+        /// GET: /Editor/CreateReviewer
         /// </summary>
         /// <param name="templateId"></param>
         /// <param name="callForProposalId"></param>
@@ -181,9 +181,15 @@ namespace Gramps.Controllers
             return View(viewModel);
         } 
 
-        //
-        // POST: /Editor/Create
-        [AcceptVerbs(HttpVerbs.Post)]
+        /// <summary>
+        /// #5
+        /// POST: /Editor/CreateReviewer
+        /// </summary>
+        /// <param name="templateId"></param>
+        /// <param name="callForProposalId"></param>
+        /// <param name="editor"></param>
+        /// <returns></returns>
+        [HttpPost]
         public ActionResult CreateReviewer(int? templateId, int? callForProposalId, Editor editor)
         {
             Template template = null;
@@ -216,7 +222,7 @@ namespace Gramps.Controllers
             {
                 _editorRepository.EnsurePersistent(editorToCreate);
 
-                Message = "Reviewer Created Successfully";
+                Message = string.Format(StaticValues.Message_CreatedSuccessfully, "Reviewer"); // "Reviewer Created Successfully";
 
                 return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
             }

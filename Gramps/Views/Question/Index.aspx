@@ -37,6 +37,7 @@
                                 col.Bound(x => x.Name);
                                 col.Bound(x => x.QuestionType.Name).Title("Type");
                                 col.Bound(x => x.OptionChoices).Title("Options");
+                                col.Bound(x => x.MaxCharacters);
                                 col.Bound(x => x.ValidationClasses).Title("Validators");
 			            col.Template(x => {%>
 				<% using (Html.BeginForm<QuestionController>(b => b.Delete(x.Id, Model.TemplateId, Model.CallForProposalId), FormMethod.Post, new { name = "DeleteQuestionForm" })){%>
