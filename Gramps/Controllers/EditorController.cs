@@ -83,6 +83,14 @@ namespace Gramps.Controllers
             return View(viewModel);
         }
 
+        /// <summary>
+        /// #3
+        /// Post: /Editor/AddEditor/?templateId=5&CallForProposalId=null&userId=3
+        /// </summary>
+        /// <param name="templateId"></param>
+        /// <param name="callForProposalId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult AddEditor(int? templateId, int? callForProposalId, int userId)
         {
@@ -91,7 +99,7 @@ namespace Gramps.Controllers
 
             if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
             {
-                Message = "You do not have access to that.";
+                Message = string.Format(StaticValues.Message_NoAccess, "that");
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
@@ -105,6 +113,11 @@ namespace Gramps.Controllers
             }
 
             var user = Repository.OfType<User>().GetNullableById(userId);
+            if (user == null)
+            {
+                ModelState.AddModelError("User", "User not found");
+                Message = "User not found";
+            }
 
             var editor = new Editor(user, false);
             editor.CallForProposal = callforProposal;
@@ -112,13 +125,13 @@ namespace Gramps.Controllers
 
             editor.TransferValidationMessagesTo(ModelState);
 
-            if (editor.Template != null && _editorRepository.Queryable.Where(a => a.User == editor.User && a.Template == template).Any())
+            if (editor.Template != null && _editorRepository.Queryable.Where(a => a.User != null && a.User == editor.User && a.Template != null && a.Template == template).Any())
             {
                 ModelState.AddModelError("User", "User already exists");
                 Message = "User already exists";
             }
 
-            if (editor.CallForProposal != null && _editorRepository.Queryable.Where(a => a.User == editor.User && a.CallForProposal == callforProposal).Any())
+            if (editor.CallForProposal != null && _editorRepository.Queryable.Where(a => a.User != null && a.User == editor.User && a.CallForProposal !=null && a.CallForProposal == callforProposal).Any())
             {
                 ModelState.AddModelError("User", "User already exists");
                 Message = "User already exists";
@@ -130,7 +143,7 @@ namespace Gramps.Controllers
             }
             else
             {
-                Message = string.Format("Unable to add editor {0}", Message);
+                Message = string.Format(string.Format("{0} {{0}}", string.Format(StaticValues.Message_UnableToAdd, "editor")), Message);
             }
 
             return this.RedirectToAction(a => a.Index(templateId, callForProposalId));

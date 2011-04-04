@@ -151,6 +151,15 @@ namespace Gramps.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to add {0}.
+        /// </summary>
+        public static string Message_UnableToAdd {
+            get {
+                return ResourceManager.GetString("Message_UnableToAdd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Email sent out to applicant if proposal is approved.
         /// </summary>
         public static string ProposalApproved {

@@ -95,6 +95,42 @@ namespace Gramps.Tests.ControllerTests.EditorControllerTests
             var fakeEditors = new FakeEditors();
             fakeEditors.Records(0, EditorRepository, editors);
         }
+
+        private void SetupDataForTests2()
+        {
+            var fakeUsers = new FakeUsers();
+            fakeUsers.Records(4, UserRepository);
+
+            var fakeTemplates = new FakeTemplates();
+            fakeTemplates.Records(5, TemplateRepository);
+            var fakeCalls = new FakeCallForProposals();
+            fakeCalls.Records(5, CallForProposalRepository);
+
+            var editors = new List<Editor>();
+            for (int i = 0; i < 4; i++)
+            {
+                editors.Add(CreateValidEntities.Editor(i + 1));
+                editors[i].Template = null;
+                editors[i].CallForProposal = CallForProposalRepository.GetNullableById(5);
+            }
+            editors[2].CallForProposal = CallForProposalRepository.GetNullableById(1);
+            editors[2].User = UserRepository.GetNullableById(2);
+            editors[1].User = UserRepository.GetNullableById(1);
+
+            for (int i = 4; i < 8; i++)
+            {
+                editors.Add(CreateValidEntities.Editor(i + 1));
+                editors[i].Template = TemplateRepository.GetNullableById(3);
+                editors[i].CallForProposal = null;
+            }
+            editors[5].Template = TemplateRepository.GetNullableById(1);
+            editors[5].User = UserRepository.GetNullableById(2);
+            editors[7].Template = TemplateRepository.GetNullableById(2);
+            editors[6].User = UserRepository.GetNullableById(1);
+
+            var fakeEditors = new FakeEditors();
+            fakeEditors.Records(0, EditorRepository, editors);
+        }
         #endregion Helpers
     }
 }
