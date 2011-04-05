@@ -132,6 +132,30 @@ namespace Gramps.Tests.ControllerTests.EditorControllerTests
             fakeEditors.Records(0, EditorRepository, editors);
         }
 
+        private void SetupDataForTests3()
+        {
+            var fakeUsers = new FakeUsers();
+            fakeUsers.Records(4, UserRepository);
+
+            var fakeCalls = new FakeCallForProposals();
+            fakeCalls.Records(3, CallForProposalRepository);
+
+            var editors = new List<Editor>();
+            for (int i = 0; i < 10; i++)
+            {
+                editors.Add(CreateValidEntities.Editor(i+1));
+                editors[i].CallForProposal = CallForProposalRepository.GetNullableById(i % 2 == 0 ? 1 : 2);
+                editors[i].Template = null;
+            }
+            editors[0].User = CreateValidEntities.User(1);
+            editors[1].User = CreateValidEntities.User(2);
+            editors[2].CallForProposal = null;
+            editors[4].CallForProposal = CallForProposalRepository.GetNullableById(3);
+
+            var fakeEditors = new FakeEditors();
+            fakeEditors.Records(0, EditorRepository, editors);
+        }
+
         #endregion Helpers
     }
 }

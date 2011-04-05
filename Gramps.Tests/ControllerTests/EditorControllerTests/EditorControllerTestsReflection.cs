@@ -331,6 +331,27 @@ namespace Gramps.Tests.ControllerTests.EditorControllerTests
             #endregion Assert
         }
 
+        /// <summary>
+        /// #9
+        /// </summary>
+        [TestMethod]
+        public void TestControllerMethodSendCallgetContainsExpectedAttributes1()
+        {
+            #region Arrange
+            var controllerClass = _controllerClass;
+            var controllerMethod = controllerClass.GetMethods().Where(a => a.Name == "SendCall");
+            #endregion Arrange
+
+            #region Act
+            //var expectedAttribute = controllerMethod.ElementAt(0).GetCustomAttributes(true).OfType<UserOnlyAttribute>();
+            var allAttributes = controllerMethod.ElementAt(0).GetCustomAttributes(true);
+            #endregion Act
+
+            #region Assert
+            //Assert.AreEqual(1, expectedAttribute.Count(), "UserOnlyAttribute not found");
+            Assert.AreEqual(0, allAttributes.Count());
+            #endregion Assert
+        }
         #endregion Controller Method Tests
 
         #endregion Reflection Tests

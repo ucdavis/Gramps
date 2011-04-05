@@ -32,22 +32,31 @@ namespace Gramps.Tests.ControllerTests.EditorControllerTests
         /// #3
         /// </summary>
         [TestMethod]
-        public void TestCreateReviewerGetMapping()
-        {
-            "~/Editor/CreateReviewer/".ShouldMapTo<EditorController>(a => a.CreateReviewer(null, null));
-        }
-
-        /// <summary>
-        /// #4
-        /// </summary>
-        [TestMethod]
         public void TestAddEditorPostMapping()
         {
             "~/Editor/AddEditor/5".ShouldMapTo<EditorController>(a => a.AddEditor(null, null, 5), true);
         }
 
         /// <summary>
+        /// #4
+        /// </summary>
+        [TestMethod]
+        public void TestCreateReviewerGetMapping()
+        {
+            "~/Editor/CreateReviewer/".ShouldMapTo<EditorController>(a => a.CreateReviewer(null, null));
+        }
+
+        /// <summary>
         /// #5
+        /// </summary>
+        [TestMethod]
+        public void TestCreateReviewerPostMapping()
+        {
+            "~/Editor/CreateReviewer/".ShouldMapTo<EditorController>(a => a.CreateReviewer(null, null, new Editor()), true);
+        }
+
+        /// <summary>
+        /// #6
         /// </summary>
         [TestMethod]
         public void TestEditReviewerGetMapping()
@@ -56,7 +65,7 @@ namespace Gramps.Tests.ControllerTests.EditorControllerTests
         }
 
         /// <summary>
-        /// #6
+        /// #7
         /// </summary>
         [TestMethod]
         public void TestEditReviewerPostMapping()
@@ -65,12 +74,21 @@ namespace Gramps.Tests.ControllerTests.EditorControllerTests
         }
 
         /// <summary>
-        /// #7
+        /// #8
         /// </summary>
         [TestMethod]
-        public void TestAddEditReviewerPostMapping()
+        public void TestDeleteMapping()
         {
             "~/Editor/Delete/5".ShouldMapTo<EditorController>(a => a.Delete(5, null, null));
+        }
+
+        /// <summary>
+        /// #9
+        /// </summary>
+        [TestMethod]
+        public void TestSendCallGetMapping()
+        {
+            "~/Editor/SendCall/5".ShouldMapTo<EditorController>(a => a.SendCall(5));
         }
         #endregion Mapping Tests
     }
