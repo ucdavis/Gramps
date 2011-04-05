@@ -283,4 +283,7 @@
   <data name="Message_NotFound" xml:space="preserve">
     <value>{0} not found.</value>
   </data>
+  <data name="Message_RemovedSuccessfully" xml:space="preserve">
+    <value>{0} Removed Successfully.</value>
+  </data>
 </root>

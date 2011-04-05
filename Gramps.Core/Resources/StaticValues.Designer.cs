@@ -160,6 +160,15 @@ namespace Gramps.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} Removed Successfully..
+        /// </summary>
+        public static string Message_RemovedSuccessfully {
+            get {
+                return ResourceManager.GetString("Message_RemovedSuccessfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unable to add {0}.
         /// </summary>
         public static string Message_UnableToAdd {

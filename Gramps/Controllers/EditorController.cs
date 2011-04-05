@@ -340,14 +340,20 @@ namespace Gramps.Controllers
             }
         }
 
-        //
-        // POST: /Editor/Delete/5
-        [AcceptVerbs(HttpVerbs.Post)]
+        /// <summary>
+        /// #8
+        /// POST: /Editor/Delete/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="templateId"></param>
+        /// <param name="callForProposalId"></param>
+        /// <returns></returns>
+        [HttpPost]
         public ActionResult Delete(int id, int? templateId, int? callForProposalId)
         {
             if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
             {
-                Message = "You do not have access to that.";
+                Message = string.Format(StaticValues.Message_NoAccess, "that");
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
@@ -355,8 +361,14 @@ namespace Gramps.Controllers
 
             if (editorToDelete == null)
             {
-                Message = "Editor Not Found";
+                Message = string.Format(StaticValues.Message_NotFound, "Editor");
                 return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
+            }
+            
+            if (!_accessService.HasSameId(editorToDelete.Template, editorToDelete.CallForProposal, templateId, callForProposalId))
+            {
+                Message = string.Format(StaticValues.Message_NoAccess, "that");
+                return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
             if (editorToDelete.IsOwner)
@@ -364,11 +376,7 @@ namespace Gramps.Controllers
                 Message = "Can't delete owner.";
                 return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
             }
-            if (!_accessService.HasSameId(editorToDelete.Template, editorToDelete.CallForProposal, templateId, callForProposalId))
-            {
-                Message = "You do not have access to that.";
-                return this.RedirectToAction<HomeController>(a => a.Index());
-            }
+
             if (editorToDelete.CallForProposal != null)
             {
                 editorToDelete.CallForProposal.RemoveEditor(editorToDelete);
@@ -376,48 +384,48 @@ namespace Gramps.Controllers
 
             _editorRepository.Remove(editorToDelete);
 
-            Message = "Editor Removed Successfully";
+            Message = string.Format(StaticValues.Message_RemovedSuccessfully, "Editor");
 
             return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
         }
 
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult ResetReviewerId(int id, int? templateId, int? callForProposalId)
-        {
-            if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
-            {
-                Message = "You do not have access to that.";
-                return this.RedirectToAction<HomeController>(a => a.Index());
-            }
+        //[AcceptVerbs(HttpVerbs.Post)]
+        //public ActionResult ResetReviewerId(int id, int? templateId, int? callForProposalId)
+        //{
+        //    if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
+        //    {
+        //        Message = "You do not have access to that.";
+        //        return this.RedirectToAction<HomeController>(a => a.Index());
+        //    }
 
-            var editorToReset = _editorRepository.GetNullableById(id);
+        //    var editorToReset = _editorRepository.GetNullableById(id);
 
-            if (editorToReset == null)
-            {
-                Message = "Editor Not Found";
-                return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
-            }
+        //    if (editorToReset == null)
+        //    {
+        //        Message = "Editor Not Found";
+        //        return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
+        //    }
 
-            if (editorToReset.User != null)
-            {
-                Message = "Can't Reset non Reviewers";
-                return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
-            }
-            if (!_accessService.HasSameId(editorToReset.Template, editorToReset.CallForProposal, templateId, callForProposalId))
-            {
-                Message = "You do not have access to that.";
-                return this.RedirectToAction<HomeController>(a => a.Index());
-            }
+        //    if (editorToReset.User != null)
+        //    {
+        //        Message = "Can't Reset non Reviewers";
+        //        return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
+        //    }
+        //    if (!_accessService.HasSameId(editorToReset.Template, editorToReset.CallForProposal, templateId, callForProposalId))
+        //    {
+        //        Message = "You do not have access to that.";
+        //        return this.RedirectToAction<HomeController>(a => a.Index());
+        //    }
 
-            editorToReset.ReviewerId = Guid.NewGuid();
-            editorToReset.HasBeenNotified = false;
+        //    editorToReset.ReviewerId = Guid.NewGuid();
+        //    editorToReset.HasBeenNotified = false;
 
-            _editorRepository.EnsurePersistent(editorToReset);
+        //    _editorRepository.EnsurePersistent(editorToReset);
 
-            Message = "Editor Reset Successfully";
+        //    Message = "Editor Reset Successfully";
 
-            return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
-        }
+        //    return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
+        //}
 
 
         public ActionResult SendCall(int id)
