@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.Security;
 using Gramps.Controllers.Filters;
 using Gramps.Controllers.ViewModels;
 using Gramps.Core.Domain;
@@ -22,12 +23,14 @@ namespace Gramps.Controllers
 	    private readonly IRepository<Editor> _editorRepository;
         private readonly IAccessService _accessService;
         private readonly IEmailService _emailService;
+        private readonly IMembershipService _membershipService;
 
-        public EditorController(IRepository<Editor> editorRepository, IAccessService accessService, IEmailService emailService)
+        public EditorController(IRepository<Editor> editorRepository, IAccessService accessService, IEmailService emailService, IMembershipService membershipService)
         {
             _editorRepository = editorRepository;
             _accessService = accessService;
             _emailService = emailService;
+            _membershipService = membershipService;
         }
     
         /// <summary>
@@ -453,6 +456,12 @@ namespace Gramps.Controllers
             return View(viewModel);
         }
 
+        /// <summary>
+        /// #10
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="immediate"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult SendCall(int id, bool immediate)
         {
@@ -475,26 +484,29 @@ namespace Gramps.Controllers
             var viewModel = ReviewersSendViewModel.Create(Repository, callforproposal);
             if (!callforproposal.IsActive)
             {
-                Message = "Is not active";
+                Message = "Is not active, no emails sent.";
                 return View(viewModel);
             }
 
-            var membershipService = new AccountMembershipService();
+            //var membershipService = new AccountMembershipService();
             var count = 0;
             foreach (var editor in viewModel.EditorsToNotify.Where(a => !a.HasBeenNotified))
             {
                 string tempPass = null;
-                if (membershipService.DoesUserExist(editor.ReviewerEmail))
-                {
-                    //Send an email saying you already exist and can view here
-
+                if (_membershipService.DoesUserExist(editor.ReviewerEmail))
+                {                   
+                    //Don't Create user.
                 }
                 else
                 {
-                    membershipService.CreateUser(editor.ReviewerEmail.Trim().ToLower(),
+                    var result = _membershipService.CreateUser(editor.ReviewerEmail.Trim().ToLower(),
                                                  "Ht548*%KjjY2#",
                                                  editor.ReviewerEmail.Trim().ToLower());
-                    tempPass = membershipService.ResetPassword(editor.ReviewerEmail.Trim().ToLower());
+                    if (result != MembershipCreateStatus.Success)
+                    {
+                        throw new ApplicationException(string.Format("Error Creating user '{0}' result '{1}'", editor.ReviewerEmail.Trim().ToLower(), result));
+                    }
+                    tempPass = _membershipService.ResetPassword(editor.ReviewerEmail.Trim().ToLower());
                 }
 
                 _emailService.SendEmail(Request, Url, callforproposal, callforproposal.EmailTemplates.Where(a => a.TemplateType == EmailTemplateType.ReadyForReview).Single(), editor.ReviewerEmail, immediate, tempPass);
@@ -505,7 +517,7 @@ namespace Gramps.Controllers
             }
 
             viewModel = ReviewersSendViewModel.Create(Repository, callforproposal);
-            Message = string.Format("{0} Emails Generated", count);
+            Message = string.Format("{0} Emails Generated.", count);
             return View(viewModel);
         }
         

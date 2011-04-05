@@ -90,6 +90,15 @@ namespace Gramps.Tests.ControllerTests.EditorControllerTests
         {
             "~/Editor/SendCall/5".ShouldMapTo<EditorController>(a => a.SendCall(5));
         }
+
+        /// <summary>
+        /// #10
+        /// </summary>
+        [TestMethod]
+        public void TestSendCallPostMapping()
+        {
+            "~/Editor/SendCall/5".ShouldMapTo<EditorController>(a => a.SendCall(5,true), true);
+        }
         #endregion Mapping Tests
     }
 }

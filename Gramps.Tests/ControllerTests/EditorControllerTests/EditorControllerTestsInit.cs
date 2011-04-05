@@ -1,13 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web.Mvc;
 using System.Web.Routing;
 using Gramps.Controllers;
-using Gramps.Controllers.Filters;
-using Gramps.Controllers.ViewModels;
 using Gramps.Core.Domain;
+using Gramps.Models;
 using Gramps.Services;
 using Gramps.Tests.Core.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -15,7 +11,6 @@ using MvcContrib.TestHelper;
 using Rhino.Mocks;
 using UCDArch.Core.PersistanceSupport;
 using UCDArch.Testing;
-using UCDArch.Web.Attributes;
 
 
 namespace Gramps.Tests.ControllerTests.EditorControllerTests
@@ -30,6 +25,7 @@ namespace Gramps.Tests.ControllerTests.EditorControllerTests
         public IRepository<Template> TemplateRepository;
         public IRepository<CallForProposal> CallForProposalRepository;
         public IRepository<User> UserRepository;
+        public IMembershipService MembershipService;
 
         #region Init
         /// <summary>
@@ -39,8 +35,9 @@ namespace Gramps.Tests.ControllerTests.EditorControllerTests
         {
             EditorRepository = FakeRepository<Editor>();
             AccessService = MockRepository.GenerateStub<IAccessService>();
-            EmailService = MockRepository.GenerateStub<IEmailService>();  
-            Controller = new TestControllerBuilder().CreateController<EditorController>(EditorRepository, AccessService, EmailService);            
+            EmailService = MockRepository.GenerateStub<IEmailService>();
+            MembershipService = MockRepository.GenerateStub<IMembershipService>();
+            Controller = new TestControllerBuilder().CreateController<EditorController>(EditorRepository, AccessService, EmailService, MembershipService);  
         }
 
         protected override void RegisterRoutes()
@@ -151,6 +148,42 @@ namespace Gramps.Tests.ControllerTests.EditorControllerTests
             editors[1].User = CreateValidEntities.User(2);
             editors[2].CallForProposal = null;
             editors[4].CallForProposal = CallForProposalRepository.GetNullableById(3);
+
+            var fakeEditors = new FakeEditors();
+            fakeEditors.Records(0, EditorRepository, editors);
+        }
+
+        private void SetupDataForTests4()
+        {
+            var calls = new List<CallForProposal>();
+            calls.Add(CreateValidEntities.CallForProposal(1));
+            calls.Add(CreateValidEntities.CallForProposal(2));
+            calls[0].IsActive = false;
+            calls[1].IsActive = true;
+            calls[1].EmailTemplates = new List<EmailTemplate>();
+            calls[1].EmailTemplates.Add(CreateValidEntities.EmailTemplate(1));
+            calls[1].EmailTemplates[0].TemplateType = EmailTemplateType.ReadyForReview;
+
+            var fakeCalls = new FakeCallForProposals();
+            fakeCalls.Records(0, CallForProposalRepository, calls);
+
+            var editors = new List<Editor>();
+            for (int i = 0; i < 10; i++)
+            {
+                editors.Add(CreateValidEntities.Editor(i + 1));
+                if (i < 5)
+                {
+                    editors[i].CallForProposal = CallForProposalRepository.GetNullableById(1);
+                }
+                else
+                {
+                    editors[i].CallForProposal = CallForProposalRepository.GetNullableById(2);
+                }
+                editors[i].Template = null;
+            }
+            editors[0].User = CreateValidEntities.User(1);
+            editors[5].User = CreateValidEntities.User(2);
+            editors[6].HasBeenNotified = true;
 
             var fakeEditors = new FakeEditors();
             fakeEditors.Records(0, EditorRepository, editors);
