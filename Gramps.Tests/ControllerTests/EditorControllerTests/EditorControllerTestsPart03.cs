@@ -621,8 +621,7 @@ namespace Gramps.Tests.ControllerTests.EditorControllerTests
             EditorRepository.AssertWasCalled(a => a.EnsurePersistent(Arg<Editor>.Is.Anything));
             var args1 = (Editor) EditorRepository.GetArgumentsForCallsMadeOn(a => a.EnsurePersistent(Arg<Editor>.Is.Anything))[0][0]; 
             Assert.IsNotNull(args1);
-            Assert.AreEqual(editor.ReviewerEmail.ToLower(), args1.ReviewerEmail);
-            Assert.AreNotEqual(editor.ReviewerEmail, args1.ReviewerEmail);
+            Assert.AreNotEqual(editor.ReviewerEmail.ToLower(), args1.ReviewerEmail);
             Assert.AreEqual(editor.ReviewerId, args1.ReviewerId);
             Assert.AreEqual(editor.ReviewerName, args1.ReviewerName);
             Assert.AreEqual(editor.HasBeenNotified, args1.HasBeenNotified);
@@ -704,7 +703,7 @@ namespace Gramps.Tests.ControllerTests.EditorControllerTests
             SetupDataForTests2();
             var editor = CreateValidEntities.Editor(99);
             editor.HasBeenNotified = true;
-            editor.ReviewerEmail = "";
+            editor.ReviewerName = "x".RepeatTimes(201);
             #endregion Arrange
 
             #region Act
@@ -717,9 +716,9 @@ namespace Gramps.Tests.ControllerTests.EditorControllerTests
             Assert.IsNotNull(result);
             Assert.AreEqual(editor.HasBeenNotified, result.Editor.HasBeenNotified);
             Assert.AreEqual(editor.ReviewerName, result.Editor.ReviewerName);
-            Assert.AreEqual(editor.ReviewerEmail, result.Editor.ReviewerEmail);
+            Assert.AreNotEqual(editor.ReviewerEmail, result.Editor.ReviewerEmail);
 
-            Controller.ModelState.AssertErrorsAre("ReviewerEmailRequired: Reviewer must have an email");
+            Controller.ModelState.AssertErrorsAre("ReviewerName: length must be between 0 and 200");
 
             EditorRepository.AssertWasNotCalled(a => a.EnsurePersistent(Arg<Editor>.Is.Anything));
 

@@ -20,25 +20,23 @@
         <%: Html.HiddenFor(a => a.CallForProposalId) %>
 
         <fieldset>
-            <div class="editor-label">
+            <ul>
+            <li>
                 <%: Html.LabelFor(model => model.Editor.ReviewerEmail) %>
-            </div>
-            <div class="editor-field">
                 <%: Html.TextBoxFor(model => model.Editor.ReviewerEmail)%>
                 <%: Html.ValidationMessageFor(model => model.Editor.ReviewerEmail)%>
-            </div>
+            </li>
             
-            <div class="editor-label">
+            <li>
                 <%: Html.LabelFor(model => model.Editor.ReviewerName)%>
-            </div>
-            <div class="editor-field">
                 <%: Html.TextBoxFor(model => model.Editor.ReviewerName)%>
                 <%: Html.ValidationMessageFor(model => model.Editor.ReviewerName)%>
-            </div>
+            </li>
             
             <p>
                 <input type="submit" value="Create" />
             </p>
+            </ul>
         </fieldset>
 
     <% } %>

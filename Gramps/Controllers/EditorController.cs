@@ -310,11 +310,15 @@ namespace Gramps.Controllers
                 Message = string.Format(StaticValues.Message_NoAccess, "that");
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
-
-            TransferValues(editor, editorToEdit);
+            var skipEmail = false;
             if (callForProposalId.HasValue && callForProposalId.Value != 0)
             {
-                editorToEdit.HasBeenNotified = editor.HasBeenNotified;
+                skipEmail = true;
+            }
+            TransferValues(editor, editorToEdit, skipEmail);
+            if (callForProposalId.HasValue && callForProposalId.Value != 0)
+            {
+                editorToEdit.HasBeenNotified = editor.HasBeenNotified;                
             }
 
             editorToEdit.TransferValidationMessagesTo(ModelState);
@@ -495,10 +499,18 @@ namespace Gramps.Controllers
         
         /// <summary>
         /// Transfer editable values from source to destination
+        /// When editing, changing the email could result in screwed up membership info.
         /// </summary>
-        private static void TransferValues(Editor source, Editor destination)
+        private static void TransferValues(Editor source, Editor destination, bool skipEmail = false)
         {
-            destination.ReviewerEmail = source.ReviewerEmail.Trim().ToLower();
+            if (skipEmail)
+            {
+                destination.ReviewerEmail = destination.ReviewerEmail.Trim().ToLower();
+            }
+            else
+            {
+                destination.ReviewerEmail = source.ReviewerEmail.Trim().ToLower(); 
+            }            
             destination.ReviewerName = source.ReviewerName;
             destination.ReviewerId = source.ReviewerId;
         }

@@ -20,33 +20,34 @@
 
         <fieldset>
             <legend>Fields</legend>
-            <div class="editor-label">
+            <ul>
+            <li>
                 <%: Html.LabelFor(model => model.Editor.ReviewerEmail) %>
-            </div>
-            <div class="editor-field">
-                <%: Html.TextBoxFor(model => model.Editor.ReviewerEmail)%>
-                <%: Html.ValidationMessageFor(model => model.Editor.ReviewerEmail)%>
-            </div>
+                <%if(Model.IsCallForProposal) {%>
+                    <%: Html.DisplayFor(model => model.Editor.ReviewerEmail)%>
+                <%}%>
+                <%else{%>
+                    <%: Html.TextBoxFor(model => model.Editor.ReviewerEmail)%>
+                    <%: Html.ValidationMessageFor(model => model.Editor.ReviewerEmail)%>
+                <%} %>
+            </li>
             
-            <div class="editor-label">
+            <li>
                 <%: Html.LabelFor(model => model.Editor.ReviewerName)%>
-            </div>
-            <div class="editor-field">
                 <%: Html.TextBoxFor(model => model.Editor.ReviewerName)%>
                 <%: Html.ValidationMessageFor(model => model.Editor.ReviewerName)%>
-            </div>
+            </li>
             <%if(Model.IsCallForProposal) {%>
-                <div class="editor-label">
+                <li>
                     <%: Html.LabelFor(model => model.Editor.HasBeenNotified)%>
-                </div>
-                <div class="editor-field">
                     <%: Html.CheckBoxFor(model => model.Editor.HasBeenNotified)%>
                     <%: Html.ValidationMessageFor(model => model.Editor.HasBeenNotified)%>
-                </div>    
+                </li>   
             <%}%>
             <p>
                 <input type="submit" value="Save" />
             </p>
+            </ul>
         </fieldset>
 
     <% } %>
