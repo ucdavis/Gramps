@@ -298,6 +298,7 @@
     <Content Include="Content\Vista\sprite.png" />
     <Content Include="Content\Windows7\loading.gif" />
     <Content Include="Content\Windows7\sprite.png" />
+    <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Gramps.Publish.xml" />
     <Content Include="Images\ajax-loader.gif" />

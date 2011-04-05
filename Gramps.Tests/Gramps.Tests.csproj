@@ -113,6 +113,7 @@
     <Compile Include="ControllerTests\EditorControllerTests\EditorControllerTestsPart01.cs" />
     <Compile Include="ControllerTests\EditorControllerTests\EditorControllerTestsPart02.cs" />
     <Compile Include="ControllerTests\EditorControllerTests\EditorControllerTestsPart03.cs" />
+    <Compile Include="ControllerTests\EditorControllerTests\EditorControllerTestsPart04.cs" />
     <Compile Include="ControllerTests\EditorControllerTests\EditorControllerTestsReflection.cs" />
     <Compile Include="Core\AbstractRepositoryTests.cs" />
     <Compile Include="Core\Extensions\AssertExtensions.cs" />

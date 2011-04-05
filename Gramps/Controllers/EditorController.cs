@@ -276,31 +276,38 @@ namespace Gramps.Controllers
 			return View(viewModel);
         }
         
-        //
-        // POST: /Editor/Edit/5
-        [AcceptVerbs(HttpVerbs.Post)]
+        /// <summary>
+        /// #7
+        /// POST: /Editor/EditReviewer/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="templateId"></param>
+        /// <param name="callForProposalId"></param>
+        /// <param name="editor"></param>
+        /// <returns></returns>
+        [HttpPost]
         public ActionResult EditReviewer(int id, int? templateId, int? callForProposalId, Editor editor)
         {
             if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
             {
-                Message = "You do not have access to that.";
+                Message = string.Format(StaticValues.Message_NoAccess, "that");
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
             var editorToEdit = _editorRepository.GetNullableById(id);
-            if (editor == null)
+            if (editorToEdit == null)
             {
-                Message = "Reviewer not found";
+                Message = string.Format(StaticValues.Message_NotFound, "Reviewer");
                 return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
             }
-            else if (editor.User != null)
+            else if (editorToEdit.User != null)
             {
                 Message = "Not a reviewer";
                 return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
             }
             if (!_accessService.HasSameId(editorToEdit.Template, editorToEdit.CallForProposal, templateId, callForProposalId))
             {
-                Message = "You do not have access to that.";
+                Message = string.Format(StaticValues.Message_NoAccess, "that");
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
@@ -316,14 +323,14 @@ namespace Gramps.Controllers
             {
                 _editorRepository.EnsurePersistent(editorToEdit);
 
-                Message = "Editor Edited Successfully";
+                Message = string.Format(StaticValues.Message_EditedSuccessfully, "Reviewer");
 
                 return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
             }
             else
             {
                 var viewModel = EditorViewModel.Create(Repository, editorToEdit.Template, editorToEdit.CallForProposal);
-                viewModel.Editor = editor;
+                viewModel.Editor = editorToEdit;
 
                 return View(viewModel);
             }
