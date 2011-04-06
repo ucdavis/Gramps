@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -490,9 +491,11 @@ namespace Gramps.Controllers
 
             //var membershipService = new AccountMembershipService();
             var count = 0;
+            var errorList = new List<string>();
             foreach (var editor in viewModel.EditorsToNotify.Where(a => !a.HasBeenNotified))
             {
                 string tempPass = null;
+                var errorHappened = false;
                 if (_membershipService.DoesUserExist(editor.ReviewerEmail))
                 {                   
                     //Don't Create user.
@@ -502,22 +505,44 @@ namespace Gramps.Controllers
                     var result = _membershipService.CreateUser(editor.ReviewerEmail.Trim().ToLower(),
                                                  "Ht548*%KjjY2#",
                                                  editor.ReviewerEmail.Trim().ToLower());
+
                     if (result != MembershipCreateStatus.Success)
                     {
-                        throw new ApplicationException(string.Format("Error Creating user '{0}' result '{1}'", editor.ReviewerEmail.Trim().ToLower(), result));
+                        //throw new ApplicationException(string.Format("Error Creating user '{0}' result '{1}'", editor.ReviewerEmail.Trim().ToLower(), result));
+                        errorList.Add(string.Format("Error Creating user '{0}' result '{1}'", editor.ReviewerEmail.Trim().ToLower(), result));
+                        errorHappened = true;
                     }
-                    tempPass = _membershipService.ResetPassword(editor.ReviewerEmail.Trim().ToLower());
+                    else
+                    {
+                        tempPass = _membershipService.ResetPassword(editor.ReviewerEmail.Trim().ToLower()); 
+                    }                    
                 }
+                
+                if (!errorHappened)
+                {
+                    _emailService.SendEmail(Request, Url, callforproposal,
+                                            callforproposal.EmailTemplates.Where(
+                                                a => a.TemplateType == EmailTemplateType.ReadyForReview).Single(),
+                                            editor.ReviewerEmail, immediate, tempPass);
+                    editor.NotifiedDate = DateTime.Now;
+                    editor.HasBeenNotified = true;
+                    _editorRepository.EnsurePersistent(editor);
+                    count++;
+                }
+            }
 
-                _emailService.SendEmail(Request, Url, callforproposal, callforproposal.EmailTemplates.Where(a => a.TemplateType == EmailTemplateType.ReadyForReview).Single(), editor.ReviewerEmail, immediate, tempPass);
-                editor.NotifiedDate = DateTime.Now;
-                editor.HasBeenNotified = true;
-                _editorRepository.EnsurePersistent(editor);
-                count++;
+            if (errorList.Count > 0)
+            {
+                var user = Repository.OfType<User>().Queryable.Where(a => a.LoginId == CurrentUser.Identity.Name).FirstOrDefault();
+                _emailService.SendErrorReport(errorList, user.Email);
             }
 
             viewModel = ReviewersSendViewModel.Create(Repository, callforproposal);
             Message = string.Format("{0} Emails Generated.", count);
+            if (errorList.Count > 0)
+            {
+                Message = string.Format("{0} There were {1} Emails NOT Generated because of errors.", Message,errorList.Count);
+            }
             return View(viewModel);
         }
         

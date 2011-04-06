@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using System.Security.Policy;
 using System.Web;
 using System.Web.Mvc;
@@ -17,6 +18,7 @@ namespace Gramps.Services
         void SendConfirmation(HttpRequestBase request, UrlHelper url, Proposal proposal, EmailTemplate emailTemplate, bool immediate, string userName, string tempPass);
         void SendPasswordReset(CallForProposal callForProposal, string email, string tempPassword);
         void SendProposalEmail(HttpRequestBase request, UrlHelper url, Proposal proposal, EmailTemplate emailTemplate, bool immediate);
+        void SendErrorReport(List<string> errorList, string email);
     }
 
     public class EmailService : IEmailService
@@ -26,6 +28,22 @@ namespace Gramps.Services
         public EmailService(IRepository repository)
         {
             _repository = repository;
+        }
+
+        public virtual void SendErrorReport(List<string> errorList, string email)
+        {
+
+            var mail = new MailMessage("automatedemail@caes.ucdavis.edu", email, "Grants Management Error", "");
+            mail.IsBodyHtml = true;
+            mail.Body = "The following users were not added or notified: <br />";
+            foreach (var errors in errorList)
+            {
+                mail.Body = string.Format("{0}<p>{1}</p>", mail.Body, errors);
+            }
+            mail.Bcc.Add("jsylvestre@ucdavis.edu");
+
+            var client = new SmtpClient();
+            client.Send(mail);
         }
 
         public virtual void SendPasswordReset(CallForProposal callForProposal, string email, string tempPassword)

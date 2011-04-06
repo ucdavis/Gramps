@@ -155,6 +155,13 @@ namespace Gramps.Tests.ControllerTests.EditorControllerTests
 
         private void SetupDataForTests4()
         {
+            var fakeU = new List<User>();
+            fakeU.Add(CreateValidEntities.User(1));
+            fakeU[0].LoginId = "Me";
+            fakeU[0].Email = "me@me.com";
+            var fakeUsers = new FakeUsers();
+            fakeUsers.Records(0, UserRepository, fakeU);
+
             var calls = new List<CallForProposal>();
             calls.Add(CreateValidEntities.CallForProposal(1));
             calls.Add(CreateValidEntities.CallForProposal(2));
