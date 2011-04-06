@@ -87,4 +87,12 @@ namespace Gramps.Tests.Core.Helpers
             return CreateValidEntities.Template(i);
         }
     }
+
+    public class FakeEmailQueues : ControllerRecordFakes<EmailQueue>
+    {
+        protected override EmailQueue CreateValid(int i)
+        {
+            return CreateValidEntities.EmailQueue(i);
+        }
+    }
 }

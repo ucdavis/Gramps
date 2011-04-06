@@ -116,6 +116,7 @@
     <Compile Include="ControllerTests\EditorControllerTests\EditorControllerTestsPart04.cs" />
     <Compile Include="ControllerTests\EditorControllerTests\EditorControllerTestsPart05.cs" />
     <Compile Include="ControllerTests\EditorControllerTests\EditorControllerTestsReflection.cs" />
+    <Compile Include="ControllerTests\EmailQueueControllerTests.cs" />
     <Compile Include="Core\AbstractRepositoryTests.cs" />
     <Compile Include="Core\Extensions\AssertExtensions.cs" />
     <Compile Include="Core\Extensions\RouteTestingExtensions.cs" />

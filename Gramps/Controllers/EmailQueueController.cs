@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using Gramps.Controllers.Filters;
 using Gramps.Controllers.ViewModels;
 using Gramps.Core.Domain;
+using Gramps.Core.Resources;
 using Gramps.Services;
 using UCDArch.Core.PersistanceSupport;
 using UCDArch.Web.Controller;
@@ -27,8 +28,12 @@ namespace Gramps.Controllers
             _accessService = accessService;
         }
 
-        //
-        // GET: /EmailQueue/
+        /// <summary>
+        /// #1
+        /// GET: /EmailQueue/
+        /// </summary>
+        /// <param name="id">CallForProposal Id</param>
+        /// <returns></returns>
         public ActionResult Index(int id)
         {
             var callforproposal = Repository.OfType<CallForProposal>().GetNullableById(id);
@@ -40,7 +45,7 @@ namespace Gramps.Controllers
 
             if (!_accessService.HasAccess(null, callforproposal.Id, CurrentUser.Identity.Name))
             {
-                Message = "You do not have access to that.";
+                Message = string.Format(StaticValues.Message_NoAccess, "that");
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
             var viewModel = EmailQueueListViewModel.Create(Repository, callforproposal);
@@ -48,8 +53,13 @@ namespace Gramps.Controllers
             return View(viewModel);
         }
 
-        //
-        // GET: /EmailQueue/Details/5
+        /// <summary>
+        /// #2
+        /// GET: /EmailQueue/Details/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="callForProposalId"></param>
+        /// <returns></returns>
         public ActionResult Details(int id, int callForProposalId)
         {
             var callforproposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId);
@@ -61,7 +71,7 @@ namespace Gramps.Controllers
 
             if (!_accessService.HasAccess(null, callForProposalId, CurrentUser.Identity.Name))
             {
-                Message = "You do not have access to that.";
+                Message = string.Format(StaticValues.Message_NoAccess, "that");
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
@@ -69,12 +79,12 @@ namespace Gramps.Controllers
 
             if (emailqueue == null)
             {
-                Message = "Email not found";
+                Message = string.Format(StaticValues.Message_NotFound, "Email");
                 return this.RedirectToAction(a => a.Index(callForProposalId));
             }
-            if (!_accessService.HasSameId(null, callforproposal, null, callForProposalId))
+            if (!_accessService.HasSameId(null, callforproposal, null, emailqueue.CallForProposal.Id))
             {
-                Message = "You do not have access to that.";
+                Message = string.Format(StaticValues.Message_NoAccess, "that");
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
@@ -84,10 +94,13 @@ namespace Gramps.Controllers
             return View(viewModel);
         }
 
-
-
-        //
-        // GET: /EmailQueue/Edit/5
+        /// <summary>
+        /// #3
+        /// GET: /EmailQueue/Edit/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="callForProposalId"></param>
+        /// <returns></returns>
         public ActionResult Edit(int id, int callForProposalId)
         {
             var callforproposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId);
@@ -99,15 +112,20 @@ namespace Gramps.Controllers
 
             if (!_accessService.HasAccess(null, callForProposalId, CurrentUser.Identity.Name))
             {
-                Message = "You do not have access to that.";
+                Message = string.Format(StaticValues.Message_NoAccess, "that");
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
             var emailqueue = _emailqueueRepository.GetNullableById(id);
-            if (emailqueue == null || emailqueue.CallForProposal == null || emailqueue.CallForProposal.Id != callForProposalId)
+            if (emailqueue == null)
             {
-                Message = "Email not found";
-                this.RedirectToAction(a => a.Index(callForProposalId));
+                Message = string.Format(StaticValues.Message_NotFound, "Email");
+                return this.RedirectToAction(a => a.Index(callForProposalId));
+            }
+            if (!_accessService.HasSameId(null, callforproposal, null, emailqueue.CallForProposal.Id))
+            {
+                Message = string.Format(StaticValues.Message_NoAccess, "that");
+                return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
 
@@ -119,7 +137,7 @@ namespace Gramps.Controllers
 
         //
         // POST: /EmailQueue/Edit/5
-        [AcceptVerbs(HttpVerbs.Post)]
+        [HttpPost]
         [ValidateInput(false)]
         public ActionResult Edit(int id, int callForProposalId, EmailQueue emailqueue)
         {
