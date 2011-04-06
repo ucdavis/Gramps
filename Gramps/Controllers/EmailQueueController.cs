@@ -135,8 +135,14 @@ namespace Gramps.Controllers
             return View(viewModel);
         }
 
-        //
-        // POST: /EmailQueue/Edit/5
+        /// <summary>
+        /// #4
+        /// POST: /EmailQueue/Edit/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="callForProposalId"></param>
+        /// <param name="emailqueue"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateInput(false)]
         public ActionResult Edit(int id, int callForProposalId, EmailQueue emailqueue)
@@ -150,7 +156,7 @@ namespace Gramps.Controllers
 
             if (!_accessService.HasAccess(null, callForProposalId, CurrentUser.Identity.Name))
             {
-                Message = "You do not have access to that.";
+                Message = string.Format(StaticValues.Message_NoAccess, "that");
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
             
@@ -158,12 +164,12 @@ namespace Gramps.Controllers
 
             if (emailqueueToEdit == null)
             {
-                Message = "Email not found";
+                Message = string.Format(StaticValues.Message_NotFound, "Email");
                 return this.RedirectToAction(a => a.Index(callForProposalId));
             }
-            if (!_accessService.HasSameId(null, callforproposal, null, callForProposalId))
+            if (!_accessService.HasSameId(null, callforproposal, null, emailqueueToEdit.CallForProposal.Id))
             {
-                Message = "You do not have access to that.";
+                Message = string.Format(StaticValues.Message_NoAccess, "that");
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
