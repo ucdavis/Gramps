@@ -1,23 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Web.Mvc;
-using System.Web.Routing;
 using Gramps.Controllers;
-using Gramps.Controllers.Filters;
 using Gramps.Controllers.ViewModels;
 using Gramps.Core.Domain;
-using Gramps.Services;
-using Gramps.Tests.Core.Helpers;
 using Gramps.Tests.Core.Extensions;
+using Gramps.Tests.Core.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MvcContrib.TestHelper;
 using Rhino.Mocks;
-using UCDArch.Core.PersistanceSupport;
-using UCDArch.Testing;
-using UCDArch.Web.Attributes;
-
 
 
 namespace Gramps.Tests.ControllerTests.EmailQueueControllerTests
@@ -226,6 +216,7 @@ namespace Gramps.Tests.ControllerTests.EmailQueueControllerTests
             #endregion Act
 
             #region Assert
+            EmailQueueRepository.AssertWasNotCalled(a => a.EnsurePersistent(Arg<EmailQueue>.Is.Anything));
             #endregion Assert
         }
 
@@ -252,6 +243,7 @@ namespace Gramps.Tests.ControllerTests.EmailQueueControllerTests
             Assert.IsNull(args[0]);
             Assert.AreEqual(3, args[1]);
             Assert.AreEqual("Me", args[2]);
+            EmailQueueRepository.AssertWasNotCalled(a => a.EnsurePersistent(Arg<EmailQueue>.Is.Anything));
             #endregion Assert
         }
 
@@ -284,7 +276,7 @@ namespace Gramps.Tests.ControllerTests.EmailQueueControllerTests
 
             Assert.IsNotNull(result);
             Assert.AreEqual(3, result.RouteValues.ElementAt(2).Value);
-
+            EmailQueueRepository.AssertWasNotCalled(a => a.EnsurePersistent(Arg<EmailQueue>.Is.Anything));
             #endregion Assert
         }
 
@@ -337,23 +329,194 @@ namespace Gramps.Tests.ControllerTests.EmailQueueControllerTests
             Assert.AreEqual(3, ((CallForProposal)args2[1]).Id);
             Assert.AreEqual(null, args2[2]);
             Assert.AreEqual(1, args2[3]);
+
+            EmailQueueRepository.AssertWasNotCalled(a => a.EnsurePersistent(Arg<EmailQueue>.Is.Anything));
             #endregion Assert
         }
 
 
         [TestMethod]
-        public void TestDescription()
+        public void TestEditPostReturnsViewWhenInvalid1()
         {
             #region Arrange
-            Assert.Inconclusive("Continue edit post tests (validation and valid edit)");
+            var fakeCalls = new FakeCallForProposals();
+            fakeCalls.Records(3, CallForProposalRepository);
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "Me");
+            AccessService.Expect(a => a.HasAccess(null, 3, "Me")).Return(true).Repeat.Any();
+            AccessService.Expect(a => a.HasSameId(
+                Arg<Template>.Is.Anything,
+                Arg<CallForProposal>.Is.Anything,
+                Arg<int?>.Is.Anything,
+                Arg<int?>.Is.Anything)).Return(true).Repeat.Any();
+
+            var fakeEmail = new List<EmailQueue>();
+            for (int i = 0; i < 3; i++)
+            {
+                fakeEmail.Add(CreateValidEntities.EmailQueue(i + 1));
+                fakeEmail[i].CallForProposal = CallForProposalRepository.GetNullableById(3);
+            }
+            fakeEmail[0].CallForProposal = CallForProposalRepository.GetNullableById(1);
+            var fakeEmails = new FakeEmailQueues();
+            fakeEmails.Records(0, EmailQueueRepository, fakeEmail);
+            var email = CreateValidEntities.EmailQueue(99);
+            email.Subject = string.Empty;
             #endregion Arrange
 
             #region Act
+            var result = Controller.Edit(2, 3, email)
+                .AssertViewRendered()
+                .WithViewData<EmailQueueViewModel>();
             #endregion Act
 
             #region Assert
-            #endregion Assert		
+            Controller.ModelState.AssertErrorsAre("Subject: may not be null or empty");
+            Assert.IsNotNull(result);
+            Assert.AreEqual(string.Empty, result.EmailQueue.Subject);
+            Assert.AreEqual("Body99", result.EmailQueue.Body);
+            EmailQueueRepository.AssertWasNotCalled(a => a.EnsurePersistent(Arg<EmailQueue>.Is.Anything));
+
+            AccessService.AssertWasCalled(a => a.HasAccess(Arg<int?>.Is.Anything, Arg<int?>.Is.Anything, Arg<string>.Is.Anything));
+            var args = AccessService.GetArgumentsForCallsMadeOn(a => a.HasAccess(Arg<int?>.Is.Anything, Arg<int?>.Is.Anything, Arg<string>.Is.Anything))[0];
+            Assert.IsNull(args[0]);
+            Assert.AreEqual(3, args[1]);
+            Assert.AreEqual("Me", args[2]);
+
+            AccessService.AssertWasCalled(a => a.HasSameId(Arg<Template>.Is.Anything,
+                Arg<CallForProposal>.Is.Anything,
+                Arg<int?>.Is.Anything,
+                Arg<int?>.Is.Anything));
+            var args2 = AccessService.GetArgumentsForCallsMadeOn(a => a.HasSameId(Arg<Template>.Is.Anything, Arg<CallForProposal>.Is.Anything, Arg<int?>.Is.Anything, Arg<int?>.Is.Anything))[0];
+            Assert.AreEqual(null, args2[0]);
+            Assert.AreEqual(3, ((CallForProposal)args2[1]).Id);
+            Assert.AreEqual(null, args2[2]);
+            Assert.AreEqual(3, args2[3]);
+            #endregion Assert	
         }
+
+        [TestMethod]
+        public void TestEditPostReturnsViewWhenInvalid2()
+        {
+            #region Arrange
+            var fakeCalls = new FakeCallForProposals();
+            fakeCalls.Records(3, CallForProposalRepository);
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "Me");
+            AccessService.Expect(a => a.HasAccess(null, 3, "Me")).Return(true).Repeat.Any();
+            AccessService.Expect(a => a.HasSameId(
+                Arg<Template>.Is.Anything,
+                Arg<CallForProposal>.Is.Anything,
+                Arg<int?>.Is.Anything,
+                Arg<int?>.Is.Anything)).Return(true).Repeat.Any();
+
+            var fakeEmail = new List<EmailQueue>();
+            for (int i = 0; i < 3; i++)
+            {
+                fakeEmail.Add(CreateValidEntities.EmailQueue(i + 1));
+                fakeEmail[i].CallForProposal = CallForProposalRepository.GetNullableById(3);
+                fakeEmail[i].Pending = false;
+            }
+            fakeEmail[0].CallForProposal = CallForProposalRepository.GetNullableById(1);
+            var fakeEmails = new FakeEmailQueues();
+            fakeEmails.Records(0, EmailQueueRepository, fakeEmail);
+            var email = CreateValidEntities.EmailQueue(99);
+            email.Pending = false;
+            #endregion Arrange
+
+            #region Act
+            var result = Controller.Edit(2, 3, email)
+                .AssertViewRendered()
+                .WithViewData<EmailQueueViewModel>();
+            #endregion Act
+
+            #region Assert
+            Controller.ModelState.AssertErrorsAre("Can't edit an email that was already sent");
+            Assert.IsNotNull(result);
+            Assert.AreEqual("Subject99", result.EmailQueue.Subject);
+            Assert.AreEqual("Body99", result.EmailQueue.Body);
+            EmailQueueRepository.AssertWasNotCalled(a => a.EnsurePersistent(Arg<EmailQueue>.Is.Anything));
+
+            AccessService.AssertWasCalled(a => a.HasAccess(Arg<int?>.Is.Anything, Arg<int?>.Is.Anything, Arg<string>.Is.Anything));
+            var args = AccessService.GetArgumentsForCallsMadeOn(a => a.HasAccess(Arg<int?>.Is.Anything, Arg<int?>.Is.Anything, Arg<string>.Is.Anything))[0];
+            Assert.IsNull(args[0]);
+            Assert.AreEqual(3, args[1]);
+            Assert.AreEqual("Me", args[2]);
+
+            AccessService.AssertWasCalled(a => a.HasSameId(Arg<Template>.Is.Anything,
+                Arg<CallForProposal>.Is.Anything,
+                Arg<int?>.Is.Anything,
+                Arg<int?>.Is.Anything));
+            var args2 = AccessService.GetArgumentsForCallsMadeOn(a => a.HasSameId(Arg<Template>.Is.Anything, Arg<CallForProposal>.Is.Anything, Arg<int?>.Is.Anything, Arg<int?>.Is.Anything))[0];
+            Assert.AreEqual(null, args2[0]);
+            Assert.AreEqual(3, ((CallForProposal)args2[1]).Id);
+            Assert.AreEqual(null, args2[2]);
+            Assert.AreEqual(3, args2[3]);
+            #endregion Assert
+        }
+
+
+        [TestMethod]
+        public void TestEditRedirectsWhenValidAndSuccessful()
+        {
+            #region Arrange
+            var fakeCalls = new FakeCallForProposals();
+            fakeCalls.Records(3, CallForProposalRepository);
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "Me");
+            AccessService.Expect(a => a.HasAccess(null, 3, "Me")).Return(true).Repeat.Any();
+            AccessService.Expect(a => a.HasSameId(
+                Arg<Template>.Is.Anything,
+                Arg<CallForProposal>.Is.Anything,
+                Arg<int?>.Is.Anything,
+                Arg<int?>.Is.Anything)).Return(true).Repeat.Any();
+
+            var fakeEmail = new List<EmailQueue>();
+            for (int i = 0; i < 3; i++)
+            {
+                fakeEmail.Add(CreateValidEntities.EmailQueue(i + 1));
+                fakeEmail[i].CallForProposal = CallForProposalRepository.GetNullableById(3);
+                fakeEmail[i].Pending = false;
+                fakeEmail[i].Immediate = false;
+            }
+            fakeEmail[0].CallForProposal = CallForProposalRepository.GetNullableById(1);
+            var fakeEmails = new FakeEmailQueues();
+            fakeEmails.Records(0, EmailQueueRepository, fakeEmail);
+            var email = CreateValidEntities.EmailQueue(99);
+            email.Immediate = true;
+            #endregion Arrange
+
+            #region Act
+            var result = Controller.Edit(2, 3, email)
+                .AssertActionRedirect()
+                .ToAction<EmailQueueController>(a => a.Index(3));
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual("EmailQueue Edited Successfully.", Controller.Message);
+            Assert.IsNotNull(result);
+
+            EmailQueueRepository.AssertWasCalled(a => a.EnsurePersistent(Arg<EmailQueue>.Is.Anything));
+            var args3 = (EmailQueue)EmailQueueRepository.GetArgumentsForCallsMadeOn(a => a.EnsurePersistent(Arg<EmailQueue>.Is.Anything))[0][0];
+            Assert.IsNotNull(args3);
+            Assert.AreEqual("Subject99", args3.Subject);
+            Assert.IsTrue(args3.Immediate);
+            Assert.AreEqual("Body99", args3.Body);
+
+            AccessService.AssertWasCalled(a => a.HasAccess(Arg<int?>.Is.Anything, Arg<int?>.Is.Anything, Arg<string>.Is.Anything));
+            var args = AccessService.GetArgumentsForCallsMadeOn(a => a.HasAccess(Arg<int?>.Is.Anything, Arg<int?>.Is.Anything, Arg<string>.Is.Anything))[0];
+            Assert.IsNull(args[0]);
+            Assert.AreEqual(3, args[1]);
+            Assert.AreEqual("Me", args[2]);
+
+            AccessService.AssertWasCalled(a => a.HasSameId(Arg<Template>.Is.Anything,
+                Arg<CallForProposal>.Is.Anything,
+                Arg<int?>.Is.Anything,
+                Arg<int?>.Is.Anything));
+            var args2 = AccessService.GetArgumentsForCallsMadeOn(a => a.HasSameId(Arg<Template>.Is.Anything, Arg<CallForProposal>.Is.Anything, Arg<int?>.Is.Anything, Arg<int?>.Is.Anything))[0];
+            Assert.AreEqual(null, args2[0]);
+            Assert.AreEqual(3, ((CallForProposal)args2[1]).Id);
+            Assert.AreEqual(null, args2[2]);
+            Assert.AreEqual(3, args2[3]);
+            #endregion Assert	
+        }
+
         #endregion Edit Post Tests
         #endregion Edit Tests
     }

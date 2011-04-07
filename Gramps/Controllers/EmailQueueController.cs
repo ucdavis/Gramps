@@ -188,7 +188,7 @@ namespace Gramps.Controllers
             {
                 _emailqueueRepository.EnsurePersistent(emailqueueToEdit);
 
-                Message = "EmailQueue Edited Successfully";
+                Message = string.Format(StaticValues.Message_EditedSuccessfully, "EmailQueue");
 
                 return this.RedirectToAction(a => a.Index(callForProposalId));
             }
@@ -201,16 +201,19 @@ namespace Gramps.Controllers
             }
         }
 
-
-
-        //
-        // POST: /EmailQueue/Delete/5
-        [AcceptVerbs(HttpVerbs.Post)]
+        /// <summary>
+        /// #5
+        /// POST: /EmailQueue/Delete/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="callForProposalId"></param>
+        /// <returns></returns>
+        [HttpPost]
         public ActionResult Delete(int id, int callForProposalId)
         {
             if (!_accessService.HasAccess(null, callForProposalId, CurrentUser.Identity.Name))
             {
-                Message = "You do not have access to that.";
+                Message = string.Format(StaticValues.Message_NoAccess, "that");
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
@@ -218,8 +221,7 @@ namespace Gramps.Controllers
 
             if (emailqueueToDelete == null || emailqueueToDelete.CallForProposal == null || emailqueueToDelete.CallForProposal.Id != callForProposalId)
             {
-                Message = "Email not deleted";
-                this.RedirectToAction(a => a.Index(callForProposalId));
+                return this.RedirectToAction(a => a.Index(callForProposalId));
             }
             if (emailqueueToDelete.Pending)
             {
@@ -230,7 +232,7 @@ namespace Gramps.Controllers
 
             _emailqueueRepository.Remove(emailqueueToDelete);
 
-            Message = "EmailQueue Removed Successfully";
+            Message = string.Format(StaticValues.Message_RemovedSuccessfully, "EmailQueue");
 
             return this.RedirectToAction(a => a.Index(callForProposalId));
         }

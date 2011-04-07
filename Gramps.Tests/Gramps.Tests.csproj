@@ -120,6 +120,7 @@
     <Compile Include="ControllerTests\EmailQueueControllerTests\EmailQueueControllerTestsMapping.cs" />
     <Compile Include="ControllerTests\EmailQueueControllerTests\EmailQueueControllerTestsPart01.cs" />
     <Compile Include="ControllerTests\EmailQueueControllerTests\EmailQueueControllerTestsPart02.cs" />
+    <Compile Include="ControllerTests\EmailQueueControllerTests\EmailQueueControllerTestsPart03.cs" />
     <Compile Include="ControllerTests\EmailQueueControllerTests\EmailQueueControllerTestsReflection.cs" />
     <Compile Include="Core\AbstractRepositoryTests.cs" />
     <Compile Include="Core\Extensions\AssertExtensions.cs" />

@@ -4,8 +4,6 @@ using Gramps.Tests.Core.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MvcContrib.TestHelper;
 
-
-
 namespace Gramps.Tests.ControllerTests.EmailQueueControllerTests
 {
     public partial class EmailQueueControllerTests
@@ -46,6 +44,15 @@ namespace Gramps.Tests.ControllerTests.EmailQueueControllerTests
         public void TestEditPostMapping()
         {
             "~/EmailQueue/Edit/5".ShouldMapTo<EmailQueueController>(a => a.Edit(5, 3, new EmailQueue()), true);
+        }
+
+        /// <summary>
+        /// #5
+        /// </summary>
+        [TestMethod]
+        public void TestDeleteMapping()
+        {
+            "~/EmailQueue/Delete/5".ShouldMapTo<EmailQueueController>(a => a.Delete(5, 3), true);
         }
         #endregion Mapping Tests
     }

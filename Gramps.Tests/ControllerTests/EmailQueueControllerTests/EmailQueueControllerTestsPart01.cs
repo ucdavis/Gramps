@@ -3,13 +3,10 @@ using System.Linq;
 using Gramps.Controllers;
 using Gramps.Controllers.ViewModels;
 using Gramps.Core.Domain;
-using Gramps.Services;
 using Gramps.Tests.Core.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MvcContrib.TestHelper;
 using Rhino.Mocks;
-
-
 
 namespace Gramps.Tests.ControllerTests.EmailQueueControllerTests
 {
