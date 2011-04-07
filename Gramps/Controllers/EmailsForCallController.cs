@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Gramps.Controllers.Filters;
 using Gramps.Controllers.ViewModels;
 using Gramps.Core.Domain;
+using Gramps.Core.Resources;
 using Gramps.Services;
 using MvcContrib;
 using UCDArch.Core.PersistanceSupport;
@@ -30,17 +31,22 @@ namespace Gramps.Controllers
             _emailService = emailService;
         }
     
-        //
-        // GET: /EmailsForCall/
+        /// <summary>
+        /// #1
+        /// GET: /EmailsForCall/
+        /// </summary>
+        /// <param name="templateId"></param>
+        /// <param name="callForProposalId"></param>
+        /// <returns></returns>
         public ActionResult Index(int? templateId, int? callForProposalId)
         {
-            var viewModel = EmailsForCallListViewModel.Create(Repository, templateId, callForProposalId);
-
             if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
             {
-                Message = "You do not have access to that.";
+                Message = string.Format(StaticValues.Message_NoAccess, "that");
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
+
+            var viewModel = EmailsForCallListViewModel.Create(Repository, templateId, callForProposalId);
 
             return View(viewModel);
         }
