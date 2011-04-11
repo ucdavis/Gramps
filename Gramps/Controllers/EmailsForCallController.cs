@@ -179,12 +179,23 @@ namespace Gramps.Controllers
             }
         }
 
-        //
-        // GET: /EmailsForCall/Create
+        /// <summary>
+        /// #4
+        /// GET: /EmailsForCall/Create
+        /// </summary>
+        /// <param name="templateId"></param>
+        /// <param name="callForProposalId"></param>
+        /// <returns></returns>
         public ActionResult Create(int? templateId, int? callForProposalId)
         {
             Template template = null;
             CallForProposal callforProposal = null;
+
+            if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
+            {
+                Message = string.Format(StaticValues.Message_NoAccess, "that");
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
 
             if (templateId.HasValue && templateId != 0)
             {
@@ -194,19 +205,22 @@ namespace Gramps.Controllers
             {
                 callforProposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId.Value);
             }
-            if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
-            {
-                Message = "You do not have access to that.";
-                return this.RedirectToAction<HomeController>(a => a.Index());
-            }
+
             var viewModel = EmailsForCallViewModel.Create(Repository, template, callforProposal);
             
             return View(viewModel);
         } 
 
-        //
-        // POST: /EmailsForCall/Create
-        [AcceptVerbs(HttpVerbs.Post)]
+        /// <summary>
+        /// #5
+        /// POST: /EmailsForCall/Create
+        /// </summary>
+        /// <param name="templateId"></param>
+        /// <param name="callForProposalId"></param>
+        /// <param name="emailsforcall"></param>
+        /// <returns></returns>
+ 
+        [HttpPost]
         public ActionResult Create(int? templateId, int? callForProposalId, EmailsForCall emailsforcall)
         {
             Template template = null;
@@ -214,24 +228,24 @@ namespace Gramps.Controllers
 
             if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
             {
-                Message = "You do not have access to that.";
+                Message = string.Format(StaticValues.Message_NoAccess, "that");
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
             if (templateId.HasValue && templateId != 0)
             {
                 template = Repository.OfType<Template>().GetNullableById(templateId.Value);
-                if(_emailsforcallRepository.Queryable.Where(a => a.Template == template && a.Email == emailsforcall.Email).Any())
+                if(_emailsforcallRepository.Queryable.Where(a => a.Template != null && a.Template == template && a.Email == emailsforcall.Email).Any())
                 {
-                    ModelState.AddModelError("Email", "Email already exists");
+                    ModelState.AddModelError("Email", string.Format(StaticValues.ModelError_AlreadyExists, "Email"));
                 }
             }
             else if (callForProposalId.HasValue && callForProposalId != 0)
             {
                 callforProposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId.Value);
-                if (_emailsforcallRepository.Queryable.Where(a => a.CallForProposal == callforProposal && a.Email == emailsforcall.Email).Any())
+                if (_emailsforcallRepository.Queryable.Where(a => a.CallForProposal != null && a.CallForProposal == callforProposal && a.Email == emailsforcall.Email).Any())
                 {
-                    ModelState.AddModelError("Email", "Email already exists");
+                    ModelState.AddModelError("Email", string.Format(StaticValues.ModelError_AlreadyExists, "Email"));
                 }
             }
 
@@ -248,15 +262,15 @@ namespace Gramps.Controllers
             {
                 _emailsforcallRepository.EnsurePersistent(emailsforcallToCreate);
 
-                Message = "EmailsForCall Created Successfully";
+                Message = string.Format(StaticValues.Message_CreatedSuccessfully, "Emails For Call");
 
                 return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
             }
             else
             {
                 var viewModel = EmailsForCallViewModel.Create(Repository, template, callforProposal);
-                viewModel.EmailsForCall = emailsforcall;
-                Message = "EmailsForCall not created";
+                viewModel.EmailsForCall = emailsforcallToCreate;
+                Message = string.Format(StaticValues.Message_NotCreated, "Emails For Call");
 
                 return View(viewModel);
             }

@@ -81,7 +81,7 @@ namespace Gramps.Tests.RepositoryTests
         /// <param name="counter"></param>
         protected override void FoundEntityComparison(EmailsForCall entity, int counter)
         {
-            Assert.AreEqual(string.Format("Test{0}@testy.com", counter), entity.Email);
+            Assert.AreEqual(string.Format("test{0}@testy.com", counter), entity.Email);
         }
 
         /// <summary>

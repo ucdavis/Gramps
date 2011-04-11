@@ -286,4 +286,10 @@
   <data name="Message_RemovedSuccessfully" xml:space="preserve">
     <value>{0} Removed Successfully.</value>
   </data>
+  <data name="Message_NotCreated" xml:space="preserve">
+    <value>{0} not created.</value>
+  </data>
+  <data name="ModelError_AlreadyExists" xml:space="preserve">
+    <value>{0} already exists</value>
+  </data>
 </root>

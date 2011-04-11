@@ -19,16 +19,14 @@
 
         <fieldset>
             <legend>Fields</legend>
-            
-            <div class="editor-label">
+            <ul>
+            <li>
                 <%: Html.LabelFor(model => model.EmailsForCall.Email) %>
-            </div>
-            <div class="editor-field">
                 <%: Html.TextBoxFor(model => model.EmailsForCall.Email)%>
                 <%--<%: Html.ValidationMessageFor(model => model.EmailsForCall.Email)%>--%>
                 <%= Html.ValidationMessage("Email") %>
-            </div>
-                      
+            </li>
+            </ul>      
             <p>
                 <input type="submit" value="Create" />
             </p>

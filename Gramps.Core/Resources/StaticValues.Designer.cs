@@ -142,6 +142,15 @@ namespace Gramps.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} not created..
+        /// </summary>
+        public static string Message_NotCreated {
+            get {
+                return ResourceManager.GetString("Message_NotCreated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} not found..
         /// </summary>
         public static string Message_NotFound {
@@ -174,6 +183,15 @@ namespace Gramps.Core.Resources {
         public static string Message_UnableToAdd {
             get {
                 return ResourceManager.GetString("Message_UnableToAdd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} already exists.
+        /// </summary>
+        public static string ModelError_AlreadyExists {
+            get {
+                return ResourceManager.GetString("ModelError_AlreadyExists", resourceCulture);
             }
         }
         

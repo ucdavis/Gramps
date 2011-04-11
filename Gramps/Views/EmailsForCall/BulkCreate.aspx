@@ -16,7 +16,7 @@
         <%: Html.HiddenFor(a => a.TemplateId) %>
         <%: Html.HiddenFor(a => a.CallForProposalId) %>
         <fieldset>
-            <legend>Fields</legend>
+            <legend>Paste list of emails</legend>
 
             <div class="editor-label">
                 <%: Html.LabelFor(model => model.BulkLoadEmails) %>

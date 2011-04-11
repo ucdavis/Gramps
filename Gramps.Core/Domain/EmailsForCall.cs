@@ -12,10 +12,10 @@ namespace Gramps.Core.Domain
     public class EmailsForCall : DomainObject
     {
         #region Constructor
-        public EmailsForCall(string emailAddres)
+        public EmailsForCall(string emailAddress)
         {
             SetDefaults();
-            Email = emailAddres;
+            Email = emailAddress.ToLower();
         }
         public EmailsForCall()
         {

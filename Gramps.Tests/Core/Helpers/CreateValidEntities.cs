@@ -58,7 +58,7 @@ namespace Gramps.Tests.Core.Helpers
 
         public static EmailsForCall EmailsForCall(int? counter)
         {
-            var rtValue = new EmailsForCall(string.Format("Test{0}@testy.com", counter.Extra()));
+            var rtValue = new EmailsForCall(string.Format("Test{0}@testy.com".ToLower(), counter.Extra()));
 
             return rtValue;
         }
