@@ -1,20 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web.Mvc;
-using System.Web.Routing;
-using Gramps.Controllers;
-using Gramps.Controllers.Filters;
+﻿using Gramps.Controllers;
 using Gramps.Core.Domain;
-using Gramps.Services;
+using Gramps.Tests.Core.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MvcContrib.TestHelper;
-using Rhino.Mocks;
-using UCDArch.Core.PersistanceSupport;
-using UCDArch.Testing;
-using UCDArch.Web.Attributes;
-using Gramps.Tests.Core.Extensions;
 
 
 namespace Gramps.Tests.ControllerTests.EmailsForCallControllerTests
@@ -65,6 +53,15 @@ namespace Gramps.Tests.ControllerTests.EmailsForCallControllerTests
         public void TestCreatePostMapping()
         {
             "~/EmailsForCall/Create/".ShouldMapTo<EmailsForCallController>(a => a.Create(null, null, new EmailsForCall()), true);
+        }
+
+        /// <summary>
+        /// #6
+        /// </summary>
+        [TestMethod]
+        public void TestEditGetMapping()
+        {
+            "~/EmailsForCall/Edit/5".ShouldMapTo<EmailsForCallController>(a => a.Edit(5, null, null));
         }
         #endregion Mapping Tests
     }

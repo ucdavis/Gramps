@@ -218,8 +218,7 @@ namespace Gramps.Controllers
         /// <param name="templateId"></param>
         /// <param name="callForProposalId"></param>
         /// <param name="emailsforcall"></param>
-        /// <returns></returns>
- 
+        /// <returns></returns> 
         [HttpPost]
         public ActionResult Create(int? templateId, int? callForProposalId, EmailsForCall emailsforcall)
         {
@@ -277,12 +276,19 @@ namespace Gramps.Controllers
         }
 
         
-        // GET: /EmailsForCall/Edit/5
+        /// <summary>
+        /// #6
+        /// GET: /EmailsForCall/Edit/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="templateId"></param>
+        /// <param name="callForProposalId"></param>
+        /// <returns></returns>
         public ActionResult Edit(int id, int? templateId, int? callForProposalId)
         {
             if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
             {
-                Message = "You do not have access to that.";
+                Message = string.Format(StaticValues.Message_NoAccess, "that");
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
@@ -290,12 +296,12 @@ namespace Gramps.Controllers
 
             if (emailsforcall == null)
             {
-                Message = "EmailsForCall not found.";
+                Message = string.Format(StaticValues.Message_NotFound, "Emails For Call");
                 return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
             }
             if (!_accessService.HasSameId(emailsforcall.Template, emailsforcall.CallForProposal, templateId, callForProposalId))
             {
-                Message = "You do not have access to that.";
+                Message = string.Format(StaticValues.Message_NoAccess, "that");
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
             var viewModel = EmailsForCallViewModel.Create(Repository, emailsforcall.Template, emailsforcall.CallForProposal);
