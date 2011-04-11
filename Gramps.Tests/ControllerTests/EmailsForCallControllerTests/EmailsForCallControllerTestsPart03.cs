@@ -6,8 +6,11 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Gramps.Controllers;
 using Gramps.Controllers.Filters;
+using Gramps.Controllers.ViewModels;
 using Gramps.Core.Domain;
 using Gramps.Services;
+using Gramps.Tests.Core.Extensions;
+using Gramps.Tests.Core.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MvcContrib.TestHelper;
 using Rhino.Mocks;
@@ -20,24 +23,5 @@ namespace Gramps.Tests.ControllerTests.EmailsForCallControllerTests
 {
     public partial class EmailsForCallControllerTests
     {
-        #region Mapping Tests
-        /// <summary>
-        /// #1
-        /// </summary>
-        [TestMethod]
-        public void TestIndexMapping()
-        {
-            "~/EmailsForCall/Index/".ShouldMapTo<EmailsForCallController>(a => a.Index(null, null));
-        }
-
-        /// <summary>
-        /// #2
-        /// </summary>
-        [TestMethod]
-        public void TestBulkCreateMapping()
-        {
-            "~/EmailsForCall/BulkCreate/".ShouldMapTo<EmailsForCallController>(a => a.BulkCreate(null, null));
-        }
-        #endregion Mapping Tests
     }
 }

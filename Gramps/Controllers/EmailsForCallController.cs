@@ -51,11 +51,22 @@ namespace Gramps.Controllers
             return View(viewModel);
         }
 
-
+        /// <summary>
+        /// #2
+        /// </summary>
+        /// <param name="templateId"></param>
+        /// <param name="callForProposalId"></param>
+        /// <returns></returns>
         public ActionResult BulkCreate(int? templateId, int? callForProposalId)
         {
             Template template = null;
             CallForProposal callforProposal = null;
+
+            if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
+            {
+                Message = string.Format(StaticValues.Message_NoAccess, "that");
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
 
             if (templateId.HasValue && templateId != 0)
             {
@@ -65,17 +76,20 @@ namespace Gramps.Controllers
             {
                 callforProposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId.Value);
             }
-            if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
-            {
-                Message = "You do not have access to that.";
-                return this.RedirectToAction<HomeController>(a => a.Index());
-            }
+
             var viewModel = EmailsForCallViewModel.Create(Repository, template, callforProposal);
 
             return View(viewModel);
         }
 
-        [AcceptVerbs(HttpVerbs.Post)]
+        /// <summary>
+        /// #3
+        /// </summary>
+        /// <param name="templateId"></param>
+        /// <param name="callForProposalId"></param>
+        /// <param name="bulkLoadEmails"></param>
+        /// <returns></returns>
+        [HttpPost]
         [ValidateInput(false)]
         public ActionResult BulkCreate(int? templateId, int? callForProposalId, string bulkLoadEmails)
         {
@@ -86,26 +100,28 @@ namespace Gramps.Controllers
             var existingList = new List<string>();
             var notAddedSb = new StringBuilder();
 
+            if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
+            {
+                Message = string.Format(StaticValues.Message_NoAccess, "that");
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+
             if (templateId.HasValue && templateId != 0)
             {
                 template = Repository.OfType<Template>().GetNullableById(templateId.Value);
-                existingList = _emailsforcallRepository.Queryable.Where(a => a.Template == template).Select(a => a.Email).ToList();
+                existingList = _emailsforcallRepository.Queryable.Where(a => a.Template != null && a.Template == template).Select(a => a.Email.ToLower()).ToList();
             }
             else if (callForProposalId.HasValue && callForProposalId != 0)
             {
                 callforProposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId.Value);
-                existingList = _emailsforcallRepository.Queryable.Where(a => a.CallForProposal == callforProposal).Select(a => a.Email).ToList();
+                existingList = _emailsforcallRepository.Queryable.Where(a => a.CallForProposal != null && a.CallForProposal == callforProposal).Select(a => a.Email.ToLower()).ToList();
             }
-            if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
-            {
-                Message = "You do not have access to that.";
-                return this.RedirectToAction<HomeController>(a => a.Index());
-            }
+
             
-            var RegexPattern = @"\b[A-Z0-9._-]+@[A-Z0-9][A-Z0-9.-]{0,61}[A-Z0-9]\.[A-Z.]{2,6}\b";
+            const string regexPattern = @"\b[A-Z0-9._-]+@[A-Z0-9][A-Z0-9.-]{0,61}[A-Z0-9]\.[A-Z.]{2,6}\b";
 
             // Find matches
-            System.Text.RegularExpressions.MatchCollection matches = System.Text.RegularExpressions.Regex.Matches(bulkLoadEmails, RegexPattern, System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+            System.Text.RegularExpressions.MatchCollection matches = System.Text.RegularExpressions.Regex.Matches(bulkLoadEmails, regexPattern, System.Text.RegularExpressions.RegexOptions.IgnoreCase);
 
 
             // add each match
