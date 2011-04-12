@@ -129,6 +129,7 @@
     <Compile Include="ControllerTests\EmailsForCallControllerTests\EmailsForCallControllerTestsPart03.cs" />
     <Compile Include="ControllerTests\EmailsForCallControllerTests\EmailsForCallControllerTestsPart04.cs" />
     <Compile Include="ControllerTests\EmailsForCallControllerTests\EmailsForCallControllerTestsPart05.cs" />
+    <Compile Include="ControllerTests\EmailsForCallControllerTests\EmailsForCallControllerTestsPart06.cs" />
     <Compile Include="ControllerTests\EmailsForCallControllerTests\EmailsForCallControllerTestsReflection.cs" />
     <Compile Include="Core\AbstractRepositoryTests.cs" />
     <Compile Include="Core\Extensions\AssertExtensions.cs" />

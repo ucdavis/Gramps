@@ -387,15 +387,20 @@ namespace Gramps.Controllers
             }
         }
         
-
-        //
-        // POST: /EmailsForCall/Delete/5
-        [AcceptVerbs(HttpVerbs.Post)]
+        /// <summary>
+        /// #8
+        /// POST: /EmailsForCall/Delete/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="templateId"></param>
+        /// <param name="callForProposalId"></param>
+        /// <returns></returns>
+        [HttpPost]
         public ActionResult Delete(int id, int? templateId, int? callForProposalId)
         {
             if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
             {
-                Message = "You do not have access to that.";
+                Message = string.Format(StaticValues.Message_NoAccess, "that");
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
@@ -403,17 +408,17 @@ namespace Gramps.Controllers
 
             if (emailsforcallToDelete == null)
             {
-                Message = "Email not removed";
-                this.RedirectToAction(a => a.Index(templateId, callForProposalId));
+                Message = "Email not removed.";
+                return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
             }
             if (!_accessService.HasSameId(emailsforcallToDelete.Template, emailsforcallToDelete.CallForProposal, templateId, callForProposalId))
             {
-                Message = "You do not have access to that.";
+                Message = string.Format(StaticValues.Message_NoAccess, "that");
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
             _emailsforcallRepository.Remove(emailsforcallToDelete);
 
-            Message = "Email Removed Successfully";
+            Message = string.Format(StaticValues.Message_RemovedSuccessfully, "Email");
 
             return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
         }

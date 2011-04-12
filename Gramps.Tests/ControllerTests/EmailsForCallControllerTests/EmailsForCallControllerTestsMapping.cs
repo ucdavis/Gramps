@@ -72,6 +72,15 @@ namespace Gramps.Tests.ControllerTests.EmailsForCallControllerTests
         {
             "~/EmailsForCall/Edit/5".ShouldMapTo<EmailsForCallController>(a => a.Edit(5, null, null, new EmailsForCall()), true);
         }
+
+        /// <summary>
+        /// #8
+        /// </summary>
+        [TestMethod]
+        public void TestDeleteMapping()
+        {
+            "~/EmailsForCall/Delete/5".ShouldMapTo<EmailsForCallController>(a => a.Delete(5, null, null));
+        }
         #endregion Mapping Tests
     }
 }
