@@ -156,6 +156,7 @@ namespace Gramps.Tests.RepositoryTests
             #endregion Act
 
             #region Assert
+            Assert.AreEqual(null, comment.Text);
             Assert.IsFalse(comment.IsTransient());
             Assert.IsTrue(comment.IsValid());
             #endregion Assert
