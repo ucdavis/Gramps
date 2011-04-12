@@ -423,6 +423,12 @@ namespace Gramps.Controllers
             return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
         }
 
+        /// <summary>
+        /// #9
+        /// GET: /EmailsForCall/SendCall/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public ActionResult SendCall(int id)
         {
             var callforproposal = Repository.OfType<CallForProposal>().GetNullableById(id);
@@ -435,7 +441,7 @@ namespace Gramps.Controllers
 
             if (!_accessService.HasAccess(null, callforproposal.Id, CurrentUser.Identity.Name))
             {
-                Message = "You do not have access to that.";
+                Message = string.Format(StaticValues.Message_NoAccess, "that");
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
