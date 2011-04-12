@@ -311,8 +311,16 @@ namespace Gramps.Controllers
         }
         
         
-        // POST: /EmailsForCall/Edit/5
-        [AcceptVerbs(HttpVerbs.Post)]
+        /// <summary>
+        /// #7
+        /// POST: /EmailsForCall/Edit/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="templateId"></param>
+        /// <param name="callForProposalId"></param>
+        /// <param name="emailsforcall"></param>
+        /// <returns></returns>
+        [HttpPost]
         public ActionResult Edit(int id, int? templateId, int? callForProposalId, EmailsForCall emailsforcall)
         {
             Template template = null;
@@ -320,7 +328,7 @@ namespace Gramps.Controllers
 
             if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
             {
-                Message = "You do not have access to that.";
+                Message = string.Format(StaticValues.Message_NoAccess, "that");
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
@@ -328,12 +336,12 @@ namespace Gramps.Controllers
 
             if (emailsforcallToEdit == null)
             {
-                Message = "EmailsForCall not found.";
+                Message = string.Format(StaticValues.Message_NotFound, "Emails For Call");
                 return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
             }
             if (!_accessService.HasSameId(emailsforcallToEdit.Template, emailsforcallToEdit.CallForProposal, templateId, callForProposalId))
             {
-                Message = "You do not have access to that.";
+                Message = string.Format(StaticValues.Message_NoAccess, "that");
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
             //TransferValues(emailsforcall, emailsforcallToEdit);
@@ -348,7 +356,7 @@ namespace Gramps.Controllers
             if (templateId.HasValue && templateId != 0)
             {
                 template = Repository.OfType<Template>().GetNullableById(templateId.Value);
-                if(_emailsforcallRepository.Queryable.Where(a => a.Template == template && a.Id != emailsforcallToEdit.Id && a.Email == emailsforcall.Email).Any())
+                if (_emailsforcallRepository.Queryable.Where(a => a.Template != null && a.Template == template && a.Id != emailsforcallToEdit.Id && a.Email == emailsforcallToEdit.Email).Any())
                 {
                     ModelState.AddModelError("Email", "Email already exists");
                 }
@@ -356,7 +364,7 @@ namespace Gramps.Controllers
             else if (callForProposalId.HasValue && callForProposalId != 0)
             {
                 callforProposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId.Value);
-                if (_emailsforcallRepository.Queryable.Where(a => a.CallForProposal == callforProposal && a.Id != emailsforcallToEdit.Id && a.Email == emailsforcall.Email).Any())
+                if (_emailsforcallRepository.Queryable.Where(a => a.CallForProposal != null && a.CallForProposal == callforProposal && a.Id != emailsforcallToEdit.Id && a.Email == emailsforcallToEdit.Email).Any())
                 {
                     ModelState.AddModelError("Email", "Email already exists");
                 }
@@ -366,7 +374,7 @@ namespace Gramps.Controllers
             {
                 _emailsforcallRepository.EnsurePersistent(emailsforcallToEdit);
 
-                Message = "EmailsForCall Edited Successfully";
+                Message = string.Format(StaticValues.Message_EditedSuccessfully, "Emails For Call");
 
                 return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
             }
