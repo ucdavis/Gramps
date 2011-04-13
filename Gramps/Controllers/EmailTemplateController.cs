@@ -31,22 +31,21 @@ namespace Gramps.Controllers
             _accessService = accessService;
         }
     
-        //
-        // GET: /EmailTemplate/
+        /// <summary>
+        /// #1
+        /// GET: /EmailTemplate/
+        /// </summary>
+        /// <param name="templateId"></param>
+        /// <param name="callForProposalId"></param>
+        /// <returns></returns>
         public ActionResult Index(int? templateId, int? callForProposalId)
         {
             if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
             {
-                Message = "You do not have access to that.";
+                Message = string.Format(StaticValues.Message_NoAccess, "that");
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
             var viewModel = EmailTemplateListViewModel.Create(Repository, templateId, callForProposalId);
-
-            if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
-            {
-                Message = "You do not have access to that.";
-                return this.RedirectToAction<HomeController>(a => a.Index());
-            }
 
             return View(viewModel);
         }

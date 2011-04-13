@@ -22,13 +22,13 @@ namespace Gramps.Controllers.ViewModels
             if (templateId != null  && templateId != 0)
             {
                 viewModel.IsTemplate = true;
-                viewModel.EmailTemplateList = repository.OfType<EmailTemplate>().Queryable.Where(a => a.Template.Id == templateId);
+                viewModel.EmailTemplateList = repository.OfType<EmailTemplate>().Queryable.Where(a => a.Template != null && a.Template.Id == templateId);
                 viewModel.TemplateId = templateId;
             }
             else if (callForProposalId != null && callForProposalId != 0)
             {
                 viewModel.IsCallForProposal = true;
-                viewModel.EmailTemplateList = repository.OfType<EmailTemplate>().Queryable.Where(a => a.CallForProposal.Id == callForProposalId);
+                viewModel.EmailTemplateList = repository.OfType<EmailTemplate>().Queryable.Where(a => a.CallForProposal != null && a.CallForProposal.Id == callForProposalId);
                 viewModel.CallForProposalId = callForProposalId;
             }
             viewModel.DescriptionDict = new Dictionary<EmailTemplateType, string>(7);
