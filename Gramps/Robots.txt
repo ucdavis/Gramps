@@ -1,0 +1,4 @@
+﻿# robots.txt for Gramps
+User-agent: *
+Disallow: /
+

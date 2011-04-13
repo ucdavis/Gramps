@@ -50,7 +50,13 @@ namespace Gramps.Controllers
             return View(viewModel);
         }
 
-        
+        /// <summary>
+        /// #2 Not Tested
+        /// </summary>
+        /// <param name="subject"></param>
+        /// <param name="message"></param>
+        /// <param name="footerText"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateInput(false)]
         public JsonResult SendTestEmail(string subject, string message, string footerText)
@@ -81,21 +87,30 @@ namespace Gramps.Controllers
             return string.Format("{0}://{1}{2}", request.Url.Scheme, request.Url.Host, url.Content(relative));
         }
 
-        //
-        // GET: /EmailTemplate/Edit/5
+        /// <summary>
+        /// #3
+        /// GET: /EmailTemplate/Edit/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="templateId"></param>
+        /// <param name="callForProposalId"></param>
+        /// <returns></returns>
         public ActionResult Edit(int id, int? templateId, int? callForProposalId)
         {
             if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
             {
-                Message = "You do not have access to that.";
+                Message = string.Format(StaticValues.Message_NoAccess, "that");
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
             var emailtemplate = _emailtemplateRepository.GetNullableById(id);
 
-            if (emailtemplate == null) return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
+            if (emailtemplate == null)
+            {
+                return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
+            }
             if (!_accessService.HasSameId(emailtemplate.Template, emailtemplate.CallForProposal, templateId, callForProposalId))
             {
-                Message = "You do not have access to that.";
+                Message = string.Format(StaticValues.Message_NoAccess, "that");
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
 

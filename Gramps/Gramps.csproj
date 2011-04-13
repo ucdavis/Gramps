@@ -321,6 +321,7 @@
     <Content Include="Images\plus.png" />
     <Content Include="Images\Rocket_launch.png" />
     <Content Include="Images\small_print.png" />
+    <Content Include="Robots.txt" />
     <Content Include="Scripts\jquery.bt.min.js" />
     <Content Include="Scripts\jquery.CaesMutioptionControl.js" />
     <Content Include="Scripts\jquery.enableTinyMce.js" />
