@@ -450,6 +450,13 @@ namespace Gramps.Controllers
             return View(viewModel);
         }
 
+        /// <summary>
+        /// #10
+        /// POST: /EmailsForCall/SendCall/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="immediate"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult SendCall(int id, bool immediate)
         {
@@ -463,7 +470,7 @@ namespace Gramps.Controllers
 
             if (!_accessService.HasAccess(null, callforproposal.Id, CurrentUser.Identity.Name))
             {
-                Message = "You do not have access to that.";
+                Message = string.Format(StaticValues.Message_NoAccess, "that");
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
@@ -493,14 +500,6 @@ namespace Gramps.Controllers
             viewModel = EmailsForCallSendViewModel.Create(Repository, callforproposal);
             Message = string.Format("{0} Emails Generated", count);
             return View(viewModel);
-        }
-        
-        /// <summary>
-        /// Transfer editable values from source to destination
-        /// </summary>
-        private static void TransferValues(EmailsForCall source, EmailsForCall destination)
-        {
-            throw new NotImplementedException();
         }
 
     }

@@ -103,4 +103,12 @@ namespace Gramps.Tests.Core.Helpers
             return CreateValidEntities.EmailsForCall(i);
         } 
     }
+
+    public class FakeEmailTemplates : ControllerRecordFakes<EmailTemplate>
+    {
+        protected override EmailTemplate CreateValid(int i)
+        {
+            return CreateValidEntities.EmailTemplate(i);
+        }
+    }
 }

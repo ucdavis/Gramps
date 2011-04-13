@@ -1,11 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web.Mvc;
 using System.Web.Routing;
 using Gramps.Controllers;
-using Gramps.Controllers.Filters;
 using Gramps.Core.Domain;
 using Gramps.Services;
 using Gramps.Tests.Core.Helpers;
@@ -14,7 +10,6 @@ using MvcContrib.TestHelper;
 using Rhino.Mocks;
 using UCDArch.Core.PersistanceSupport;
 using UCDArch.Testing;
-using UCDArch.Web.Attributes;
 
 
 namespace Gramps.Tests.ControllerTests.EmailsForCallControllerTests
@@ -26,6 +21,7 @@ namespace Gramps.Tests.ControllerTests.EmailsForCallControllerTests
         public IRepository<EmailsForCall> EmailsForCallRepository;
         public IRepository<CallForProposal> CallForProposalRepository;
         public IRepository<Template> TemplateRepository;
+        public IRepository<EmailTemplate> EmailTemplateRepository;
         public IAccessService AccessService;
         public IEmailService EmailService;
 
@@ -53,6 +49,9 @@ namespace Gramps.Tests.ControllerTests.EmailsForCallControllerTests
 
             TemplateRepository = FakeRepository<Template>();
             Controller.Repository.Expect(a => a.OfType<Template>()).Return(TemplateRepository).Repeat.Any();
+
+            EmailTemplateRepository = FakeRepository<EmailTemplate>();
+            Controller.Repository.Expect(a => a.OfType<EmailTemplate>()).Return(EmailTemplateRepository).Repeat.Any();
 
             Controller.Repository.Expect(a => a.OfType<EmailsForCall>()).Return(EmailsForCallRepository).Repeat.Any();
         }

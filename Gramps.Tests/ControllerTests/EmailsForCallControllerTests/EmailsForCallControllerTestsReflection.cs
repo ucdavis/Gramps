@@ -1,18 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using System.Web.Mvc;
-using System.Web.Routing;
-using Gramps.Controllers;
 using Gramps.Controllers.Filters;
-using Gramps.Core.Domain;
-using Gramps.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MvcContrib.TestHelper;
-using Rhino.Mocks;
-using UCDArch.Core.PersistanceSupport;
-using UCDArch.Testing;
 using UCDArch.Web.Attributes;
 
 
@@ -148,8 +137,7 @@ namespace Gramps.Tests.ControllerTests.EmailsForCallControllerTests
             #endregion Act
 
             #region Assert
-            Assert.Inconclusive("Tests are still being written. When done, remove this line.");
-            Assert.AreEqual(9, result.Count(), "It looks like a method was added or removed from the controller.");
+            Assert.AreEqual(10, result.Count(), "It looks like a method was added or removed from the controller.");
             #endregion Assert
         }
 
@@ -364,7 +352,27 @@ namespace Gramps.Tests.ControllerTests.EmailsForCallControllerTests
             #endregion Assert
         }
 
+        /// <summary>
+        /// #10
+        /// </summary>
+        [TestMethod]
+        public void TestControllerMethodSendCallContainsExpectedAttributes2()
+        {
+            #region Arrange
+            var controllerClass = _controllerClass;
+            var controllerMethod = controllerClass.GetMethods().Where(a => a.Name == "SendCall");
+            #endregion Arrange
 
+            #region Act
+            var expectedAttribute = controllerMethod.ElementAt(1).GetCustomAttributes(true).OfType<HttpPostAttribute>();
+            var allAttributes = controllerMethod.ElementAt(1).GetCustomAttributes(true);
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual(1, expectedAttribute.Count(), "HttpPostAttribute not found");
+            Assert.AreEqual(1, allAttributes.Count());
+            #endregion Assert
+        }
         #endregion Controller Method Tests
 
         #endregion Reflection Tests
