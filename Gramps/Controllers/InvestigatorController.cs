@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
+using Gramps.Controllers.Filters;
 using Gramps.Core.Domain;
+using Gramps.Core.Resources;
 using UCDArch.Core.PersistanceSupport;
 using UCDArch.Web.Controller;
 using UCDArch.Web.Helpers;
@@ -13,6 +15,7 @@ namespace Gramps.Controllers
     /// <summary>
     /// Controller for the Investigator class
     /// </summary>
+    [PublicAuthorize]
     public class InvestigatorController : ApplicationController
     {
 	    private readonly IRepository<Investigator> _investigatorRepository;
@@ -23,30 +26,34 @@ namespace Gramps.Controllers
             _investigatorRepository = investigatorRepository;
             _proposalRepository = proposalRepository;
         }
-
-        //
-        // GET: /Investigator/Create
+        
+        /// <summary>
+        /// #1
+        /// GET: /Investigator/Create
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>        
         public ActionResult Create(Guid id) //Proposal ID
         {
             var proposal = _proposalRepository.Queryable.Where(a => a.Guid == id).SingleOrDefault();
             if (proposal == null)
             {
-                Message = "Your proposal was not found.";
+                Message = string.Format(StaticValues.Message_NotFound, "Your proposal was");
                 return this.RedirectToAction<ErrorController>(a => a.Index());
             }
             if (proposal.Email != CurrentUser.Identity.Name)
             {
-                Message = "You do not have access to that.";
+                Message = string.Format(StaticValues.Message_NoAccess, "that");
                 return this.RedirectToAction<ErrorController>(a => a.Index());
             }
             if (proposal.IsSubmitted)
             {
-                Message = "Cannot edit proposal once submitted.";
+                Message = string.Format(StaticValues.Message_ProposalSubmitted, "edit", "proposal");
                 return this.RedirectToAction<ProposalController>(a => a.Details(id));
             }
             if (!proposal.CallForProposal.IsActive || proposal.CallForProposal.EndDate < DateTime.Now.Date)
             {
-                Message = "Proposal is not active are end date has passed. Cannot add investigator.";
+                Message = string.Format(StaticValues.Message_ProposalNotActive, "Cannot add investigator");
                 return this.RedirectToAction<ProposalController>(a => a.Edit(id));
             }
 
@@ -78,7 +85,7 @@ namespace Gramps.Controllers
             }
             if (!proposal.CallForProposal.IsActive || proposal.CallForProposal.EndDate < DateTime.Now.Date)
             {
-                Message = "Proposal is not active are end date has passed. Cannot add investigator.";
+                Message = "Proposal is not active or end date has passed. Cannot add investigator.";
                 return this.RedirectToAction<ProposalController>(a => a.Edit(id));
             }
 
@@ -134,7 +141,7 @@ namespace Gramps.Controllers
             }
             if (!proposal.CallForProposal.IsActive || proposal.CallForProposal.EndDate < DateTime.Now.Date)
             {
-                Message = "Proposal is not active are end date has passed. Cannot add investigator.";
+                Message = "Proposal is not active or end date has passed. Cannot add investigator.";
                 return this.RedirectToAction<ProposalController>(a => a.Edit(proposalId));
             }
 
@@ -181,7 +188,7 @@ namespace Gramps.Controllers
             }
             if (!proposal.CallForProposal.IsActive || proposal.CallForProposal.EndDate < DateTime.Now.Date)
             {
-                Message = "Proposal is not active are end date has passed. Cannot add investigator.";
+                Message = "Proposal is not active or end date has passed. Cannot add investigator.";
                 return this.RedirectToAction<ProposalController>(a => a.Edit(proposalId));
             }
 
@@ -248,7 +255,7 @@ namespace Gramps.Controllers
             }
             if (!proposal.CallForProposal.IsActive || proposal.CallForProposal.EndDate < DateTime.Now.Date)
             {
-                Message = "Proposal is not active are end date has passed. Cannot remove investigator.";
+                Message = "Proposal is not active or end date has passed. Cannot remove investigator.";
                 return this.RedirectToAction<ProposalController>(a => a.Edit(proposalId));
             }
 
@@ -287,7 +294,7 @@ namespace Gramps.Controllers
             destination.IsPrimary =     source.IsPrimary;
             destination.Name =          source.Name;
             destination.Phone =         source.Phone;
-            destination.State =         source.State;
+            destination.State =         source.State.ToUpper();
             destination.Zip =           source.Zip;
             destination.Position =      source.Position;
         }

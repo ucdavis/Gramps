@@ -292,4 +292,12 @@
   <data name="ModelError_AlreadyExists" xml:space="preserve">
     <value>{0} already exists</value>
   </data>
+  <data name="Message_ProposalNotActive" xml:space="preserve">
+    <value>Call For Proposal is not active or end date has passed. {0}.</value>
+    <comment>{0} -  Cannot add investigator</comment>
+  </data>
+  <data name="Message_ProposalSubmitted" xml:space="preserve">
+    <value>Cannot {0} {1} once submitted.</value>
+    <comment>{0} - action, {1} entity</comment>
+  </data>
 </root>

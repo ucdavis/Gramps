@@ -111,4 +111,12 @@ namespace Gramps.Tests.Core.Helpers
             return CreateValidEntities.EmailTemplate(i);
         }
     }
+
+    public class FakeProposals : ControllerRecordFakes<Proposal>
+    {
+        protected override Proposal CreateValid(int i)
+        {
+            return CreateValidEntities.Proposal(i);
+        }
+    }
 }

@@ -85,7 +85,7 @@ namespace Gramps.Tests.Core.Helpers
         public static Proposal Proposal(int? counter)
         {
             var rtValue = new Proposal();
-            rtValue.Email = "Email" + counter.Extra() + "@testy.com";
+            rtValue.Email = "email" + counter.Extra() + "@testy.com";
 
             return rtValue;
         }
