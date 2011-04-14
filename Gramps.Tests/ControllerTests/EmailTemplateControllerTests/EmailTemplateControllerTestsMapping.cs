@@ -1,4 +1,5 @@
 ﻿using Gramps.Controllers;
+using Gramps.Core.Domain;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MvcContrib.TestHelper;
 using Gramps.Tests.Core.Extensions;
@@ -34,6 +35,15 @@ namespace Gramps.Tests.ControllerTests.EmailTemplateControllerTests
         public void TestEditGetMapping()
         {
             "~/EmailTemplate/Edit/5".ShouldMapTo<EmailTemplateController>(a => a.Edit(5, null, null));
+        }
+
+        /// <summary>
+        /// #4
+        /// </summary>
+        [TestMethod]
+        public void TestEditPostMapping()
+        {
+            "~/EmailTemplate/Edit/5".ShouldMapTo<EmailTemplateController>(a => a.Edit(5, null, null, new EmailTemplate()), true);
         }
         #endregion Mapping Tests
     }

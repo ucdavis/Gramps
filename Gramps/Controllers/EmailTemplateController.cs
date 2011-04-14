@@ -116,6 +116,14 @@ namespace Gramps.Controllers
 
             var viewModel = EmailTemplateViewModel.Create(Repository, templateId, callForProposalId);
             viewModel.EmailTemplate = emailtemplate;
+
+            SetEmailTemplateViewExtras(emailtemplate, viewModel);
+
+            return View(viewModel);
+        }
+
+        private static void SetEmailTemplateViewExtras(EmailTemplate emailtemplate, EmailTemplateViewModel viewModel)
+        {
             viewModel.FooterText = StaticValues.EmailAutomatedDisclaimer;
             if (emailtemplate.TemplateType == EmailTemplateType.InitialCall)
             {
@@ -128,53 +136,53 @@ namespace Gramps.Controllers
             else if (emailtemplate.TemplateType == EmailTemplateType.ReadyForReview)
             {               
                 viewModel.FooterText = string.Format("{0}<p>{1}</p><p>{2}</p><p>{3}</p><p>{4}</p><p>{5}</p><p>{6}</p><p>{7}</p><p>{8}</p>"
-                    , viewModel.FooterText
-                    , "An account has been created for you."
-                    , "UserName johnnytest@test.com"
-                    , "Password bdLJ&SftBN>%oe"
-                    , "You may change your password (recommended) after logging in."
-                    , "After you have logged in, you may use this link to review submitted proposals for this Grant Request:"
-                    , "http://localhost:31701/Proposal/ReviewerIndex/8"
-                    , "Or to view all active Call For Proposals you can use this link(Home):"
-                    , "http://localhost:31701/Proposal/Home");
+                                                     , viewModel.FooterText
+                                                     , "An account has been created for you."
+                                                     , "UserName johnnytest@test.com"
+                                                     , "Password bdLJ&SftBN>%oe"
+                                                     , "You may change your password (recommended) after logging in."
+                                                     , "After you have logged in, you may use this link to review submitted proposals for this Grant Request:"
+                                                     , "http://localhost:31701/Proposal/ReviewerIndex/8"
+                                                     , "Or to view all active Call For Proposals you can use this link(Home):"
+                                                     , "http://localhost:31701/Proposal/Home");
 
                 viewModel.AlternateFooterText = string.Format("{0}<br /><p>{1}</p><p>{2}</p><p>{3}</p><p>{4}</p><p>{5}</p>"
-                    , StaticValues.EmailAutomatedDisclaimer
-                    , "You have an existing account. Use your email as the userName to login"
-                    , "After you have logged in, you may use this link to review submitted proposals for this Grant Request:"
-                    , "http://localhost:31701/Proposal/ReviewerIndex/8"
-                    , "Or to view all active Call For Proposals you can use this link(Home):"
-                    , "http://localhost:31701/Proposal/Home");
+                                                              , StaticValues.EmailAutomatedDisclaimer
+                                                              , "You have an existing account. Use your email as the userName to login"
+                                                              , "After you have logged in, you may use this link to review submitted proposals for this Grant Request:"
+                                                              , "http://localhost:31701/Proposal/ReviewerIndex/8"
+                                                              , "Or to view all active Call For Proposals you can use this link(Home):"
+                                                              , "http://localhost:31701/Proposal/Home");
 
                 viewModel.Tokens.Add(StaticValues.TokenReviewerName);
             }
             else if (emailtemplate.TemplateType == EmailTemplateType.ProposalConfirmation)
             {
                 viewModel.FooterText = string.Format("{0}<p>{1}</p><p>{2} {3}</p><p>{4} {5}</p><p>{6}</p>"
-                    , viewModel.FooterText
-                    , "An account has been created for you."
-                    , "UserName"
-                    , "johnnytest@test.com"
-                    , "Password"
-                    , "bdLJ&SftBN>%oe"
-                    , "You may change your password (recommended) after logging in.");
+                                                     , viewModel.FooterText
+                                                     , "An account has been created for you."
+                                                     , "UserName"
+                                                     , "johnnytest@test.com"
+                                                     , "Password"
+                                                     , "bdLJ&SftBN>%oe"
+                                                     , "You may change your password (recommended) after logging in.");
 
                 viewModel.FooterText = string.Format("{0}<p>{1}</p><p>{2}</p><p>{3}</p><p>{4}</p>"
-                    , viewModel.FooterText
-                    , "After you have logged in, you may use this link to edit your proposal:"
-                    , "http://localhost:31701/Proposal/Edit/e18348ee-424c-4754-ab48-a23cc7d177a9"
-                    , "Or you may access a list of your proposal(s) here:"
-                    , "http://localhost:31701/Proposal/Home");
+                                                     , viewModel.FooterText
+                                                     , "After you have logged in, you may use this link to edit your proposal:"
+                                                     , "http://localhost:31701/Proposal/Edit/e18348ee-424c-4754-ab48-a23cc7d177a9"
+                                                     , "Or you may access a list of your proposal(s) here:"
+                                                     , "http://localhost:31701/Proposal/Home");
 
                 viewModel.AlternateFooterText = string.Format("{0}<p>{1}</p>"
-                    , viewModel.AlternateFooterText
-                    , "You have an existing account. Use your email as the userName to login");
+                                                              , viewModel.AlternateFooterText
+                                                              , "You have an existing account. Use your email as the userName to login");
                 viewModel.AlternateFooterText = string.Format("{0}<p>{1}</p><p>{2}</p><p>{3}</p><p>{4}</p>"
-                    , viewModel.AlternateFooterText
-                    , "After you have logged in, you may use this link to edit your proposal:"
-                    , "http://localhost:31701/Proposal/Edit/e18348ee-424c-4754-ab48-a23cc7d177a9"
-                    , "Or you may access a list of your proposal(s) here:"
-                    , "http://localhost:31701/Proposal/Home");
+                                                              , viewModel.AlternateFooterText
+                                                              , "After you have logged in, you may use this link to edit your proposal:"
+                                                              , "http://localhost:31701/Proposal/Edit/e18348ee-424c-4754-ab48-a23cc7d177a9"
+                                                              , "Or you may access a list of your proposal(s) here:"
+                                                              , "http://localhost:31701/Proposal/Home");
 
                 viewModel.Tokens.Add(StaticValues.TokenCloseDate);
             }
@@ -201,19 +209,24 @@ namespace Gramps.Controllers
                 viewModel.Tokens.Add(StaticValues.TokenCloseDate);
                 viewModel.Tokens.Add(StaticValues.TokenProposalLink);
             }
-
-            return View(viewModel);
         }
 
-        //
-        // POST: /EmailTemplate/Edit/5
-        [AcceptVerbs(HttpVerbs.Post)]
+        /// <summary>
+        /// #4
+        /// POST: /EmailTemplate/Edit/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="templateId"></param>
+        /// <param name="callForProposalId"></param>
+        /// <param name="emailtemplate"></param>
+        /// <returns></returns>
+        [HttpPost]
         [ValidateInput(false)]
         public ActionResult Edit(int id, int? templateId, int? callForProposalId, EmailTemplate emailtemplate)
         {
             if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
             {
-                Message = "You do not have access to that.";
+                Message = string.Format(StaticValues.Message_NoAccess, "that");
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
@@ -221,12 +234,12 @@ namespace Gramps.Controllers
 
             if (emailtemplateToEdit == null)
             {
-                Message = "Email Template not found.";
+                Message = string.Format(StaticValues.Message_NotFound, "Email Template");
                 return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
             }
             if (!_accessService.HasSameId(emailtemplateToEdit.Template, emailtemplateToEdit.CallForProposal, templateId, callForProposalId))
             {
-                Message = "You do not have access to that.";
+                Message = string.Format(StaticValues.Message_NoAccess, "that");
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
@@ -238,7 +251,7 @@ namespace Gramps.Controllers
             {
                 _emailtemplateRepository.EnsurePersistent(emailtemplateToEdit);
 
-                Message = "EmailTemplate Edited Successfully";
+                Message = string.Format(StaticValues.Message_EditedSuccessfully, "Email Template");
 
                 return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
             }
@@ -246,6 +259,7 @@ namespace Gramps.Controllers
             {
                 var viewModel = EmailTemplateViewModel.Create(Repository, templateId, callForProposalId);
                 viewModel.EmailTemplate = emailtemplateToEdit;
+                SetEmailTemplateViewExtras(emailtemplateToEdit, viewModel);
 
                 return View(viewModel);
             }
