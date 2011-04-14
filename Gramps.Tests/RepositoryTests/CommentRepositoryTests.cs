@@ -584,7 +584,7 @@ namespace Gramps.Tests.RepositoryTests
 
             #region Assert
             Assert.AreEqual(DateTime.Now.Date, record.CreatedDate.Date);
-            Assert.AreEqual("Email7@testy.com", record.Proposal.Email);
+            Assert.AreEqual("email7@testy.com", record.Proposal.Email);
             Assert.AreEqual("ReviewerName8", record.Editor.ReviewerName);
             Assert.AreEqual("Test", record.Text);
             #endregion Assert

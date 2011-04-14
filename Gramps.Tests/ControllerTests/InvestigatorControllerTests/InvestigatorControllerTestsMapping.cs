@@ -30,6 +30,15 @@ namespace Gramps.Tests.ControllerTests.InvestigatorControllerTests
         {
             "~/Investigator/Create/730ce6ea-d76d-482f-84da-915f1d3b7562".ShouldMapTo<InvestigatorController>(a => a.Create(SpecificGuid.GetGuid(1)), true);
         }
+
+        /// <summary>
+        /// #2
+        /// </summary>
+        [TestMethod]
+        public void TestCreatePostMapping()
+        {
+            "~/Investigator/Create/730ce6ea-d76d-482f-84da-915f1d3b7562".ShouldMapTo<InvestigatorController>(a => a.Create(SpecificGuid.GetGuid(1), new Investigator()), true);
+        }
         #endregion Mapping Tests
 
     }

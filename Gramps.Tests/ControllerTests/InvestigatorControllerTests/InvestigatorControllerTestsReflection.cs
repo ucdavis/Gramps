@@ -149,10 +149,13 @@ namespace Gramps.Tests.ControllerTests.InvestigatorControllerTests
 
             #region Assert
             Assert.Inconclusive("Tests are still being written. When done, remove this line.");
-            Assert.AreEqual(1, result.Count(), "It looks like a method was added or removed from the controller.");
+            Assert.AreEqual(2, result.Count(), "It looks like a method was added or removed from the controller.");
             #endregion Assert
         }
 
+        /// <summary>
+        /// #1
+        /// </summary>
         [TestMethod]
         public void TestControllerMethodCreateContainsExpectedAttributes1()
         {
@@ -169,6 +172,28 @@ namespace Gramps.Tests.ControllerTests.InvestigatorControllerTests
             #region Assert
             //Assert.AreEqual(1, expectedAttribute.Count(), "UserOnlyAttribute not found");
             Assert.AreEqual(0, allAttributes.Count());
+            #endregion Assert
+        }
+
+        /// <summary>
+        /// #2
+        /// </summary>
+        [TestMethod]
+        public void TestControllerMethodCreateContainsExpectedAttributes2()
+        {
+            #region Arrange
+            var controllerClass = _controllerClass;
+            var controllerMethod = controllerClass.GetMethods().Where(a => a.Name == "Create");
+            #endregion Arrange
+
+            #region Act
+            var expectedAttribute = controllerMethod.ElementAt(1).GetCustomAttributes(true).OfType<HttpPostAttribute>();
+            var allAttributes = controllerMethod.ElementAt(1).GetCustomAttributes(true);
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual(1, expectedAttribute.Count(), "UserOnlyAttribute not found");
+            Assert.AreEqual(1, allAttributes.Count());
             #endregion Assert
         }
 

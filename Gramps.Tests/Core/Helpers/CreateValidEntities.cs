@@ -137,7 +137,7 @@ namespace Gramps.Tests.Core.Helpers
             return rtValue;
         }
 
-        public static Investigator Investigator(int? counter)
+        public static Investigator Investigator(int? counter, bool populateAll = false)
         {
             var rtValue = new Investigator();
             rtValue.Proposal = new Proposal();
@@ -150,6 +150,12 @@ namespace Gramps.Tests.Core.Helpers
             rtValue.Zip = "95616";
             rtValue.Phone = "(530) 551-5515";
             rtValue.Email = string.Format("test{0}@testy.com", counter.Extra());
+            if (populateAll)
+            {
+                rtValue.Address2 = "Address2" + counter.Extra();
+                rtValue.Address3 = "Address3" + counter.Extra();
+                rtValue.Position = "Position" + counter.Extra();
+            }
 
             return rtValue;
         }

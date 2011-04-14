@@ -141,6 +141,7 @@
     <Compile Include="ControllerTests\InvestigatorControllerTests\InvestigatorControllerTestsInit.cs" />
     <Compile Include="ControllerTests\InvestigatorControllerTests\InvestigatorControllerTestsMapping.cs" />
     <Compile Include="ControllerTests\InvestigatorControllerTests\InvestigatorControllerTestsPart01.cs" />
+    <Compile Include="ControllerTests\InvestigatorControllerTests\InvestigatorControllerTestsPart02.cs" />
     <Compile Include="ControllerTests\InvestigatorControllerTests\InvestigatorControllerTestsReflection.cs" />
     <Compile Include="Core\AbstractRepositoryTests.cs" />
     <Compile Include="Core\Extensions\AssertExtensions.cs" />

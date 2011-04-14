@@ -318,7 +318,7 @@ namespace Gramps.Tests.RepositoryTests
             #endregion Act
 
             #region Assert
-            Assert.AreEqual("Email3@testy.com", questionAnswer.Proposal.Email);
+            Assert.AreEqual("email3@testy.com", questionAnswer.Proposal.Email);
             Assert.IsFalse(questionAnswer.IsTransient());
             Assert.IsTrue(questionAnswer.IsValid());
             #endregion Assert

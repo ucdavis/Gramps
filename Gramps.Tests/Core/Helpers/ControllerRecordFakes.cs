@@ -119,4 +119,12 @@ namespace Gramps.Tests.Core.Helpers
             return CreateValidEntities.Proposal(i);
         }
     }
+
+    public class FakeInvestigators : ControllerRecordFakes<Investigator>
+    {
+        protected override Investigator CreateValid(int i)
+        {
+            return CreateValidEntities.Investigator(i);
+        }
+    }
 }

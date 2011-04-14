@@ -297,7 +297,7 @@
     <comment>{0} -  Cannot add investigator</comment>
   </data>
   <data name="Message_ProposalSubmitted" xml:space="preserve">
-    <value>Cannot {0} {1} once submitted.</value>
+    <value>Cannot {0} {1} once proposal is submitted.</value>
     <comment>{0} - action, {1} entity</comment>
   </data>
 </root>

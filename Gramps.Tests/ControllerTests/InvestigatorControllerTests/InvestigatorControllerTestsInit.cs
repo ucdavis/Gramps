@@ -67,7 +67,7 @@ namespace Gramps.Tests.ControllerTests.InvestigatorControllerTests
             fakeCalls.Records(0, CallForProposalRepository, calls);
 
             var proposals = new List<Proposal>();
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 7; i++)
             {
                 proposals.Add(CreateValidEntities.Proposal(i+1));
                 proposals[i].Guid = SpecificGuid.GetGuid(i + 1);
@@ -80,6 +80,20 @@ namespace Gramps.Tests.ControllerTests.InvestigatorControllerTests
 
             var fakeProposals = new FakeProposals();
             fakeProposals.Records(0, ProposalRepository, proposals);
+
+            var investigators = new List<Investigator>();
+            for (int i = 0; i < 5; i++)
+            {
+                investigators.Add(CreateValidEntities.Investigator(i+1));
+            }
+            investigators[0].Proposal = ProposalRepository.GetNullableById(6);
+            investigators[1].Proposal = ProposalRepository.GetNullableById(6);
+            investigators[1].IsPrimary = true;
+            investigators[2].Proposal = ProposalRepository.GetNullableById(6);
+            investigators[3].Proposal = ProposalRepository.GetNullableById(7);
+            investigators[4].Proposal = ProposalRepository.GetNullableById(7);
+            var fakeInvestigators = new FakeInvestigators();
+            fakeInvestigators.Records(0, InvestigatorRepository, investigators);
         }
         #endregion Helpers
     }

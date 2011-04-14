@@ -178,7 +178,7 @@ namespace Gramps.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cannot {0} {1} once submitted..
+        ///   Looks up a localized string similar to Cannot {0} {1} once proposal is submitted..
         /// </summary>
         public static string Message_ProposalSubmitted {
             get {
