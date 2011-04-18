@@ -123,46 +123,58 @@ namespace Gramps.Controllers
             }
         }
 
-
-        //
-        // GET: /Investigator/Edit/5
+        /// <summary>
+        /// #3
+        /// GET: /Investigator/Edit/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="proposalId"></param>
+        /// <returns></returns>
         public ActionResult Edit(int id, Guid proposalId)
         {
             var proposal = _proposalRepository.Queryable.Where(a => a.Guid == proposalId).SingleOrDefault();
-            if (proposal == null)
-            {
-                Message = "Your proposal was not found.";
-                return this.RedirectToAction<ErrorController>(a => a.Index());
-            }
-            if (proposal.Email != CurrentUser.Identity.Name)
-            {
-                Message = "You do not have access to that.";
-                return this.RedirectToAction<ErrorController>(a => a.Index());
-            }
-            if (proposal.IsSubmitted)
-            {
-                Message = "Cannot edit proposal once submitted.";
-                return this.RedirectToAction<ProposalController>(a => a.Details(proposalId));
-            }
-            if (!proposal.CallForProposal.IsActive || proposal.CallForProposal.EndDate < DateTime.Now.Date)
-            {
-                Message = "Proposal is not active or end date has passed. Cannot add investigator.";
-                return this.RedirectToAction<ProposalController>(a => a.Edit(proposalId));
-            }
-
-
             var investigator = _investigatorRepository.GetNullableById(id);
 
-            if (investigator == null)
+            var redirectCheck = EditRedirectCheck(this, proposal, investigator, proposalId, "edit");
+            if (redirectCheck != null)
             {
-                Message = "Investigator Not Found";
-                return this.RedirectToAction<ProposalController>(a => a.Edit(proposalId));
+                return redirectCheck;
             }
-            if (investigator.Proposal.Guid != proposalId)
-            {
-                Message = "You do not have access to that.";
-                return this.RedirectToAction<ErrorController>(a => a.Index());
-            }
+
+            //if (proposal == null)
+            //{
+            //    Message = string.Format(StaticValues.Message_NotFound, "Your proposal was");
+            //    return this.RedirectToAction<ErrorController>(a => a.Index());
+            //}
+            //if (proposal.Email != CurrentUser.Identity.Name)
+            //{
+            //    Message = string.Format(StaticValues.Message_NoAccess, "that");
+            //    return this.RedirectToAction<ErrorController>(a => a.Index());
+            //}
+            //if (proposal.IsSubmitted)
+            //{
+            //    Message = string.Format(StaticValues.Message_ProposalSubmitted, "edit investigator for", "proposal");
+            //    return this.RedirectToAction<ProposalController>(a => a.Details(proposalId));
+            //}
+            //if (!proposal.CallForProposal.IsActive || proposal.CallForProposal.EndDate < DateTime.Now.Date)
+            //{
+            //    Message = string.Format(StaticValues.Message_ProposalNotActive, "Cannot edit investigator");
+            //    return this.RedirectToAction<ProposalController>(a => a.Edit(proposalId));
+            //}
+
+
+
+
+            //if (investigator == null)
+            //{
+            //    Message = string.Format(StaticValues.Message_NotFound, "Investigator");
+            //    return this.RedirectToAction<ProposalController>(a => a.Edit(proposalId));
+            //}
+            //if (investigator.Proposal.Guid != proposalId)
+            //{
+            //    Message = string.Format(StaticValues.Message_NoAccess, "that");
+            //    return this.RedirectToAction<ErrorController>(a => a.Index());
+            //}
 
             var viewModel = InvestigatorViewModel.Create(Repository, proposal);
             viewModel.Investigator = investigator;
@@ -170,45 +182,98 @@ namespace Gramps.Controllers
             return View(viewModel);
         }
 
-        //
-        // POST: /Investigator/Edit/5
+        private ActionResult EditRedirectCheck(InvestigatorController investigatorController, Proposal proposal, Investigator investigator, Guid proposalId, string action)
+        {
+            if (proposal == null)
+            {
+                investigatorController.Message = string.Format(StaticValues.Message_NotFound, "Your proposal was");
+                return investigatorController.RedirectToAction<ErrorController>(a => a.Index());
+            }
+            if (proposal.Email != CurrentUser.Identity.Name)
+            {
+                investigatorController.Message = string.Format(StaticValues.Message_NoAccess, "that");
+                return investigatorController.RedirectToAction<ErrorController>(a => a.Index());
+            }
+            if (proposal.IsSubmitted)
+            {
+                investigatorController.Message = string.Format(StaticValues.Message_ProposalSubmitted, string.Format("{0} investigator for", action), "proposal");
+                return investigatorController.RedirectToAction<ProposalController>(a => a.Details(proposalId));
+            }
+            if (!proposal.CallForProposal.IsActive || proposal.CallForProposal.EndDate < DateTime.Now.Date)
+            {
+                investigatorController.Message = string.Format(StaticValues.Message_ProposalNotActive, string.Format("Cannot {0} investigator", action));
+                return investigatorController.RedirectToAction<ProposalController>(a => a.Edit(proposalId));
+            }
+
+            if (investigator == null)
+            {
+                investigatorController.Message = string.Format(StaticValues.Message_NotFound, "Investigator");
+                return investigatorController.RedirectToAction<ProposalController>(a => a.Edit(proposalId));
+            }
+            if (investigator.Proposal.Guid != proposalId)
+            {
+                investigatorController.Message = string.Format(StaticValues.Message_NoAccess, "that");
+                return investigatorController.RedirectToAction<ErrorController>(a => a.Index());
+            }
+
+            return null;
+        }
+
+
+        /// <summary>
+        /// #4
+        /// POST: /Investigator/Edit/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="proposalId"></param>
+        /// <param name="investigator"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult Edit(int id, Guid proposalId, Investigator investigator)
         {
             var proposal = _proposalRepository.Queryable.Where(a => a.Guid == proposalId).SingleOrDefault();
-            if (proposal == null)
-            {
-                Message = "Your proposal was not found.";
-                return this.RedirectToAction<ErrorController>(a => a.Index());
-            }
-            if (proposal.Email != CurrentUser.Identity.Name)
-            {
-                Message = "You do not have access to that.";
-                return this.RedirectToAction<ErrorController>(a => a.Index());
-            }
-            if (proposal.IsSubmitted)
-            {
-                Message = "Cannot edit proposal once submitted.";
-                return this.RedirectToAction<ProposalController>(a => a.Details(proposalId));
-            }
-            if (!proposal.CallForProposal.IsActive || proposal.CallForProposal.EndDate < DateTime.Now.Date)
-            {
-                Message = "Proposal is not active or end date has passed. Cannot add investigator.";
-                return this.RedirectToAction<ProposalController>(a => a.Edit(proposalId));
-            }
-
             var investigatorToEdit = _investigatorRepository.GetNullableById(id);
+            var redirectCheck = EditRedirectCheck(this, proposal, investigatorToEdit, proposalId, "edit");
+            if (redirectCheck != null)
+            {
+                return redirectCheck;
+            }
 
-            if (investigatorToEdit == null)
-            {
-                Message = "Investigator Not Found";
-                return this.RedirectToAction<ProposalController>(a => a.Edit(proposalId));
-            }
-            if (investigatorToEdit.Proposal.Guid != proposalId)
-            {
-                Message = "You do not have access to that.";
-                return this.RedirectToAction<ErrorController>(a => a.Index());
-            }
+            //if (proposal == null)
+            //{
+            //    Message = string.Format(StaticValues.Message_NotFound, "Your proposal was");
+            //    return this.RedirectToAction<ErrorController>(a => a.Index());
+            //}
+            //if (proposal.Email != CurrentUser.Identity.Name)
+            //{
+            //    Message = string.Format(StaticValues.Message_NoAccess, "that");
+            //    return this.RedirectToAction<ErrorController>(a => a.Index());
+            //}
+            //if (proposal.IsSubmitted)
+            //{
+            //    Message = string.Format(StaticValues.Message_ProposalSubmitted, "edit investigator for", "proposal");
+            //    return this.RedirectToAction<ProposalController>(a => a.Details(proposalId));
+            //}
+            //if (!proposal.CallForProposal.IsActive || proposal.CallForProposal.EndDate < DateTime.Now.Date)
+            //{
+            //    Message = string.Format(StaticValues.Message_ProposalNotActive, "Cannot edit investigator");
+            //    return this.RedirectToAction<ProposalController>(a => a.Edit(proposalId));
+            //}
+
+            
+
+            //if (investigatorToEdit == null)
+            //{
+            //    Message = string.Format(StaticValues.Message_NotFound, "Investigator");
+            //    return this.RedirectToAction<ProposalController>(a => a.Edit(proposalId));
+            //}
+            //if (investigatorToEdit.Proposal.Guid != proposalId)
+            //{
+            //    Message = string.Format(StaticValues.Message_NoAccess, "that");
+            //    return this.RedirectToAction<ErrorController>(a => a.Index());
+            //}
+
+
 
             TransferValues(investigator, investigatorToEdit);
 
@@ -223,7 +288,7 @@ namespace Gramps.Controllers
             {
                 _investigatorRepository.EnsurePersistent(investigatorToEdit);
 
-                Message = "Investigator Edited Successfully";
+                Message = string.Format(StaticValues.Message_EditedSuccessfully, "Investigator");
 
                 return this.RedirectToAction<ProposalController>(a => a.Edit(proposalId));
             }

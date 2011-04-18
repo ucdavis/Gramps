@@ -39,6 +39,24 @@ namespace Gramps.Tests.ControllerTests.InvestigatorControllerTests
         {
             "~/Investigator/Create/730ce6ea-d76d-482f-84da-915f1d3b7562".ShouldMapTo<InvestigatorController>(a => a.Create(SpecificGuid.GetGuid(1), new Investigator()), true);
         }
+
+        /// <summary>
+        /// #3
+        /// </summary>
+        [TestMethod]
+        public void TestEditGetMapping()
+        {
+            "~/Investigator/Edit/5 propsalId?730ce6ea-d76d-482f-84da-915f1d3b7562".ShouldMapTo<InvestigatorController>(a => a.Edit(5, SpecificGuid.GetGuid(1)), true);
+        }
+
+        /// <summary>
+        /// #4
+        /// </summary>
+        [TestMethod]
+        public void TestEditPostMapping()
+        {
+            "~/Investigator/Edit/5 propsalId?730ce6ea-d76d-482f-84da-915f1d3b7562".ShouldMapTo<InvestigatorController>(a => a.Edit(5, SpecificGuid.GetGuid(1), new Investigator()), true);
+        }
         #endregion Mapping Tests
 
     }
