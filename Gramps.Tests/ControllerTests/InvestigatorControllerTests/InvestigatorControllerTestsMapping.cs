@@ -1,21 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web.Mvc;
-using System.Web.Routing;
-using Gramps.Controllers;
-using Gramps.Controllers.Filters;
+﻿using Gramps.Controllers;
 using Gramps.Core.Domain;
-using Gramps.Services;
+using Gramps.Tests.Core.Extensions;
 using Gramps.Tests.Core.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MvcContrib.TestHelper;
-using Rhino.Mocks;
-using UCDArch.Core.PersistanceSupport;
-using UCDArch.Testing;
-using UCDArch.Web.Attributes;
-using Gramps.Tests.Core.Extensions;
 
 namespace Gramps.Tests.ControllerTests.InvestigatorControllerTests
 {
@@ -56,6 +43,15 @@ namespace Gramps.Tests.ControllerTests.InvestigatorControllerTests
         public void TestEditPostMapping()
         {
             "~/Investigator/Edit/5 propsalId?730ce6ea-d76d-482f-84da-915f1d3b7562".ShouldMapTo<InvestigatorController>(a => a.Edit(5, SpecificGuid.GetGuid(1), new Investigator()), true);
+        }
+
+        /// <summary>
+        /// #5
+        /// </summary>
+        [TestMethod]
+        public void TestDeleteMapping()
+        {
+            "~/Investigator/Delete/5 propsalId?730ce6ea-d76d-482f-84da-915f1d3b7562".ShouldMapTo<InvestigatorController>(a => a.Delete(5, SpecificGuid.GetGuid(1)), true);
         }
         #endregion Mapping Tests
 

@@ -214,6 +214,15 @@ namespace Gramps.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There can only be one primary investigator per proposal..
+        /// </summary>
+        public static string ModelError_MultiplePrimary {
+            get {
+                return ResourceManager.GetString("ModelError_MultiplePrimary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Email sent out to applicant if proposal is approved.
         /// </summary>
         public static string ProposalApproved {

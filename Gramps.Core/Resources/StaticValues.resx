@@ -300,4 +300,7 @@
     <value>Cannot {0} {1} once proposal is submitted.</value>
     <comment>{0} - action, {1} entity</comment>
   </data>
+  <data name="ModelError_MultiplePrimary" xml:space="preserve">
+    <value>There can only be one primary investigator per proposal.</value>
+  </data>
 </root>
