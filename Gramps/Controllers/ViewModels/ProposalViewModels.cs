@@ -92,7 +92,7 @@ namespace Gramps.Controllers.ViewModels
                 FilterEmail = filterEmail
             };
             viewModel.Editor = repository.OfType<Editor>()
-                .Queryable.Where(a => a.CallForProposal == callForProposal && a.User != null && a.User.LoginId == login).Single();
+                .Queryable.Where(a => a.CallForProposal != null && a.CallForProposal == callForProposal && a.User != null && a.User.LoginId == login).Single();
             var tempToFilter = repository.OfType<Proposal>()
                 .Queryable.Where(a => a.CallForProposal == callForProposal);
 

@@ -36,8 +36,11 @@ namespace Gramps.Controllers
             _emailService = emailService;
         }
 
-        //
-        // GET: /Proposal/
+        /// <summary>
+        /// #1
+        /// GET: /Proposal/
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Index()
         {
             return this.RedirectToAction<HomeController>(a => a.About());
@@ -45,6 +48,16 @@ namespace Gramps.Controllers
 
         #region Admin(User) Methods
         
+        /// <summary>
+        /// #2
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="filterDecission"></param>
+        /// <param name="filterNotified"></param>
+        /// <param name="filterSubmitted"></param>
+        /// <param name="filterWarned"></param>
+        /// <param name="filterEmail"></param>
+        /// <returns></returns>
         [UserOnly]
         public ActionResult AdminIndex(int id, string filterDecission, string filterNotified, string filterSubmitted, string filterWarned, string filterEmail)
         {
@@ -57,7 +70,7 @@ namespace Gramps.Controllers
 
             if (!_accessService.HasAccess(null, callforproposal.Id, CurrentUser.Identity.Name))
             {
-                Message = "You do not have access to that.";
+                Message = string.Format(StaticValues.Message_NoAccess, "that");
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
             var viewModel = ProposalAdminListViewModel.Create(Repository, 
