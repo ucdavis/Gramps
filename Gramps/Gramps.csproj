@@ -114,9 +114,6 @@
     <Reference Include="NPOI.Util">
       <HintPath>..\Bin\NPOI.Util.dll</HintPath>
     </Reference>
-    <Reference Include="Recaptcha">
-      <HintPath>..\Bin\Recaptcha.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
