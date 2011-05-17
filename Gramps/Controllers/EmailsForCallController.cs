@@ -109,12 +109,13 @@ namespace Gramps.Controllers
             if (templateId.HasValue && templateId != 0)
             {
                 template = Repository.OfType<Template>().GetNullableById(templateId.Value);
-                existingList = _emailsforcallRepository.Queryable.Where(a => a.Template != null && a.Template == template).Select(a => a.Email.ToLower()).ToList();
+
+                existingList = _emailsforcallRepository.Queryable.Where(a => a.Template != null && a.Template == template).Select(a => a.Email).ToList();
             }
             else if (callForProposalId.HasValue && callForProposalId != 0)
             {
                 callforProposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId.Value);
-                existingList = _emailsforcallRepository.Queryable.Where(a => a.CallForProposal != null && a.CallForProposal == callforProposal).Select(a => a.Email.ToLower()).ToList();
+                existingList = _emailsforcallRepository.Queryable.Where(a => a.CallForProposal != null && a.CallForProposal == callforProposal).Select(a => a.Email).ToList();
             }
 
             
