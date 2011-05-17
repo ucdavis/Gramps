@@ -375,6 +375,8 @@ div.t-grid {}
     background: url("../Images/arrow_fat_up.gif") no-repeat scroll 0 0 transparent;
     border:0;
     cursor:pointer;
+    height:19px;
+    width:9px;
 }
 .moveUp_button:hover
 {
@@ -386,6 +388,8 @@ div.t-grid {}
     background: url("../Images/arrow_fat_down.gif") no-repeat scroll 0 0 transparent;
     border:0;
     cursor:pointer;
+    height:19px;
+    width:9px;
 }
 .moveDown_button:hover
 {

@@ -72,6 +72,11 @@
          $(function () {
              $("#filter_container").accordion({ collapsible: true, autoHeight: false, active: false });
          });
+
+         $(document).ready(function () {
+             $(".big_print_button").bt("Print all submitted proposals to PDF");
+             $(".small_print_button").bt("Print this proposal to PDF");
+         });
     </script>
 </asp:Content>
 
