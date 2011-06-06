@@ -511,6 +511,15 @@ namespace Gramps.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to UA-5512876-7.
+        /// </summary>
+        public static string Txt_GoogleAnalytics {
+            get {
+                return ResourceManager.GetString("Txt_GoogleAnalytics", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to VersionKey.
         /// </summary>
         public static string VersionKey {

@@ -303,4 +303,7 @@
   <data name="ModelError_MultiplePrimary" xml:space="preserve">
     <value>There can only be one primary investigator per proposal.</value>
   </data>
+  <data name="Txt_GoogleAnalytics" xml:space="preserve">
+    <value>UA-5512876-7</value>
+  </data>
 </root>

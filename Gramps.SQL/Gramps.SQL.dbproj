@@ -968,5 +968,8 @@
     <NotInBuild Include="Schema Comparisons\VogelToTerry.scmp">
       <SubType>NotInBuild</SubType>
     </NotInBuild>
+    <NotInBuild Include="Schema Comparisons\VogelToDonBotSchemaComparison.scmp">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
   </ItemGroup>
 </Project>
