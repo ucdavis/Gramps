@@ -121,6 +121,8 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -210,6 +212,7 @@
     </Compile>
     <Compile Include="Helpers\CustomGridBuilder.cs" />
     <Compile Include="Helpers\HtmlHelperExtensions.cs" />
+    <Compile Include="Helpers\ServiceMessages.cs" />
     <Compile Include="Helpers\StringExtension.cs" />
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -634,6 +637,7 @@
     <Content Include="Views\Shared\LogOnUserControl.ascx" />
     <Content Include="Views\Shared\NavigationButtons.ascx" />
     <Content Include="Views\Shared\PublicLogOnUserControl.ascx" />
+    <Content Include="Views\Shared\SystemMessage.ascx" />
     <Content Include="Views\Template\Create.aspx" />
     <Content Include="Views\Template\Edit.aspx" />
     <Content Include="Views\Template\Index.aspx" />

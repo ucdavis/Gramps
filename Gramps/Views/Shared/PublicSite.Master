@@ -61,10 +61,13 @@
     
         <asp:ContentPlaceHolder ID="MainContent" runat="server" />
     </div>    
-
+    
 </div>
 
+
+
 <div id="footer">
+<%:Html.Partial("SystemMessage") %>
 <div id="footer_text">
 <p>
 <span id="ByLine">Developed By The College Of Agricultural And Environmental Science Dean's Office</span><br />

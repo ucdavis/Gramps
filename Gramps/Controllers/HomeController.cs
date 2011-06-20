@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using Gramps.Controllers.Filters;
 using UCDArch.Web.Attributes;
+using MvcContrib;
 
 namespace Gramps.Controllers
 {
@@ -23,6 +24,14 @@ namespace Gramps.Controllers
         public ActionResult LoggedOut()
         {
             return View();
+        }
+
+        [UserOnly]
+        public ActionResult ResetCache()
+        {
+            HttpContext.Cache.Remove("ServiceMessages");
+
+            return this.RedirectToAction(a => a.Index());
         }
     }
 }

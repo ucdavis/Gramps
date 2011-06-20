@@ -45,11 +45,12 @@
     <span class="logos">
         <span class="ucdavis"><a href="<%: Url.Action("About", "Home") %>"><img src="<%= Url.Content("~/Images/logo-ucdavis.png") %>" alt="UC Davis" /></a></span>
         <span class="ucdavis"><a href="<%: Url.Action("About", "Home") %>"><img src="<%= Url.Content("~/Images/logo-caes.png") %>" alt="College of Agricultural &amp; Environmental Sciences" /></a></span>
-        <asp:ContentPlaceHolder ID="logoContent" runat="server">        
-        </asp:ContentPlaceHolder>
+
              <span id="logindisplay">
                 <% Html.RenderPartial("LogOnUserControl"); %>
              </span> 
+        <asp:ContentPlaceHolder ID="logoContent" runat="server">        
+        </asp:ContentPlaceHolder>
     </span>
     
         
@@ -62,9 +63,13 @@
         <asp:ContentPlaceHolder ID="MainContent" runat="server" />
     </div>    
 
+    
 </div>
 
+
+
 <div id="footer">
+<%:Html.Partial("SystemMessage") %>
 <div id="footer_text">
 <p><%: Html.ActionLink<HomeController>(a=>a.Index(), "Home", new {style="color:white; text-decoration:none;"}) %> | 
 <a href="https://secure.caes.ucdavis.edu/help/ticket/SubmitRedirect?appName=Gramps" style="color:white; text-decoration:none;"">Questions or Comments</a> | 
