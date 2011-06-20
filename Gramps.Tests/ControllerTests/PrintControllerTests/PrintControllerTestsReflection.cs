@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Gramps.Controllers.Filters;
+using Gramps.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using UCDArch.Web.Attributes;
 
@@ -32,10 +33,10 @@ namespace Gramps.Tests.ControllerTests.PrintControllerTests
         }
 
         /// <summary>
-        /// Tests the controller has only three attributes.
+        /// Tests the controller has 4 attributes.
         /// </summary>
         [TestMethod]
-        public void TestControllerHasOnlyThreeAttributes()
+        public void TestControllerHasFourAttributes()
         {
             #region Arrange
             var controllerClass = _controllerClass;
@@ -46,7 +47,7 @@ namespace Gramps.Tests.ControllerTests.PrintControllerTests
             #endregion Act
 
             #region Assert
-            Assert.AreEqual(3, result.Count());
+            Assert.AreEqual(4, result.Count());
             #endregion Assert
         }
 
@@ -101,6 +102,22 @@ namespace Gramps.Tests.ControllerTests.PrintControllerTests
 
             #region Assert
             Assert.IsTrue(result.Count() > 0, "VersionAttribute not found.");
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestControllerHasLocServiceMessageAttribute()
+        {
+            #region Arrange
+            var controllerClass = _controllerClass;
+            #endregion Arrange
+
+            #region Act
+            var result = controllerClass.GetCustomAttributes(true).OfType<LocServiceMessageAttribute>();
+            #endregion Act
+
+            #region Assert
+            Assert.IsTrue(result.Count() > 0, "LocServiceMessageAttribute not found.");
             #endregion Assert
         }
 
