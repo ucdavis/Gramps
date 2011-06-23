@@ -965,7 +965,7 @@ namespace Gramps.Controllers
                 }
                 else if (name == QuestionTypeText.STR_TextArea)
                 {
-                    answer = qa.Answer;
+                    answer = qa.Answer ?? string.Empty;
                 }
                 else
                 {
