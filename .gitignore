@@ -1,5 +1,5 @@
 #Don't include local appsettings files
-AppSettings*.config
+App*Settings.config
 #ignore thumbnails created by windows
 Thumbs.db
 #Ignore files build by Visual Studio
