@@ -60,24 +60,6 @@ EndProject
 Project("{C8D11400-126E-41CD-887F-60BD40844F9E}") = "Gramps.SQL", "Gramps.SQL\Gramps.SQL.dbproj", "{67CBC824-A49E-4E9B-A947-360F3DFE65C3}"
 EndProject
 Global
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 5
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://tfs.caes.ucdavis.edu:8088/tfs/defaultcollection
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = Gramps.Tests\\Gramps.Tests.csproj
-		SccProjectName1 = Gramps.Tests
-		SccLocalPath1 = Gramps.Tests
-		SccProjectUniqueName2 = Gramps\\Gramps.csproj
-		SccProjectName2 = Gramps
-		SccLocalPath2 = Gramps
-		SccProjectUniqueName3 = Gramps.Core\\Gramps.Core.csproj
-		SccProjectName3 = Gramps.Core
-		SccLocalPath3 = Gramps.Core
-		SccProjectUniqueName4 = Gramps.SQL\\Gramps.SQL.dbproj
-		SccProjectName4 = Gramps.SQL
-		SccLocalPath4 = Gramps.SQL
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
