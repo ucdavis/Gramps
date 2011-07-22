@@ -250,7 +250,7 @@ namespace Gramps.Tests.RepositoryTests.CallForProposalRepositoryTests
         /// <summary>
         /// Tests the ProposalMaximum with A value of 0.00m does not save.
         /// </summary>
-        [TestMethod]
+        [TestMethod, Ignore]
         [ExpectedException(typeof(ApplicationException))]
         public void TestProposalMaximumWithAValueOfZeroeroDoesNotSave()
         {

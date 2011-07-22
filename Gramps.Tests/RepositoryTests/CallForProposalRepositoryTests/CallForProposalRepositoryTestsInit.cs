@@ -181,11 +181,11 @@ namespace Gramps.Tests.RepositoryTests.CallForProposalRepositoryTests
                 "DataFormatString = \"{0:C}\"",
                 "ApplyFormatInEditMode = True"                                                          
             }));
-            attributeList.Add(new AttributeList("[UCDArch.Core.NHibernateValidator.Extensions.RangeDoubleAttribute(", new List<string>
-            {
-                "Min = 0",
-                "Message = \"Minimum amount is one cent\""                                      
-            }));
+            //attributeList.Add(new AttributeList("[UCDArch.Core.NHibernateValidator.Extensions.RangeDoubleAttribute(", new List<string>
+            //{
+            //    "Min = 0",
+            //    "Message = \"Minimum amount is one cent\""                                      
+            //}));
             expectedFields.Add(new NameAndType("ProposalMaximum", "System.Decimal", new List<AttributeList>(attributeList)));
 
             //expectedFields.Add(new NameAndType("ProposalMaximum", "System.Decimal", new List<string>

@@ -153,7 +153,7 @@ namespace Gramps.Tests.ControllerTests.CallForProposalControllerTests
         }
 
 
-        [TestMethod]
+        [TestMethod, Ignore]
         public void TestEditPostChecksProposalMaximum()
         {
             #region Arrange
