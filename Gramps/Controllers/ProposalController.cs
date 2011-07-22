@@ -810,9 +810,13 @@ namespace Gramps.Controllers
                 {
                     ModelState.AddModelError("Investigators", "Must have one primary investigator");
                 }
-                if (proposalToEdit.RequestedAmount > proposalToEdit.CallForProposal.ProposalMaximum)
+                if (proposalToEdit.CallForProposal.ProposalMaximum > 0)
                 {
-                    ModelState.AddModelError("Proposal.RequestedAmount", string.Format("Requested Amount must be {0} or less", String.Format("{0:C}", proposalToEdit.CallForProposal.ProposalMaximum)));
+                    if (proposalToEdit.RequestedAmount > proposalToEdit.CallForProposal.ProposalMaximum)
+                    {
+                        ModelState.AddModelError(
+                            "Proposal.RequestedAmount", string.Format("Requested Amount must be {0} or less", String.Format("{0:C}", proposalToEdit.CallForProposal.ProposalMaximum)));
+                    }
                 }
                 if (proposalToEdit.RequestedAmount <= 0)
                 {

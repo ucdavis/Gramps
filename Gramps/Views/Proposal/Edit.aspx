@@ -104,10 +104,12 @@
         <fieldset>
             <legend>Edit Proposal Details</legend>
             <ul>
+            <%if (Model.CallForProposal.ProposalMaximum > 0){%>
             <li>
-                <%: Html.Label("Proposal Maximum Amount:")%>
-                <%: String.Format("{0:C}", Model.CallForProposal.ProposalMaximum)%>
+                <%:Html.Label("Proposal Maximum Amount:")%>
+                <%:String.Format("{0:C}", Model.CallForProposal.ProposalMaximum)%>
             </li>  
+            <%}%>
             <li>
                 <%: Html.Label("Requested Amount:")%>  
                 <%: Html.TextBoxFor(model => model.Proposal.RequestedAmount, String.Format("{0:F}", Model.Proposal.RequestedAmount))%>

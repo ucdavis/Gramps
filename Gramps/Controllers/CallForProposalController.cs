@@ -173,10 +173,10 @@ namespace Gramps.Controllers
 
             callforproposalToEdit.TransferValidationMessagesTo(ModelState);
 
-            if (callforproposalToEdit.ProposalMaximum < 0.01m)
-            {
-                ModelState.AddModelError("CallForProposal.ProposalMaximum", "You need to specify a Proposal Maximum of at least a cent");
-            }
+            //if (callforproposalToEdit.ProposalMaximum < 0.01m)
+            //{
+            //    ModelState.AddModelError("CallForProposal.ProposalMaximum", "You need to specify a Proposal Maximum of at least a cent");
+            //}
 
             if (callforproposalToEdit.IsActive && string.IsNullOrWhiteSpace(callforproposalToEdit.Description))
             {
