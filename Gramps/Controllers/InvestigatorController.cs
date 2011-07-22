@@ -211,7 +211,10 @@ namespace Gramps.Controllers
             destination.IsPrimary =     source.IsPrimary;
             destination.Name =          source.Name;
             destination.Phone =         source.Phone;
-            destination.State =         source.State.ToUpper();
+            if (source.State != null)
+            {
+                destination.State = source.State.ToUpper();
+            }
             destination.Zip =           source.Zip;
             destination.Position =      source.Position;
         }
