@@ -577,8 +577,10 @@ namespace Gramps.Controllers
             }
 
             var proposalToCreate = new Proposal();
-
-            proposalToCreate.Email = proposal.Email.Trim().ToLower();
+            if (proposal.Email != null) 
+            { 
+                proposalToCreate.Email = proposal.Email.Trim().ToLower();
+            }
             proposalToCreate.CallForProposal = callforproposal;
             proposalToCreate.Sequence =
                 Repository.OfType<Proposal>().Queryable

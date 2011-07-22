@@ -20,6 +20,7 @@
     <legend><%: Html.Encode(Model.CallForProposal.Name) %> </legend>
         <%: Html.HtmlEncode(Model.CallForProposal.Description) %>
     </fieldset>
+    <br />
 
     <% using (Html.BeginForm()) {%>
         <%= Html.AntiForgeryToken() %>
@@ -28,15 +29,19 @@
 
         <fieldset>
             <legend>Fields</legend>
-            
+            <br />
+            <ul>
+            <li>
             <div class="editor-label">
-                <%: Html.LabelFor(model => model.Proposal.Email) %>
+                <strong><%: Html.LabelFor(model => model.Proposal.Email) %></strong>
             </div>
             <div class="editor-field">
                 <%: Html.TextBoxFor(model => model.Proposal.Email, new { @style = "width:50em;" })%>
                 <%: Html.ValidationMessageFor(model => model.Proposal.Email)%>
             </div>
-
+            </li>
+            </ul>
+            <br />
             <p>
                 <%= Html.GenerateCaptcha() %>
             </p>

@@ -110,7 +110,12 @@
         <% var index = 0;%>
         <%foreach (var question in Model.Proposal.CallForProposal.Questions.OrderBy(a => a.Order)){%>
         <li>
-            <%: Html.Encode(question.Name) %>        
+            <%if (question.QuestionType.Name == "No Answer"){%>
+                <%:Html.Encode(question.Name)%>
+            <%}%>
+            <%else{%>
+                <strong><%:Html.Encode(question.Name)%></strong>
+            <%}%>        
         <%
             var answer = "";
             var indexString = string.Format("[{0}]", index);

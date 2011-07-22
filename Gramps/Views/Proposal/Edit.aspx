@@ -14,7 +14,7 @@
     
         
         <fieldset>        
-        <legend><%: Html.Encode(Model.CallForProposal.Name) %> </legend>
+        <legend><strong><%: Html.Encode(Model.CallForProposal.Name) %> </strong></legend>
         <ul>
         <li>
             <%: Html.HtmlEncode(Model.CallForProposal.Description) %>
@@ -29,7 +29,7 @@
     <%: Html.ValidationSummary("There were validation Errors.") %>
     
     <fieldset>
-    <legend>Non Editable</legend>
+    <legend><strong>Non Editable</strong></legend>
     <ul>
         <li>
             <%: Html.Label("Proposal Unique ID:") %>
@@ -62,7 +62,7 @@
     
 
     <fieldset>
-    <legend>Investigators</legend>
+    <legend><strong>Investigators</strong></legend>
     <br /><br />
     <p>
         <%: Html.ActionLink<InvestigatorController>(a => a.Create(Model.Proposal.Guid), "Add Investigator", new { @class = "button" })%>
@@ -102,7 +102,7 @@
 
 
         <fieldset>
-            <legend>Edit Proposal Details</legend>
+            <legend><strong>Edit Proposal Details</strong></legend>
             <ul>
             <%if (Model.CallForProposal.ProposalMaximum > 0){%>
             <li>
@@ -111,7 +111,7 @@
             </li>  
             <%}%>
             <li>
-                <%: Html.Label("Requested Amount:")%>  
+                <strong> <%: Html.Label("Requested Amount:")%> </strong> 
                 <%: Html.TextBoxFor(model => model.Proposal.RequestedAmount, String.Format("{0:F}", Model.Proposal.RequestedAmount))%>
                 <%: Html.ValidationMessageFor(model => model.Proposal.RequestedAmount)%>
             </li>
@@ -132,11 +132,11 @@
            
             <% switch (question.QuestionType.Name){%>
                 <% case "Text Box" : %>
-                    <%: Html.Encode(question.Name) %>
+                    <strong><%: Html.Encode(question.Name) %></strong>
                     <%= Html.TextBox("proposalAnswers" + indexString + ".Answer", answer, new { @class = "indexedControl " + question.ValidationClasses +" BigWidth" })%>                                     
                 <% break; %>
                 <% case "Text Area" : %>
-                    <%: Html.Encode(question.Name) %>
+                    <strong><%: Html.Encode(question.Name) %></strong>
                     <%--<%= Html.TextArea("proposalAnswers" + indexString + ".Answer", answer, new {@class = StaticValues.Class_indexedControl + " BigAnswer" })%>--%>
                     <%--name="proposalAnswers[1].Answer" --%>
                     <%if (question.MaxCharacters != null && question.MaxCharacters > 0){%>
@@ -153,10 +153,10 @@
                         var ans = false;
                         if (!Boolean.TryParse(answer, out ans)) {
                             ans = false; } %>
-                    <%= Html.CheckBox("proposalAnswers" + indexString + ".Answer", ans, new { @class = "indexedControl " + question.ValidationClasses })%> <%= Html.Encode(question.Name) %>
+                    <%= Html.CheckBox("proposalAnswers" + indexString + ".Answer", ans, new { @class = "indexedControl " + question.ValidationClasses })%> <strong><%= Html.Encode(question.Name) %></strong>
                 <% break; %>
                 <% case "Radio Buttons" : %>  
-                    <%: Html.Encode(question.Name) %>
+                    <strong><%: Html.Encode(question.Name) %></strong>
                     <% var option = !string.IsNullOrEmpty(answer) ? answer.Trim().ToLower() : string.Empty;%>            
                     <% foreach (var o in question.Options){ %> 
                         <%var isChecked = option == o.Name.Trim().ToLower();%>
@@ -165,7 +165,7 @@
                     <% } %>
                 <% break; %>
                 <% case "Checkbox List" : %>
-                    <%: Html.Encode(question.Name) %>
+                    <strong><%: Html.Encode(question.Name) %></strong>
                     <% var options = !string.IsNullOrEmpty(answer) ? answer.Split(',') : new string[1]; %>
                     <%--<%= Html.Encode(Model.Answer) %>--%>
      
@@ -178,13 +178,13 @@
                     <% } %>
                 <% break; %>
                 <% case "Drop Down" : %>
-                    <%: Html.Encode(question.Name) %>
+                    <strong><%: Html.Encode(question.Name) %></strong>
                     <%= this.Select("proposalAnswers" + indexString + ".Answer").Options(question.Options.OrderBy(a => a.Name), x => x.Name, x => x.Name).Class("indexedControl " + question.ValidationClasses)
                             .Selected(answer ?? string.Empty)
                             .FirstOption("--Not Selected--")%>
                 <% break; %>
                 <% case "Date" : %>
-                    <%: Html.Encode(question.Name) %>
+                    <strong><%: Html.Encode(question.Name) %></strong>
                     <%= Html.TextBox("proposalAnswers" + indexString + ".Answer", answer, new { @class = "dateForm indexedControl " + question.ValidationClasses })%>
                 <% break; %>
                 <% default: %>
@@ -203,7 +203,7 @@
                 <%= this.FileUpload("uploadAttachment").Label("Replace PDF Attachment")%>
             <%}%>
             <%else { %> 
-                <%= this.FileUpload("uploadAttachment").Label("Add PDF Attachment")%>
+                <strong><%= this.FileUpload("uploadAttachment").Label("Add PDF Attachment")%></strong>
             <%} %>
             
             <%: Html.ValidationMessageFor(model => model.Proposal.File)%>
@@ -213,7 +213,7 @@
         <br />
 
         <fieldset>
-        <legend>Save Options</legend>
+        <legend><strong>Save Options</strong></legend>
             <span id = "SaveOptions">
                 <span id = "SFWithV">
                 <input type="radio" id="SubmitFinalWithValidation" name="SaveOptions" value="<%:StaticValues.RB_SaveOptions_SubmitFinal%>" "<%= Model.SaveOptionChoice == StaticValues.RB_SaveOptions_SubmitFinal ? "checked" : string.Empty%>" /><label for="SubmitFinalWithValidation">Submit Final With Validation</label><br />
