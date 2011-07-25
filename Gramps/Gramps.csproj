@@ -70,9 +70,7 @@
     <Reference Include="Elmah">
       <HintPath>..\Bin\Elmah.dll</HintPath>
     </Reference>
-    <Reference Include="FluentNHibernate">
-      <HintPath>..\Bin\FluentNHibernate.dll</HintPath>
-    </Reference>
+    <Reference Include="FluentNHibernate, Version=1.1.0.685, Culture=neutral, PublicKeyToken=8aa435e3cb308880, processorArchitecture=MSIL" />
     <Reference Include="HibernatingRhinos.Profiler.Appender">
       <HintPath>..\Bin\HibernatingRhinos.Profiler.Appender.dll</HintPath>
     </Reference>
@@ -648,7 +646,9 @@
     <Content Include="Views\Template\Create.aspx" />
     <Content Include="Views\Template\Edit.aspx" />
     <Content Include="Views\Template\Index.aspx" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -762,7 +762,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>3209</DevelopmentServerPort>
+          <DevelopmentServerPort>9202</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>
