@@ -137,6 +137,12 @@ namespace Gramps.Controllers
             return View(viewModel);
         }
 
+        /// <summary>
+        /// #4
+        /// </summary>
+        /// <param name="id">Proposal Id</param>
+        /// <param name="callForProposalId">Call For Proposal Id</param>
+        /// <returns>Proposal's PDF if found</returns>
         [UserOnly]
         public ActionResult AdminDownload(int id, int callForProposalId)
         {
@@ -175,6 +181,13 @@ namespace Gramps.Controllers
             return File(proposal.File.Contents, proposal.File.ContentType, proposal.File.Name);
         }
 
+        /// <summary>
+        /// #5
+        /// Send Call that the CallForProposals is about to close.
+        /// </summary>
+        /// <param name="id">CallForProposal Id</param>
+        /// <param name="immediate"></param>
+        /// <returns></returns>
         [HttpPost]
         [UserOnly]
         public ActionResult SendCall(int id, bool immediate)
@@ -183,7 +196,6 @@ namespace Gramps.Controllers
 
             if (callforproposal == null)
             {
-
                 return this.RedirectToAction<CallForProposalController>(a => a.Index(null, null, null));
             }
 

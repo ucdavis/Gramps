@@ -56,6 +56,24 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
         {
             "~/Proposal/AdminDetails/5".ShouldMapTo<ProposalController>(a => a.AdminDetails(5, 3), true);
         }
+
+        /// <summary>
+        /// #4
+        /// </summary>
+        [TestMethod]
+        public void TestAdminDownloadMapping()
+        {
+            "~/Proposal/AdminDownload/5".ShouldMapTo<ProposalController>(a => a.AdminDownload(5, 3), true);
+        }
+
+        /// <summary>
+        /// #5
+        /// </summary>
+        [TestMethod]
+        public void TestSendCallMapping()
+        {
+            "~/Proposal/SendCall/5".ShouldMapTo<ProposalController>(a => a.SendCall(5, true), true);
+        }
         #endregion Mapping Tests
     }
 }
