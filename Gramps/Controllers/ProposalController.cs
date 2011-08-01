@@ -85,8 +85,13 @@ namespace Gramps.Controllers
             return View(viewModel);
         }
 
-        //
-        // GET: /Proposal/Details/5
+        /// <summary>
+        /// #3
+        /// GET: /Proposal/Details/5
+        /// </summary>
+        /// <param name="id">Proposal Id</param>
+        /// <param name="callForProposalId">CallForProposal Id </param>
+        /// <returns></returns>
         [UserOnly]
         public ActionResult AdminDetails(int id, int callForProposalId)
         {

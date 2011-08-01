@@ -14,7 +14,7 @@ using Rhino.Mocks;
 using UCDArch.Core.PersistanceSupport;
 using UCDArch.Testing;
 using UCDArch.Web.Attributes;
-
+using Gramps.Tests.Core.Extensions;
 
 namespace Gramps.Tests.ControllerTests.ProposalControllerTests
 {
@@ -46,6 +46,15 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
         public void TestAdminIndexMapping()
         {
             "~/Proposal/AdminIndex/5".ShouldMapTo<ProposalController>(a => a.AdminIndex(5,null, null, null, null, null));
+        }
+
+        /// <summary>
+        /// #3
+        /// </summary>
+        [TestMethod]
+        public void TestAdminDetailsMapping()
+        {
+            "~/Proposal/AdminDetails/5".ShouldMapTo<ProposalController>(a => a.AdminDetails(5, 3), true);
         }
         #endregion Mapping Tests
     }
