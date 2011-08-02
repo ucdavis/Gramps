@@ -228,6 +228,12 @@ namespace Gramps.Controllers
             return this.RedirectToAction(a => a.AdminIndex(id, null, null, null, null, null));
         }
 
+        /// <summary>
+        /// #6
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="immediate"></param>
+        /// <returns></returns>
         [HttpPost]
         [UserOnly]
         public ActionResult SendDecision(int id, bool immediate)
@@ -284,6 +290,12 @@ namespace Gramps.Controllers
             return this.RedirectToAction(a => a.AdminIndex(id, null, null, null, null, null));
         }
 
+        /// <summary>
+        /// #7
+        /// </summary>
+        /// <param name="id">Proposal Id</param>
+        /// <param name="callForProposalId">callForProposal Id</param>
+        /// <returns></returns>
         [UserOnly]
         public ActionResult AdminEdit(int id, int callForProposalId)
         {
@@ -333,6 +345,15 @@ namespace Gramps.Controllers
             return View(viewModel);
         }
 
+        /// <summary>
+        /// #8
+        /// </summary>
+        /// <param name="id">Proposal Id</param>
+        /// <param name="callForProposalId">callForProposal Id</param>
+        /// <param name="proposal"></param>
+        /// <param name="comment"></param>
+        /// <param name="approvedDenied"></param>
+        /// <returns></returns>
         [UserOnly]
         [HttpPost]
         [ValidateInput(false)]

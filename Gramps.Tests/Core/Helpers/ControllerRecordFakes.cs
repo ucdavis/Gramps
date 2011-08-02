@@ -135,4 +135,12 @@ namespace Gramps.Tests.Core.Helpers
             return CreateValidEntities.ReviewedProposal(i);
         }
     }
+
+    public class FakeComments : ControllerRecordFakes<Comment>
+    {
+        protected override Comment CreateValid(int i)
+        {
+            return CreateValidEntities.Comment(i);
+        }
+    }
 }

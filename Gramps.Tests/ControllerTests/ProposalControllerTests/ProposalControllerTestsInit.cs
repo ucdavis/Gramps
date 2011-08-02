@@ -27,6 +27,7 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
         public IRepository<CallForProposal> CallForProposalRepository;
         public IRepository<Editor> EditorRepository;
         public IRepository<ReviewedProposal> ReviewedProposalRepository;
+        public IRepository<Comment> CommentRepository;
         public IAccessService AccessService;
         public IEmailService EmailService;
         //public IRepository<Example> ExampleRepository;
@@ -59,6 +60,9 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
 
             ReviewedProposalRepository = FakeRepository<ReviewedProposal>();
             Controller.Repository.Expect(a => a.OfType<ReviewedProposal>()).Return(ReviewedProposalRepository).Repeat.Any();
+
+            CommentRepository = FakeRepository<Comment>();
+            Controller.Repository.Expect(a => a.OfType<Comment>()).Return(CommentRepository).Repeat.Any();
 
             Controller.Repository.Expect(a => a.OfType<Proposal>()).Return(ProposalRepository).Repeat.Any();	
         }
