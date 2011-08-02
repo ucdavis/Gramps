@@ -43,9 +43,9 @@
 <%--        <li>
         <span id = "ApprovedSpan">
             <label for="Approved">Decision: </label>
-                <input type="radio" id="IsApproved" name="ApprovedDenied" disabled="true" value="<%:StaticValues.RB_Decission_Approved%>" "<%=Model.Proposal.IsApproved ? "checked" : string.Empty%>" /><label for="approved">Approved</label>
-                <input type="radio" id="IsDenied" name="ApprovedDenied" disabled="true" value="<%:StaticValues.RB_Decission_Denied%>" "<%= Model.Proposal.IsDenied ? "checked" : string.Empty %>" /><label for="denied">Denied</label>
-                <input type="radio" id="IsNotDecied" name="ApprovedDenied" disabled="true" value="<%:StaticValues.RB_Decission_NotDecided%>" "<%= !Model.Proposal.IsDenied && !Model.Proposal.IsApproved ? "checked" : string.Empty %>" /><label for="notDecieded">Not Decided</label>
+                <input type="radio" id="IsApproved" name="ApprovedDenied" disabled="true" value="<%:StaticValues.RB_Decission_Approved%>" <%=Model.Proposal.IsApproved ? "checked" : string.Empty%> /><label for="approved">Approved</label>
+                <input type="radio" id="IsDenied" name="ApprovedDenied" disabled="true" value="<%:StaticValues.RB_Decission_Denied%>" <%= Model.Proposal.IsDenied ? "checked" : string.Empty %> /><label for="denied">Denied</label>
+                <input type="radio" id="IsNotDecied" name="ApprovedDenied" disabled="true" value="<%:StaticValues.RB_Decission_NotDecided%>" <%= !Model.Proposal.IsDenied && !Model.Proposal.IsApproved ? "checked" : string.Empty %> /><label for="notDecieded">Not Decided</label>
         </span>  
         </li>  --%>     
         
@@ -216,13 +216,13 @@
         <legend><strong>Save Options</strong></legend>
             <span id = "SaveOptions">
                 <span id = "SFWithV">
-                <input type="radio" id="SubmitFinalWithValidation" name="SaveOptions" value="<%:StaticValues.RB_SaveOptions_SubmitFinal%>" "<%= Model.SaveOptionChoice == StaticValues.RB_SaveOptions_SubmitFinal ? "checked" : string.Empty%>" /><label for="SubmitFinalWithValidation">Submit Final With Validation</label><br />
+                <input type="radio" id="SubmitFinalWithValidation" name="SaveOptions" value="<%:StaticValues.RB_SaveOptions_SubmitFinal%>" <%= Model.SaveOptionChoice == StaticValues.RB_SaveOptions_SubmitFinal ? "checked" : string.Empty%> /><label for="SubmitFinalWithValidation">Submit Final With Validation</label><br />
                 </span>     
                 <span id="SWithV">        
-                <input type="radio" id="SaveWithValidation" name="SaveOptions" value="<%:StaticValues.RB_SaveOptions_SaveWithValidation%>" "<%= Model.SaveOptionChoice == StaticValues.RB_SaveOptions_SaveWithValidation ? "checked" : string.Empty %>" /><label for="SaveWithValidation">Save Draft With Validation</label><br />
+                <input type="radio" id="SaveWithValidation" name="SaveOptions" value="<%:StaticValues.RB_SaveOptions_SaveWithValidation%>" <%= Model.SaveOptionChoice == StaticValues.RB_SaveOptions_SaveWithValidation ? "checked" : string.Empty %> /><label for="SaveWithValidation">Save Draft With Validation</label><br />
                 </span>  
                 <span id ="SWithoutV">
-                <input type="radio" id="SaveWithoutValidation" name="SaveOptions" value="<%:StaticValues.RB_SaveOptions_SaveNoValidate%>" "<%= Model.SaveOptionChoice == StaticValues.RB_SaveOptions_SaveNoValidate ? "checked" : string.Empty %>" /><label for="SaveWithoutValidation">Save Draft Without Validation</label><br />
+                <input type="radio" id="SaveWithoutValidation" name="SaveOptions" value="<%:StaticValues.RB_SaveOptions_SaveNoValidate%>" <%= Model.SaveOptionChoice == StaticValues.RB_SaveOptions_SaveNoValidate ? "checked" : string.Empty %> /><label for="SaveWithoutValidation">Save Draft Without Validation</label><br />
                 </span>
             </span> 
             <p>

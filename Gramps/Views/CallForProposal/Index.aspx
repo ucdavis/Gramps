@@ -24,9 +24,9 @@
             <li>
             <span id = "IsActiveSpan">
             <label for="Approved"></label>
-                <input type="radio" id="Active" name="filterActive" value="<%:StaticValues.Filter_Active%>" "<%=Model.FilterActive == StaticValues.Filter_Active ? "checked" : string.Empty%>" /><label for="active">Active</label>
-                <input type="radio" id="InActive" name="filterActive" value="<%:StaticValues.Filter_Not_Active%>" "<%= Model.FilterActive == StaticValues.Filter_Not_Active ? "checked" : string.Empty %>" /><label for="inactive">InActive</label>
-                <input type="radio" id="Both" name="filterActive" value="Both" "<%= string.IsNullOrWhiteSpace(Model.FilterActive) || Model.FilterActive == "Both" ? "checked" : string.Empty %>" /><label for="both">Both</label>
+                <input type="radio" id="Active" name="filterActive" value="<%:StaticValues.Filter_Active%>" <%=Model.FilterActive == StaticValues.Filter_Active ? "checked" : string.Empty%> /><label for="active">Active</label>
+                <input type="radio" id="InActive" name="filterActive" value="<%:StaticValues.Filter_Not_Active%>" <%= Model.FilterActive == StaticValues.Filter_Not_Active ? "checked" : string.Empty %> /><label for="inactive">InActive</label>
+                <input type="radio" id="Both" name="filterActive" value="Both" <%= string.IsNullOrWhiteSpace(Model.FilterActive) || Model.FilterActive == "Both" ? "checked" : string.Empty %> /><label for="both">Both</label>
             </span>
             </li>
             <li>
