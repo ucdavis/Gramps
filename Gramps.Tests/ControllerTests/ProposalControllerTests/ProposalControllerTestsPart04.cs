@@ -1,24 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.Routing;
 using Gramps.Controllers;
-using Gramps.Controllers.Filters;
 using Gramps.Controllers.ViewModels;
 using Gramps.Core.Domain;
 using Gramps.Core.Resources;
-using Gramps.Services;
 using Gramps.Tests.Core.Extensions;
 using Gramps.Tests.Core.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MvcContrib.TestHelper;
 using Rhino.Mocks;
-using UCDArch.Core.PersistanceSupport;
-using UCDArch.Testing;
-using UCDArch.Web.Attributes;
 
 
 namespace Gramps.Tests.ControllerTests.ProposalControllerTests
@@ -594,7 +587,7 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
 
 
         [TestMethod]
-        public void TestAdminEditPostWhenAlreadyNotifiedDoesNotSave()
+        public void TestAdminEditPostWhenAlreadyNotifiedDoesNotSave1()
         {
             #region Arrange
             var calls = new FakeCallForProposals();
@@ -610,6 +603,7 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
             proposalList[0].IsNotified = true;
             proposalList[0].IsApproved = true;
             proposalList[0].IsDenied = false;
+            proposalList[0].CallForProposal = CreateValidEntities.CallForProposal(1);
             
             var proposals = new FakeProposals();
             proposals.Records(2, ProposalRepository, proposalList);
@@ -644,17 +638,509 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
             #endregion Arrange
 
             #region Act
-            var result = Controller.AdminEdit(1, 3, proposalToEdit, null, StaticValues.RB_Decission_NotDecided)
+            var result = Controller.AdminEdit(1, 3, proposalToEdit, CreateValidEntities.Comment(1), StaticValues.RB_Decission_NotDecided)
                 .AssertViewRendered()
                 .WithViewData<ProposalAdminViewModel>();
             #endregion Act
 
             #region Assert
-            Assert.Inconclusive("Finish and continue these tests");
-            Controller.ModelState.AssertErrorsAre("");
-            Assert.AreEqual("", Controller.Message);
+            Controller.ModelState.AssertErrorsAre("You should not change the Decission if they have been notified.");
             Assert.IsNotNull(result);
+            Assert.IsNotNull(result.Proposal);
+            Assert.IsNotNull(result.Comment);
             #endregion Assert		
+        }
+
+        [TestMethod]
+        public void TestAdminEditPostWhenAlreadyNotifiedDoesNotSave2()
+        {
+            #region Arrange
+            var calls = new FakeCallForProposals();
+            calls.Records(3, CallForProposalRepository);
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "me");
+            AccessService.Expect(a => a.HasAccess(null, 3, "me")).Return(true).Repeat.Any();
+            AccessService.Expect(
+                a =>
+                a.HasSameId(Arg<Template>.Is.Anything, Arg<CallForProposal>.Is.Anything, Arg<int?>.Is.Anything,
+                            Arg<int?>.Is.Anything)).Return(true).Repeat.Any();
+            var proposalList = new List<Proposal>();
+            proposalList.Add(CreateValidEntities.Proposal(1));
+            proposalList[0].IsNotified = true;
+            proposalList[0].IsApproved = false;
+            proposalList[0].IsDenied = true;
+            proposalList[0].CallForProposal = CreateValidEntities.CallForProposal(1);
+
+            var proposals = new FakeProposals();
+            proposals.Records(2, ProposalRepository, proposalList);
+
+            var editors = new List<Editor>();
+            editors.Add(CreateValidEntities.Editor(1));
+            editors[0].CallForProposal = CallForProposalRepository.GetNullableById(3);
+            editors[0].User = CreateValidEntities.User(1);
+            editors[0].User.LoginId = "me";
+            var fakedEditors = new FakeEditors();
+            fakedEditors.Records(3, EditorRepository, editors);
+            var reviewedProposals = new List<ReviewedProposal>();
+            reviewedProposals.Add(CreateValidEntities.ReviewedProposal(1));
+            reviewedProposals[0].Editor = EditorRepository.GetNullableById(1);
+            reviewedProposals[0].Proposal = ProposalRepository.GetNullableById(2);
+            reviewedProposals[0].FirstViewedDate = new DateTime(2011, 01, 01);
+            var fakedReviewedProposal = new FakeReviewedProposals();
+            fakedReviewedProposal.Records(0, ReviewedProposalRepository, reviewedProposals);
+
+            var comments = new List<Comment>();
+            comments.Add(CreateValidEntities.Comment(1));
+            comments[0].Editor = EditorRepository.GetNullableById(1);
+            comments[0].Proposal = ProposalRepository.GetNullableById(2);
+            var fakedComments = new FakeComments();
+            fakedComments.Records(0, CommentRepository, comments);
+
+            var proposalToEdit = CreateValidEntities.Proposal(1);
+            proposalToEdit.IsNotified = true;
+            proposalToEdit.IsApproved = false;
+            proposalToEdit.IsDenied = false;
+
+            #endregion Arrange
+
+            #region Act
+            var result = Controller.AdminEdit(1, 3, proposalToEdit, CreateValidEntities.Comment(1), StaticValues.RB_Decission_NotDecided)
+                .AssertViewRendered()
+                .WithViewData<ProposalAdminViewModel>();
+            #endregion Act
+
+            #region Assert
+            Controller.ModelState.AssertErrorsAre("You should not change the Decission if they have been notified.");
+            Assert.IsNotNull(result);
+            Assert.IsNotNull(result.Proposal);
+            Assert.IsNotNull(result.Comment);
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestAdminEditPostWhenAlreadyNotifiedDoesNotSave3()
+        {
+            #region Arrange
+            var calls = new FakeCallForProposals();
+            calls.Records(3, CallForProposalRepository);
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "me");
+            AccessService.Expect(a => a.HasAccess(null, 3, "me")).Return(true).Repeat.Any();
+            AccessService.Expect(
+                a =>
+                a.HasSameId(Arg<Template>.Is.Anything, Arg<CallForProposal>.Is.Anything, Arg<int?>.Is.Anything,
+                            Arg<int?>.Is.Anything)).Return(true).Repeat.Any();
+            var proposalList = new List<Proposal>();
+            proposalList.Add(CreateValidEntities.Proposal(1));
+            proposalList[0].IsNotified = true;
+            proposalList[0].IsApproved = false;
+            proposalList[0].IsDenied = false;
+            proposalList[0].CallForProposal = CreateValidEntities.CallForProposal(1);
+
+            var proposals = new FakeProposals();
+            proposals.Records(2, ProposalRepository, proposalList);
+
+            var editors = new List<Editor>();
+            editors.Add(CreateValidEntities.Editor(1));
+            editors[0].CallForProposal = CallForProposalRepository.GetNullableById(3);
+            editors[0].User = CreateValidEntities.User(1);
+            editors[0].User.LoginId = "me";
+            var fakedEditors = new FakeEditors();
+            fakedEditors.Records(3, EditorRepository, editors);
+            var reviewedProposals = new List<ReviewedProposal>();
+            reviewedProposals.Add(CreateValidEntities.ReviewedProposal(1));
+            reviewedProposals[0].Editor = EditorRepository.GetNullableById(1);
+            reviewedProposals[0].Proposal = ProposalRepository.GetNullableById(2);
+            reviewedProposals[0].FirstViewedDate = new DateTime(2011, 01, 01);
+            var fakedReviewedProposal = new FakeReviewedProposals();
+            fakedReviewedProposal.Records(0, ReviewedProposalRepository, reviewedProposals);
+
+            var comments = new List<Comment>();
+            comments.Add(CreateValidEntities.Comment(1));
+            comments[0].Editor = EditorRepository.GetNullableById(1);
+            comments[0].Proposal = ProposalRepository.GetNullableById(2);
+            var fakedComments = new FakeComments();
+            fakedComments.Records(0, CommentRepository, comments);
+
+            var proposalToEdit = CreateValidEntities.Proposal(1);
+            proposalToEdit.IsNotified = true;
+            proposalToEdit.IsApproved = true;
+            proposalToEdit.IsDenied = false;
+
+            #endregion Arrange
+
+            #region Act
+            var result = Controller.AdminEdit(1, 3, proposalToEdit, CreateValidEntities.Comment(1), StaticValues.RB_Decission_Approved)
+                .AssertViewRendered()
+                .WithViewData<ProposalAdminViewModel>();
+            #endregion Act
+
+            #region Assert
+            Controller.ModelState.AssertErrorsAre("You should not change the Decission if they have been notified.", "Can not approve an unsubmitted proposal");
+            Assert.IsNotNull(result);
+            Assert.IsNotNull(result.Proposal);
+            Assert.IsNotNull(result.Comment);
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestAdminEditPostWhenApprovedAndUnsubmitted()
+        {
+            #region Arrange
+            var calls = new FakeCallForProposals();
+            calls.Records(3, CallForProposalRepository);
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "me");
+            AccessService.Expect(a => a.HasAccess(null, 3, "me")).Return(true).Repeat.Any();
+            AccessService.Expect(
+                a =>
+                a.HasSameId(Arg<Template>.Is.Anything, Arg<CallForProposal>.Is.Anything, Arg<int?>.Is.Anything,
+                            Arg<int?>.Is.Anything)).Return(true).Repeat.Any();
+            var proposalList = new List<Proposal>();
+            proposalList.Add(CreateValidEntities.Proposal(1));
+            proposalList[0].CallForProposal = CreateValidEntities.CallForProposal(1);
+
+            var proposals = new FakeProposals();
+            proposals.Records(2, ProposalRepository, proposalList);
+
+            var editors = new List<Editor>();
+            editors.Add(CreateValidEntities.Editor(1));
+            editors[0].CallForProposal = CallForProposalRepository.GetNullableById(3);
+            editors[0].User = CreateValidEntities.User(1);
+            editors[0].User.LoginId = "me";
+            var fakedEditors = new FakeEditors();
+            fakedEditors.Records(3, EditorRepository, editors);
+            var reviewedProposals = new List<ReviewedProposal>();
+            reviewedProposals.Add(CreateValidEntities.ReviewedProposal(1));
+            reviewedProposals[0].Editor = EditorRepository.GetNullableById(1);
+            reviewedProposals[0].Proposal = ProposalRepository.GetNullableById(2);
+            reviewedProposals[0].FirstViewedDate = new DateTime(2011, 01, 01);
+            var fakedReviewedProposal = new FakeReviewedProposals();
+            fakedReviewedProposal.Records(0, ReviewedProposalRepository, reviewedProposals);
+
+            var comments = new List<Comment>();
+            comments.Add(CreateValidEntities.Comment(1));
+            comments[0].Editor = EditorRepository.GetNullableById(1);
+            comments[0].Proposal = ProposalRepository.GetNullableById(2);
+            var fakedComments = new FakeComments();
+            fakedComments.Records(0, CommentRepository, comments);
+
+            var proposalToEdit = CreateValidEntities.Proposal(1);
+            proposalToEdit.IsSubmitted = false;
+            //proposalToEdit.IsApproved = true;
+
+
+            #endregion Arrange
+
+            #region Act
+            var result = Controller.AdminEdit(1, 3, proposalToEdit, CreateValidEntities.Comment(1), StaticValues.RB_Decission_Approved)
+                .AssertViewRendered()
+                .WithViewData<ProposalAdminViewModel>();
+            #endregion Act
+
+            #region Assert
+            Controller.ModelState.AssertErrorsAre("Can not approve an unsubmitted proposal");
+            Assert.IsNotNull(result);
+            Assert.IsNotNull(result.Proposal);
+            Assert.IsNotNull(result.Comment);
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestAdminEditPostWhenWasSubmittedAndUnsubmittingAndApproved()
+        {
+            #region Arrange
+            var calls = new FakeCallForProposals();
+            calls.Records(3, CallForProposalRepository);
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "me");
+            AccessService.Expect(a => a.HasAccess(null, 3, "me")).Return(true).Repeat.Any();
+            AccessService.Expect(
+                a =>
+                a.HasSameId(Arg<Template>.Is.Anything, Arg<CallForProposal>.Is.Anything, Arg<int?>.Is.Anything,
+                            Arg<int?>.Is.Anything)).Return(true).Repeat.Any();
+            var proposalList = new List<Proposal>();
+            proposalList.Add(CreateValidEntities.Proposal(1));
+            proposalList[0].CallForProposal = CreateValidEntities.CallForProposal(1);
+            proposalList[0].IsSubmitted = true;
+
+            var proposals = new FakeProposals();
+            proposals.Records(2, ProposalRepository, proposalList);
+
+            var editors = new List<Editor>();
+            editors.Add(CreateValidEntities.Editor(1));
+            editors[0].CallForProposal = CallForProposalRepository.GetNullableById(3);
+            editors[0].User = CreateValidEntities.User(1);
+            editors[0].User.LoginId = "me";
+            var fakedEditors = new FakeEditors();
+            fakedEditors.Records(3, EditorRepository, editors);
+            var reviewedProposals = new List<ReviewedProposal>();
+            reviewedProposals.Add(CreateValidEntities.ReviewedProposal(1));
+            reviewedProposals[0].Editor = EditorRepository.GetNullableById(1);
+            reviewedProposals[0].Proposal = ProposalRepository.GetNullableById(2);
+            reviewedProposals[0].FirstViewedDate = new DateTime(2011, 01, 01);
+            var fakedReviewedProposal = new FakeReviewedProposals();
+            fakedReviewedProposal.Records(0, ReviewedProposalRepository, reviewedProposals);
+
+            var comments = new List<Comment>();
+            comments.Add(CreateValidEntities.Comment(1));
+            comments[0].Editor = EditorRepository.GetNullableById(1);
+            comments[0].Proposal = ProposalRepository.GetNullableById(2);
+            var fakedComments = new FakeComments();
+            fakedComments.Records(0, CommentRepository, comments);
+
+            var proposalToEdit = CreateValidEntities.Proposal(1);
+            proposalToEdit.IsSubmitted = false;
+            //proposalToEdit.IsApproved = true;
+
+
+            #endregion Arrange
+
+            #region Act
+            var result = Controller.AdminEdit(1, 3, proposalToEdit, CreateValidEntities.Comment(1), StaticValues.RB_Decission_Approved)
+                .AssertViewRendered()
+                .WithViewData<ProposalAdminViewModel>();
+            #endregion Act
+
+            #region Assert
+            Controller.ModelState.AssertErrorsAre("Can not approve an unsubmitted proposal", "Can not unsubmit unless the decission is undecided");
+            Assert.IsNotNull(result);
+            Assert.IsNotNull(result.Proposal);
+            Assert.IsNotNull(result.Comment);
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestAdminEditPostSaves1()
+        {
+            #region Arrange
+            var callsFor = new List<CallForProposal>();
+            callsFor.Add(CreateValidEntities.CallForProposal(1));
+            callsFor[0].EmailTemplates = new List<EmailTemplate>();
+            callsFor[0].EmailTemplates.Add(CreateValidEntities.EmailTemplate(1));
+            callsFor[0].EmailTemplates[0].TemplateType = EmailTemplateType.ProposalUnsubmitted;
+ 
+            var calls = new FakeCallForProposals();
+            calls.Records(3, CallForProposalRepository, callsFor);
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "me");
+            AccessService.Expect(a => a.HasAccess(null, 1, "me")).Return(true).Repeat.Any();
+            AccessService.Expect(
+                a =>
+                a.HasSameId(Arg<Template>.Is.Anything, Arg<CallForProposal>.Is.Anything, Arg<int?>.Is.Anything,
+                            Arg<int?>.Is.Anything)).Return(true).Repeat.Any();
+            var proposalList = new List<Proposal>();
+            proposalList.Add(CreateValidEntities.Proposal(1));
+            proposalList[0].CallForProposal = CreateValidEntities.CallForProposal(1);
+            proposalList[0].IsSubmitted = true;
+
+            var proposals = new FakeProposals();
+            proposals.Records(2, ProposalRepository, proposalList);
+
+            var editors = new List<Editor>();
+            editors.Add(CreateValidEntities.Editor(1));
+            editors[0].CallForProposal = CallForProposalRepository.GetNullableById(1);
+            editors[0].User = CreateValidEntities.User(1);
+            editors[0].User.LoginId = "me";
+            var fakedEditors = new FakeEditors();
+            fakedEditors.Records(3, EditorRepository, editors);
+            var reviewedProposals = new List<ReviewedProposal>();
+            reviewedProposals.Add(CreateValidEntities.ReviewedProposal(1));
+            reviewedProposals[0].Editor = EditorRepository.GetNullableById(1);
+            reviewedProposals[0].Proposal = ProposalRepository.GetNullableById(2);
+            reviewedProposals[0].FirstViewedDate = new DateTime(2011, 01, 01);
+            var fakedReviewedProposal = new FakeReviewedProposals();
+            fakedReviewedProposal.Records(0, ReviewedProposalRepository, reviewedProposals);
+
+            var comments = new List<Comment>();
+            comments.Add(CreateValidEntities.Comment(1));
+            comments[0].Editor = EditorRepository.GetNullableById(1);
+            comments[0].Proposal = ProposalRepository.GetNullableById(2);
+            var fakedComments = new FakeComments();
+            fakedComments.Records(0, CommentRepository, comments);
+
+            var proposalToEdit = CreateValidEntities.Proposal(1);
+            proposalToEdit.IsSubmitted = false;
+            //proposalToEdit.IsApproved = true;
+
+            EmailService.Expect(a => a.SendProposalEmail(
+                Arg<HttpRequestBase>.Is.Anything,
+                Arg<UrlHelper>.Is.Anything,
+                Arg<Proposal>.Is.Anything,
+                Arg<EmailTemplate>.Is.Anything,
+                Arg<bool>.Is.Anything)).Repeat.Any();
+            #endregion Arrange
+
+            #region Act
+            Controller.AdminEdit(1, 1, proposalToEdit, CreateValidEntities.Comment(1),StaticValues.RB_Decission_NotDecided)
+                .AssertActionRedirect()
+                .ToAction<ProposalController>(a => a.AdminIndex(1, null, null, null, null, null));
+            #endregion Act
+
+            #region Assert            
+            Assert.AreEqual("Proposal successfully edited", Controller.Message);            
+            ProposalRepository.AssertWasCalled(a => a.EnsurePersistent(Arg<Proposal>.Is.Anything));
+            CommentRepository.AssertWasCalled(a => a.EnsurePersistent(Arg<Comment>.Is.Anything));
+            EmailService.AssertWasCalled(a => a.SendProposalEmail(
+                Arg<HttpRequestBase>.Is.Anything,
+                Arg<UrlHelper>.Is.Anything,
+                Arg<Proposal>.Is.Anything,
+                Arg<EmailTemplate>.Is.Anything,
+                Arg<bool>.Is.Anything));
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestAdminEditPostSaves2()
+        {
+            #region Arrange
+            var callsFor = new List<CallForProposal>();
+            callsFor.Add(CreateValidEntities.CallForProposal(1));
+            callsFor[0].EmailTemplates = new List<EmailTemplate>();
+            callsFor[0].EmailTemplates.Add(CreateValidEntities.EmailTemplate(1));
+            callsFor[0].EmailTemplates[0].TemplateType = EmailTemplateType.ProposalUnsubmitted;
+
+            var calls = new FakeCallForProposals();
+            calls.Records(3, CallForProposalRepository, callsFor);
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "me");
+            AccessService.Expect(a => a.HasAccess(null, 1, "me")).Return(true).Repeat.Any();
+            AccessService.Expect(
+                a =>
+                a.HasSameId(Arg<Template>.Is.Anything, Arg<CallForProposal>.Is.Anything, Arg<int?>.Is.Anything,
+                            Arg<int?>.Is.Anything)).Return(true).Repeat.Any();
+            var proposalList = new List<Proposal>();
+            proposalList.Add(CreateValidEntities.Proposal(1));
+            proposalList[0].CallForProposal = CreateValidEntities.CallForProposal(1);
+            proposalList[0].IsSubmitted = true;
+
+            var proposals = new FakeProposals();
+            proposals.Records(2, ProposalRepository, proposalList);
+
+            var editors = new List<Editor>();
+            editors.Add(CreateValidEntities.Editor(1));
+            editors[0].CallForProposal = CallForProposalRepository.GetNullableById(1);
+            editors[0].User = CreateValidEntities.User(1);
+            editors[0].User.LoginId = "me";
+            var fakedEditors = new FakeEditors();
+            fakedEditors.Records(3, EditorRepository, editors);
+            var reviewedProposals = new List<ReviewedProposal>();
+            reviewedProposals.Add(CreateValidEntities.ReviewedProposal(1));
+            reviewedProposals[0].Editor = EditorRepository.GetNullableById(1);
+            reviewedProposals[0].Proposal = ProposalRepository.GetNullableById(2);
+            reviewedProposals[0].FirstViewedDate = new DateTime(2011, 01, 01);
+            var fakedReviewedProposal = new FakeReviewedProposals();
+            fakedReviewedProposal.Records(0, ReviewedProposalRepository, reviewedProposals);
+
+            var comments = new List<Comment>();
+            comments.Add(CreateValidEntities.Comment(1));
+            comments[0].Editor = EditorRepository.GetNullableById(1);
+            comments[0].Proposal = ProposalRepository.GetNullableById(2);
+            var fakedComments = new FakeComments();
+            fakedComments.Records(0, CommentRepository, comments);
+
+            var proposalToEdit = CreateValidEntities.Proposal(1);
+            proposalToEdit.IsSubmitted = false;
+            //proposalToEdit.IsApproved = true;
+
+            EmailService.Expect(a => a.SendProposalEmail(
+                Arg<HttpRequestBase>.Is.Anything,
+                Arg<UrlHelper>.Is.Anything,
+                Arg<Proposal>.Is.Anything,
+                Arg<EmailTemplate>.Is.Anything,
+                Arg<bool>.Is.Anything)).Repeat.Any();
+            #endregion Arrange
+
+            #region Act
+            Controller.AdminEdit(1, 1, proposalToEdit, new Comment(proposalList[0], editors[0], null), StaticValues.RB_Decission_NotDecided)
+                .AssertActionRedirect()
+                .ToAction<ProposalController>(a => a.AdminIndex(1, null, null, null, null, null));
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual("Proposal successfully edited", Controller.Message);
+            ProposalRepository.AssertWasCalled(a => a.EnsurePersistent(Arg<Proposal>.Is.Anything));
+            CommentRepository.AssertWasNotCalled(a => a.EnsurePersistent(Arg<Comment>.Is.Anything));
+            EmailService.AssertWasCalled(a => a.SendProposalEmail(
+                Arg<HttpRequestBase>.Is.Anything,
+                Arg<UrlHelper>.Is.Anything,
+                Arg<Proposal>.Is.Anything,
+                Arg<EmailTemplate>.Is.Anything,
+                Arg<bool>.Is.Anything));
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestAdminEditPostSaves3()
+        {
+            #region Arrange
+            var callsFor = new List<CallForProposal>();
+            callsFor.Add(CreateValidEntities.CallForProposal(1));
+            callsFor[0].EmailTemplates = new List<EmailTemplate>();
+            callsFor[0].EmailTemplates.Add(CreateValidEntities.EmailTemplate(1));
+            callsFor[0].EmailTemplates[0].TemplateType = EmailTemplateType.ProposalUnsubmitted;
+
+            var calls = new FakeCallForProposals();
+            calls.Records(3, CallForProposalRepository, callsFor);
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "me");
+            AccessService.Expect(a => a.HasAccess(null, 1, "me")).Return(true).Repeat.Any();
+            AccessService.Expect(
+                a =>
+                a.HasSameId(Arg<Template>.Is.Anything, Arg<CallForProposal>.Is.Anything, Arg<int?>.Is.Anything,
+                            Arg<int?>.Is.Anything)).Return(true).Repeat.Any();
+            var proposalList = new List<Proposal>();
+            proposalList.Add(CreateValidEntities.Proposal(1));
+            proposalList[0].CallForProposal = CreateValidEntities.CallForProposal(1);
+            proposalList[0].IsSubmitted = true;
+
+            var proposals = new FakeProposals();
+            proposals.Records(2, ProposalRepository, proposalList);
+
+            var editors = new List<Editor>();
+            editors.Add(CreateValidEntities.Editor(1));
+            editors[0].CallForProposal = CallForProposalRepository.GetNullableById(1);
+            editors[0].User = CreateValidEntities.User(1);
+            editors[0].User.LoginId = "me";
+            var fakedEditors = new FakeEditors();
+            fakedEditors.Records(3, EditorRepository, editors);
+            var reviewedProposals = new List<ReviewedProposal>();
+            reviewedProposals.Add(CreateValidEntities.ReviewedProposal(1));
+            reviewedProposals[0].Editor = EditorRepository.GetNullableById(1);
+            reviewedProposals[0].Proposal = ProposalRepository.GetNullableById(2);
+            reviewedProposals[0].FirstViewedDate = new DateTime(2011, 01, 01);
+            var fakedReviewedProposal = new FakeReviewedProposals();
+            fakedReviewedProposal.Records(0, ReviewedProposalRepository, reviewedProposals);
+
+            var comments = new List<Comment>();
+            comments.Add(CreateValidEntities.Comment(1));
+            comments[0].Editor = EditorRepository.GetNullableById(1);
+            comments[0].Proposal = ProposalRepository.GetNullableById(2);
+            var fakedComments = new FakeComments();
+            fakedComments.Records(0, CommentRepository, comments);
+
+            var proposalToEdit = CreateValidEntities.Proposal(1);
+            proposalToEdit.IsSubmitted = true;
+            //proposalToEdit.IsApproved = true;
+
+            EmailService.Expect(a => a.SendProposalEmail(
+                Arg<HttpRequestBase>.Is.Anything,
+                Arg<UrlHelper>.Is.Anything,
+                Arg<Proposal>.Is.Anything,
+                Arg<EmailTemplate>.Is.Anything,
+                Arg<bool>.Is.Anything)).Repeat.Any();
+            #endregion Arrange
+
+            #region Act
+            Controller.AdminEdit(1, 1, proposalToEdit, new Comment(proposalList[0], editors[0], null), StaticValues.RB_Decission_NotDecided)
+                .AssertActionRedirect()
+                .ToAction<ProposalController>(a => a.AdminIndex(1, null, null, null, null, null));
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual("Proposal successfully edited", Controller.Message);
+            ProposalRepository.AssertWasCalled(a => a.EnsurePersistent(Arg<Proposal>.Is.Anything));
+            CommentRepository.AssertWasNotCalled(a => a.EnsurePersistent(Arg<Comment>.Is.Anything));
+            EmailService.AssertWasNotCalled(a => a.SendProposalEmail(
+                Arg<HttpRequestBase>.Is.Anything,
+                Arg<UrlHelper>.Is.Anything,
+                Arg<Proposal>.Is.Anything,
+                Arg<EmailTemplate>.Is.Anything,
+                Arg<bool>.Is.Anything));
+            #endregion Assert
         }
         #endregion AdminEdit Post Tests
     }

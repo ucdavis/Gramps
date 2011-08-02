@@ -430,7 +430,7 @@ namespace Gramps.Controllers
             proposalToEdit.TransferValidationMessagesTo(ModelState);
             commentToEdit.TransferValidationMessagesTo(ModelState);
 
-            if (proposalToEdit.IsApproved && proposalToEdit.IsDenied)
+            if (proposalToEdit.IsApproved && proposalToEdit.IsDenied) //Should not be able to happen
             {
                 ModelState.AddModelError("IsApproved", "IsApproved and IsDenied can not both be checked");
             }
@@ -447,7 +447,10 @@ namespace Gramps.Controllers
             if (ModelState.IsValid)
             {
                 _proposalRepository.EnsurePersistent(proposalToEdit);
-                Repository.OfType<Comment>().EnsurePersistent(commentToEdit);
+                if(commentToEdit.Text != null) //This shouldn't break anything...
+                {
+                    Repository.OfType<Comment>().EnsurePersistent(commentToEdit);
+                }
 
                 if (saveIsSubmitted && !proposalToEdit.IsSubmitted)
                 {
