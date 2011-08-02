@@ -650,6 +650,7 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
             #endregion Act
 
             #region Assert
+            Assert.Inconclusive("Finish and continue these tests");
             Controller.ModelState.AssertErrorsAre("");
             Assert.AreEqual("", Controller.Message);
             Assert.IsNotNull(result);
