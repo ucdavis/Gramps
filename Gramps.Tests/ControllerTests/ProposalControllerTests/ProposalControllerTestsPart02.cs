@@ -65,6 +65,12 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
             #region Arrange
             var calls = new FakeCallForProposals();
             calls.Records(3, CallForProposalRepository);
+            var proposals = new List<Proposal>();
+            proposals.Add(CreateValidEntities.Proposal(1));
+            proposals[0].CallForProposal = CallForProposalRepository.GetNullableById(2); //different
+            var fakeProposals = new FakeProposals();
+            fakeProposals.Records(2, ProposalRepository, proposals);
+
             Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "me");
             AccessService.Expect(a => a.HasAccess(null, 3, "me")).Return(true).Repeat.Any();
             AccessService.Expect(

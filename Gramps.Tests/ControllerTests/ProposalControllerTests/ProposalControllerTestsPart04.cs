@@ -273,6 +273,12 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
                 a =>
                 a.HasSameId(Arg<Template>.Is.Anything, Arg<CallForProposal>.Is.Anything, Arg<int?>.Is.Anything,
                             Arg<int?>.Is.Anything)).Return(false).Repeat.Any();
+
+            var proposals = new List<Proposal>();
+            proposals.Add(CreateValidEntities.Proposal(1));
+            proposals[0].CallForProposal = CallForProposalRepository.GetNullableById(2); //different
+            var fakeProposals = new FakeProposals();
+            fakeProposals.Records(2, ProposalRepository, proposals);
             #endregion Arrange
 
             #region Act
@@ -486,6 +492,11 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
                 a =>
                 a.HasSameId(Arg<Template>.Is.Anything, Arg<CallForProposal>.Is.Anything, Arg<int?>.Is.Anything,
                             Arg<int?>.Is.Anything)).Return(false).Repeat.Any();
+            var proposals = new List<Proposal>();
+            proposals.Add(CreateValidEntities.Proposal(1));
+            proposals[0].CallForProposal = CallForProposalRepository.GetNullableById(2); //different
+            var fakeProposals = new FakeProposals();
+            fakeProposals.Records(2, ProposalRepository, proposals);
             #endregion Arrange
 
             #region Act

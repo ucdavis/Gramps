@@ -127,8 +127,10 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
             var calls = new List<CallForProposal>();
             calls.Add(CreateValidEntities.CallForProposal(1));            
             calls[0].Editors = editors;
+            calls.Add(CreateValidEntities.CallForProposal(2));
+            calls[1].Editors = editors;
             var fakeCalls = new FakeCallForProposals();
-            fakeCalls.Records(2, CallForProposalRepository, calls);
+            fakeCalls.Records(1, CallForProposalRepository, calls);
             
             foreach (var editor in editors)
             {
@@ -144,6 +146,8 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
                 proposals[i].CallForProposal = CallForProposalRepository.GetNullableById(1);
                 proposals[i].Sequence = i + 1;
             }
+
+            proposals[9].CallForProposal = CallForProposalRepository.GetNullableById(2);
 
             proposals[3].ReviewedByEditors.Add(new ReviewedProposal(proposals[3], EditorRepository.GetNullableById(2)));
             proposals[3].ReviewedByEditors[0].LastViewedDate = new DateTime(2011, 01, 20);

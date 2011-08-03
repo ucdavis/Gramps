@@ -106,9 +106,18 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
         /// #9
         /// </summary>
         [TestMethod]
-        public void TestReviewerIndexPostMapping()
+        public void TestReviewerIndexMapping()
         {
             "~/Proposal/ReviewerIndex/5".ShouldMapTo<ProposalController>(a => a.ReviewerIndex(5, null, null));
+        }
+
+        /// <summary>
+        /// #10
+        /// </summary>
+        [TestMethod]
+        public void TestReviewerDetailsMapping()
+        {
+            "~/Proposal/ReviewerDetails/5".ShouldMapTo<ProposalController>(a => a.ReviewerDetails(5, 6), true);
         }
         #endregion Mapping Tests
     }
