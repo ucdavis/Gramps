@@ -149,7 +149,7 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
 
             #region Assert
             Assert.Inconclusive("Tests are still being written. When done, remove this line.");
-            Assert.AreEqual(8, result.Count(), "It looks like a method was added or removed from the controller.");
+            Assert.AreEqual(9, result.Count(), "It looks like a method was added or removed from the controller.");
             #endregion Assert
         }
 
@@ -416,6 +416,27 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
             #endregion Assert
         }
 
+        /// <summary>
+        /// #9
+        /// </summary>
+        [TestMethod]
+        public void TestControllerMethodReviewerIndexContainsExpectedAttributes()
+        {
+            #region Arrange
+            var controllerClass = _controllerClass;
+            var controllerMethod = controllerClass.GetMethod("ReviewerIndex");
+            #endregion Arrange
+
+            #region Act
+            var expectedAttribute = controllerMethod.GetCustomAttributes(true).OfType<PublicAuthorize>();
+            var allAttributes = controllerMethod.GetCustomAttributes(true);
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual(1, expectedAttribute.Count(), "PublicAuthorize not found");
+            Assert.AreEqual(1, allAttributes.Count());
+            #endregion Assert
+        }
 
         #endregion Controller Method Tests
 

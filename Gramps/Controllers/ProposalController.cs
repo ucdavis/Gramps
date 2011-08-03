@@ -476,6 +476,13 @@ namespace Gramps.Controllers
         #endregion Admin(User) Methods
 
         #region Reviewer Methods
+        /// <summary>
+        /// #9
+        /// </summary>
+        /// <param name="id">CallForProposal Id</param>
+        /// <param name="filterDecission"></param>
+        /// <param name="filterEmail"></param>
+        /// <returns></returns>
         [PublicAuthorize]
         public ActionResult ReviewerIndex(int id, string filterDecission, string filterEmail)
         {

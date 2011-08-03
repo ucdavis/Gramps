@@ -101,6 +101,15 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
         {
             "~/Proposal/AdminEdit/5".ShouldMapTo<ProposalController>(a => a.AdminEdit(5, 5, null, null, string.Empty), true);
         }
+
+        /// <summary>
+        /// #9
+        /// </summary>
+        [TestMethod]
+        public void TestReviewerIndexPostMapping()
+        {
+            "~/Proposal/ReviewerIndex/5".ShouldMapTo<ProposalController>(a => a.ReviewerIndex(5, null, null));
+        }
         #endregion Mapping Tests
     }
 }

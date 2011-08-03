@@ -225,7 +225,7 @@ namespace Gramps.Controllers.ViewModels
                 SubmittedDate = x.SubmittedDate,
                 WarnedOfClosing = x.WasWarned,
                 NotifiedOfDecission = x.IsNotified,
-                Seq = x .Sequence
+                Seq = x.Sequence
             }).ToList();
             foreach (var proposal in viewModel.Proposals)
             {

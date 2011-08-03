@@ -116,6 +116,55 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
             fakeProposals.Records(3, ProposalRepository, proposals);
 
         }
+        public void SetupDataForTests2()
+        {
+            var editors = new List<Editor>();
+            for (int i = 0; i < 3; i++)
+            {
+                editors.Add(CreateValidEntities.Editor(i + 1));
+            }
+
+            var calls = new List<CallForProposal>();
+            calls.Add(CreateValidEntities.CallForProposal(1));            
+            calls[0].Editors = editors;
+            var fakeCalls = new FakeCallForProposals();
+            fakeCalls.Records(2, CallForProposalRepository, calls);
+            
+            foreach (var editor in editors)
+            {
+                editor.CallForProposal = CallForProposalRepository.GetNullableById(1);
+            }
+            var fakeEditors = new FakeEditors();
+            fakeEditors.Records(0, EditorRepository, editors);
+
+            var proposals = new List<Proposal>();
+            for (int i = 0; i < 10; i++)
+            {
+                proposals.Add(CreateValidEntities.Proposal(i + 1));
+                proposals[i].CallForProposal = CallForProposalRepository.GetNullableById(1);
+                proposals[i].Sequence = i + 1;
+            }
+
+            proposals[3].ReviewedByEditors.Add(new ReviewedProposal(proposals[3], EditorRepository.GetNullableById(2)));
+            proposals[3].ReviewedByEditors[0].LastViewedDate = new DateTime(2011, 01, 20);
+
+            proposals[1].IsApproved = true;
+            proposals[1].IsNotified = true;
+            proposals[2].IsDenied = true;
+            proposals[3].IsSubmitted = true;
+            proposals[3].SubmittedDate = new DateTime(2011,02,3);
+            proposals[4].IsSubmitted = true;
+            proposals[4].SubmittedDate = new DateTime(2011, 02, 4);
+            proposals[4].IsApproved = true;
+            proposals[5].IsSubmitted = true;
+            proposals[5].SubmittedDate = new DateTime(2011, 02, 5);
+            proposals[5].IsDenied = true;
+            proposals[5].IsNotified = true;
+            proposals[5].WasWarned = true;
+
+            var fakeProposals = new FakeProposals();
+            fakeProposals.Records(0, ProposalRepository, proposals);
+        }
         #endregion Helpers
     }
 }
