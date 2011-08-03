@@ -161,6 +161,7 @@
     <Compile Include="ControllerTests\ProposalControllerTests\ProposalControllerTestsPart04.cs" />
     <Compile Include="ControllerTests\ProposalControllerTests\ProposalControllerTestsPart05.cs" />
     <Compile Include="ControllerTests\ProposalControllerTests\ProposalControllerTestsPart06.cs" />
+    <Compile Include="ControllerTests\ProposalControllerTests\ProposalControllerTestsPart07.cs" />
     <Compile Include="ControllerTests\ProposalControllerTests\ProposalControllerTestsReflection.cs" />
     <Compile Include="Core\AbstractRepositoryTests.cs" />
     <Compile Include="Core\Extensions\AssertExtensions.cs" />

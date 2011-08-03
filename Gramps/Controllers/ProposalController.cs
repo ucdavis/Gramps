@@ -549,6 +549,12 @@ namespace Gramps.Controllers
                 return this.RedirectToAction<ProposalController>(a => a.Home());
             }
 
+            if (!proposal.IsSubmitted)
+            {
+                Message = "Proposal Not Submitted Yet";
+                return this.RedirectToAction<ProposalController>(a => a.Home());
+            }
+
 
             var editor = Repository.OfType<Editor>().Queryable.Where(a => a.CallForProposal == callforproposal && a.ReviewerEmail == CurrentUser.Identity.Name).First();
             var reviewed = Repository.OfType<ReviewedProposal>().Queryable.Where(a => a.Proposal == proposal && a.Editor == editor).FirstOrDefault();
@@ -567,6 +573,12 @@ namespace Gramps.Controllers
             return View(viewModel);
         }
 
+        /// <summary>
+        /// #11
+        /// </summary>
+        /// <param name="id">Proposal Id</param>
+        /// <param name="callForProposalId">CallForProposal Id</param>
+        /// <returns></returns>
         [PublicAuthorize]
         public ActionResult ReviewerDownload(int id, int callForProposalId)
         {
@@ -595,6 +607,12 @@ namespace Gramps.Controllers
             if (!_accessService.HasSameId(null, proposal.CallForProposal, null, callForProposalId))
             {
                 Message = "You do not have access to that.";
+                return this.RedirectToAction<ProposalController>(a => a.Home());
+            }
+
+            if (!proposal.IsSubmitted)
+            {
+                Message = "Proposal Not Submitted Yet";
                 return this.RedirectToAction<ProposalController>(a => a.Home());
             }
 

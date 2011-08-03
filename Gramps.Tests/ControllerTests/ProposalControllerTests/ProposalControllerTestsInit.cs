@@ -118,6 +118,7 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
         }
         public void SetupDataForTests2()
         {
+
             var editors = new List<Editor>();
             for (int i = 0; i < 3; i++)
             {
@@ -149,8 +150,15 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
 
             proposals[9].CallForProposal = CallForProposalRepository.GetNullableById(2);
 
-            proposals[3].ReviewedByEditors.Add(new ReviewedProposal(proposals[3], EditorRepository.GetNullableById(2)));
-            proposals[3].ReviewedByEditors[0].LastViewedDate = new DateTime(2011, 01, 20);
+            var reviewedProposals = new List<ReviewedProposal>();
+            reviewedProposals.Add(new ReviewedProposal(proposals[3], EditorRepository.GetNullableById(2)));
+            reviewedProposals[0].LastViewedDate = new DateTime(2011, 01, 20);
+            reviewedProposals[0].Proposal.SetIdTo(4);
+            var fakeReviewedProposals = new FakeReviewedProposals();
+            fakeReviewedProposals.Records(3, ReviewedProposalRepository, reviewedProposals);
+
+            proposals[3].ReviewedByEditors.Add(ReviewedProposalRepository.GetNullableById(1));
+        
 
             proposals[1].IsApproved = true;
             proposals[1].IsNotified = true;
@@ -160,11 +168,16 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
             proposals[4].IsSubmitted = true;
             proposals[4].SubmittedDate = new DateTime(2011, 02, 4);
             proposals[4].IsApproved = true;
+            proposals[4].File = CreateValidEntities.File(1);
+            proposals[4].File.Contents = null;
             proposals[5].IsSubmitted = true;
             proposals[5].SubmittedDate = new DateTime(2011, 02, 5);
             proposals[5].IsDenied = true;
             proposals[5].IsNotified = true;
             proposals[5].WasWarned = true;
+            proposals[5].File = CreateValidEntities.File(44);
+            proposals[5].File.Contents = new byte[]{2,3,6};
+            proposals[5].File.ContentType = "FakeType";
 
             var fakeProposals = new FakeProposals();
             fakeProposals.Records(0, ProposalRepository, proposals);
