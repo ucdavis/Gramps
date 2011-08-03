@@ -107,11 +107,7 @@ namespace Gramps.Controllers
                 Message = "You do not have access to that.";
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
-            if(!_accessService.HasSameId(null, callforproposal, null, callForProposalId))
-            {
-                Message = "You do not have access to that.";
-                return this.RedirectToAction<HomeController>(a => a.Index());
-            }
+
 
             var proposal = _proposalRepository.GetNullableById(id);
 
@@ -120,6 +116,13 @@ namespace Gramps.Controllers
                 Message = "Proposal Not Found";
                 return this.RedirectToAction(a => a.Index());
             }
+
+            if (!_accessService.HasSameId(null, proposal.CallForProposal, null, callForProposalId))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+
             var editor = Repository.OfType<Editor>().Queryable.Where(a => a.CallForProposal == callforproposal && a.User != null && a.User.LoginId == CurrentUser.Identity.Name).Single();
             var reviewed = Repository.OfType<ReviewedProposal>().Queryable.Where(a => a.Proposal == proposal && a.Editor == editor).FirstOrDefault();
             if (reviewed == null)
@@ -158,11 +161,7 @@ namespace Gramps.Controllers
                 Message = "You do not have access to that.";
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
-            if (!_accessService.HasSameId(null, callforproposal, null, callForProposalId))
-            {
-                Message = "You do not have access to that.";
-                return this.RedirectToAction<HomeController>(a => a.Index());
-            }
+
 
             var proposal = _proposalRepository.GetNullableById(id);
 
@@ -170,6 +169,12 @@ namespace Gramps.Controllers
             {
                 Message = "Proposal Not Found";
                 return this.RedirectToAction(a => a.Index());
+            }
+            
+            if (!_accessService.HasSameId(null, proposal.CallForProposal, null, callForProposalId))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
             if (proposal.File == null || proposal.File.Contents == null)
@@ -311,11 +316,7 @@ namespace Gramps.Controllers
                 Message = "You do not have access to that.";
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
-            if (!_accessService.HasSameId(null, callforproposal, null, callForProposalId))
-            {
-                Message = "You do not have access to that.";
-                return this.RedirectToAction<HomeController>(a => a.Index());
-            }
+
 
             var proposal = _proposalRepository.GetNullableById(id);
 
@@ -323,6 +324,12 @@ namespace Gramps.Controllers
             {
                 Message = "Proposal Not Found";
                 return this.RedirectToAction(a => a.Index());
+            }
+
+            if (!_accessService.HasSameId(null, proposal.CallForProposal, null, callForProposalId))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
             var editor = Repository.OfType<Editor>().Queryable.Where(a => a.CallForProposal == callforproposal && a.User != null && a.User.LoginId == CurrentUser.Identity.Name).Single();
@@ -371,11 +378,7 @@ namespace Gramps.Controllers
                 Message = "You do not have access to that.";
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
-            if (!_accessService.HasSameId(null, callforproposal, null, callForProposalId))
-            {
-                Message = "You do not have access to that.";
-                return this.RedirectToAction<HomeController>(a => a.Index());
-            }
+
 
             var proposalToEdit = _proposalRepository.GetNullableById(id);
 
@@ -383,6 +386,12 @@ namespace Gramps.Controllers
             {
                 Message = "Proposal Not Found";
                 return this.RedirectToAction(a => a.Index());
+            }
+
+            if (!_accessService.HasSameId(null, proposalToEdit.CallForProposal, null, callForProposalId))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
             var saveIsSubmitted = proposalToEdit.IsSubmitted;
@@ -503,6 +512,12 @@ namespace Gramps.Controllers
             return View(viewModel);
         }
 
+        /// <summary>
+        /// #10
+        /// </summary>
+        /// <param name="id">Proposal Id</param>
+        /// <param name="callForProposalId">CallForProposal Id</param>
+        /// <returns></returns>
         [PublicAuthorize]
         public ActionResult ReviewerDetails(int id, int callForProposalId)
         {
@@ -519,11 +534,6 @@ namespace Gramps.Controllers
                 return this.RedirectToAction<ProposalController>(a => a.Home());
             }
 
-            if (!_accessService.HasSameId(null, callforproposal, null, callForProposalId))
-            {
-                Message = "You do not have access to that.";
-                return this.RedirectToAction<ProposalController>(a => a.Home());
-            }
 
             var proposal = _proposalRepository.GetNullableById(id);
 
@@ -532,6 +542,14 @@ namespace Gramps.Controllers
                 Message = "Proposal Not Found";
                 return this.RedirectToAction<ProposalController>(a => a.Home());
             }
+
+            if (!_accessService.HasSameId(null, proposal.CallForProposal, null, callForProposalId))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<ProposalController>(a => a.Home());
+            }
+
+
             var editor = Repository.OfType<Editor>().Queryable.Where(a => a.CallForProposal == callforproposal && a.ReviewerEmail == CurrentUser.Identity.Name).First();
             var reviewed = Repository.OfType<ReviewedProposal>().Queryable.Where(a => a.Proposal == proposal && a.Editor == editor).FirstOrDefault();
             if (reviewed == null)
@@ -565,17 +583,18 @@ namespace Gramps.Controllers
                 return this.RedirectToAction<ProposalController>(a => a.Home());
             }
 
-            if (!_accessService.HasSameId(null, callforproposal, null, callForProposalId))
-            {
-                Message = "You do not have access to that.";
-                return this.RedirectToAction<ProposalController>(a => a.Home());
-            }
 
             var proposal = _proposalRepository.GetNullableById(id);
 
             if (proposal == null)
             {
                 Message = "Proposal Not Found";
+                return this.RedirectToAction<ProposalController>(a => a.Home());
+            }
+
+            if (!_accessService.HasSameId(null, proposal.CallForProposal, null, callForProposalId))
+            {
+                Message = "You do not have access to that.";
                 return this.RedirectToAction<ProposalController>(a => a.Home());
             }
 

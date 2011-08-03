@@ -64,11 +64,11 @@ namespace Gramps.Controllers
                 Message = "You do not have access to that.";
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
-            if (!_accessService.HasSameId(null, callforproposal, null, id))
-            {
-                Message = "You do not have access to that.";
-                return this.RedirectToAction<HomeController>(a => a.Index());
-            }
+            //if (!_accessService.HasSameId(null, callforproposal, null, id))
+            //{
+            //    Message = "You do not have access to that.";
+            //    return this.RedirectToAction<HomeController>(a => a.Index());
+            //}
 
             var viewModel = CallReportListViewModel.Create(Repository, callforproposal);
 
@@ -352,16 +352,18 @@ namespace Gramps.Controllers
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
-            if (!_accessService.HasSameId(null, callforProposal, null, callForProposalId))
-            {
-                Message = "You do not have access to that.";
-                return this.RedirectToAction<HomeController>(a => a.Index());
-            }
+
 
             var report = _reportRepository.GetNullableById(id);
             if (report == null)
             {
                 return this.RedirectToAction(a => a.CallIndex(callforProposal.Id));
+            }
+
+            if (!_accessService.HasSameId(null, report.CallForProposal, null, callForProposalId))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
             var viewModel = CallReportViewModel.Create(Repository, callforProposal);
@@ -390,16 +392,18 @@ namespace Gramps.Controllers
                 Message = "You do not have access to that.";
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
-            if (!_accessService.HasSameId(null, callforProposal, null, callForProposalId))
-            {
-                Message = "You do not have access to that.";
-                return this.RedirectToAction<HomeController>(a => a.Index());
-            }
+
 
             var reportToEdit = _reportRepository.GetNullableById(id);
             if (reportToEdit == null)
             {
                 return this.RedirectToAction(a => a.CallIndex(callforProposal.Id));
+            }
+
+            if (!_accessService.HasSameId(null, reportToEdit.CallForProposal, null, callForProposalId))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
             var temp = CommonCreate(report, templateId, callForProposalId, createReportParameters, showSubmitted);
