@@ -128,6 +128,15 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
         {
             "~/Proposal/ReviewerDownload/5".ShouldMapTo<ProposalController>(a => a.ReviewerDownload(5, 6), true);
         }
+
+        /// <summary>
+        /// #12
+        /// </summary>
+        [TestMethod]
+        public void TestCreateGetMapping()
+        {
+            "~/Proposal/Create/5".ShouldMapTo<ProposalController>(a => a.Create(5));
+        }
         #endregion Mapping Tests
     }
 }

@@ -629,8 +629,12 @@ namespace Gramps.Controllers
 
         #region Public Methods (Proposer)
                
-        //
-        // GET: /Proposal/Create
+        /// <summary>
+        /// #12
+        /// GET: /Proposal/Create
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public ActionResult Create(int id)
         {
             var callforproposal = Repository.OfType<CallForProposal>().GetNullableById(id);
