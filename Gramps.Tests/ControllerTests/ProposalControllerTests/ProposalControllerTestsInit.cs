@@ -7,6 +7,7 @@ using System.Web.Routing;
 using Gramps.Controllers;
 using Gramps.Controllers.Filters;
 using Gramps.Core.Domain;
+using Gramps.Models;
 using Gramps.Services;
 using Gramps.Tests.Core.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -30,6 +31,8 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
         public IRepository<Comment> CommentRepository;
         public IAccessService AccessService;
         public IEmailService EmailService;
+        public IMembershipService MembershipService;
+ 
         //public IRepository<Example> ExampleRepository;
 
         #region Init
@@ -40,9 +43,10 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
         {
             ProposalRepository = FakeRepository<Proposal>();
             AccessService = MockRepository.GenerateStub<IAccessService>();
-            EmailService = MockRepository.GenerateStub<IEmailService>();  
+            EmailService = MockRepository.GenerateStub<IEmailService>();
+            MembershipService = MockRepository.GenerateStub<IMembershipService>();
 
-            Controller = new TestControllerBuilder().CreateController<ProposalController>(ProposalRepository, AccessService, EmailService);
+            Controller = new TestControllerBuilder().CreateController<ProposalController>(ProposalRepository, AccessService, EmailService, MembershipService);
         }
 
         protected override void RegisterRoutes()
@@ -209,8 +213,26 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
             calls[1].EndDate = DateTime.Now.AddDays(-1);
             calls[2].EndDate = DateTime.Now.Date;
             calls[3].EndDate = DateTime.Now.AddDays(1);
+            calls[3].EmailTemplates.Add(CreateValidEntities.EmailTemplate(1));
+            calls[3].EmailTemplates[0].TemplateType = EmailTemplateType.ProposalConfirmation;
             var fakeCalls = new FakeCallForProposals();
             fakeCalls.Records(0, CallForProposalRepository, calls);
+        }
+        public void SetupData4()
+        {
+            var proposals = new List<Proposal>();
+            for (int i = 0; i < 4; i++)
+            {
+                proposals.Add(CreateValidEntities.Proposal(i + 1));
+                proposals[i].CallForProposal = CallForProposalRepository.GetNullableById(4);
+            }
+            proposals[1].CallForProposal = CallForProposalRepository.GetNullableById(2);
+            proposals[1].Sequence = 1;
+            proposals[0].Sequence = 1;
+            proposals[2].Sequence = 2;
+            proposals[3].Sequence = 3;
+            var fakeProposals = new FakeProposals();
+            fakeProposals.Records(0, ProposalRepository, proposals);
         }
         #endregion Helpers
     }
