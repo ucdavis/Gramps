@@ -720,12 +720,26 @@ namespace Gramps.Controllers
             }
         }
 
-
-
-
+        /// <summary>
+        /// #14
+        /// </summary>
+        /// <param name="proposalEmail"></param>
+        /// <returns></returns>
         public ActionResult Confirmation(string proposalEmail)
         {
             var viewModel = ProposalConfirmationViewModel.Create(proposalEmail);
+            return View(viewModel);
+        }
+
+        /// <summary>
+        /// #15
+        /// </summary>
+        /// <returns></returns>
+        [PublicAuthorize]
+        public ActionResult Home()
+        {
+            var viewModel = ProposalPublicListViewModel.Create(Repository, CurrentUser.Identity.Name);
+
             return View(viewModel);
         }
 
@@ -766,13 +780,7 @@ namespace Gramps.Controllers
 
 			return View(viewModel);
         }
-        [PublicAuthorize]
-        public ActionResult Home()
-        {
-            var viewModel = ProposalPublicListViewModel.Create(Repository, CurrentUser.Identity.Name);
 
-            return View(viewModel);
-        }
         
         //
         // POST: /Proposal/Edit/5

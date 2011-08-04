@@ -149,7 +149,7 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
 
             #region Assert
             Assert.Inconclusive("Tests are still being written. When done, remove this line.");
-            Assert.AreEqual(12, result.Count(), "It looks like a method was added or removed from the controller.");
+            Assert.AreEqual(14, result.Count(), "It looks like a method was added or removed from the controller.");
             #endregion Assert
         }
 
@@ -545,6 +545,26 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
             #region Assert
             Assert.AreEqual(1, expectedAttribute.Count(), "CaptchaValidator not found");
             Assert.AreEqual(2, allAttributes.Count());
+            #endregion Assert
+        }
+
+        /// <summary>
+        /// #14
+        /// </summary>
+        [TestMethod]
+        public void TestControllerMethodConfirmationContainsExpectedAttributes()
+        {
+            #region Arrange
+            var controllerClass = _controllerClass;
+            var controllerMethod = controllerClass.GetMethod("Confirmation");
+            #endregion Arrange
+
+            #region Act            
+            var allAttributes = controllerMethod.GetCustomAttributes(true);
+            #endregion Act
+
+            #region Assert            
+            Assert.AreEqual(0, allAttributes.Count());
             #endregion Assert
         }
         #endregion Controller Method Tests

@@ -146,6 +146,15 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
         {
             "~/Proposal/Create/5".ShouldMapTo<ProposalController>(a => a.Create(5, true, null), true);
         }
+
+        /// <summary>
+        /// #14
+        /// </summary>
+        [TestMethod]
+        public void TestConfirmationMapping()
+        {
+            "~/Proposal/Confirmation/".ShouldMapTo<ProposalController>(a => a.Confirmation(null));
+        }
         #endregion Mapping Tests
     }
 }

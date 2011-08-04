@@ -234,6 +234,49 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
             var fakeProposals = new FakeProposals();
             fakeProposals.Records(0, ProposalRepository, proposals);
         }
+
+
+        public void SetupData5()
+        {
+            var calls = new List<CallForProposal>();
+            for (int i = 0; i < 7; i++)
+            {
+                calls.Add(CreateValidEntities.CallForProposal(i+1));
+                calls[i].IsActive = true;
+            }
+            calls[2].IsActive = false;
+            var fakeCalls = new FakeCallForProposals();
+            fakeCalls.Records(0, CallForProposalRepository, calls);
+
+            var editors = new List<Editor>();
+            for (int i = 0; i < 7; i++)
+            {
+                editors.Add(CreateValidEntities.Editor(i+1));
+                editors[i].User = null;
+                editors[i].ReviewerEmail = "is@reviewer.com";
+                editors[i].CallForProposal = CallForProposalRepository.GetNullableById(i + 1);
+            }
+
+            editors[1].User = CreateValidEntities.User(1);
+            editors[3].ReviewerEmail = "no@one.com";
+            editors[6].ReviewerEmail = "also@reviewer.com";
+
+            var fakeEditors = new FakeEditors();
+            fakeEditors.Records(0, EditorRepository, editors);
+
+            var proposals = new List<Proposal>();
+            for (int i = 0; i < 7; i++)
+            {
+                proposals.Add(CreateValidEntities.Proposal(i + 1));
+                proposals[i].Email = "email2@testy.com";
+                proposals[i].CreatedDate = DateTime.Now.AddDays(i);
+            }
+            proposals[1].Email = "notme@test.com";
+            proposals[5].Email = "also@reviewer.com";
+            proposals[6].Email = "also@reviewer.com";
+            var fakeProposals = new FakeProposals();
+            fakeProposals.Records(0, ProposalRepository, proposals);
+        }
         #endregion Helpers
     }
 }

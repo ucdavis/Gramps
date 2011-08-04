@@ -21,7 +21,7 @@ namespace Gramps.Controllers.ViewModels
 
             var viewModel = new ProposalPublicListViewModel();
             viewModel.IsReviewer = repository.OfType<Editor>()
-                .Queryable.Where(a => a.CallForProposal != null && a .CallForProposal.IsActive && a.User == null && a.ReviewerEmail == login).Any();
+                .Queryable.Where(a => a.CallForProposal != null && a.CallForProposal.IsActive && a.User == null && a.ReviewerEmail == login).Any();
             if (viewModel.IsReviewer)
             {
                 var callForProposalIds =
@@ -268,8 +268,7 @@ namespace Gramps.Controllers.ViewModels
         {
             var viewModel = new ProposalConfirmationViewModel();
             viewModel.Message1 =
-                "Thank you. An email with a link to complete your proposal will be sent to shortly. It will be sent to " +
-                email;
+                string.Format("Thank you. An email with a link to complete your proposal will be sent to shortly. It will be sent to {0}", email);
             viewModel.Message2 =
                 "Note: This email will be sent from the following address so if you do not receive it please check your email filters. automatedemail@caes.ucdavis.edu";
 
