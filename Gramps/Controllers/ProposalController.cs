@@ -661,7 +661,7 @@ namespace Gramps.Controllers
         /// <param name="captchaValid"></param>
         /// <param name="proposal"></param>
         /// <returns></returns>
-        [AcceptVerbs(HttpVerbs.Post)]
+        [HttpPost]
         [CaptchaValidator]
         public ActionResult Create(int id, bool captchaValid, Proposal proposal)
         {
