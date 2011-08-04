@@ -28,12 +28,14 @@ namespace Gramps.Controllers
 	    private readonly IRepository<Proposal> _proposalRepository;
         private readonly IAccessService _accessService;
         private readonly IEmailService _emailService;
+        private readonly IMembershipService _membershipService;
 
-        public ProposalController(IRepository<Proposal> proposalRepository, IAccessService accessService, IEmailService emailService)
+        public ProposalController(IRepository<Proposal> proposalRepository, IAccessService accessService, IEmailService emailService, IMembershipService membershipService)
         {
             _proposalRepository = proposalRepository;
             _accessService = accessService;
             _emailService = emailService;
+            _membershipService = membershipService;
         }
 
         /// <summary>
@@ -651,7 +653,14 @@ namespace Gramps.Controllers
         }
 
         
-        // POST: /Proposal/Create
+        /// <summary>
+        /// #13
+        /// POST: /Proposal/Create
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="captchaValid"></param>
+        /// <param name="proposal"></param>
+        /// <returns></returns>
         [AcceptVerbs(HttpVerbs.Post)]
         [CaptchaValidator]
         public ActionResult Create(int id, bool captchaValid, Proposal proposal)
@@ -690,18 +699,12 @@ namespace Gramps.Controllers
                 Message = "Proposal Created Successfully";
 
                 string tempPass = null;
-                var membershipService = new AccountMembershipService();
-                if (membershipService.DoesUserExist(proposalToCreate.Email))
+                if (!_membershipService.DoesUserExist(proposalToCreate.Email))                
                 {
-                    //Send an email saying you already exist and can view here
-                    
-                }
-                else
-                {
-                    membershipService.CreateUser(proposalToCreate.Email.Trim().ToLower(),
+                    _membershipService.CreateUser(proposalToCreate.Email.Trim().ToLower(),
                                                  "Ht548*%KjjY2#",
                                                  proposalToCreate.Email.Trim().ToLower());
-                    tempPass = membershipService.ResetPassword(proposalToCreate.Email.Trim().ToLower());
+                    tempPass = _membershipService.ResetPassword(proposalToCreate.Email.Trim().ToLower());
                 }
 
                 _emailService.SendConfirmation(Request, Url, proposalToCreate, proposalToCreate.CallForProposal.EmailTemplates.Where(a => a.TemplateType == EmailTemplateType.ProposalConfirmation).Single(), true, proposalToCreate.Email.Trim().ToLower(), tempPass);
