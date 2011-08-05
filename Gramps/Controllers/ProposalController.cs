@@ -743,8 +743,12 @@ namespace Gramps.Controllers
             return View(viewModel);
         }
 
-        //
-        // GET: /Proposal/Edit/5
+        /// <summary>
+        /// #16
+        /// GET: /Proposal/Edit/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [PublicAuthorize]
         public ActionResult Edit(Guid id)
         {
