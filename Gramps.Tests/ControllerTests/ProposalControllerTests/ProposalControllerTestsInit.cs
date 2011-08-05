@@ -277,6 +277,38 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
             var fakeProposals = new FakeProposals();
             fakeProposals.Records(0, ProposalRepository, proposals);
         }
+
+        public void SetupData6()
+        {
+            var editor = CreateValidEntities.Editor(1);
+            editor.IsOwner = true;
+            editor.User = CreateValidEntities.User(1);
+            var calls = new List<CallForProposal>();
+            for (int i = 0; i < 3; i++)
+            {
+                calls.Add(CreateValidEntities.CallForProposal(i+1));
+                calls[i].AddEditor(editor);
+                calls[i].IsActive = true;
+                calls[i].EndDate = DateTime.Now;
+            }
+            calls[0].EndDate = DateTime.Now.AddDays(-1);
+            calls[1].IsActive = false;
+
+            var proposals = new List<Proposal>();
+            for (int i = 0; i < 6; i++)
+            {
+                proposals.Add(CreateValidEntities.Proposal(i + 1));
+                proposals[i].Guid = SpecificGuid.GetGuid(i + 1);
+            }
+            proposals[1].IsSubmitted = true;
+            proposals[2].CallForProposal = calls[0];
+            proposals[3].CallForProposal = calls[1];
+
+            proposals[4].CallForProposal = calls[2];
+
+            var fakeProposals = new FakeProposals();
+            fakeProposals.Records(0, ProposalRepository, proposals);
+        }
         #endregion Helpers
     }
 }

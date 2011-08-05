@@ -1,24 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
-using Gramps.Controllers;
-using Gramps.Controllers.Filters;
-using Gramps.Controllers.ViewModels;
-using Gramps.Core.Domain;
-using Gramps.Core.Resources;
-using Gramps.Services;
-using Gramps.Tests.Core.Extensions;
+﻿using Gramps.Controllers.ViewModels;
 using Gramps.Tests.Core.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MvcContrib.TestHelper;
-using Rhino.Mocks;
-using UCDArch.Core.PersistanceSupport;
-using UCDArch.Testing;
-using UCDArch.Web.Attributes;
 
 
 namespace Gramps.Tests.ControllerTests.ProposalControllerTests
@@ -164,22 +147,6 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
             Assert.AreEqual(2, result.UsersProposals.Count);
             Assert.AreEqual(7, result.UsersProposals[0].Id);
             Assert.AreEqual(6, result.UsersProposals[1].Id);
-            #endregion Assert
-        }
-
-
-
-        [TestMethod]
-        public void TestDescription()
-        {
-            #region Arrange
-            Assert.Inconclusive("Write these tests");
-            #endregion Arrange
-
-            #region Act
-            #endregion Act
-
-            #region Assert
             #endregion Assert
         }
         #endregion Home Tests

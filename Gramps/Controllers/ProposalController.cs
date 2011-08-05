@@ -747,7 +747,7 @@ namespace Gramps.Controllers
         /// #16
         /// GET: /Proposal/Edit/5
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">Proposal Guid</param>
         /// <returns></returns>
         [PublicAuthorize]
         public ActionResult Edit(Guid id)
