@@ -144,6 +144,56 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
             #endregion Assert
         }
 
+        [TestMethod]
+        public void TestEditGetReturnsViewWhenCallNotActive()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "email4@testy.com");
+            SetupData6();
+            #endregion Arrange
+
+            #region Act
+            var results = Controller.Edit(SpecificGuid.GetGuid(4))
+                .AssertViewRendered()
+                .WithViewData<ProposalViewModel>();
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual("Call for proposal has been deactivated, you will not be able to save changes.", Controller.Message);
+            Assert.IsNotNull(results);
+            Assert.AreEqual("test1@testy.com", results.ContactEmail);
+            Assert.AreEqual(SpecificGuid.GetGuid(4), results.Proposal.Guid);
+            Assert.AreEqual("Name2", results.CallForProposal.Name);
+            Assert.AreEqual(StaticValues.RB_SaveOptions_SaveWithValidation, results.SaveOptionChoice);
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestEditGetReturnsView()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "email5@testy.com");
+            SetupData6();
+            #endregion Arrange
+
+            #region Act
+            var results = Controller.Edit(SpecificGuid.GetGuid(5))
+                .AssertViewRendered()
+                .WithViewData<ProposalViewModel>();
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual(null, Controller.Message);
+            Assert.IsNotNull(results);
+            Assert.AreEqual("test1@testy.com", results.ContactEmail);
+            Assert.AreEqual(SpecificGuid.GetGuid(5), results.Proposal.Guid);
+            Assert.AreEqual("Name3", results.CallForProposal.Name);
+            Assert.AreEqual(StaticValues.RB_SaveOptions_SaveWithValidation, results.SaveOptionChoice);
+            #endregion Assert
+        }
+        #endregion Edit Get Tests
+
+        #region Edit Post Tests
 
         [TestMethod]
         public void TestDescription()
@@ -157,9 +207,9 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
             #endregion Act
 
             #region Assert
-            
+
             #endregion Assert
         }
-        #endregion Edit Get Tests
+        #endregion Edit Post Tests
     }
 }

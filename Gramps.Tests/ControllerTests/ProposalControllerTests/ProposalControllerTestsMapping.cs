@@ -8,6 +8,7 @@ using Gramps.Controllers;
 using Gramps.Controllers.Filters;
 using Gramps.Core.Domain;
 using Gramps.Services;
+using Gramps.Tests.Core.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MvcContrib.TestHelper;
 using Rhino.Mocks;
@@ -163,6 +164,15 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
         public void TestHomeMapping()
         {
             "~/Proposal/Home/".ShouldMapTo<ProposalController>(a => a.Home());
+        }
+
+        /// <summary>
+        /// #16
+        /// </summary>
+        [TestMethod]
+        public void TestEditMapping()
+        {
+            "~/Proposal/Edit/".ShouldMapTo<ProposalController>(a => a.Edit(SpecificGuid.GetGuid(1)), true);
         }
         #endregion Mapping Tests
     }
