@@ -222,6 +222,7 @@
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RouteRegistrar.asax.cs" />
+    <Compile Include="Services\AnswerService.cs" />
     <Compile Include="Services\IAccessService.cs" />
     <Compile Include="Services\IEmailService.cs" />
     <Compile Include="Views\Shared\LogOnUserControl.ascx.cs">

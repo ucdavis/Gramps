@@ -29,13 +29,15 @@ namespace Gramps.Controllers
         private readonly IAccessService _accessService;
         private readonly IEmailService _emailService;
         private readonly IMembershipService _membershipService;
+        private readonly IAnswerService _answerService;
 
-        public ProposalController(IRepository<Proposal> proposalRepository, IAccessService accessService, IEmailService emailService, IMembershipService membershipService)
+        public ProposalController(IRepository<Proposal> proposalRepository, IAccessService accessService, IEmailService emailService, IMembershipService membershipService, IAnswerService answerService)
         {
             _proposalRepository = proposalRepository;
             _accessService = accessService;
             _emailService = emailService;
             _membershipService = membershipService;
+            _answerService = answerService;
         }
 
         /// <summary>
@@ -869,52 +871,7 @@ namespace Gramps.Controllers
 
             TransferValues(proposal, proposalToEdit);
 
-            var allQuestions = proposalToEdit.CallForProposal.Questions.ToList();
-
-            foreach (var pa in proposalAnswers)
-            {
-                var question = allQuestions.Where(a => a.Id == pa.QuestionId).FirstOrDefault();
-                if (question != null)
-                {
-                    var answer = CleanUpAnswer(question.QuestionType.Name, pa, question.ValidationClasses);//, question);
-                    if (proposal.IsSubmitted || saveWithValidate)
-                    {
-                        foreach (var validator in question.Validators)
-                        {
-                            string message;
-                            if (question.QuestionType.Name == QuestionTypeText.STR_TextArea)
-                            {
-                                if(validator.Class == "required" && !string.IsNullOrWhiteSpace(answer))
-                                {
-                                    continue;
-                                }
-                            }
-                            if (!Validate(validator, answer, question.Name, out message))
-                            {
-                                ModelState.AddModelError(question.Name, message);
-                            }
-                        }
-                        if (question.MaxCharacters != null && question.MaxCharacters > 0)
-                        {
-                            if (answer.Trim().Length > question.MaxCharacters)
-                            {
-                                ModelState.AddModelError(question.Name, string.Format("{0} must be less than {1} characters long.", question.Name, question.MaxCharacters));
-                            }
-                        }
-                    }
-                    var pteAnswers = proposalToEdit.Answers.Where(a => a.Question.Id == question.Id).FirstOrDefault();
-                    if(pteAnswers != null)
-                    {
-                        pteAnswers.Answer = answer;
-                    }
-                    else if(!string.IsNullOrWhiteSpace(answer))
-                    {
-                        proposalToEdit.AddAnswer(question, answer);
-                    }
-
-                }
-
-            }
+            _answerService.ProcessAnswers(proposal, proposalAnswers, saveWithValidate, proposalToEdit, ModelState);
 
             proposalToEdit.TransferValidationMessagesTo(ModelState);
             if (proposalToEdit.IsSubmitted || saveWithValidate)
@@ -971,6 +928,7 @@ namespace Gramps.Controllers
                 return View(viewModel);
             }
         }
+      
 
 
         public ActionResult Details(Guid id)
@@ -1045,68 +1003,6 @@ namespace Gramps.Controllers
             commentDestination.Text = commentSource.Text;
         }
 
-        private bool Validate(Validator validator, string answer, string fieldName, out string message)
-        {
-            // set as default so we can return without having to set it individually
-            message = string.Empty;
-
-            // check to make sure we have a reg ex
-            if (string.IsNullOrEmpty(validator.RegEx)) return true;
-
-            var regExVal = new Regex(validator.RegEx);
-            // valid
-            // check for when answer is null, because when doing a radio button it is null when nothing is selected
-            if (regExVal.IsMatch(answer ?? string.Empty)) return true;
-
-            // not valid input provide error message
-            message = string.Format(validator.ErrorMessage, fieldName);
-            return false;
-        }
-
-        private static string CleanUpAnswer(string name, QuestionAnswerParameter qa, string validationClasses)//, Question question)
-        {
-            string answer;
-            if (name != QuestionTypeText.STR_CheckboxList)
-            {
-                if (name == QuestionTypeText.STR_Boolean)
-                {
-                    //Convert unchecked bool of null to false
-                    if (string.IsNullOrEmpty(qa.Answer) || qa.Answer.ToLower() == "false")
-                    {
-                        answer = "false";
-                    }
-                    else
-                    {
-                        answer = "true";
-                    }
-                }
-                else if (name == QuestionTypeText.STR_TextArea)
-                {
-                    answer = qa.Answer ?? string.Empty;
-                }
-                else
-                {
-                    answer = qa.Answer ?? string.Empty;
-                    if (validationClasses != null && validationClasses.Contains("email"))
-                    {
-                        answer = answer.ToLower();
-                    }
-                }
-            }
-            else
-            {
-                if (qa.CblAnswer != null)
-                {
-                    answer = string.Join(",", qa.CblAnswer);
-                }
-                else
-                {
-                    answer = string.Empty;
-                }
-            }
-            return answer;
-
-        }
     }
 
     public class QuestionAnswerParameter
