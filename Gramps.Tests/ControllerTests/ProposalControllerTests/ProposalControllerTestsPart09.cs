@@ -71,7 +71,7 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
             #endregion Arrange
 
             #region Act
-            Controller.Edit(SpecificGuid.GetGuid(7))
+            Controller.Edit(SpecificGuid.GetGuid(8))
                 .AssertActionRedirect()
                 .ToAction<ErrorController>(a => a.Index());
             #endregion Act
@@ -237,7 +237,7 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
             #endregion Arrange
 
             #region Act
-            Controller.Edit(SpecificGuid.GetGuid(7), null, new QuestionAnswerParameter[0], null, StaticValues.RB_SaveOptions_SaveWithValidation)
+            Controller.Edit(SpecificGuid.GetGuid(8), null, new QuestionAnswerParameter[0], null, StaticValues.RB_SaveOptions_SaveWithValidation)
                 .AssertActionRedirect()
                 .ToAction<ErrorController>(a => a.Index());
             #endregion Act
@@ -892,7 +892,22 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
             #endregion Assert
         }
 
-        //Test passed answers
+
+        [TestMethod]
+        public void TestEditPostWithAnswers1()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "email7@testy.com");
+            SetupData6();
+            SetupData7();
+            #endregion Arrange
+
+            #region Act
+            #endregion Act
+
+            #region Assert
+            #endregion Assert		
+        }
 
         [TestMethod]
         public void TestDescription()

@@ -7,6 +7,7 @@ using System.Web.Routing;
 using Gramps.Controllers;
 using Gramps.Controllers.Filters;
 using Gramps.Core.Domain;
+using Gramps.Core.Resources;
 using Gramps.Models;
 using Gramps.Services;
 using Gramps.Tests.Core.Helpers;
@@ -284,11 +285,12 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
 
         public void SetupData6()
         {
+            var questions = SetupQuestionsForCall();
             var editor = CreateValidEntities.Editor(1);
             editor.IsOwner = true;
             editor.User = CreateValidEntities.User(1);
             var calls = new List<CallForProposal>();
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 5; i++)
             {
                 calls.Add(CreateValidEntities.CallForProposal(i+1));
                 calls[i].AddEditor(editor);
@@ -300,7 +302,7 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
             calls[3].ProposalMaximum = 0;
 
             var proposals = new List<Proposal>();
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < 7; i++)
             {
                 proposals.Add(CreateValidEntities.Proposal(i + 1));
                 proposals[i].Guid = SpecificGuid.GetGuid(i + 1);
@@ -311,10 +313,24 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
 
             proposals[4].CallForProposal = calls[2];
             proposals[5].CallForProposal = calls[3];
+            proposals[6].CallForProposal = calls[4];
 
 
             var fakeProposals = new FakeProposals();
             fakeProposals.Records(0, ProposalRepository, proposals);
+        }
+
+        public List<Question> SetupQuestionsForCall()
+        {
+            var questionTypes = new List<QuestionType>();
+            questionTypes.Add(new QuestionType());
+            questionTypes[0].Name = QuestionTypeText.STR_CheckboxList;
+
+            var questions = new List<Question>();
+            for (int i = 0; i < 5; i++)
+            {
+                
+            }
         }
 
         public void SetupData7()
