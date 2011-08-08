@@ -785,9 +785,16 @@ namespace Gramps.Controllers
 			return View(viewModel);
         }
 
-        
-        //
-        // POST: /Proposal/Edit/5
+        /// <summary>
+        /// #17
+        /// POST: /Proposal/Edit/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="proposal"></param>
+        /// <param name="proposalAnswers"></param>
+        /// <param name="uploadAttachment"></param>
+        /// <param name="saveOptions"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateInput(false)]
         public ActionResult Edit(Guid id, Proposal proposal, QuestionAnswerParameter[] proposalAnswers, HttpPostedFileBase uploadAttachment, string saveOptions)

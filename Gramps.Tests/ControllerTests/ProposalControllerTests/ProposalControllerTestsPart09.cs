@@ -18,6 +18,7 @@ using MvcContrib.TestHelper;
 using Rhino.Mocks;
 using UCDArch.Core.PersistanceSupport;
 using UCDArch.Testing;
+using UCDArch.Testing.Fakes;
 using UCDArch.Web.Attributes;
 
 
@@ -194,6 +195,225 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
         #endregion Edit Get Tests
 
         #region Edit Post Tests
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void TestEditPostThrowsAnExceptionIfGuidIsNotUnique()
+        {
+            var thisFar = false;
+            try
+            {
+                #region Arrange
+                var proposals = new List<Proposal>();
+                for (int i = 0; i < 2; i++)
+                {
+                    proposals.Add(CreateValidEntities.Proposal(i + 1));
+                    proposals[i].Guid = SpecificGuid.GetGuid(1);
+                }
+                var fakeProposals = new FakeProposals();
+                fakeProposals.Records(3, ProposalRepository, proposals);
+                thisFar = true;
+                #endregion Arrange
+
+                #region Act
+                Controller.Edit(SpecificGuid.GetGuid(1), null, new QuestionAnswerParameter[0], null, StaticValues.RB_SaveOptions_SaveWithValidation );
+                #endregion Act
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(thisFar);
+                Assert.IsNotNull(ex);
+                Assert.AreEqual("Sequence contains more than one element", ex.Message);
+                throw;
+            }
+        }
+
+
+        [TestMethod]
+        public void TestEditPostRedirectsWhenProposalNotFound()
+        {
+            #region Arrange
+            SetupData6();
+            #endregion Arrange
+
+            #region Act
+            Controller.Edit(SpecificGuid.GetGuid(7), null, new QuestionAnswerParameter[0], null, StaticValues.RB_SaveOptions_SaveWithValidation)
+                .AssertActionRedirect()
+                .ToAction<ErrorController>(a => a.Index());
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual("Your proposal was not found.", Controller.Message);
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestEditPostRedirectsWhenNoAccess()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "email3@testy.com");
+            SetupData6();
+            #endregion Arrange
+
+            #region Act
+            Controller.Edit(SpecificGuid.GetGuid(2), null, new QuestionAnswerParameter[0], null, StaticValues.RB_SaveOptions_SaveWithValidation)
+                .AssertActionRedirect()
+                .ToAction<ErrorController>(a => a.Index());
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual("You do not have access to that.", Controller.Message);
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestEditPostRedirectsWhenSubmitted()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "email2@testy.com");
+            SetupData6();
+            #endregion Arrange
+
+            #region Act
+            var results = Controller.Edit(SpecificGuid.GetGuid(2), null, new QuestionAnswerParameter[0], null, StaticValues.RB_SaveOptions_SaveWithValidation)
+                .AssertActionRedirect()
+                .ToAction<ProposalController>(a => a.Details(SpecificGuid.GetGuid(2)));
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual("Cannot edit proposal once submitted.", Controller.Message);
+            Assert.IsNotNull(results);
+            Assert.AreEqual(SpecificGuid.GetGuid(2), results.RouteValues["id"]);
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestEditPostReturnsViewWhenCallEndDatePast()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "email3@testy.com");
+            SetupData6();
+            var proposalToEdit = CreateValidEntities.Proposal(9);
+            var qaParm = new QuestionAnswerParameter[0];
+            #endregion Arrange
+
+            #region Act
+            var results = Controller.Edit(SpecificGuid.GetGuid(3), proposalToEdit, qaParm, null, StaticValues.RB_SaveOptions_SaveNoValidate)
+                .AssertViewRendered()
+                .WithViewData<ProposalViewModel>();
+            #endregion Act
+
+            #region Assert
+            Controller.ModelState.AssertErrorsAre("Call for proposal has closed");
+            Assert.AreEqual("Unable to save. Please Correct Errors", Controller.Message);
+            Assert.IsNotNull(results);
+            Assert.AreEqual("test1@testy.com", results.ContactEmail);
+            Assert.AreEqual(SpecificGuid.GetGuid(3), results.Proposal.Guid);
+            Assert.AreEqual("Name1", results.CallForProposal.Name);
+            Assert.AreEqual(StaticValues.RB_SaveOptions_SaveNoValidate, results.SaveOptionChoice);
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestEditPostReturnsViewWhenCallNotActive()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "email4@testy.com");
+            SetupData6();
+            var proposalToEdit = CreateValidEntities.Proposal(9);
+            var qaParm = new QuestionAnswerParameter[0];
+            #endregion Arrange
+
+            #region Act
+            var results = Controller.Edit(SpecificGuid.GetGuid(4), proposalToEdit, qaParm, null, StaticValues.RB_SaveOptions_SaveNoValidate)
+                .AssertViewRendered()
+                .WithViewData<ProposalViewModel>();
+            #endregion Act
+
+            #region Assert
+            Controller.ModelState.AssertErrorsAre("Call for proposal has been deactivated");
+            Assert.AreEqual("Unable to save. Please Correct Errors", Controller.Message);
+            Assert.IsNotNull(results);
+            Assert.AreEqual("test1@testy.com", results.ContactEmail);
+            Assert.AreEqual(SpecificGuid.GetGuid(4), results.Proposal.Guid);
+            Assert.AreEqual("Name2", results.CallForProposal.Name);
+            Assert.AreEqual(StaticValues.RB_SaveOptions_SaveNoValidate, results.SaveOptionChoice);
+            #endregion Assert
+        }
+
+
+        [TestMethod]
+        public void TestEditPostReturnsViewWhenUploadedFileIsNotPdf()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "email5@testy.com");
+            SetupData6();
+            var proposalToEdit = CreateValidEntities.Proposal(9);
+            var qaParm = new QuestionAnswerParameter[0];
+            var fakedFile = new FakeHttpPostedFileBase("fileName", "notpdf", new byte[] {1, 2, 4});
+            #endregion Arrange
+
+            #region Act
+            var results = Controller.Edit(SpecificGuid.GetGuid(5), proposalToEdit, qaParm, fakedFile, StaticValues.RB_SaveOptions_SaveNoValidate)
+                .AssertViewRendered()
+                .WithViewData<ProposalViewModel>();
+            #endregion Act
+
+            #region Assert
+            Controller.ModelState.AssertErrorsAre("Can only upload PDF files.");
+            Assert.AreEqual("Unable to save. Please Correct Errors", Controller.Message);
+            Assert.IsNotNull(results);
+            Assert.AreEqual("test1@testy.com", results.ContactEmail);
+            Assert.AreEqual(SpecificGuid.GetGuid(5), results.Proposal.Guid);
+            Assert.AreEqual("Name3", results.CallForProposal.Name);
+            Assert.AreEqual(StaticValues.RB_SaveOptions_SaveNoValidate, results.SaveOptionChoice);
+            #endregion Assert		
+        }
+
+        [TestMethod]
+        public void TestEditPostReturnsViewWhenUploadedFileIsPdf()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "email5@testy.com");
+            SetupData6();
+            SetupData7();
+
+            var proposalToEdit = CreateValidEntities.Proposal(9);
+            proposalToEdit.RequestedAmount = 12.31m;
+            var qaParm = new QuestionAnswerParameter[0];
+            var fakedFile = new FakeHttpPostedFileBase("fileName", "application/PDF", new byte[] { 1, 2, 4 });
+            #endregion Arrange
+
+            #region Act
+            var results = Controller.Edit(SpecificGuid.GetGuid(5), proposalToEdit, qaParm, fakedFile, StaticValues.RB_SaveOptions_SaveNoValidate)
+                .AssertViewRendered()
+                .WithViewData<ProposalViewModel>();
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual("Proposal Edited Successfully", Controller.Message);
+            Assert.IsNotNull(results);
+            Assert.AreEqual("test1@testy.com", results.ContactEmail);
+            Assert.AreEqual(SpecificGuid.GetGuid(5), results.Proposal.Guid);
+            Assert.AreEqual("Name3", results.CallForProposal.Name);
+            Assert.AreEqual(StaticValues.RB_SaveOptions_SaveNoValidate, results.SaveOptionChoice);
+            ProposalRepository.AssertWasCalled(a => a.EnsurePersistent(Arg<Proposal>.Is.Anything));
+            var proposalArgs = (Proposal) ProposalRepository.GetArgumentsForCallsMadeOn(a => a.EnsurePersistent(Arg<Proposal>.Is.Anything))[0][0]; 
+            Assert.IsNotNull(proposalArgs);
+            Assert.AreEqual(12.31m, proposalArgs.RequestedAmount);
+            Assert.IsFalse(proposalArgs.IsSubmitted);
+            Assert.IsNotNull(proposalArgs.File);
+            Assert.AreEqual("application/pdf", proposalArgs.File.ContentType.ToLower());
+            Assert.AreEqual("124", proposalArgs.File.Contents.ByteArrayToString());
+            Assert.AreEqual("fileName", proposalArgs.File.Name);
+            Assert.AreEqual(DateTime.Now.Date, proposalArgs.File.DateAdded.Date);
+            #endregion Assert
+        }
+
+
+
+
+        //Test passed answers
 
         [TestMethod]
         public void TestDescription()

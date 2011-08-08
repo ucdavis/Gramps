@@ -28,6 +28,7 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
         public IRepository<CallForProposal> CallForProposalRepository;
         public IRepository<Editor> EditorRepository;
         public IRepository<ReviewedProposal> ReviewedProposalRepository;
+        public IRepository<Investigator> InvestigatorRepository;
         public IRepository<Comment> CommentRepository;
         public IAccessService AccessService;
         public IEmailService EmailService;
@@ -67,6 +68,9 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
 
             CommentRepository = FakeRepository<Comment>();
             Controller.Repository.Expect(a => a.OfType<Comment>()).Return(CommentRepository).Repeat.Any();
+
+            InvestigatorRepository = FakeRepository<Investigator>();
+            Controller.Repository.Expect(a => a.OfType<Investigator>()).Return(InvestigatorRepository).Repeat.Any();
 
             Controller.Repository.Expect(a => a.OfType<Proposal>()).Return(ProposalRepository).Repeat.Any();	
         }
@@ -308,6 +312,19 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
 
             var fakeProposals = new FakeProposals();
             fakeProposals.Records(0, ProposalRepository, proposals);
+        }
+
+        public void SetupData7()
+        {
+            var investigators = new List<Investigator>();
+            for (int i = 0; i < 3; i++)
+            {
+                investigators.Add(CreateValidEntities.Investigator(i + 1));
+                investigators[i].Proposal = ProposalRepository.GetById(6);
+            }
+            investigators[0].IsPrimary = true;
+            var fakeInvestigators = new FakeInvestigators();
+            fakeInvestigators.Records(0, InvestigatorRepository, investigators);
         }
         #endregion Helpers
     }
