@@ -170,9 +170,18 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
         /// #16
         /// </summary>
         [TestMethod]
-        public void TestEditMapping()
+        public void TestEditGetMapping()
         {
             "~/Proposal/Edit/".ShouldMapTo<ProposalController>(a => a.Edit(SpecificGuid.GetGuid(1)), true);
+        }
+
+        /// <summary>
+        /// #17
+        /// </summary>
+        [TestMethod]
+        public void TestEditPostMapping()
+        {
+            "~/Proposal/Edit/".ShouldMapTo<ProposalController>(a => a.Edit(SpecificGuid.GetGuid(1), null, new QuestionAnswerParameter[0],null, string.Empty ), true);
         }
         #endregion Mapping Tests
     }
