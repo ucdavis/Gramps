@@ -34,6 +34,7 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
         public IAccessService AccessService;
         public IEmailService EmailService;
         public IMembershipService MembershipService;
+        public IAnswerService AnswerService;
  
         //public IRepository<Example> ExampleRepository;
 
@@ -47,8 +48,9 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
             AccessService = MockRepository.GenerateStub<IAccessService>();
             EmailService = MockRepository.GenerateStub<IEmailService>();
             MembershipService = MockRepository.GenerateStub<IMembershipService>();
+            AnswerService = MockRepository.GenerateStub<IAnswerService>();
 
-            Controller = new TestControllerBuilder().CreateController<ProposalController>(ProposalRepository, AccessService, EmailService, MembershipService);
+            Controller = new TestControllerBuilder().CreateController<ProposalController>(ProposalRepository, AccessService, EmailService, MembershipService, AnswerService);
         }
 
         protected override void RegisterRoutes()
@@ -285,7 +287,7 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
 
         public void SetupData6()
         {
-            var questions = SetupQuestionsForCall();
+            //var questions = SetupQuestionsForCall();
             var editor = CreateValidEntities.Editor(1);
             editor.IsOwner = true;
             editor.User = CreateValidEntities.User(1);
@@ -320,18 +322,18 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
             fakeProposals.Records(0, ProposalRepository, proposals);
         }
 
-        public List<Question> SetupQuestionsForCall()
-        {
-            var questionTypes = new List<QuestionType>();
-            questionTypes.Add(new QuestionType());
-            questionTypes[0].Name = QuestionTypeText.STR_CheckboxList;
+        //public List<Question> SetupQuestionsForCall()
+        //{
+        //    var questionTypes = new List<QuestionType>();
+        //    questionTypes.Add(new QuestionType());
+        //    questionTypes[0].Name = QuestionTypeText.STR_CheckboxList;
 
-            var questions = new List<Question>();
-            for (int i = 0; i < 5; i++)
-            {
+        //    var questions = new List<Question>();
+        //    for (int i = 0; i < 5; i++)
+        //    {
                 
-            }
-        }
+        //    }
+        //}
 
         public void SetupData7()
         {
