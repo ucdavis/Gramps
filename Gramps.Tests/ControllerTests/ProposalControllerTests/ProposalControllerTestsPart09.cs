@@ -411,7 +411,486 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
         }
 
 
+        [TestMethod]
+        public void TestEditPostInvestigator1()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "email5@testy.com");
+            SetupData6();
+            //SetupData7();
+            var fakeInvestigators = new FakeInvestigators();
+            fakeInvestigators.Records(3, InvestigatorRepository);
+            var proposalToEdit = CreateValidEntities.Proposal(9);
+            proposalToEdit.RequestedAmount = 0.01m;
+            var qaParm = new QuestionAnswerParameter[0];            
+            #endregion Arrange
 
+            #region Act
+            var results = Controller.Edit(SpecificGuid.GetGuid(5), proposalToEdit, qaParm, null, StaticValues.RB_SaveOptions_SaveWithValidation)
+                .AssertViewRendered()
+                .WithViewData<ProposalViewModel>();
+            #endregion Act
+
+            #region Assert
+            Controller.ModelState.AssertErrorsAre("Must have one primary investigator");
+            Assert.AreEqual("Unable to save. Please Correct Errors", Controller.Message);
+            Assert.IsNotNull(results);
+            Assert.AreEqual("test1@testy.com", results.ContactEmail);
+            Assert.AreEqual(SpecificGuid.GetGuid(5), results.Proposal.Guid);
+            Assert.AreEqual("Name3", results.CallForProposal.Name);
+            Assert.AreEqual(StaticValues.RB_SaveOptions_SaveWithValidation, results.SaveOptionChoice);
+            #endregion Assert		
+        }
+
+        [TestMethod]
+        public void TestEditPostInvestigator2()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "email5@testy.com");
+            SetupData6();
+            //SetupData7();
+            var investigators = new List<Investigator>();
+            for (int i = 0; i < 3; i++)
+            {
+                investigators.Add(CreateValidEntities.Investigator(i + 1));
+                investigators[i].Proposal = ProposalRepository.GetNullableById(5);
+                investigators[i].IsPrimary = true;
+            }
+            var fakeInvestigators = new FakeInvestigators();
+            fakeInvestigators.Records(0, InvestigatorRepository, investigators);
+            var proposalToEdit = CreateValidEntities.Proposal(9);
+            proposalToEdit.RequestedAmount = 0.01m;
+            var qaParm = new QuestionAnswerParameter[0];
+            #endregion Arrange
+
+            #region Act
+            var results = Controller.Edit(SpecificGuid.GetGuid(5), proposalToEdit, qaParm, null, StaticValues.RB_SaveOptions_SaveWithValidation)
+                .AssertViewRendered()
+                .WithViewData<ProposalViewModel>();
+            #endregion Act
+
+            #region Assert
+            Controller.ModelState.AssertErrorsAre("Must have one primary investigator");
+            Assert.AreEqual("Unable to save. Please Correct Errors", Controller.Message);
+            Assert.IsNotNull(results);
+            Assert.AreEqual("test1@testy.com", results.ContactEmail);
+            Assert.AreEqual(SpecificGuid.GetGuid(5), results.Proposal.Guid);
+            Assert.AreEqual("Name3", results.CallForProposal.Name);
+            Assert.AreEqual(StaticValues.RB_SaveOptions_SaveWithValidation, results.SaveOptionChoice);
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestEditPostInvestigator2A()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "email5@testy.com");
+            SetupData6();
+            //SetupData7();
+            var investigators = new List<Investigator>();
+            for (int i = 0; i < 3; i++)
+            {
+                investigators.Add(CreateValidEntities.Investigator(i + 1));
+                investigators[i].Proposal = ProposalRepository.GetNullableById(5);
+                investigators[i].IsPrimary = true;
+            }
+            var fakeInvestigators = new FakeInvestigators();
+            fakeInvestigators.Records(0, InvestigatorRepository, investigators);
+            var proposalToEdit = CreateValidEntities.Proposal(9);
+            proposalToEdit.RequestedAmount = 0.01m;
+            var qaParm = new QuestionAnswerParameter[0];
+            #endregion Arrange
+
+            #region Act
+            var results = Controller.Edit(SpecificGuid.GetGuid(5), proposalToEdit, qaParm, null, StaticValues.RB_SaveOptions_SubmitFinal)
+                .AssertViewRendered()
+                .WithViewData<ProposalViewModel>();
+            #endregion Act
+
+            #region Assert
+            Controller.ModelState.AssertErrorsAre("Must have one primary investigator");
+            Assert.AreEqual("Unable to save. Please Correct Errors", Controller.Message);
+            Assert.IsNotNull(results);
+            Assert.AreEqual("test1@testy.com", results.ContactEmail);
+            Assert.AreEqual(SpecificGuid.GetGuid(5), results.Proposal.Guid);
+            Assert.AreEqual("Name3", results.CallForProposal.Name);
+            Assert.AreEqual(StaticValues.RB_SaveOptions_SubmitFinal, results.SaveOptionChoice);
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestEditPostInvestigator2B()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "email5@testy.com");
+            SetupData6();
+            //SetupData7();
+            var investigators = new List<Investigator>();
+            for (int i = 0; i < 3; i++)
+            {
+                investigators.Add(CreateValidEntities.Investigator(i + 1));
+                investigators[i].Proposal = ProposalRepository.GetNullableById(5);
+                investigators[i].IsPrimary = true;
+            }
+            var fakeInvestigators = new FakeInvestigators();
+            fakeInvestigators.Records(0, InvestigatorRepository, investigators);
+            var proposalToEdit = CreateValidEntities.Proposal(9);
+            proposalToEdit.RequestedAmount = 0.01m;
+            var qaParm = new QuestionAnswerParameter[0];
+            #endregion Arrange
+
+            #region Act
+            var results = Controller.Edit(SpecificGuid.GetGuid(5), proposalToEdit, qaParm, null, StaticValues.RB_SaveOptions_SaveNoValidate)
+                .AssertViewRendered()
+                .WithViewData<ProposalViewModel>();
+            #endregion Act
+
+            #region Assert
+            //Controller.ModelState.AssertErrorsAre("Must have one primary investigator");
+            Assert.AreEqual("Proposal Edited Successfully", Controller.Message);
+            Assert.IsNotNull(results);
+            Assert.AreEqual("test1@testy.com", results.ContactEmail);
+            Assert.AreEqual(SpecificGuid.GetGuid(5), results.Proposal.Guid);
+            Assert.AreEqual("Name3", results.CallForProposal.Name);
+            Assert.AreEqual(StaticValues.RB_SaveOptions_SaveNoValidate, results.SaveOptionChoice);
+            #endregion Assert
+        }
+
+
+        [TestMethod]
+        public void TestEditPostProposalMaximum1()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "email5@testy.com");
+            SetupData6();
+            SetupData7();
+
+            var proposalToEdit = CreateValidEntities.Proposal(9);
+            proposalToEdit.RequestedAmount = 10.01m;
+            var qaParm = new QuestionAnswerParameter[0];
+            #endregion Arrange
+
+            #region Act
+            var results = Controller.Edit(SpecificGuid.GetGuid(5), proposalToEdit, qaParm, null, StaticValues.RB_SaveOptions_SaveWithValidation)
+                .AssertViewRendered()
+                .WithViewData<ProposalViewModel>();
+            #endregion Act
+
+            #region Assert
+            Controller.ModelState.AssertErrorsAre("Requested Amount must be $0.01 or less");
+            Assert.AreEqual("Unable to save. Please Correct Errors", Controller.Message);
+            Assert.IsNotNull(results);
+            Assert.AreEqual("test1@testy.com", results.ContactEmail);
+            Assert.AreEqual(SpecificGuid.GetGuid(5), results.Proposal.Guid);
+            Assert.AreEqual("Name3", results.CallForProposal.Name);
+            Assert.AreEqual(StaticValues.RB_SaveOptions_SaveWithValidation, results.SaveOptionChoice);
+            #endregion Assert		
+        }
+
+        [TestMethod]
+        public void TestEditPostProposalMaximum1A()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "email5@testy.com");
+            SetupData6();
+            SetupData7();
+
+            var proposalToEdit = CreateValidEntities.Proposal(9);
+            proposalToEdit.RequestedAmount = 10.01m;
+            var qaParm = new QuestionAnswerParameter[0];
+            #endregion Arrange
+
+            #region Act
+            var results = Controller.Edit(SpecificGuid.GetGuid(5), proposalToEdit, qaParm, null, StaticValues.RB_SaveOptions_SubmitFinal)
+                .AssertViewRendered()
+                .WithViewData<ProposalViewModel>();
+            #endregion Act
+
+            #region Assert
+            Controller.ModelState.AssertErrorsAre("Requested Amount must be $0.01 or less");
+            Assert.AreEqual("Unable to save. Please Correct Errors", Controller.Message);
+            Assert.IsNotNull(results);
+            Assert.AreEqual("test1@testy.com", results.ContactEmail);
+            Assert.AreEqual(SpecificGuid.GetGuid(5), results.Proposal.Guid);
+            Assert.AreEqual("Name3", results.CallForProposal.Name);
+            Assert.AreEqual(StaticValues.RB_SaveOptions_SubmitFinal, results.SaveOptionChoice);
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestEditPostProposalMaximum1B()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "email5@testy.com");
+            SetupData6();
+            SetupData7();
+
+            var proposalToEdit = CreateValidEntities.Proposal(9);
+            proposalToEdit.RequestedAmount = 10.01m;
+            var qaParm = new QuestionAnswerParameter[0];
+            #endregion Arrange
+
+            #region Act
+            var results = Controller.Edit(SpecificGuid.GetGuid(5), proposalToEdit, qaParm, null, StaticValues.RB_SaveOptions_SaveNoValidate)
+                .AssertViewRendered()
+                .WithViewData<ProposalViewModel>();
+            #endregion Act
+
+            #region Assert
+            //Controller.ModelState.AssertErrorsAre("Requested Amount must be $0.01 or less");
+            Assert.AreEqual("Proposal Edited Successfully", Controller.Message);
+            Assert.IsNotNull(results);
+            Assert.AreEqual("test1@testy.com", results.ContactEmail);
+            Assert.AreEqual(SpecificGuid.GetGuid(5), results.Proposal.Guid);
+            Assert.AreEqual("Name3", results.CallForProposal.Name);
+            Assert.AreEqual(StaticValues.RB_SaveOptions_SaveNoValidate, results.SaveOptionChoice);
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestEditPostProposalMaximum1C()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "email6@testy.com");
+            SetupData6();
+            SetupData7();
+
+            var proposalToEdit = CreateValidEntities.Proposal(9);
+            proposalToEdit.RequestedAmount = 10.01m;
+            var qaParm = new QuestionAnswerParameter[0];
+            #endregion Arrange
+
+            #region Act
+            var results = Controller.Edit(SpecificGuid.GetGuid(6), proposalToEdit, qaParm, null, StaticValues.RB_SaveOptions_SaveWithValidation)
+                .AssertViewRendered()
+                .WithViewData<ProposalViewModel>();
+            #endregion Act
+
+            #region Assert
+            //Controller.ModelState.AssertErrorsAre("Requested Amount must be $0.01 or less");
+            Assert.AreEqual("Proposal Edited Successfully", Controller.Message);
+            Assert.IsNotNull(results);
+            Assert.AreEqual("test1@testy.com", results.ContactEmail);
+            Assert.AreEqual(SpecificGuid.GetGuid(6), results.Proposal.Guid);
+            Assert.AreEqual("Name4", results.CallForProposal.Name);
+            Assert.AreEqual(StaticValues.RB_SaveOptions_SaveWithValidation, results.SaveOptionChoice);
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestEditPostProposalMaximum1D()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "email6@testy.com");
+            SetupData6();
+            SetupData7();
+
+            var proposalToEdit = CreateValidEntities.Proposal(9);
+            proposalToEdit.RequestedAmount = 10.01m;
+            var qaParm = new QuestionAnswerParameter[0];
+            #endregion Arrange
+
+            #region Act
+            var results = Controller.Edit(SpecificGuid.GetGuid(6), proposalToEdit, qaParm, null, StaticValues.RB_SaveOptions_SubmitFinal)
+                .AssertActionRedirect()
+                .ToAction<ProposalController>(a => a.Details(SpecificGuid.GetGuid(6)));
+            #endregion Act
+
+            #region Assert
+            //Controller.ModelState.AssertErrorsAre("Requested Amount must be $0.01 or less");
+            Assert.AreEqual("Proposal Submitted Successfully", Controller.Message);
+            Assert.IsNotNull(results);
+            Assert.AreEqual(SpecificGuid.GetGuid(6), results.RouteValues["id"]);
+            ProposalRepository.AssertWasCalled(a => a.EnsurePersistent(Arg<Proposal>.Is.Anything));
+            var proposalArgs = (Proposal)ProposalRepository.GetArgumentsForCallsMadeOn(a => a.EnsurePersistent(Arg<Proposal>.Is.Anything))[0][0];
+            Assert.IsNotNull(proposalArgs);
+            Assert.AreEqual(10.01m, proposalArgs.RequestedAmount);
+            Assert.IsTrue(proposalArgs.IsSubmitted);
+            #endregion Assert
+        }
+
+
+        [TestMethod]
+        public void TestEditPostProposalMaximum2()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "email5@testy.com");
+            SetupData6();
+            SetupData7();
+
+            var proposalToEdit = CreateValidEntities.Proposal(9);
+            proposalToEdit.RequestedAmount = 0m;
+            var qaParm = new QuestionAnswerParameter[0];
+            #endregion Arrange
+
+            #region Act
+            var results = Controller.Edit(SpecificGuid.GetGuid(5), proposalToEdit, qaParm, null, StaticValues.RB_SaveOptions_SaveWithValidation)
+                .AssertViewRendered()
+                .WithViewData<ProposalViewModel>();
+            #endregion Act
+
+            #region Assert
+            Controller.ModelState.AssertErrorsAre("Requested Amount must be entered");
+            Assert.AreEqual("Unable to save. Please Correct Errors", Controller.Message);
+            Assert.IsNotNull(results);
+            Assert.AreEqual("test1@testy.com", results.ContactEmail);
+            Assert.AreEqual(SpecificGuid.GetGuid(5), results.Proposal.Guid);
+            Assert.AreEqual("Name3", results.CallForProposal.Name);
+            Assert.AreEqual(StaticValues.RB_SaveOptions_SaveWithValidation, results.SaveOptionChoice);
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestEditPostProposalMaximum2A()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "email5@testy.com");
+            SetupData6();
+            SetupData7();
+
+            var proposalToEdit = CreateValidEntities.Proposal(9);
+            proposalToEdit.RequestedAmount = 0m;
+            var qaParm = new QuestionAnswerParameter[0];
+            #endregion Arrange
+
+            #region Act
+            var results = Controller.Edit(SpecificGuid.GetGuid(5), proposalToEdit, qaParm, null, StaticValues.RB_SaveOptions_SubmitFinal)
+                .AssertViewRendered()
+                .WithViewData<ProposalViewModel>();
+            #endregion Act
+
+            #region Assert
+            Controller.ModelState.AssertErrorsAre("Requested Amount must be entered");
+            Assert.AreEqual("Unable to save. Please Correct Errors", Controller.Message);
+            Assert.IsNotNull(results);
+            Assert.AreEqual("test1@testy.com", results.ContactEmail);
+            Assert.AreEqual(SpecificGuid.GetGuid(5), results.Proposal.Guid);
+            Assert.AreEqual("Name3", results.CallForProposal.Name);
+            Assert.AreEqual(StaticValues.RB_SaveOptions_SubmitFinal, results.SaveOptionChoice);
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestEditPostProposalMaximum2B()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "email5@testy.com");
+            SetupData6();
+            SetupData7();
+
+            var proposalToEdit = CreateValidEntities.Proposal(9);
+            proposalToEdit.RequestedAmount = 0m;
+            var qaParm = new QuestionAnswerParameter[0];
+            #endregion Arrange
+
+            #region Act
+            var results = Controller.Edit(SpecificGuid.GetGuid(5), proposalToEdit, qaParm, null, StaticValues.RB_SaveOptions_SaveNoValidate)
+                .AssertViewRendered()
+                .WithViewData<ProposalViewModel>();
+            #endregion Act
+
+            #region Assert
+            //Controller.ModelState.AssertErrorsAre("Requested Amount must be entered");
+            Assert.AreEqual("Proposal Edited Successfully", Controller.Message);
+            Assert.IsNotNull(results);
+            Assert.AreEqual("test1@testy.com", results.ContactEmail);
+            Assert.AreEqual(SpecificGuid.GetGuid(5), results.Proposal.Guid);
+            Assert.AreEqual("Name3", results.CallForProposal.Name);
+            Assert.AreEqual(StaticValues.RB_SaveOptions_SaveNoValidate, results.SaveOptionChoice);
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestEditPostProposalMaximum2C()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "email6@testy.com");
+            SetupData6();
+            SetupData7();
+
+            var proposalToEdit = CreateValidEntities.Proposal(9);
+            proposalToEdit.RequestedAmount = 0m;
+            var qaParm = new QuestionAnswerParameter[0];
+            #endregion Arrange
+
+            #region Act
+            var results = Controller.Edit(SpecificGuid.GetGuid(6), proposalToEdit, qaParm, null, StaticValues.RB_SaveOptions_SaveWithValidation)
+                .AssertViewRendered()
+                .WithViewData<ProposalViewModel>();
+            #endregion Act
+
+            #region Assert
+            Controller.ModelState.AssertErrorsAre("Requested Amount must be entered");
+            Assert.AreEqual("Unable to save. Please Correct Errors", Controller.Message);
+            Assert.IsNotNull(results);
+            Assert.AreEqual("test1@testy.com", results.ContactEmail);
+            Assert.AreEqual(SpecificGuid.GetGuid(6), results.Proposal.Guid);
+            Assert.AreEqual("Name4", results.CallForProposal.Name);
+            Assert.AreEqual(StaticValues.RB_SaveOptions_SaveWithValidation, results.SaveOptionChoice);
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestEditPostProposalMaximum2D()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "email6@testy.com");
+            SetupData6();
+            SetupData7();
+
+            var proposalToEdit = CreateValidEntities.Proposal(9);
+            proposalToEdit.RequestedAmount = 0m;
+            var qaParm = new QuestionAnswerParameter[0];
+            #endregion Arrange
+
+            #region Act
+            var results = Controller.Edit(SpecificGuid.GetGuid(6), proposalToEdit, qaParm, null, StaticValues.RB_SaveOptions_SaveNoValidate)
+                .AssertViewRendered()
+                .WithViewData<ProposalViewModel>();
+            #endregion Act
+
+            #region Assert
+            //Controller.ModelState.AssertErrorsAre("Requested Amount must be entered");
+            Assert.AreEqual("Proposal Edited Successfully", Controller.Message);
+            Assert.IsNotNull(results);
+            Assert.AreEqual("test1@testy.com", results.ContactEmail);
+            Assert.AreEqual(SpecificGuid.GetGuid(6), results.Proposal.Guid);
+            Assert.AreEqual("Name4", results.CallForProposal.Name);
+            Assert.AreEqual(StaticValues.RB_SaveOptions_SaveNoValidate, results.SaveOptionChoice);
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestEditPostProposalMaximum2E()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "email6@testy.com");
+            SetupData6();
+            SetupData7();
+
+            var proposalToEdit = CreateValidEntities.Proposal(9);
+            proposalToEdit.RequestedAmount = 0m;
+            var qaParm = new QuestionAnswerParameter[0];
+            #endregion Arrange
+
+            #region Act
+            var results = Controller.Edit(SpecificGuid.GetGuid(6), proposalToEdit, qaParm, null, StaticValues.RB_SaveOptions_SubmitFinal)
+                .AssertViewRendered()
+                .WithViewData<ProposalViewModel>();
+            #endregion Act
+
+            #region Assert
+            Controller.ModelState.AssertErrorsAre("Requested Amount must be entered");
+            Assert.AreEqual("Unable to save. Please Correct Errors", Controller.Message);
+            Assert.IsNotNull(results);
+            Assert.AreEqual("test1@testy.com", results.ContactEmail);
+            Assert.AreEqual(SpecificGuid.GetGuid(6), results.Proposal.Guid);
+            Assert.AreEqual("Name4", results.CallForProposal.Name);
+            Assert.AreEqual(StaticValues.RB_SaveOptions_SubmitFinal, results.SaveOptionChoice);
+            ProposalRepository.AssertWasNotCalled(a => a.EnsurePersistent(Arg<Proposal>.Is.Anything));
+
+            #endregion Assert
+        }
 
         //Test passed answers
 

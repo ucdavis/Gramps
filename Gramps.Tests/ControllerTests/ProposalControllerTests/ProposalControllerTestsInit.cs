@@ -288,7 +288,7 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
             editor.IsOwner = true;
             editor.User = CreateValidEntities.User(1);
             var calls = new List<CallForProposal>();
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 4; i++)
             {
                 calls.Add(CreateValidEntities.CallForProposal(i+1));
                 calls[i].AddEditor(editor);
@@ -297,6 +297,7 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
             }
             calls[0].EndDate = DateTime.Now.AddDays(-1);
             calls[1].IsActive = false;
+            calls[3].ProposalMaximum = 0;
 
             var proposals = new List<Proposal>();
             for (int i = 0; i < 6; i++)
@@ -309,6 +310,8 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
             proposals[3].CallForProposal = calls[1];
 
             proposals[4].CallForProposal = calls[2];
+            proposals[5].CallForProposal = calls[3];
+
 
             var fakeProposals = new FakeProposals();
             fakeProposals.Records(0, ProposalRepository, proposals);
@@ -317,12 +320,15 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
         public void SetupData7()
         {
             var investigators = new List<Investigator>();
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 4; i++)
             {
                 investigators.Add(CreateValidEntities.Investigator(i + 1));
-                investigators[i].Proposal = ProposalRepository.GetById(6);
+                investigators[i].Proposal = ProposalRepository.GetNullableById(5);
             }
             investigators[0].IsPrimary = true;
+            investigators[3].IsPrimary = true;
+            investigators[3].Proposal = ProposalRepository.GetNullableById(6);
+
             var fakeInvestigators = new FakeInvestigators();
             fakeInvestigators.Records(0, InvestigatorRepository, investigators);
         }
