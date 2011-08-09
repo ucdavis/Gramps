@@ -931,7 +931,12 @@ namespace Gramps.Controllers
         }
       
 
-
+        /// <summary>
+        /// #18
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [PublicAuthorize]
         public ActionResult Details(Guid id)
         {
             var proposal = _proposalRepository.Queryable.Where(a => a.Guid == id).SingleOrDefault();

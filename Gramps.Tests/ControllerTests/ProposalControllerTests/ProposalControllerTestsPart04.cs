@@ -205,13 +205,16 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
             var args = ProposalRepository.GetArgumentsForCallsMadeOn(a => a.EnsurePersistent(Arg<Proposal>.Is.Anything));
             Assert.IsTrue(((Proposal)args[0][0]).IsNotified);
             Assert.IsNotNull(((Proposal)args[0][0]).NotifiedDate);
+// ReSharper disable PossibleInvalidOperationException
             Assert.AreEqual(DateTime.Now.Date, ((Proposal)args[0][0]).NotifiedDate.Value.Date);
+
             Assert.IsTrue(((Proposal)args[1][0]).IsNotified);
             Assert.IsNotNull(((Proposal)args[1][0]).NotifiedDate);
             Assert.AreEqual(DateTime.Now.Date, ((Proposal)args[1][0]).NotifiedDate.Value.Date);
             Assert.IsTrue(((Proposal)args[2][0]).IsNotified);
             Assert.IsNotNull(((Proposal)args[2][0]).NotifiedDate);
             Assert.AreEqual(DateTime.Now.Date, ((Proposal)args[2][0]).NotifiedDate.Value.Date);
+            // ReSharper restore PossibleInvalidOperationException
             #endregion Assert
         }
 

@@ -1,13 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web.Mvc;
 using System.Web.Routing;
 using Gramps.Controllers;
-using Gramps.Controllers.Filters;
 using Gramps.Core.Domain;
-using Gramps.Core.Resources;
 using Gramps.Models;
 using Gramps.Services;
 using Gramps.Tests.Core.Helpers;
@@ -16,7 +11,6 @@ using MvcContrib.TestHelper;
 using Rhino.Mocks;
 using UCDArch.Core.PersistanceSupport;
 using UCDArch.Testing;
-using UCDArch.Web.Attributes;
 
 
 namespace Gramps.Tests.ControllerTests.ProposalControllerTests
@@ -310,6 +304,7 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
                 proposals[i].Guid = SpecificGuid.GetGuid(i + 1);
             }
             proposals[1].IsSubmitted = true;
+            proposals[1].CallForProposal = calls[4];
             proposals[2].CallForProposal = calls[0];
             proposals[3].CallForProposal = calls[1];
 
@@ -322,18 +317,6 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
             fakeProposals.Records(0, ProposalRepository, proposals);
         }
 
-        //public List<Question> SetupQuestionsForCall()
-        //{
-        //    var questionTypes = new List<QuestionType>();
-        //    questionTypes.Add(new QuestionType());
-        //    questionTypes[0].Name = QuestionTypeText.STR_CheckboxList;
-
-        //    var questions = new List<Question>();
-        //    for (int i = 0; i < 5; i++)
-        //    {
-                
-        //    }
-        //}
 
         public void SetupData7()
         {

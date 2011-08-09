@@ -1,21 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web.Mvc;
-using System.Web.Routing;
-using Gramps.Controllers;
-using Gramps.Controllers.Filters;
-using Gramps.Core.Domain;
-using Gramps.Services;
+﻿using Gramps.Controllers;
+using Gramps.Tests.Core.Extensions;
 using Gramps.Tests.Core.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MvcContrib.TestHelper;
-using Rhino.Mocks;
-using UCDArch.Core.PersistanceSupport;
-using UCDArch.Testing;
-using UCDArch.Web.Attributes;
-using Gramps.Tests.Core.Extensions;
 
 namespace Gramps.Tests.ControllerTests.ProposalControllerTests
 {
@@ -183,6 +170,16 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
         {
             "~/Proposal/Edit/".ShouldMapTo<ProposalController>(a => a.Edit(SpecificGuid.GetGuid(1), null, new QuestionAnswerParameter[0],null, string.Empty ), true);
         }
+
+        /// <summary>
+        /// #18
+        /// </summary>
+        [TestMethod]
+        public void TestDetailsMapping()
+        {
+            "~/Proposal/Details/".ShouldMapTo<ProposalController>(a => a.Details(SpecificGuid.GetGuid(1)), true);
+        }
+
         #endregion Mapping Tests
     }
 }

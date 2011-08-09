@@ -19,9 +19,7 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
     public partial class ProposalControllerTests
     {
         #region Edit Get Tests
-        /// <summary>
-        /// Tests the FieldToTest with A value of TestValue does not save.
-        /// </summary>
+
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
         public void TestEditGetThrowsAnExceptionIfGuidIsNotUnique()

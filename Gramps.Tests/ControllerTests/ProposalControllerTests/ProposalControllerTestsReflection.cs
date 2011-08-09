@@ -1,19 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using System.Web.Mvc;
-using System.Web.Routing;
-using Gramps.Controllers;
 using Gramps.Controllers.Filters;
-using Gramps.Core.Domain;
 using Gramps.Helpers;
-using Gramps.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MvcContrib.TestHelper;
-using Rhino.Mocks;
-using UCDArch.Core.PersistanceSupport;
-using UCDArch.Testing;
 using UCDArch.Web.Attributes;
 
 
@@ -148,8 +137,7 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
             #endregion Act
 
             #region Assert
-            Assert.Inconclusive("Tests are still being written. When done, remove this line.");
-            Assert.AreEqual(17, result.Count(), "It looks like a method was added or removed from the controller.");
+            Assert.AreEqual(18, result.Count(), "It looks like a method was added or removed from the controller.");
             #endregion Assert
         }
 
@@ -410,9 +398,11 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
             #endregion Act
 
             #region Assert
+            // ReSharper disable PossibleNullReferenceException
             Assert.AreEqual(1, expectedAttribute.Count(), "ValidateInputAttribute not found");
             Assert.IsFalse(expectedAttribute.ElementAtOrDefault(0).EnableValidation);
             Assert.AreEqual(3, allAttributes.Count());
+            // ReSharper restore PossibleNullReferenceException
             #endregion Assert
         }
 
@@ -678,6 +668,29 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
             Assert.AreEqual(3, allAttributes.Count());
             #endregion Assert
         }
+
+        /// <summary>
+        /// #18
+        /// </summary>
+        [TestMethod]
+        public void TestControllerMethodDetailsContainsExpectedAttributes()
+        {
+            #region Arrange
+            var controllerClass = _controllerClass;
+            var controllerMethod = controllerClass.GetMethod("Details");
+            #endregion Arrange
+
+            #region Act
+            var expectedAttribute = controllerMethod.GetCustomAttributes(true).OfType<PublicAuthorize>();
+            var allAttributes = controllerMethod.GetCustomAttributes(true);
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual(1, expectedAttribute.Count(), "PublicAuthorize not found");
+            Assert.AreEqual(1, allAttributes.Count());
+            #endregion Assert
+        }
+
         #endregion Controller Method Tests
 
         #endregion Reflection Tests
