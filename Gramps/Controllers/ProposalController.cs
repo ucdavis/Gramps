@@ -799,6 +799,7 @@ namespace Gramps.Controllers
         /// <returns></returns>
         [HttpPost]
         [ValidateInput(false)]
+        [PublicAuthorize]
         public ActionResult Edit(Guid id, Proposal proposal, QuestionAnswerParameter[] proposalAnswers, HttpPostedFileBase uploadAttachment, string saveOptions)
         {
             var proposalToEdit = _proposalRepository.Queryable.Where(a => a.Guid == id).SingleOrDefault();
