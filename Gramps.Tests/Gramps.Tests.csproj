@@ -211,6 +211,7 @@
     <Compile Include="RepositoryTests\TemplateRepositoryTests.cs" />
     <Compile Include="RepositoryTests\UserRepositoryTests.cs" />
     <Compile Include="RepositoryTests\ValidatorRepositoryTests.cs" />
+    <Compile Include="ServiceTests\ServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />

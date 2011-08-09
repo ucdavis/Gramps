@@ -897,18 +897,118 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
         public void TestEditPostWithAnswers1()
         {
             #region Arrange
-            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "email7@testy.com");
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "email5@testy.com");
             SetupData6();
             SetupData7();
+            var proposalToEdit = CreateValidEntities.Proposal(9);
+            proposalToEdit.RequestedAmount = 0.01m;
+            proposalToEdit.IsSubmitted = false;
+            var qaParm = new QuestionAnswerParameter[1];
+            qaParm[0] = new QuestionAnswerParameter();
+            qaParm[0].Answer = "Test Answer";
             #endregion Arrange
 
             #region Act
+            var results = Controller.Edit(SpecificGuid.GetGuid(5), proposalToEdit, qaParm, null, StaticValues.RB_SaveOptions_SubmitFinal)
+                .AssertActionRedirect()
+                .ToAction<ProposalController>(a => a.Details(SpecificGuid.GetGuid(5)));
             #endregion Act
 
             #region Assert
+            Assert.IsNotNull(results);
+            Assert.AreEqual(SpecificGuid.GetGuid(5), results.RouteValues["id"]);
+            Assert.AreEqual("Proposal Submitted Successfully", Controller.Message);
+            AnswerService.AssertWasCalled(a => a.ProcessAnswers(Arg<Proposal>.Is.Anything, Arg<QuestionAnswerParameter[]>.Is.Anything, Arg<bool>.Is.Anything, Arg<Proposal>.Is.Anything, Arg<ModelStateDictionary>.Is.Anything));
+            var args =
+                AnswerService.GetArgumentsForCallsMadeOn(
+                    a =>
+                    a.ProcessAnswers(Arg<Proposal>.Is.Anything, Arg<QuestionAnswerParameter[]>.Is.Anything, Arg<bool>.Is.Anything, Arg<Proposal>.Is.Anything, Arg<ModelStateDictionary>.Is.Anything))[0];
+            Assert.IsNotNull(args);
+            Assert.AreEqual("email9@testy.com", ((Proposal)args[0]).Email);
+            Assert.IsTrue(((Proposal)args[0]).IsSubmitted);
+            Assert.AreEqual(1, ((QuestionAnswerParameter[])args[1]).Count());
+            Assert.AreEqual("Test Answer", ((QuestionAnswerParameter[])args[1])[0].Answer);
+            Assert.IsFalse((bool)args[2]);
+            Assert.AreEqual("email5@testy.com", ((Proposal)args[3]).Email);
+            Assert.IsTrue(((ModelStateDictionary)args[4]).IsValid);
             #endregion Assert		
         }
 
+        [TestMethod]
+        public void TestEditPostWithAnswers2()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "email5@testy.com");
+            SetupData6();
+            SetupData7();
+            var proposalToEdit = CreateValidEntities.Proposal(9);
+            proposalToEdit.RequestedAmount = 0.01m;
+            var qaParm = new QuestionAnswerParameter[1];
+            qaParm[0] = new QuestionAnswerParameter();
+            qaParm[0].Answer = "Test Answer";
+            #endregion Arrange
+
+            #region Act
+            var results = Controller.Edit(SpecificGuid.GetGuid(5), proposalToEdit, qaParm, null, StaticValues.RB_SaveOptions_SaveWithValidation)
+                .AssertViewRendered()
+                .WithViewData<ProposalViewModel>();
+            #endregion Act
+
+            #region Assert
+            Assert.IsNotNull(results);
+            Assert.AreEqual("Proposal Edited Successfully", Controller.Message);
+            AnswerService.AssertWasCalled(a => a.ProcessAnswers(Arg<Proposal>.Is.Anything, Arg<QuestionAnswerParameter[]>.Is.Anything, Arg<bool>.Is.Anything, Arg<Proposal>.Is.Anything, Arg<ModelStateDictionary>.Is.Anything));
+            var args =
+                AnswerService.GetArgumentsForCallsMadeOn(
+                    a =>
+                    a.ProcessAnswers(Arg<Proposal>.Is.Anything, Arg<QuestionAnswerParameter[]>.Is.Anything, Arg<bool>.Is.Anything, Arg<Proposal>.Is.Anything, Arg<ModelStateDictionary>.Is.Anything))[0];
+            Assert.IsNotNull(args);
+            Assert.AreEqual("email9@testy.com", ((Proposal)args[0]).Email);
+            Assert.AreEqual(1, ((QuestionAnswerParameter[])args[1]).Count());
+            Assert.AreEqual("Test Answer", ((QuestionAnswerParameter[])args[1])[0].Answer);
+            Assert.IsTrue((bool)args[2]);
+            Assert.AreEqual("email5@testy.com", ((Proposal)args[3]).Email);
+            Assert.IsTrue(((ModelStateDictionary)args[4]).IsValid);
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestEditPostWithAnswers3()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "email5@testy.com");
+            SetupData6();
+            SetupData7();
+            var proposalToEdit = CreateValidEntities.Proposal(9);
+            proposalToEdit.RequestedAmount = 0.01m;
+            var qaParm = new QuestionAnswerParameter[1];
+            qaParm[0] = new QuestionAnswerParameter();
+            qaParm[0].Answer = "Test Answer";
+            #endregion Arrange
+
+            #region Act
+            var results = Controller.Edit(SpecificGuid.GetGuid(5), proposalToEdit, qaParm, null, StaticValues.RB_SaveOptions_SaveNoValidate)
+                .AssertViewRendered()
+                .WithViewData<ProposalViewModel>();
+            #endregion Act
+
+            #region Assert
+            Assert.IsNotNull(results);
+            Assert.AreEqual("Proposal Edited Successfully", Controller.Message);
+            AnswerService.AssertWasCalled(a => a.ProcessAnswers(Arg<Proposal>.Is.Anything, Arg<QuestionAnswerParameter[]>.Is.Anything, Arg<bool>.Is.Anything, Arg<Proposal>.Is.Anything, Arg<ModelStateDictionary>.Is.Anything));
+            var args =
+                AnswerService.GetArgumentsForCallsMadeOn(
+                    a =>
+                    a.ProcessAnswers(Arg<Proposal>.Is.Anything, Arg<QuestionAnswerParameter[]>.Is.Anything, Arg<bool>.Is.Anything, Arg<Proposal>.Is.Anything, Arg<ModelStateDictionary>.Is.Anything))[0];
+            Assert.IsNotNull(args);
+            Assert.AreEqual("email9@testy.com", ((Proposal)args[0]).Email);
+            Assert.AreEqual(1, ((QuestionAnswerParameter[])args[1]).Count());
+            Assert.AreEqual("Test Answer", ((QuestionAnswerParameter[])args[1])[0].Answer);
+            Assert.IsFalse((bool)args[2]);
+            Assert.AreEqual("email5@testy.com", ((Proposal)args[3]).Email);
+            Assert.IsTrue(((ModelStateDictionary)args[4]).IsValid);
+            #endregion Assert
+        }
         [TestMethod]
         public void TestDescription()
         {
