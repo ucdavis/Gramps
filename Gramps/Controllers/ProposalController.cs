@@ -957,32 +957,6 @@ namespace Gramps.Controllers
         }
         #endregion Public Methods (Proposer)
 
-        //
-        // GET: /Proposal/Delete/5 
-        public ActionResult Delete(int id)
-        {
-			var proposal = _proposalRepository.GetNullableById(id);
-
-            if (proposal == null) return this.RedirectToAction(a => a.Index());
-
-            return View(proposal);
-        }
-
-        //
-        // POST: /Proposal/Delete/5
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Delete(int id, Proposal proposal)
-        {
-			var proposalToDelete = _proposalRepository.GetNullableById(id);
-
-            if (proposalToDelete == null) this.RedirectToAction(a => a.Index());
-
-            _proposalRepository.Remove(proposalToDelete);
-
-            Message = "Proposal Removed Successfully";
-
-            return this.RedirectToAction(a => a.Index());
-        }
         
         /// <summary>
         /// Transfer editable values from source to destination
