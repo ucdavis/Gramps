@@ -149,7 +149,7 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
 
             #region Assert
             Assert.Inconclusive("Tests are still being written. When done, remove this line.");
-            Assert.AreEqual(16, result.Count(), "It looks like a method was added or removed from the controller.");
+            Assert.AreEqual(17, result.Count(), "It looks like a method was added or removed from the controller.");
             #endregion Assert
         }
 
@@ -607,8 +607,75 @@ namespace Gramps.Tests.ControllerTests.ProposalControllerTests
             #endregion Act
 
             #region Assert
-            Assert.AreEqual(1, expectedAttribute.Count(), "UserOnlyAttribute not found");
+            Assert.AreEqual(1, expectedAttribute.Count(), "PublicAuthorize not found");
             Assert.AreEqual(1, allAttributes.Count());
+            #endregion Assert
+        }
+
+        /// <summary>
+        /// #17
+        /// </summary>
+        [TestMethod]
+        public void TestControllerMethodEditPostContainsExpectedAttributes1()
+        {
+            #region Arrange
+            var controllerClass = _controllerClass;
+            var controllerMethod = controllerClass.GetMethods().Where(a => a.Name == "Edit");
+            #endregion Arrange
+
+            #region Act
+            var expectedAttribute = controllerMethod.ElementAt(1).GetCustomAttributes(true).OfType<PublicAuthorize>();
+            var allAttributes = controllerMethod.ElementAt(1).GetCustomAttributes(true);
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual(1, expectedAttribute.Count(), "PublicAuthorize not found");
+            Assert.AreEqual(3, allAttributes.Count());
+            #endregion Assert
+        }
+
+        /// <summary>
+        /// #17
+        /// </summary>
+        [TestMethod]
+        public void TestControllerMethodEditPostContainsExpectedAttributes2()
+        {
+            #region Arrange
+            var controllerClass = _controllerClass;
+            var controllerMethod = controllerClass.GetMethods().Where(a => a.Name == "Edit");
+            #endregion Arrange
+
+            #region Act
+            var expectedAttribute = controllerMethod.ElementAt(1).GetCustomAttributes(true).OfType<HttpPostAttribute>();
+            var allAttributes = controllerMethod.ElementAt(1).GetCustomAttributes(true);
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual(1, expectedAttribute.Count(), "HttpPostAttribute not found");
+            Assert.AreEqual(3, allAttributes.Count());
+            #endregion Assert
+        }
+
+        /// <summary>
+        /// #17
+        /// </summary>
+        [TestMethod]
+        public void TestControllerMethodEditPostContainsExpectedAttributes3()
+        {
+            #region Arrange
+            var controllerClass = _controllerClass;
+            var controllerMethod = controllerClass.GetMethods().Where(a => a.Name == "Edit");
+            #endregion Arrange
+
+            #region Act
+            var expectedAttribute = controllerMethod.ElementAt(1).GetCustomAttributes(true).OfType<ValidateInputAttribute>();
+            var allAttributes = controllerMethod.ElementAt(1).GetCustomAttributes(true);
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual(1, expectedAttribute.Count(), "ValidateInputAttribute not found");
+            Assert.IsFalse(expectedAttribute.ElementAt(0).EnableValidation);
+            Assert.AreEqual(3, allAttributes.Count());
             #endregion Assert
         }
         #endregion Controller Method Tests
