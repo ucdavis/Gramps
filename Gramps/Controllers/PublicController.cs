@@ -88,6 +88,12 @@ namespace Gramps.Controllers
             return View(viewModel);
         }
 
+        /// <summary>
+        /// #4
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <param name="captchaValid"></param>
+        /// <returns></returns>
         [CaptchaValidator]
         [HttpPost]
         public ActionResult ForgotPassword(string userName, bool captchaValid )
@@ -95,6 +101,8 @@ namespace Gramps.Controllers
             if (!captchaValid)
             {
                 ModelState.AddModelError("Captcha", "Recaptcha value not valid");
+                Message = "Unable to reset password";
+                return View(new ForgotPasswordModel() { UserName = userName .ToLower()});
             }
             userName = userName.Trim().ToLower();
 
@@ -149,10 +157,10 @@ namespace Gramps.Controllers
         }
 
 
-        // **************************************
-        // URL: /Account/LogOff
-        // **************************************
-
+       /// <summary>
+       /// #5
+       /// </summary>
+       /// <returns></returns>
         public ActionResult LogOff()
         {
             _formsService.SignOut();
@@ -160,11 +168,10 @@ namespace Gramps.Controllers
             return this.RedirectToAction<HomeController>(a => a.LoggedOut());
         }
 
-
-        // **************************************
-        // URL: /Account/ChangePassword
-        // **************************************
-
+        /// <summary>
+        /// #6
+        /// </summary>
+        /// <returns></returns>
         [PublicAuthorize]
         public ActionResult ChangePassword()
         {
@@ -172,6 +179,11 @@ namespace Gramps.Controllers
             return View();
         }
 
+        /// <summary>
+        /// #7
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [PublicAuthorize]
         [HttpPost]
         public ActionResult ChangePassword(ChangePasswordModel model)
@@ -180,7 +192,8 @@ namespace Gramps.Controllers
             {
                 if (_membershipService.ChangePassword(User.Identity.Name, model.OldPassword, model.NewPassword))
                 {
-                    return RedirectToAction("ChangePasswordSuccess");
+                    //return RedirectToAction("ChangePasswordSuccess");
+                    return this.RedirectToAction(a => a.ChangePasswordSuccess());
                 }
                 else
                 {
@@ -193,10 +206,10 @@ namespace Gramps.Controllers
             return View(model);
         }
 
-        // **************************************
-        // URL: /Account/ChangePasswordSuccess
-        // **************************************
-
+        /// <summary>
+        /// #8
+        /// </summary>
+        /// <returns></returns>
         public ActionResult ChangePasswordSuccess()
         {
             return View();
