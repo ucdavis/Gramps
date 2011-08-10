@@ -28,6 +28,8 @@ namespace Gramps
 
             container.AddComponent("answerService", typeof (IAnswerService), typeof (AnswerService));
 
+            container.AddComponent("formsService", typeof (IFormsAuthenticationService), typeof (FormsAuthenticationService));
+
         }
 
         private static void AddGenericRepositoriesTo(IWindsorContainer container)

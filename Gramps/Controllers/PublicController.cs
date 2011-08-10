@@ -16,33 +16,36 @@ using MvcContrib;
 
 namespace Gramps.Controllers
 {
-
-
     [HandleError]
     public class PublicController : ApplicationController 
     {
+        private readonly IFormsAuthenticationService _formsService;
+        private readonly IMembershipService _membershipService;
+        private readonly IEmailService _emailService;
 
-        public IFormsAuthenticationService FormsService { get; set; }
-        public IMembershipService MembershipService { get; set; }
-        public IEmailService EmailService { get; set; }
 
-        protected override void Initialize(RequestContext requestContext)
+        public PublicController(IFormsAuthenticationService formsService, IMembershipService membershipService, IEmailService emailService)
         {
-            if (FormsService == null) { FormsService = new FormsAuthenticationService(); }
-            if (MembershipService == null) { MembershipService = new AccountMembershipService(); }
-
-            base.Initialize(requestContext);
+            _formsService = formsService;
+            _membershipService = membershipService;
+            _emailService = emailService;
         }
 
-        // **************************************
-        // URL: /Account/LogOn
-        // **************************************
-
+        /// <summary>
+        /// #1
+        /// </summary>
+        /// <returns></returns>
         public ActionResult LogOn()
         {
             return View();
         }
 
+        /// <summary>
+        /// #2
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="returnUrl"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult LogOn(LogOnModel model, string returnUrl)
         {
@@ -52,9 +55,9 @@ namespace Gramps.Controllers
             }
             if (ModelState.IsValid)
             {
-                if (MembershipService.ValidateUser(model.UserName, model.Password))
+                if (_membershipService.ValidateUser(model.UserName, model.Password))
                 {
-                    FormsService.SignIn(model.UserName, model.RememberMe);
+                    _formsService.SignIn(model.UserName, model.RememberMe);
                     if (!String.IsNullOrEmpty(returnUrl))
                     {
                         return Redirect(returnUrl);
@@ -74,6 +77,10 @@ namespace Gramps.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// #3
+        /// </summary>
+        /// <returns></returns>
         public ActionResult ForgotPassword()
         {
             var viewModel = new ForgotPasswordModel();
@@ -81,6 +88,12 @@ namespace Gramps.Controllers
             return View(viewModel);
         }
 
+        /// <summary>
+        /// #4
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <param name="captchaValid"></param>
+        /// <returns></returns>
         [CaptchaValidator]
         [HttpPost]
         public ActionResult ForgotPassword(string userName, bool captchaValid )
@@ -88,10 +101,12 @@ namespace Gramps.Controllers
             if (!captchaValid)
             {
                 ModelState.AddModelError("Captcha", "Recaptcha value not valid");
+                Message = "Unable to reset password";
+                return View(new ForgotPasswordModel() { UserName = userName .ToLower()});
             }
             userName = userName.Trim().ToLower();
 
-            if (!MembershipService.DoesUserExist(userName))
+            if (!_membershipService.DoesUserExist(userName))
             {
                 ModelState.AddModelError("UserName", "Email not found");
             }
@@ -128,8 +143,8 @@ namespace Gramps.Controllers
 
             if (ModelState.IsValid)
             {
-                var tempPass = MembershipService.ResetPassword(userName);
-                EmailService.SendPasswordReset(callForProposal, userName, tempPass);
+                var tempPass = _membershipService.ResetPassword(userName);
+                _emailService.SendPasswordReset(callForProposal, userName, tempPass);
 
                 Message = "A new password has been sent to your email. It should arrive in a few minutes";
                 return this.RedirectToAction<PublicController>(a => a.LogOn());
@@ -141,77 +156,44 @@ namespace Gramps.Controllers
             return View(viewModel);
         }
 
-        [HttpGet]
-        public ActionResult ResetPassword()
-        {
-            throw new NotImplementedException();
-        }
 
-        // **************************************
-        // URL: /Account/LogOff
-        // **************************************
-
+       /// <summary>
+       /// #5
+       /// </summary>
+       /// <returns></returns>
         public ActionResult LogOff()
         {
-            FormsService.SignOut();
+            _formsService.SignOut();
 
             return this.RedirectToAction<HomeController>(a => a.LoggedOut());
         }
 
-        // **************************************
-        // URL: /Account/Register
-        // **************************************
-
-        //public ActionResult Register()
-        //{
-        //    ViewData["PasswordLength"] = MembershipService.MinPasswordLength;
-        //    return View();
-        //}
-
-        //[HttpPost]
-        //public ActionResult Register(RegisterModel model)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        // Attempt to register the user
-        //        MembershipCreateStatus createStatus = MembershipService.CreateUser(model.UserName, model.Password, model.Email);
-
-        //        if (createStatus == MembershipCreateStatus.Success)
-        //        {
-        //            FormsService.SignIn(model.UserName, false /* createPersistentCookie */);
-        //            return RedirectToAction("Index", "Home");
-        //        }
-        //        else
-        //        {
-        //            ModelState.AddModelError("", AccountValidation.ErrorCodeToString(createStatus));
-        //        }
-        //    }
-
-        //    // If we got this far, something failed, redisplay form
-        //    ViewData["PasswordLength"] = MembershipService.MinPasswordLength;
-        //    return View(model);
-        //}
-
-        // **************************************
-        // URL: /Account/ChangePassword
-        // **************************************
-
+        /// <summary>
+        /// #6
+        /// </summary>
+        /// <returns></returns>
         [PublicAuthorize]
         public ActionResult ChangePassword()
         {
-            ViewData["PasswordLength"] = MembershipService.MinPasswordLength;
+            ViewData["PasswordLength"] = _membershipService.MinPasswordLength;
             return View();
         }
 
+        /// <summary>
+        /// #7
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [PublicAuthorize]
         [HttpPost]
         public ActionResult ChangePassword(ChangePasswordModel model)
         {
             if (ModelState.IsValid)
             {
-                if (MembershipService.ChangePassword(User.Identity.Name, model.OldPassword, model.NewPassword))
+                if (_membershipService.ChangePassword(User.Identity.Name, model.OldPassword, model.NewPassword))
                 {
-                    return RedirectToAction("ChangePasswordSuccess");
+                    //return RedirectToAction("ChangePasswordSuccess");
+                    return this.RedirectToAction(a => a.ChangePasswordSuccess());
                 }
                 else
                 {
@@ -220,14 +202,14 @@ namespace Gramps.Controllers
             }
 
             // If we got this far, something failed, redisplay form
-            ViewData["PasswordLength"] = MembershipService.MinPasswordLength;
+            ViewData["PasswordLength"] = _membershipService.MinPasswordLength;
             return View(model);
         }
 
-        // **************************************
-        // URL: /Account/ChangePasswordSuccess
-        // **************************************
-
+        /// <summary>
+        /// #8
+        /// </summary>
+        /// <returns></returns>
         public ActionResult ChangePasswordSuccess()
         {
             return View();
