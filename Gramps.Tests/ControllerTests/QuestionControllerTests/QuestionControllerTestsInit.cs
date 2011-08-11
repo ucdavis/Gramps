@@ -27,6 +27,8 @@ namespace Gramps.Tests.ControllerTests.QuestionControllerTests
         public IAccessService AccessService;
         public IRepository<CallForProposal> CallForProposalRepository;
         public IRepository<Template> TemplateRepository;
+        public IRepository<QuestionType> QuestionTypeRepository;
+        public IRepository<Validator> ValidatorRepository;
 
 
         #region Init
@@ -53,6 +55,12 @@ namespace Gramps.Tests.ControllerTests.QuestionControllerTests
 
             TemplateRepository = FakeRepository<Template>();
             Controller.Repository.Expect(a => a.OfType<Template>()).Return(TemplateRepository).Repeat.Any();
+
+            QuestionTypeRepository = FakeRepository<QuestionType>();
+            Controller.Repository.Expect(a => a.OfType<QuestionType>()).Return(QuestionTypeRepository).Repeat.Any();
+
+            ValidatorRepository = FakeRepository<Validator>();
+            Controller.Repository.Expect(a => a.OfType<Validator>()).Return(ValidatorRepository).Repeat.Any();
 
             Controller.Repository.Expect(a => a.OfType<Question>()).Return(QuestionRepository).Repeat.Any();	
         }
@@ -89,6 +97,14 @@ namespace Gramps.Tests.ControllerTests.QuestionControllerTests
             var fakeQuestions = new FakeQuestions();
             fakeQuestions.Records(0, QuestionRepository, questions);
 
+        }
+
+        public void SetupData2()
+        {
+            var fakeQuestionTypes = new FakeQuestionTypes();
+            fakeQuestionTypes.Records(5, QuestionTypeRepository);
+            var fakeValidators = new FakeValidators();
+            fakeValidators.Records(4, ValidatorRepository);
         }
         
     }

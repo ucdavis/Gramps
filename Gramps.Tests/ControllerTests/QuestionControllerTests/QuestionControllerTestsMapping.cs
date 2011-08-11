@@ -27,5 +27,14 @@ namespace Gramps.Tests.ControllerTests.QuestionControllerTests
         {
             "~/Question/".ShouldMapTo<QuestionController>(a => a.Index(null, null));
         }
+
+        /// <summary>
+        /// #2
+        /// </summary>
+        [TestMethod]
+        public void TestCreateGetMapping()
+        {
+            "~/Question/Create/".ShouldMapTo<QuestionController>(a => a.Create(null, null));
+        }
     }
 }

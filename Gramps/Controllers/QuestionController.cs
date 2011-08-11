@@ -44,6 +44,13 @@ namespace Gramps.Controllers
             return View(viewModel);
         }
 
+        /// <summary>
+        /// #2
+        /// GET: /Question/Create
+        /// </summary>
+        /// <param name="templateId"></param>
+        /// <param name="callForProposalId"></param>
+        /// <returns></returns>
         public ActionResult Create(int? templateId, int? callForProposalId)
         {
 
