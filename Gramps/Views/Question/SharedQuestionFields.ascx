@@ -9,6 +9,7 @@
             <li>
                 <%: Html.LabelFor(model => model.Validators) %>
                 <%= this.CheckBoxList("Question.Validators").Options(Model.Validators, x => x.Id, x => x.Name)%>
+                <%: Html.ValidationMessageFor(model => model.Question.Validators)%>
             </li>
             
             <li>

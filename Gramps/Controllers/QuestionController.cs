@@ -344,7 +344,7 @@ namespace Gramps.Controllers
                     //All possible, but only a combination of required and others
                     if (validatorsSelected > 1)
                     {
-                        ModelState.AddModelError("Validators", "Cannot have Email, Url, Date, Phone Number, or zip validators selected together.");
+                        ModelState.AddModelError("Question.Validators", "Cannot have Email, Url, Date, Phone Number, or zip validators selected together.");
                     }
                     break;
                 case "Boolean":
@@ -354,7 +354,7 @@ namespace Gramps.Controllers
                 case "Text Area":
                     if (validatorsSelected > 0) //count of all validators excluding required
                     {
-                        ModelState.AddModelError("Validators", string.Format("The only validator allowed for a Question Type of {0} is Required.", question.QuestionType.Name));
+                        ModelState.AddModelError("Question.Validators", string.Format("The only validator allowed for a Question Type of {0} is Required.", question.QuestionType.Name));
                     }
                     break;
 
@@ -363,14 +363,14 @@ namespace Gramps.Controllers
                     {
                         if (validator.Class.ToLower().Trim() != "required" && validator.Class.ToLower().Trim() != "date")
                         {
-                            ModelState.AddModelError("Validators", string.Format("{0} is not a valid validator for a Question Type of {1}", validator.Name, question.QuestionType.Name));
+                            ModelState.AddModelError("Question.Validators", string.Format("{0} is not a valid validator for a Question Type of {1}", validator.Name, question.QuestionType.Name));
                         }
                     }
                     break;
                 case "No Answer":
                     foreach (var validator in question.Validators)
                     {
-                        ModelState.AddModelError("Validators", string.Format("{0} is not a valid validator for a Question Type of {1}", validator.Name, question.QuestionType.Name));
+                        ModelState.AddModelError("Question.Validators", string.Format("{0} is not a valid validator for a Question Type of {1}", validator.Name, question.QuestionType.Name));
                     }
                     break;
                 default:
