@@ -5,6 +5,7 @@ using System.Text;
 using Gramps.Controllers;
 using Gramps.Controllers.ViewModels;
 using Gramps.Core.Domain;
+using Gramps.Tests.Core.Extensions;
 using Gramps.Tests.Core.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
@@ -207,17 +208,112 @@ namespace Gramps.Tests.ControllerTests.QuestionControllerTests
 
 
         [TestMethod]
-        public void TestDescription()
+        public void TestCreatePostDoesNotSaveWhenNoCallOrTemplate1()
         {
             #region Arrange
-            Assert.Inconclusive("Continue these tests");
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "tester@testy.com");
+            AccessService.Expect(a => a.HasAccess(Arg<int?>.Is.Anything, Arg<int?>.Is.Anything, Arg<string>.Is.Anything)).Return(true);
+            var questionToCreate = CreateValidEntities.Question(9);
+            var questionOptions = new string[0];
+            SetupData1();
             #endregion Arrange
 
             #region Act
+            var result = Controller.Create(4, null, questionToCreate, questionOptions)
+                .AssertViewRendered()
+                .WithViewData<QuestionViewModel>();
             #endregion Act
 
             #region Assert
+            QuestionRepository.AssertWasNotCalled(a => a.EnsurePersistent(Arg<Question>.Is.Anything));
+            Assert.IsNotNull(result);
+            Controller.ModelState.AssertErrorsAre("RelatedTable: Must be related to Template or CallForProposal not both.");
             #endregion Assert		
+        }
+
+        [TestMethod]
+        public void TestCreatePostDoesNotSaveWhenNoCallOrTemplate2()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "tester@testy.com");
+            AccessService.Expect(a => a.HasAccess(Arg<int?>.Is.Anything, Arg<int?>.Is.Anything, Arg<string>.Is.Anything)).Return(true);
+            var questionToCreate = CreateValidEntities.Question(9);
+            var questionOptions = new string[0];
+            SetupData1();
+            #endregion Arrange
+
+            #region Act
+            var result = Controller.Create(null, 4, questionToCreate, questionOptions)
+                .AssertViewRendered()
+                .WithViewData<QuestionViewModel>();
+            #endregion Act
+
+            #region Assert
+            QuestionRepository.AssertWasNotCalled(a => a.EnsurePersistent(Arg<Question>.Is.Anything));
+            Assert.IsNotNull(result);
+            Controller.ModelState.AssertErrorsAre("RelatedTable: Must be related to Template or CallForProposal not both.");
+            #endregion Assert
+        }
+
+
+        [TestMethod]
+        public void TestCreatePostSavesAndRedirectsWhenValid1()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "tester@testy.com");
+            AccessService.Expect(a => a.HasAccess(Arg<int?>.Is.Anything, Arg<int?>.Is.Anything, Arg<string>.Is.Anything)).Return(true);
+            var questionToCreate = CreateValidEntities.Question(9);
+            var questionOptions = new string[0];
+            SetupData1();
+            #endregion Arrange
+
+            #region Act
+            var result = Controller.Create(2, null, questionToCreate, questionOptions)
+                .AssertActionRedirect()
+                .ToAction<QuestionController>(a => a.Index(2, null));
+            #endregion Act
+
+            #region Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(2, result.RouteValues["templateId"]);
+            Assert.AreEqual(null, result.RouteValues["callForProposalId"]);
+            Assert.AreEqual("Question added successfully", Controller.Message);
+            QuestionRepository.AssertWasCalled(a => a.EnsurePersistent(Arg<Question>.Is.Anything));
+            var args = (Question) QuestionRepository.GetArgumentsForCallsMadeOn(a => a.EnsurePersistent(Arg<Question>.Is.Anything))[0][0]; 
+            Assert.IsNotNull(args);
+            Assert.AreEqual("Name9", args.Name);
+            Assert.AreEqual(13, args.Order);
+            #endregion Assert			
+        }
+
+        [TestMethod]
+        public void TestCreatePostSavesAndRedirectsWhenValid2()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "tester@testy.com");
+            AccessService.Expect(a => a.HasAccess(Arg<int?>.Is.Anything, Arg<int?>.Is.Anything, Arg<string>.Is.Anything)).Return(true);
+            var questionToCreate = CreateValidEntities.Question(9);
+            var questionOptions = new string[0];
+            SetupData1();
+            #endregion Arrange
+
+            #region Act
+            var result = Controller.Create(0, 3, questionToCreate, questionOptions)
+                .AssertActionRedirect()
+                .ToAction<QuestionController>(a => a.Index(2, null));
+            #endregion Act
+
+            #region Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(0, result.RouteValues["templateId"]);
+            Assert.AreEqual(3, result.RouteValues["callForProposalId"]);
+            Assert.AreEqual("Question added successfully", Controller.Message);
+            QuestionRepository.AssertWasCalled(a => a.EnsurePersistent(Arg<Question>.Is.Anything));
+            var args = (Question)QuestionRepository.GetArgumentsForCallsMadeOn(a => a.EnsurePersistent(Arg<Question>.Is.Anything))[0][0];
+            Assert.IsNotNull(args);
+            Assert.AreEqual("Name9", args.Name);
+            Assert.AreEqual(7, args.Order);
+            #endregion Assert
         }
         #endregion Create Post Tests
     }
