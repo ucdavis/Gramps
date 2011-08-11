@@ -8,6 +8,7 @@ using Gramps.Controllers;
 using Gramps.Controllers.Filters;
 using Gramps.Core.Domain;
 using Gramps.Services;
+using Gramps.Tests.Core.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MvcContrib.TestHelper;
 using Rhino.Mocks;
@@ -24,7 +25,9 @@ namespace Gramps.Tests.ControllerTests.QuestionControllerTests
         protected readonly Type ControllerClass = typeof(QuestionController);
         public IRepository<Question> QuestionRepository;
         public IAccessService AccessService;
-        //public IRepository<Example> ExampleRepository;
+        public IRepository<CallForProposal> CallForProposalRepository;
+        public IRepository<Template> TemplateRepository;
+
 
         #region Init
         /// <summary>
@@ -45,8 +48,11 @@ namespace Gramps.Tests.ControllerTests.QuestionControllerTests
 
         public QuestionControllerTests()
         {
-            //    ExampleRepository = FakeRepository<Example>();
-            //    Controller.Repository.Expect(a => a.OfType<Example>()).Return(ExampleRepository).Repeat.Any();
+            CallForProposalRepository = FakeRepository<CallForProposal>();
+            Controller.Repository.Expect(a => a.OfType<CallForProposal>()).Return(CallForProposalRepository).Repeat.Any();
+
+            TemplateRepository = FakeRepository<Template>();
+            Controller.Repository.Expect(a => a.OfType<Template>()).Return(TemplateRepository).Repeat.Any();
 
             Controller.Repository.Expect(a => a.OfType<Question>()).Return(QuestionRepository).Repeat.Any();	
         }
@@ -55,7 +61,34 @@ namespace Gramps.Tests.ControllerTests.QuestionControllerTests
         
         public void SetupData1()
         {
+            var fakeCalls = new FakeCallForProposals();
+            fakeCalls.Records(3, CallForProposalRepository);
+            var fakeTemplates = new FakeTemplates();
+            fakeTemplates.Records(3, TemplateRepository);
             
+            var questions = new List<Question>();
+            for (int i = 0; i < 12; i++)
+            {
+                questions.Add(CreateValidEntities.Question(i+1));
+                if (i < 6)
+                {
+                    questions[i].CallForProposal = null;
+                    questions[i].Template = TemplateRepository.GetNullableById(2);
+                }
+                else
+                {
+                    questions[i].CallForProposal = CallForProposalRepository.GetNullableById(3);
+                    questions[i].Template = null;
+                }
+                questions[i].Order = 12 - i;
+            }
+
+            questions[1].Template = TemplateRepository.GetNullableById(1);
+            questions[10].CallForProposal = CallForProposalRepository.GetNullableById(2);
+
+            var fakeQuestions = new FakeQuestions();
+            fakeQuestions.Records(0, QuestionRepository, questions);
+
         }
         
     }
