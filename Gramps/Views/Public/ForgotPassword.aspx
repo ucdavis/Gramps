@@ -16,21 +16,23 @@
         <%: Html.ValidationSummary("") %>
 
         <fieldset>
-            
+            <ul>
+            <li>
             <div class="editor-label">
-                <%: Html.LabelFor(model => model.UserName) %>
+                <strong><%: Html.LabelFor(model => model.UserName) %></strong>
             </div>
             <div class="editor-field">
-                <%: Html.TextBoxFor(model => model.UserName) %>
+                <%: Html.TextBoxFor(model => model.UserName, new { style = "width: 25em" })%>
                 <%: Html.ValidationMessageFor(model => model.UserName) %>
             </div>
-            <br />
+            </li>
             
-            <p>
+            
+            <li>
                 <%= Html.GenerateCaptcha() %>
                 <%: Html.ValidationMessage("Captcha")%>
-            </p>
-
+            </li>
+            </ul>
             <p>
                 <input type="submit" value="Reset Password" />
             </p>

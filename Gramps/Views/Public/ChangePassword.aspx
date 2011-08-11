@@ -18,32 +18,37 @@
         <%= Html.AntiForgeryToken() %>
         <div>
             <fieldset>
-                <legend>Account Information</legend>
+                <legend><strong>Account Information</strong></legend>
                 
+                <ul>
+                <li>
                 <div class="editor-label">
-                    <%: Html.LabelFor(m => m.OldPassword) %>
+                    <strong><%: Html.LabelFor(m => m.OldPassword) %></strong>
                 </div>
                 <div class="editor-field">
-                    <%: Html.PasswordFor(m => m.OldPassword) %>
+                    <%: Html.PasswordFor(m => m.OldPassword, new { style = "width: 25em" })%>
                     <%: Html.ValidationMessageFor(m => m.OldPassword) %>
                 </div>
-                
+                </li>
+                <li>
                 <div class="editor-label">
-                    <%: Html.LabelFor(m => m.NewPassword) %>
+                    <strong><%: Html.LabelFor(m => m.NewPassword) %></strong>
                 </div>
                 <div class="editor-field">
-                    <%: Html.PasswordFor(m => m.NewPassword) %>
+                    <%: Html.PasswordFor(m => m.NewPassword, new { style = "width: 25em" })%>
                     <%: Html.ValidationMessageFor(m => m.NewPassword) %>
                 </div>
-                
+                </li>
+                <li>
                 <div class="editor-label">
-                    <%: Html.LabelFor(m => m.ConfirmPassword) %>
+                    <strong><%: Html.LabelFor(m => m.ConfirmPassword) %></strong>
                 </div>
                 <div class="editor-field">
                     <%: Html.PasswordFor(m => m.ConfirmPassword) %>
                     <%: Html.ValidationMessageFor(m => m.ConfirmPassword) %>
                 </div>
-                
+                </li>
+                </ul>
                 <p>
                     <input type="submit" value="Change Password" />
                 </p>
