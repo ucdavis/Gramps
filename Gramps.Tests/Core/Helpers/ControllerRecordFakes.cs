@@ -143,4 +143,28 @@ namespace Gramps.Tests.Core.Helpers
             return CreateValidEntities.Comment(i);
         }
     }
+
+    public class FakeQuestions : ControllerRecordFakes<Question>
+    {
+        protected override Question CreateValid(int i)
+        {
+            return CreateValidEntities.Question(i);
+        }
+    }
+
+    public class FakeQuestionTypes : ControllerRecordFakes<QuestionType>
+    {
+        protected override QuestionType CreateValid(int i)
+        {
+            return CreateValidEntities.QuestionType(i);
+        }
+    }
+
+    public class FakeValidators : ControllerRecordFakes<Validator>
+    {
+        protected override Validator CreateValid(int i)
+        {
+            return CreateValidEntities.Validator(i);
+        }
+    }
 }

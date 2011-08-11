@@ -167,6 +167,11 @@
     <Compile Include="ControllerTests\ProposalControllerTests\ProposalControllerTestsPart10.cs" />
     <Compile Include="ControllerTests\ProposalControllerTests\ProposalControllerTestsReflection.cs" />
     <Compile Include="ControllerTests\PublicControllerTests.cs" />
+    <Compile Include="ControllerTests\QuestionControllerTests\QuestionControllerTestsInit.cs" />
+    <Compile Include="ControllerTests\QuestionControllerTests\QuestionControllerTestsMapping.cs" />
+    <Compile Include="ControllerTests\QuestionControllerTests\QuestionControllerTestsPart01.cs" />
+    <Compile Include="ControllerTests\QuestionControllerTests\QuestionControllerTestsPart02.cs" />
+    <Compile Include="ControllerTests\QuestionControllerTests\QuestionControllerTestsRefection.cs" />
     <Compile Include="Core\AbstractRepositoryTests.cs" />
     <Compile Include="Core\Extensions\AssertExtensions.cs" />
     <Compile Include="Core\Extensions\RouteTestingExtensions.cs" />

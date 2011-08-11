@@ -714,11 +714,8 @@ namespace Gramps.Tests.ControllerTests
             #endregion Assert
         }
 
-        /// <summary>
-        /// Tests the controller has only three attributes.
-        /// </summary>
         [TestMethod]
-        public void TestControllerHasOnlyThreeAttributes()
+        public void TestControllerHasOnlyFiveAttributes()
         {
             #region Arrange
             var controllerClass = _controllerClass;
