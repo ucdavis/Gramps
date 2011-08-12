@@ -255,6 +255,425 @@ namespace Gramps.Tests.ControllerTests.QuestionControllerTests
             #endregion Assert
         }
 
+        [TestMethod]
+        public void TestCreatePostDoesNotSaveWhenWrongValidators1()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "tester@testy.com");
+            AccessService.Expect(a => a.HasAccess(Arg<int?>.Is.Anything, Arg<int?>.Is.Anything, Arg<string>.Is.Anything)).Return(true);
+            var questionToCreate = CreateValidEntities.Question(9);
+            questionToCreate.QuestionType = CreateValidEntities.QuestionType(1);
+            questionToCreate.QuestionType.Name = "Text Box";
+            questionToCreate.Validators.Add(CreateValidEntities.Validator(1));
+            questionToCreate.Validators.Add(CreateValidEntities.Validator(2));
+            var questionOptions = new string[0];
+            SetupData1();
+            #endregion Arrange
+
+            #region Act
+            var result = Controller.Create(null, 3, questionToCreate, questionOptions)
+                .AssertViewRendered()
+                .WithViewData<QuestionViewModel>();
+            #endregion Act
+
+            #region Assert
+            QuestionRepository.AssertWasNotCalled(a => a.EnsurePersistent(Arg<Question>.Is.Anything));
+            Assert.IsNotNull(result);
+            Controller.ModelState.AssertErrorsAre("Cannot have Email, Url, Date, Phone Number, or zip validators selected together.");
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestCreatePostDoesSaveWhenWrongValidators1()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "tester@testy.com");
+            AccessService.Expect(a => a.HasAccess(Arg<int?>.Is.Anything, Arg<int?>.Is.Anything, Arg<string>.Is.Anything)).Return(true);
+            var questionToCreate = CreateValidEntities.Question(9);
+            questionToCreate.QuestionType = CreateValidEntities.QuestionType(1);
+            questionToCreate.QuestionType.Name = "Text Box";
+            questionToCreate.Validators.Add(CreateValidEntities.Validator(1));
+            var questionOptions = new string[0];
+            SetupData1();
+            #endregion Arrange
+
+            #region Act
+            Controller.Create(null, 3, questionToCreate, questionOptions)
+                .AssertActionRedirect()
+                .ToAction<QuestionController>(a => a.Index(null, 3));
+            #endregion Act
+
+            #region Assert
+            QuestionRepository.AssertWasCalled(a => a.EnsurePersistent(Arg<Question>.Is.Anything));
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestCreatePostDoesNotSaveWhenWrongValidators2()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "tester@testy.com");
+            AccessService.Expect(a => a.HasAccess(Arg<int?>.Is.Anything, Arg<int?>.Is.Anything, Arg<string>.Is.Anything)).Return(true);
+            var questionToCreate = CreateValidEntities.Question(9);
+            questionToCreate.QuestionType = CreateValidEntities.QuestionType(1);
+            questionToCreate.QuestionType.Name = "Boolean";
+            questionToCreate.Validators.Add(CreateValidEntities.Validator(1));
+            var questionOptions = new string[0];
+            SetupData1();
+            #endregion Arrange
+
+            #region Act
+            var result = Controller.Create(null, 3, questionToCreate, questionOptions)
+                .AssertViewRendered()
+                .WithViewData<QuestionViewModel>();
+            #endregion Act
+
+            #region Assert
+            QuestionRepository.AssertWasNotCalled(a => a.EnsurePersistent(Arg<Question>.Is.Anything));
+            Assert.IsNotNull(result);
+            Controller.ModelState.AssertErrorsAre("The only validator allowed for a Question Type of Boolean is Required.");
+            #endregion Assert
+        }
+        [TestMethod]
+        public void TestCreatePostDoesSaveWhenWrongValidators2()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "tester@testy.com");
+            AccessService.Expect(a => a.HasAccess(Arg<int?>.Is.Anything, Arg<int?>.Is.Anything, Arg<string>.Is.Anything)).Return(true);
+            var questionToCreate = CreateValidEntities.Question(9);
+            questionToCreate.QuestionType = CreateValidEntities.QuestionType(1);
+            questionToCreate.QuestionType.Name = "Boolean";
+            questionToCreate.Validators.Add(CreateValidEntities.Validator(1));
+            questionToCreate.Validators[0].Class = "required";
+            questionToCreate.Validators[0].Name = "Required";
+            var questionOptions = new string[0];
+            SetupData1();
+            #endregion Arrange
+
+            #region Act
+            Controller.Create(null, 3, questionToCreate, questionOptions)
+                .AssertActionRedirect()
+                .ToAction<QuestionController>(a => a.Index(null, 3));
+            #endregion Act
+
+            #region Assert
+            QuestionRepository.AssertWasCalled(a => a.EnsurePersistent(Arg<Question>.Is.Anything));
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestCreatePostDoesNotSaveWhenWrongValidators3()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "tester@testy.com");
+            AccessService.Expect(a => a.HasAccess(Arg<int?>.Is.Anything, Arg<int?>.Is.Anything, Arg<string>.Is.Anything)).Return(true);
+            var questionToCreate = CreateValidEntities.Question(9);
+            questionToCreate.QuestionType = CreateValidEntities.QuestionType(1);
+            questionToCreate.QuestionType.Name = "Radio Buttons";
+            questionToCreate.Validators.Add(CreateValidEntities.Validator(1));
+            var questionOptions = new string[0];
+            SetupData1();
+            #endregion Arrange
+
+            #region Act
+            var result = Controller.Create(null, 3, questionToCreate, questionOptions)
+                .AssertViewRendered()
+                .WithViewData<QuestionViewModel>();
+            #endregion Act
+
+            #region Assert
+            QuestionRepository.AssertWasNotCalled(a => a.EnsurePersistent(Arg<Question>.Is.Anything));
+            Assert.IsNotNull(result);
+            Controller.ModelState.AssertErrorsAre("The only validator allowed for a Question Type of Radio Buttons is Required.");
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestCreatePostDoesSaveWhenWrongValidators3()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "tester@testy.com");
+            AccessService.Expect(a => a.HasAccess(Arg<int?>.Is.Anything, Arg<int?>.Is.Anything, Arg<string>.Is.Anything)).Return(true);
+            var questionToCreate = CreateValidEntities.Question(9);
+            questionToCreate.QuestionType = CreateValidEntities.QuestionType(1);
+            questionToCreate.QuestionType.Name = "Radio Buttons";
+            questionToCreate.Validators.Add(CreateValidEntities.Validator(1));
+            questionToCreate.Validators[0].Class = "required";
+            questionToCreate.Validators[0].Name = "Required";
+            var questionOptions = new string[0];
+            SetupData1();
+            #endregion Arrange
+
+            #region Act
+            Controller.Create(null, 3, questionToCreate, questionOptions)
+                .AssertActionRedirect()
+                .ToAction<QuestionController>(a => a.Index(null, 3));
+            #endregion Act
+
+            #region Assert
+            QuestionRepository.AssertWasCalled(a => a.EnsurePersistent(Arg<Question>.Is.Anything));
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestCreatePostDoesNotSaveWhenWrongValidators4()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "tester@testy.com");
+            AccessService.Expect(a => a.HasAccess(Arg<int?>.Is.Anything, Arg<int?>.Is.Anything, Arg<string>.Is.Anything)).Return(true);
+            var questionToCreate = CreateValidEntities.Question(9);
+            questionToCreate.QuestionType = CreateValidEntities.QuestionType(1);
+            questionToCreate.QuestionType.Name = "Checkbox List";
+            questionToCreate.Validators.Add(CreateValidEntities.Validator(1));
+            var questionOptions = new string[0];
+            SetupData1();
+            #endregion Arrange
+
+            #region Act
+            var result = Controller.Create(null, 3, questionToCreate, questionOptions)
+                .AssertViewRendered()
+                .WithViewData<QuestionViewModel>();
+            #endregion Act
+
+            #region Assert
+            QuestionRepository.AssertWasNotCalled(a => a.EnsurePersistent(Arg<Question>.Is.Anything));
+            Assert.IsNotNull(result);
+            Controller.ModelState.AssertErrorsAre("The only validator allowed for a Question Type of Checkbox List is Required.");
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestCreatePostDoesSaveWhenWrongValidators4()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "tester@testy.com");
+            AccessService.Expect(a => a.HasAccess(Arg<int?>.Is.Anything, Arg<int?>.Is.Anything, Arg<string>.Is.Anything)).Return(true);
+            var questionToCreate = CreateValidEntities.Question(9);
+            questionToCreate.QuestionType = CreateValidEntities.QuestionType(1);
+            questionToCreate.QuestionType.Name = "Checkbox List";
+            questionToCreate.Validators.Add(CreateValidEntities.Validator(1));
+            questionToCreate.Validators[0].Class = "required";
+            questionToCreate.Validators[0].Name = "Required";
+            var questionOptions = new string[0];
+            SetupData1();
+            #endregion Arrange
+
+            #region Act
+            Controller.Create(null, 3, questionToCreate, questionOptions)
+                .AssertActionRedirect()
+                .ToAction<QuestionController>(a => a.Index(null, 3));
+            #endregion Act
+
+            #region Assert
+            QuestionRepository.AssertWasCalled(a => a.EnsurePersistent(Arg<Question>.Is.Anything));
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestCreatePostDoesNotSaveWhenWrongValidators5()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "tester@testy.com");
+            AccessService.Expect(a => a.HasAccess(Arg<int?>.Is.Anything, Arg<int?>.Is.Anything, Arg<string>.Is.Anything)).Return(true);
+            var questionToCreate = CreateValidEntities.Question(9);
+            questionToCreate.QuestionType = CreateValidEntities.QuestionType(1);
+            questionToCreate.QuestionType.Name = "Drop Down";
+            questionToCreate.Validators.Add(CreateValidEntities.Validator(1));
+            var questionOptions = new string[0];
+            SetupData1();
+            #endregion Arrange
+
+            #region Act
+            var result = Controller.Create(null, 3, questionToCreate, questionOptions)
+                .AssertViewRendered()
+                .WithViewData<QuestionViewModel>();
+            #endregion Act
+
+            #region Assert
+            QuestionRepository.AssertWasNotCalled(a => a.EnsurePersistent(Arg<Question>.Is.Anything));
+            Assert.IsNotNull(result);
+            Controller.ModelState.AssertErrorsAre("The only validator allowed for a Question Type of Drop Down is Required.");
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestCreatePostDoesSaveWhenWrongValidators5()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "tester@testy.com");
+            AccessService.Expect(a => a.HasAccess(Arg<int?>.Is.Anything, Arg<int?>.Is.Anything, Arg<string>.Is.Anything)).Return(true);
+            var questionToCreate = CreateValidEntities.Question(9);
+            questionToCreate.QuestionType = CreateValidEntities.QuestionType(1);
+            questionToCreate.QuestionType.Name = "Drop Down";
+            questionToCreate.Validators.Add(CreateValidEntities.Validator(1));
+            questionToCreate.Validators[0].Class = "required";
+            questionToCreate.Validators[0].Name = "Required";
+            var questionOptions = new string[0];
+            SetupData1();
+            #endregion Arrange
+
+            #region Act
+            Controller.Create(null, 3, questionToCreate, questionOptions)
+                .AssertActionRedirect()
+                .ToAction<QuestionController>(a => a.Index(null, 3));
+            #endregion Act
+
+            #region Assert
+            QuestionRepository.AssertWasCalled(a => a.EnsurePersistent(Arg<Question>.Is.Anything));
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestCreatePostDoesNotSaveWhenWrongValidators6()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "tester@testy.com");
+            AccessService.Expect(a => a.HasAccess(Arg<int?>.Is.Anything, Arg<int?>.Is.Anything, Arg<string>.Is.Anything)).Return(true);
+            var questionToCreate = CreateValidEntities.Question(9);
+            questionToCreate.QuestionType = CreateValidEntities.QuestionType(1);
+            questionToCreate.QuestionType.Name = "Text Area";
+            questionToCreate.Validators.Add(CreateValidEntities.Validator(1));
+            var questionOptions = new string[0];
+            SetupData1();
+            #endregion Arrange
+
+            #region Act
+            var result = Controller.Create(null, 3, questionToCreate, questionOptions)
+                .AssertViewRendered()
+                .WithViewData<QuestionViewModel>();
+            #endregion Act
+
+            #region Assert
+            QuestionRepository.AssertWasNotCalled(a => a.EnsurePersistent(Arg<Question>.Is.Anything));
+            Assert.IsNotNull(result);
+            Controller.ModelState.AssertErrorsAre("The only validator allowed for a Question Type of Text Area is Required.");
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestCreatePostDoesSaveWhenWrongValidators6()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "tester@testy.com");
+            AccessService.Expect(a => a.HasAccess(Arg<int?>.Is.Anything, Arg<int?>.Is.Anything, Arg<string>.Is.Anything)).Return(true);
+            var questionToCreate = CreateValidEntities.Question(9);
+            questionToCreate.QuestionType = CreateValidEntities.QuestionType(1);
+            questionToCreate.QuestionType.Name = "Text Area";
+            questionToCreate.Validators.Add(CreateValidEntities.Validator(1));
+            questionToCreate.Validators[0].Class = "required";
+            questionToCreate.Validators[0].Name = "Required";
+            var questionOptions = new string[0];
+            SetupData1();
+            #endregion Arrange
+
+            #region Act
+            Controller.Create(null, 3, questionToCreate, questionOptions)
+                .AssertActionRedirect()
+                .ToAction<QuestionController>(a => a.Index(null, 3));
+            #endregion Act
+
+            #region Assert
+            QuestionRepository.AssertWasCalled(a => a.EnsurePersistent(Arg<Question>.Is.Anything));
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestCreatePostDoesNotSaveWhenWrongValidators7()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "tester@testy.com");
+            AccessService.Expect(a => a.HasAccess(Arg<int?>.Is.Anything, Arg<int?>.Is.Anything, Arg<string>.Is.Anything)).Return(true);
+            var questionToCreate = CreateValidEntities.Question(9);
+            questionToCreate.QuestionType = CreateValidEntities.QuestionType(1);
+            questionToCreate.QuestionType.Name = "Date";
+            questionToCreate.Validators.Add(CreateValidEntities.Validator(1));
+            questionToCreate.Validators.Add(CreateValidEntities.Validator(2));
+            questionToCreate.Validators.Add(CreateValidEntities.Validator(3));
+            questionToCreate.Validators[0].Class = "required";
+            questionToCreate.Validators[0].Name = "Required";
+            questionToCreate.Validators[1].Class = "date";
+            questionToCreate.Validators[1].Name = "Date";
+            var questionOptions = new string[0];
+            SetupData1();
+            #endregion Arrange
+
+            #region Act
+            var result = Controller.Create(null, 3, questionToCreate, questionOptions)
+                .AssertViewRendered()
+                .WithViewData<QuestionViewModel>();
+            #endregion Act
+
+            #region Assert
+            QuestionRepository.AssertWasNotCalled(a => a.EnsurePersistent(Arg<Question>.Is.Anything));
+            Assert.IsNotNull(result);
+            Controller.ModelState.AssertErrorsAre("Name3 is not a valid validator for a Question Type of Date");
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestCreatePostDoesSaveWhenWrongValidators7()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "tester@testy.com");
+            AccessService.Expect(a => a.HasAccess(Arg<int?>.Is.Anything, Arg<int?>.Is.Anything, Arg<string>.Is.Anything)).Return(true);
+            var questionToCreate = CreateValidEntities.Question(9);
+            questionToCreate.QuestionType = CreateValidEntities.QuestionType(1);
+            questionToCreate.QuestionType.Name = "Date";
+            questionToCreate.Validators.Add(CreateValidEntities.Validator(1));
+            questionToCreate.Validators.Add(CreateValidEntities.Validator(2));
+            questionToCreate.Validators[0].Class = "required";
+            questionToCreate.Validators[0].Name = "Required";
+            questionToCreate.Validators[1].Class = "date";
+            questionToCreate.Validators[1].Name = "Date";
+            var questionOptions = new string[0];
+            SetupData1();
+            #endregion Arrange
+
+            #region Act
+            Controller.Create(null, 3, questionToCreate, questionOptions)
+                .AssertActionRedirect()
+                .ToAction<QuestionController>(a => a.Index(null, 3));
+            #endregion Act
+
+            #region Assert
+            QuestionRepository.AssertWasCalled(a => a.EnsurePersistent(Arg<Question>.Is.Anything));
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestCreatePostDoesNotSaveWhenWrongValidators8()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "tester@testy.com");
+            AccessService.Expect(a => a.HasAccess(Arg<int?>.Is.Anything, Arg<int?>.Is.Anything, Arg<string>.Is.Anything)).Return(true);
+            var questionToCreate = CreateValidEntities.Question(9);
+            questionToCreate.QuestionType = CreateValidEntities.QuestionType(1);
+            questionToCreate.QuestionType.Name = "No Answer";
+            questionToCreate.Validators.Add(CreateValidEntities.Validator(1));
+            questionToCreate.Validators.Add(CreateValidEntities.Validator(2));
+            questionToCreate.Validators.Add(CreateValidEntities.Validator(3));
+            questionToCreate.Validators[0].Class = "required";
+            questionToCreate.Validators[0].Name = "Required";
+            questionToCreate.Validators[1].Class = "date";
+            questionToCreate.Validators[1].Name = "Date";
+            var questionOptions = new string[0];
+            SetupData1();
+            #endregion Arrange
+
+            #region Act
+            var result = Controller.Create(null, 3, questionToCreate, questionOptions)
+                .AssertViewRendered()
+                .WithViewData<QuestionViewModel>();
+            #endregion Act
+
+            #region Assert
+            QuestionRepository.AssertWasNotCalled(a => a.EnsurePersistent(Arg<Question>.Is.Anything));
+            Assert.IsNotNull(result);
+            Controller.ModelState.AssertErrorsAre("Required is not a valid validator for a Question Type of No Answer"
+                , "Date is not a valid validator for a Question Type of No Answer"
+                , "Name3 is not a valid validator for a Question Type of No Answer");
+            #endregion Assert
+        }
 
         [TestMethod]
         public void TestCreatePostSavesAndRedirectsWhenValid1()

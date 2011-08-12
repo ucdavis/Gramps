@@ -229,6 +229,7 @@ namespace Gramps.Tests.Core.Helpers
         {
             var rtValue = new Validator();
             rtValue.Name = "Name" + counter.Extra();
+            rtValue.Class = "name" + counter.Extra();
 
             return rtValue;
         }
