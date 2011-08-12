@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Gramps.Controllers;
+﻿using Gramps.Controllers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MvcContrib.TestHelper;
 
@@ -44,6 +40,15 @@ namespace Gramps.Tests.ControllerTests.QuestionControllerTests
         public void TestCreatePostMapping()
         {
             "~/Question/Create/".ShouldMapTo<QuestionController>(a => a.Create(null, null, null, null));
+        }
+
+        /// <summary>
+        /// #4
+        /// </summary>
+        [TestMethod]
+        public void TestEditGetMapping()
+        {
+            "~/Question/Edit/5".ShouldMapTo<QuestionController>(a => a.Edit(5, null, null));
         }
     }
 }

@@ -149,6 +149,12 @@ namespace Gramps.Controllers
                 return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
             }
 
+            if (!_accessService.HasSameId(questionToEdit.Template, questionToEdit.CallForProposal, templateId, callForProposalId))
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<HomeController>(a => a.Index());
+            }
+
             var viewModel = QuestionViewModel.Create(Repository, templateId, callForProposalId);
             viewModel.Question = questionToEdit;
             return View(viewModel);
