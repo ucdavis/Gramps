@@ -31,8 +31,13 @@ namespace Gramps.Controllers
 
         #region Indexs
 
-        //
-        // GET: /Report/
+        /// <summary>
+        /// #1
+        /// GET: /Report/
+        /// </summary>
+        /// <param name="templateId"></param>
+        /// <param name="callForProposalId"></param>
+        /// <returns></returns>
         public ActionResult TemplateIndex(int? templateId, int? callForProposalId)
         {
 
