@@ -439,8 +439,8 @@ namespace Gramps.Tests.ControllerTests.QuestionControllerTests
             Assert.IsNotNull(args2);
             Assert.AreEqual("Name8", args1.Name);
             Assert.AreEqual("Name9", args2.Name);
-            Assert.AreEqual(2, args1.Order);
-            Assert.AreEqual(3, args2.Order);
+            Assert.AreEqual(4, args1.Order);
+            Assert.AreEqual(5, args2.Order);
             #endregion Assert
         }
 
@@ -474,8 +474,8 @@ namespace Gramps.Tests.ControllerTests.QuestionControllerTests
             Assert.IsNotNull(args2);
             Assert.AreEqual("Name7", args1.Name);
             Assert.AreEqual("Name8", args2.Name);
-            Assert.AreEqual(1, args1.Order);
-            Assert.AreEqual(2, args2.Order);
+            Assert.AreEqual(5, args1.Order);
+            Assert.AreEqual(6, args2.Order);
             #endregion Assert
         }
     }

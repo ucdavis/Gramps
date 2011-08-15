@@ -77,5 +77,14 @@ namespace Gramps.Tests.ControllerTests.QuestionControllerTests
         {
             "~/Question/MoveUp/5".ShouldMapTo<QuestionController>(a => a.MoveUp(5, null, null));
         }
+
+        /// <summary>
+        /// #8
+        /// </summary>
+        [TestMethod]
+        public void TestMoveDownMapping()
+        {
+            "~/Question/MoveDown/5".ShouldMapTo<QuestionController>(a => a.MoveDown(5, null, null));
+        }
     }
 }

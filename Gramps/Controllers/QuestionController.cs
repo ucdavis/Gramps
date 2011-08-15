@@ -316,7 +316,13 @@ namespace Gramps.Controllers
 
         }
 
-
+        /// <summary>
+        /// #8
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="templateId"></param>
+        /// <param name="callForProposalId"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult MoveDown(int id, int? templateId, int? callForProposalId)
         {
