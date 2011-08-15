@@ -93,6 +93,9 @@ namespace Gramps.Tests.ControllerTests.QuestionControllerTests
 
             questions[1].Template = TemplateRepository.GetNullableById(1);
             questions[10].CallForProposal = CallForProposalRepository.GetNullableById(2);
+            questions[4].Options.Add(CreateValidEntities.QuestionOption(1));
+            questions[4].Options.Add(CreateValidEntities.QuestionOption(2));
+            questions[9].Options.Add(CreateValidEntities.QuestionOption(3));
 
             var fakeQuestions = new FakeQuestions();
             fakeQuestions.Records(0, QuestionRepository, questions);

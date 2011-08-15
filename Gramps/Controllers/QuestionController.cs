@@ -132,7 +132,13 @@ namespace Gramps.Controllers
         }
 
         
-
+        /// <summary>
+        /// #4
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="templateId"></param>
+        /// <param name="callForProposalId"></param>
+        /// <returns></returns>
         public ActionResult Edit(int id, int? templateId, int? callForProposalId)
         {
 
@@ -160,6 +166,15 @@ namespace Gramps.Controllers
             return View(viewModel);
         }
 
+        /// <summary>
+        /// #5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="templateId"></param>
+        /// <param name="callForProposalId"></param>
+        /// <param name="question"></param>
+        /// <param name="questionOptions"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult Edit(int id, int? templateId, int? callForProposalId, Question question, string[] questionOptions)
         {
