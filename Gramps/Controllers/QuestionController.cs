@@ -213,6 +213,13 @@ namespace Gramps.Controllers
             return View(viewModel);
         }
 
+        /// <summary>
+        /// #6
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="templateId"></param>
+        /// <param name="callForProposalId"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult Delete(int id, int? templateId, int? callForProposalId)
         {

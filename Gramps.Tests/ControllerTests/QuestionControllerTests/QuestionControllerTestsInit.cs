@@ -29,6 +29,7 @@ namespace Gramps.Tests.ControllerTests.QuestionControllerTests
         public IRepository<Template> TemplateRepository;
         public IRepository<QuestionType> QuestionTypeRepository;
         public IRepository<Validator> ValidatorRepository;
+        public IRepository<QuestionAnswer> QuestionAnswerRepository; 
 
 
         #region Init
@@ -61,6 +62,9 @@ namespace Gramps.Tests.ControllerTests.QuestionControllerTests
 
             ValidatorRepository = FakeRepository<Validator>();
             Controller.Repository.Expect(a => a.OfType<Validator>()).Return(ValidatorRepository).Repeat.Any();
+
+            QuestionAnswerRepository = FakeRepository<QuestionAnswer>();
+            Controller.Repository.Expect(a => a.OfType<QuestionAnswer>()).Return(QuestionAnswerRepository).Repeat.Any();
 
             Controller.Repository.Expect(a => a.OfType<Question>()).Return(QuestionRepository).Repeat.Any();	
         }
@@ -99,6 +103,12 @@ namespace Gramps.Tests.ControllerTests.QuestionControllerTests
 
             var fakeQuestions = new FakeQuestions();
             fakeQuestions.Records(0, QuestionRepository, questions);
+
+            var questionAnswers = new List<QuestionAnswer>();
+            questionAnswers.Add(CreateValidEntities.QuestionAnswer(1));
+            questionAnswers[0].Question = QuestionRepository.GetNullableById(8);
+            var fakeQuestionAnswers = new FakeQuestionAnswers();
+            fakeQuestionAnswers.Records(3, QuestionAnswerRepository, questionAnswers);
 
         }
 
