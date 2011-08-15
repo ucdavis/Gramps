@@ -255,6 +255,13 @@ namespace Gramps.Controllers
 
         }
 
+        /// <summary>
+        /// #7
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="templateId"></param>
+        /// <param name="callForProposalId"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult MoveUp(int id, int? templateId, int? callForProposalId)
         {
@@ -270,9 +277,7 @@ namespace Gramps.Controllers
                 Message = "Question not found.";
                 return this.RedirectToAction(a => a.Index(templateId, callForProposalId));
             }
-            if (
-                !_accessService.HasSameId(questionToReorder.Template, questionToReorder.CallForProposal, templateId,
-                                          callForProposalId))
+            if (!_accessService.HasSameId(questionToReorder.Template, questionToReorder.CallForProposal, templateId, callForProposalId))
             {
                 Message = "You do not have access to that.";
                 return this.RedirectToAction<HomeController>(a => a.Index());

@@ -174,6 +174,7 @@
     <Compile Include="ControllerTests\QuestionControllerTests\QuestionControllerTestsPart03.cs" />
     <Compile Include="ControllerTests\QuestionControllerTests\QuestionControllerTestsPart04.cs" />
     <Compile Include="ControllerTests\QuestionControllerTests\QuestionControllerTestsPart05.cs" />
+    <Compile Include="ControllerTests\QuestionControllerTests\QuestionControllerTestsPart06.cs" />
     <Compile Include="ControllerTests\QuestionControllerTests\QuestionControllerTestsRefection.cs" />
     <Compile Include="Core\AbstractRepositoryTests.cs" />
     <Compile Include="Core\Extensions\AssertExtensions.cs" />

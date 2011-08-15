@@ -98,7 +98,6 @@ namespace Gramps.Tests.ControllerTests.QuestionControllerTests
             #endregion Assert
         }
 
-
         [TestMethod]
         public void TestDeleteWhenIdNotSame1()
         {
@@ -146,7 +145,6 @@ namespace Gramps.Tests.ControllerTests.QuestionControllerTests
             AccessService.AssertWasCalled(a => a.HasSameId(null, CallForProposalRepository.GetNullableById(3), null, 3));
             #endregion Assert
         }
-
 
         [TestMethod]
         public void TestDeleteFailsWhenRelatedAnswers()
