@@ -8,6 +8,7 @@ using Gramps.Controllers;
 using Gramps.Controllers.Filters;
 using Gramps.Core.Domain;
 using Gramps.Services;
+using Gramps.Tests.Core.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MvcContrib.TestHelper;
 using Rhino.Mocks;
@@ -24,7 +25,8 @@ namespace Gramps.Tests.ControllerTests.ReportControllerTests
         protected readonly Type ControllerClass = typeof(ReportController);
         public IRepository<Report> ReportRepository;
         public IAccessService AccessService;
-        //public IRepository<Example> ExampleRepository;
+        public IRepository<Template> TemplateRepository;
+        public IRepository<CallForProposal> CallForProposalRepository;
 
         #region Init
         /// <summary>
@@ -46,8 +48,11 @@ namespace Gramps.Tests.ControllerTests.ReportControllerTests
 
         public ReportControllerTests()
         {
-            //    ExampleRepository = FakeRepository<Example>();
-            //    Controller.Repository.Expect(a => a.OfType<Example>()).Return(ExampleRepository).Repeat.Any();
+            TemplateRepository = FakeRepository<Template>();
+            Controller.Repository.Expect(a => a.OfType<Template>()).Return(TemplateRepository).Repeat.Any();
+
+            CallForProposalRepository = FakeRepository<CallForProposal>();
+            Controller.Repository.Expect(a => a.OfType<CallForProposal>()).Return(CallForProposalRepository).Repeat.Any();
 
             Controller.Repository.Expect(a => a.OfType<Report>()).Return(ReportRepository).Repeat.Any();	
         }
@@ -55,7 +60,31 @@ namespace Gramps.Tests.ControllerTests.ReportControllerTests
 
 
 
-        
+        #region Helper Methods
+        public void SetupData1()
+        {
+            var fakeTemplates = new FakeTemplates();
+            fakeTemplates.Records(3, TemplateRepository);
+
+            var fakeCalls = new FakeCallForProposals();
+            fakeCalls.Records(0, CallForProposalRepository);
+
+            var reports = new List<Report>();
+            for (int i = 0; i < 5; i++)
+            {
+                reports.Add(CreateValidEntities.Report(i+1));
+                reports[i].Template = TemplateRepository.GetNullableById(2);
+                reports[i].CallForProposal = null;
+            }
+
+            reports[1].Template = TemplateRepository.GetNullableById(1);
+            reports[2].Template = null;
+            reports[2].CallForProposal = CallForProposalRepository.GetNullableById(2);
+
+            var fakeReports = new FakeReports();
+            fakeReports.Records(0, ReportRepository, reports);
+        }
+        #endregion Helper Methods
 
        
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Gramps.Controllers.Filters;
+using Gramps.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using UCDArch.Web.Attributes;
 
@@ -33,11 +34,8 @@ namespace Gramps.Tests.ControllerTests.ReportControllerTests
             #endregion Assert
         }
 
-        /// <summary>
-        /// Tests the controller has only three attributes.
-        /// </summary>
         [TestMethod]
-        public void TestControllerHasOnlyThreeAttributes()
+        public void TestControllerHasFiveAttributes()
         {
             #region Arrange
             var controllerClass = ControllerClass;
@@ -48,7 +46,7 @@ namespace Gramps.Tests.ControllerTests.ReportControllerTests
             #endregion Act
 
             #region Assert
-            Assert.AreEqual(3, result.Count());
+            Assert.AreEqual(5, result.Count());
             #endregion Assert
         }
 
@@ -106,6 +104,38 @@ namespace Gramps.Tests.ControllerTests.ReportControllerTests
             #endregion Assert
         }
 
+        [TestMethod]
+        public void TestControllerHasUserOnlyAttribute()
+        {
+            #region Arrange
+            var controllerClass = ControllerClass;
+            #endregion Arrange
+
+            #region Act
+            var result = controllerClass.GetCustomAttributes(true).OfType<UserOnlyAttribute>();
+            #endregion Act
+
+            #region Assert
+            Assert.IsTrue(result.Count() > 0, "UserOnlyAttribute not found.");
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestControllerHasLocServiceMessageAttribute()
+        {
+            #region Arrange
+            var controllerClass = ControllerClass;
+            #endregion Arrange
+
+            #region Act
+            var result = controllerClass.GetCustomAttributes(true).OfType<LocServiceMessageAttribute>();
+            #endregion Act
+
+            #region Assert
+            Assert.IsTrue(result.Count() > 0, "LocServiceMessageAttribute not found.");
+            #endregion Assert
+        }
+
         #endregion Controller Class Tests
 
         #region Controller Method Tests
@@ -123,7 +153,24 @@ namespace Gramps.Tests.ControllerTests.ReportControllerTests
 
             #region Assert
             Assert.Inconclusive("Tests are still being written. When done, remove this line.");
-            Assert.AreEqual(0, result.Count(), "It looks like a method was added or removed from the controller.");
+            Assert.AreEqual(1, result.Count(), "It looks like a method was added or removed from the controller.");
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestControllerMethodTemplateIndexContainsExpectedAttributes()
+        {
+            #region Arrange
+            var controllerClass = ControllerClass;
+            var controllerMethod = controllerClass.GetMethod("TemplateIndex");
+            #endregion Arrange
+
+            #region Act
+            var allAttributes = controllerMethod.GetCustomAttributes(true);
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual(0, allAttributes.Count());
             #endregion Assert
         }
 

@@ -69,7 +69,7 @@ namespace Gramps.Controllers.ViewModels
             if (templateId != null && templateId != 0)
             {
                 viewModel.IsTemplate = true;                
-                viewModel.ReportList = repository.OfType<Report>().Queryable.Where(a => a.Template.Id == templateId);
+                viewModel.ReportList = repository.OfType<Report>().Queryable.Where(a => a.Template != null && a.Template.Id == templateId);
                 viewModel.TemplateId = templateId;
             }
 

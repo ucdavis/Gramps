@@ -175,4 +175,12 @@ namespace Gramps.Tests.Core.Helpers
             return CreateValidEntities.QuestionAnswer(i);
         }
     }
+
+    public class FakeReports : ControllerRecordFakes<Report>
+    {
+        protected override Report CreateValid(int i)
+        {
+            return CreateValidEntities.Report(i);
+        }
+    }
 }

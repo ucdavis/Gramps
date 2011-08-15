@@ -36,12 +36,12 @@ namespace Gramps.Controllers
         /// GET: /Report/
         /// </summary>
         /// <param name="templateId"></param>
-        /// <param name="callForProposalId"></param>
+        /// <param name="callForProposalId">Always Null</param>
         /// <returns></returns>
         public ActionResult TemplateIndex(int? templateId, int? callForProposalId)
         {
 
-            if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
+            if (!_accessService.HasAccess(templateId, null, CurrentUser.Identity.Name))
             {
                 Message = "You do not have access to that.";
                 return this.RedirectToAction<HomeController>(a => a.Index());
