@@ -225,6 +225,7 @@
     <Compile Include="Services\IAnswerService.cs" />
     <Compile Include="Services\IAccessService.cs" />
     <Compile Include="Services\IEmailService.cs" />
+    <Compile Include="Services\IReportService.cs" />
     <Compile Include="Views\Shared\LogOnUserControl.ascx.cs">
       <DependentUpon>LogOnUserControl.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

@@ -21,12 +21,14 @@ namespace Gramps.Controllers
     public class ReportController : ApplicationController
     {
         private readonly IAccessService _accessService;
-	    private readonly IRepository<Report> _reportRepository;
+        private readonly IReportService _reportService;
+        private readonly IRepository<Report> _reportRepository;
 
-        public ReportController(IRepository<Report> reportRepository, IAccessService accessService)
+        public ReportController(IRepository<Report> reportRepository, IAccessService accessService, IReportService reportService)
         {
             _reportRepository = reportRepository;
             _accessService = accessService;
+            _reportService = reportService;
         }
 
         #region Indexs
@@ -121,7 +123,7 @@ namespace Gramps.Controllers
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
-            var reportToCreate = CommonCreate(report, templateId, null, createReportParameters, showSubmitted);
+            var reportToCreate = _reportService.CommonCreate(ModelState, report, templateId, null, createReportParameters, showSubmitted);
 
             if (ModelState.IsValid)
             {
@@ -188,7 +190,7 @@ namespace Gramps.Controllers
             }
 
 
-            var reportToCreate = CommonCreate(report, templateId, callForProposalId, createReportParameters, showSubmitted);
+            var reportToCreate = _reportService.CommonCreate(ModelState, report, templateId, callForProposalId, createReportParameters, showSubmitted);
             reportToCreate.CallForProposal = callforProposal;
 
             if (ModelState.IsValid)
@@ -209,64 +211,64 @@ namespace Gramps.Controllers
         }
 
 
-        private Report CommonCreate(Report report, int? templateId, int? callForProposalId, CreateReportParameter[] createReportParameters, string showSubmitted)
-        {
-            Template template = null;
-            CallForProposal callforProposal = null;
-            var availableQuestionDict = new Dictionary<int, string>();
-            if (templateId.HasValue && templateId.Value != 0)
-            {
-                template = Repository.OfType<Template>().GetNullableById(templateId.Value);
-                availableQuestionDict = template.Questions.ToDictionary(question => question.Id, question => question.Name);
-            }
-            else if (callForProposalId.HasValue && callForProposalId.Value != 0)
-            {
-                callforProposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId.Value);
-                availableQuestionDict = callforProposal.Questions.ToDictionary(question => question.Id, question => question.Name);
-            }
+        //private Report CommonCreate(Report report, int? templateId, int? callForProposalId, CreateReportParameter[] createReportParameters, string showSubmitted)
+        //{
+        //    Template template = null;
+        //    CallForProposal callforProposal = null;
+        //    var availableQuestionDict = new Dictionary<int, string>();
+        //    if (templateId.HasValue && templateId.Value != 0)
+        //    {
+        //        template = Repository.OfType<Template>().GetNullableById(templateId.Value);
+        //        availableQuestionDict = template.Questions.ToDictionary(question => question.Id, question => question.Name);
+        //    }
+        //    else if (callForProposalId.HasValue && callForProposalId.Value != 0)
+        //    {
+        //        callforProposal = Repository.OfType<CallForProposal>().GetNullableById(callForProposalId.Value);
+        //        availableQuestionDict = callforProposal.Questions.ToDictionary(question => question.Id, question => question.Name);
+        //    }
 
-            if (createReportParameters == null)
-            {
-                createReportParameters = new CreateReportParameter[0];
-            }
-
-
-            var reportToCreate = new Report();
-            reportToCreate.Template = template;
-            reportToCreate.CallForProposal = callforProposal;
-            reportToCreate.Name = report.Name;
-            reportToCreate.ShowUnsubmitted = showSubmitted == "ShowAll" ? true:false;
-
-            var count = 0;
-            foreach (var createReportParameter in createReportParameters)
-            {
-                var reportColumn = new ReportColumn();
-                reportColumn.ColumnOrder = count++;
-                if (createReportParameter.Property)
-                {
-                    reportColumn.IsProperty = createReportParameter.Property;
-                    reportColumn.Name = createReportParameter.PropertyName;
-                }
-                else
-                {
-                    if (availableQuestionDict.ContainsKey(createReportParameter.QuestionId))
-                    {
-                        reportColumn.Name = availableQuestionDict[createReportParameter.QuestionId];
-                    }
-                }
-                reportToCreate.AddReportColumn(reportColumn);
-            }
-
-            if (reportToCreate.ReportColumns.Count == 0)
-            {
-                ModelState.AddModelError("ReportColumns", "Must select at least one column to report on");
-            }
+        //    if (createReportParameters == null)
+        //    {
+        //        createReportParameters = new CreateReportParameter[0];
+        //    }
 
 
-            reportToCreate.TransferValidationMessagesTo(ModelState);
+        //    var reportToCreate = new Report();
+        //    reportToCreate.Template = template;
+        //    reportToCreate.CallForProposal = callforProposal;
+        //    reportToCreate.Name = report.Name;
+        //    reportToCreate.ShowUnsubmitted = showSubmitted == "ShowAll" ? true:false;
 
-            return reportToCreate;
-        }
+        //    var count = 0;
+        //    foreach (var createReportParameter in createReportParameters)
+        //    {
+        //        var reportColumn = new ReportColumn();
+        //        reportColumn.ColumnOrder = count++;
+        //        if (createReportParameter.Property)
+        //        {
+        //            reportColumn.IsProperty = createReportParameter.Property;
+        //            reportColumn.Name = createReportParameter.PropertyName;
+        //        }
+        //        else
+        //        {
+        //            if (availableQuestionDict.ContainsKey(createReportParameter.QuestionId))
+        //            {
+        //                reportColumn.Name = availableQuestionDict[createReportParameter.QuestionId];
+        //            }
+        //        }
+        //        reportToCreate.AddReportColumn(reportColumn);
+        //    }
+
+        //    if (reportToCreate.ReportColumns.Count == 0)
+        //    {
+        //        ModelState.AddModelError("ReportColumns", "Must select at least one column to report on");
+        //    }
+
+
+        //    reportToCreate.TransferValidationMessagesTo(ModelState);
+
+        //    return reportToCreate;
+        //}
         #endregion Creates
 
         #region Edits
@@ -319,7 +321,7 @@ namespace Gramps.Controllers
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
-            var temp = CommonCreate(report, templateId, callForProposalId, createReportParameters, showSubmitted);
+            var temp = _reportService.CommonCreate(ModelState, report, templateId, callForProposalId, createReportParameters, showSubmitted);
 
             reportToEdit.ReportColumns.Clear();
             reportToEdit.Name = temp.Name;
@@ -420,7 +422,7 @@ namespace Gramps.Controllers
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
-            var temp = CommonCreate(report, templateId, callForProposalId, createReportParameters, showSubmitted);
+            var temp = _reportService.CommonCreate(ModelState, report, templateId, callForProposalId, createReportParameters, showSubmitted);
 
             reportToEdit.ReportColumns.Clear();
             reportToEdit.Name = temp.Name;
