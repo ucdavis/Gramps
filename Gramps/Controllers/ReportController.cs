@@ -115,13 +115,13 @@ namespace Gramps.Controllers
         [HttpPost]
         public ActionResult CreateForTemplate(Report report, int? templateId, int? callForProposalId, CreateReportParameter[] createReportParameters, string showSubmitted)
         {
-            if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
+            if (!_accessService.HasAccess(templateId, null, CurrentUser.Identity.Name))
             {
                 Message = "You do not have access to that.";
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
-            var reportToCreate = CommonCreate(report, templateId, callForProposalId, createReportParameters, showSubmitted);
+            var reportToCreate = CommonCreate(report, templateId, null, createReportParameters, showSubmitted);
 
             if (ModelState.IsValid)
             {

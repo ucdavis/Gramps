@@ -1,6 +1,8 @@
 ﻿using System.Linq;
 using Gramps.Controllers;
 using Gramps.Controllers.ViewModels;
+using Gramps.Core.Domain;
+using Gramps.Core.Resources;
 using Gramps.Tests.Core.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MvcContrib.TestHelper;
@@ -105,6 +107,51 @@ namespace Gramps.Tests.ControllerTests.ReportControllerTests
         #endregion CreateForTemplate Get Tests
 
         #region CreateForTemplate Post Tests
+
+        [TestMethod]
+        public void TestCreateForTemplatePostRedirectsWhenNoAccess1()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "tester@testy.com");
+            AccessService.Expect(a => a.HasAccess(Arg<int?>.Is.Anything, Arg<int?>.Is.Anything, Arg<string>.Is.Anything)).Return(false);
+            #endregion Arrange
+
+            #region Act
+            Controller.CreateForTemplate(new Report(), 2, null, new CreateReportParameter[0], "ShowAll")
+                .AssertActionRedirect()
+                .ToAction<HomeController>(a => a.Index());
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual("You do not have access to that.", Controller.Message);
+            AccessService.AssertWasCalled(a => a.HasAccess(2, null, "tester@testy.com"));
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestCreateForTemplatePostRedirectsWhenNoAccess2()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "tester@testy.com");
+            AccessService.Expect(a => a.HasAccess(Arg<int?>.Is.Anything, Arg<int?>.Is.Anything, Arg<string>.Is.Anything)).Return(false);
+            #endregion Arrange
+
+            #region Act
+            Controller.CreateForTemplate(2, 3)
+                .AssertActionRedirect()
+                .ToAction<HomeController>(a => a.Index());
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual("You do not have access to that.", Controller.Message);
+            AccessService.AssertWasCalled(a => a.HasAccess(2, null, "tester@testy.com"));
+            #endregion Assert
+        }
+
+
+
+
+
 
         [TestMethod]
         public void TestDescription()
