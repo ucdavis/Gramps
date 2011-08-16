@@ -179,6 +179,7 @@
     <Compile Include="ControllerTests\ReportControllerTests\ReportControllerTestsInit.cs" />
     <Compile Include="ControllerTests\ReportControllerTests\ReportControllerTestsMapping.cs" />
     <Compile Include="ControllerTests\ReportControllerTests\ReportControllerTestsPart01.cs" />
+    <Compile Include="ControllerTests\ReportControllerTests\ReportControllerTestsPart02.cs" />
     <Compile Include="ControllerTests\ReportControllerTests\ReportControllerTestsReflection.cs" />
     <Compile Include="Core\AbstractRepositoryTests.cs" />
     <Compile Include="Core\Extensions\AssertExtensions.cs" />

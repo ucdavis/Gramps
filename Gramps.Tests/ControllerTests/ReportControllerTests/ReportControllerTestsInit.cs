@@ -67,7 +67,7 @@ namespace Gramps.Tests.ControllerTests.ReportControllerTests
             fakeTemplates.Records(3, TemplateRepository);
 
             var fakeCalls = new FakeCallForProposals();
-            fakeCalls.Records(0, CallForProposalRepository);
+            fakeCalls.Records(3, CallForProposalRepository);
 
             var reports = new List<Report>();
             for (int i = 0; i < 5; i++)
@@ -80,6 +80,30 @@ namespace Gramps.Tests.ControllerTests.ReportControllerTests
             reports[1].Template = TemplateRepository.GetNullableById(1);
             reports[2].Template = null;
             reports[2].CallForProposal = CallForProposalRepository.GetNullableById(2);
+
+            var fakeReports = new FakeReports();
+            fakeReports.Records(0, ReportRepository, reports);
+        }
+
+        public void SetupData2()
+        {
+            var fakeTemplates = new FakeTemplates();
+            fakeTemplates.Records(3, TemplateRepository);
+
+            var fakeCalls = new FakeCallForProposals();
+            fakeCalls.Records(3, CallForProposalRepository);
+
+            var reports = new List<Report>();
+            for (int i = 0; i < 5; i++)
+            {
+                reports.Add(CreateValidEntities.Report(i + 1));
+                reports[i].Template = null;
+                reports[i].CallForProposal = CallForProposalRepository.GetNullableById(2);
+            }
+
+            reports[1].CallForProposal = CallForProposalRepository.GetNullableById(1);
+            reports[2].CallForProposal = null;
+            reports[2].Template = TemplateRepository.GetNullableById(2);
 
             var fakeReports = new FakeReports();
             fakeReports.Records(0, ReportRepository, reports);

@@ -19,6 +19,15 @@ namespace Gramps.Tests.ControllerTests.ReportControllerTests
         {
             "~/Report/TemplateIndex/".ShouldMapTo<ReportController>(a => a.TemplateIndex(null, null));
         }
+
+        /// <summary>
+        /// #2
+        /// </summary>
+        [TestMethod]
+        public void TestCallIndexMapping()
+        {
+            "~/Report/CallIndex/5".ShouldMapTo<ReportController>(a => a.CallIndex(5));
+        }
         #endregion Mapping Tests
     }
 }

@@ -33,7 +33,7 @@ namespace Gramps.Controllers
 
         /// <summary>
         /// #1
-        /// GET: /Report/
+        /// GET: /Report/TemplateIndex
         /// </summary>
         /// <param name="templateId"></param>
         /// <param name="callForProposalId">Always Null</param>
@@ -52,11 +52,14 @@ namespace Gramps.Controllers
             return View(viewModel);
         }
 
+        /// <summary>
+        /// #2
+        ///  GET: /Report/CallIndex
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public ActionResult CallIndex(int id)
         {
-            //Message = "Not Implemented yet";
-            //return this.RedirectToAction<CallForProposalController>(a => a.Index(null, null, null));
-
             var callforproposal = Repository.OfType<CallForProposal>().GetNullableById(id);
 
             if (callforproposal == null)
@@ -69,11 +72,6 @@ namespace Gramps.Controllers
                 Message = "You do not have access to that.";
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
-            //if (!_accessService.HasSameId(null, callforproposal, null, id))
-            //{
-            //    Message = "You do not have access to that.";
-            //    return this.RedirectToAction<HomeController>(a => a.Index());
-            //}
 
             var viewModel = CallReportListViewModel.Create(Repository, callforproposal);
 

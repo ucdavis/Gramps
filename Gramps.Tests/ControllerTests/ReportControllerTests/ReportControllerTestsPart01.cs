@@ -102,25 +102,71 @@ namespace Gramps.Tests.ControllerTests.ReportControllerTests
         #endregion TemplateIndex Tests
 
         #region CallIndex Tests
+
         [TestMethod]
-        public void TestWriteMethodTests()
+        public void TestCallIndexRedirectsWhenCallNotFound()
         {
             #region Arrange
-            Assert.Inconclusive("Need to write these tests");
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "tester@testy.com");
+            SetupData2();
             #endregion Arrange
 
             #region Act
-
+            Controller.CallIndex(4)
+                .AssertActionRedirect()
+                .ToAction<CallForProposalController>(a => a.Index(null, null, null));
             #endregion Act
 
             #region Assert
+            AccessService.AssertWasNotCalled(a => a.HasAccess(Arg<int?>.Is.Anything,Arg<int?>.Is.Anything, Arg<string>.Is.Anything));
+            #endregion Assert		
+        }
 
+        [TestMethod]
+        public void TestCallIndexRedirectsWhenNoAccess()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "tester@testy.com");
+            AccessService.Expect(a => a.HasAccess(Arg<int?>.Is.Anything, Arg<int?>.Is.Anything, Arg<string>.Is.Anything)).Return(false);
+            SetupData2();
+            #endregion Arrange
+
+            #region Act
+            Controller.CallIndex(2)
+                .AssertActionRedirect()
+                .ToAction<HomeController>(a => a.Index());
+            #endregion Act
+
+            #region Assert
+            AccessService.AssertWasCalled(a => a.HasAccess(Arg<int?>.Is.Anything, Arg<int?>.Is.Anything, Arg<string>.Is.Anything));
+            Assert.AreEqual("You do not have access to that.", Controller.Message);
             #endregion Assert
         }
+
+        [TestMethod]
+        public void TestCallIndexReturnsView1()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "tester@testy.com");
+            AccessService.Expect(a => a.HasAccess(Arg<int?>.Is.Anything, Arg<int?>.Is.Anything, Arg<string>.Is.Anything)).Return(true);
+            SetupData2();
+            #endregion Arrange
+
+            #region Act
+            var result = Controller.CallIndex(2)
+                .AssertViewRendered()
+                .WithViewData<CallReportListViewModel>();
+            #endregion Act
+
+            #region Assert
+            AccessService.AssertWasCalled(a => a.HasAccess(null, 2, "tester@testy.com"));
+            Assert.IsNotNull(result);
+            Assert.AreEqual(2, result.CallForProposal.Id);
+            Assert.AreEqual(3, result.ReportList.Count());
+            #endregion Assert
+        }
+
         #endregion CallIndex Tests
-
-
-
 
     }
 }
