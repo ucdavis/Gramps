@@ -3,7 +3,6 @@ using System.Web.Mvc;
 using Gramps.Controllers;
 using Gramps.Controllers.ViewModels;
 using Gramps.Core.Domain;
-using Gramps.Core.Resources;
 using Gramps.Tests.Core.Extensions;
 using Gramps.Tests.Core.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -152,7 +151,7 @@ namespace Gramps.Tests.ControllerTests.ReportControllerTests
 
 
         [TestMethod]
-        public void TestCreateForTemplateWhenNotValid()
+        public void TestCreateForTemplateWhenNotValid1()
         {
             #region Arrange
             Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "tester@testy.com");
@@ -164,7 +163,7 @@ namespace Gramps.Tests.ControllerTests.ReportControllerTests
                     Arg<int?>.Is.Anything, 
                     Arg<CreateReportParameter[]>.Is.Anything, 
                     Arg<string>.Is.Anything)).Return(CreateValidEntities.Report(9));
-            Controller.ModelState.AddModelError("Fake", "error message");
+            Controller.ModelState.AddModelError("Fake", @"error message");
 
             var reportToEdit = CreateValidEntities.Report(4);
             var reportParms = new CreateReportParameter[2];
@@ -215,21 +214,49 @@ namespace Gramps.Tests.ControllerTests.ReportControllerTests
             #endregion Assert		
         }
 
-
-
-
         [TestMethod]
-        public void TestDescription()
+        public void TestCreateForTemplateWhenValid()
         {
             #region Arrange
-            Assert.Inconclusive("continue");
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "tester@testy.com");
+            AccessService.Expect(a => a.HasAccess(Arg<int?>.Is.Anything, Arg<int?>.Is.Anything, Arg<string>.Is.Anything)).Return(true);
+            var report = CreateValidEntities.Report(9);
+            ReportService.Expect(a => a.CommonCreate(
+                    Arg<ModelStateDictionary>.Is.Anything,
+                    Arg<Report>.Is.Anything,
+                    Arg<int?>.Is.Anything,
+                    Arg<int?>.Is.Anything,
+                    Arg<CreateReportParameter[]>.Is.Anything,
+                    Arg<string>.Is.Anything)).Return(report);
+   
+
+            var reportToEdit = CreateValidEntities.Report(4);
+            var reportParms = new CreateReportParameter[2];
+            reportParms[0] = new CreateReportParameter();
+            reportParms[1] = new CreateReportParameter();
+            reportParms[0].QuestionId = 7;
+            reportParms[1].QuestionId = 8;
+
+            SetupData3();
             #endregion Arrange
 
             #region Act
+            Controller.CreateForTemplate(reportToEdit, 2, 3, reportParms, "test")
+                .AssertActionRedirect()
+                .ToAction<ReportController>(a => a.TemplateIndex(2, 3));
             #endregion Act
 
             #region Assert
-            #endregion Assert		
+            Assert.AreEqual("Report Created Successfully", Controller.Message);
+            ReportService.AssertWasCalled(a => a.CommonCreate(
+                    Arg<ModelStateDictionary>.Is.Anything,
+                    Arg<Report>.Is.Anything,
+                    Arg<int?>.Is.Anything,
+                    Arg<int?>.Is.Anything,
+                    Arg<CreateReportParameter[]>.Is.Anything,
+                    Arg<string>.Is.Anything));
+            ReportRepository.AssertWasCalled(a => a.EnsurePersistent(report));
+            #endregion Assert
         }
         #endregion CreateForTemplate Post Tests
     }

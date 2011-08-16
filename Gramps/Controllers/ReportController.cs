@@ -142,6 +142,13 @@ namespace Gramps.Controllers
             }
         }
 
+        /// <summary>
+        /// #5
+        /// GET: /Report/CreateForCall
+        /// </summary>
+        /// <param name="templateId"></param>
+        /// <param name="callForProposalId"></param>
+        /// <returns></returns>
         public ActionResult CreateForCall(int? templateId, int? callForProposalId)
         {
             if(!callForProposalId.HasValue || callForProposalId == 0)
