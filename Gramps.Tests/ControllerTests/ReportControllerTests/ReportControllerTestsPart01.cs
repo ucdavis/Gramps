@@ -12,7 +12,7 @@ namespace Gramps.Tests.ControllerTests.ReportControllerTests
     {
         #region TemplateIndex Tests
         [TestMethod]
-        public void TestTemplateIndexRedirectsIfNoAccess1()
+        public void TestTemplateIndexRedirectsIfNoAccess1() 
         {
             #region Arrange
             Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "tester@testy.com");

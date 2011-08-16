@@ -28,6 +28,7 @@ namespace Gramps.Tests.ControllerTests.ReportControllerTests
         public IRepository<Template> TemplateRepository;
         public IRepository<CallForProposal> CallForProposalRepository;
         public IRepository<Question> QuestionRepository;
+        public IReportService ReportService;
 
         #region Init
         /// <summary>
@@ -37,8 +38,9 @@ namespace Gramps.Tests.ControllerTests.ReportControllerTests
         {
             ReportRepository = FakeRepository<Report>();
             AccessService = MockRepository.GenerateStub<IAccessService>();
+            ReportService = MockRepository.GenerateStub<IReportService>();
 
-            Controller = new TestControllerBuilder().CreateController<ReportController>(ReportRepository, AccessService);
+            Controller = new TestControllerBuilder().CreateController<ReportController>(ReportRepository, AccessService, ReportService);
         }
 
         protected override void RegisterRoutes()
