@@ -81,14 +81,17 @@ namespace Gramps.Controllers
         #endregion Indexs
 
         #region Creates
-        
-        //
-        // GET: /Report/Create
 
-
+        /// <summary>
+        /// #3
+        /// GET: /Report/CreateForTemplate
+        /// </summary>
+        /// <param name="templateId"></param>
+        /// <param name="callForProposalId"></param>
+        /// <returns></returns>
         public ActionResult CreateForTemplate(int? templateId, int? callForProposalId)
         {
-            if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
+            if (!_accessService.HasAccess(templateId, null, CurrentUser.Identity.Name))
             {
                 Message = "You do not have access to that.";
                 return this.RedirectToAction<HomeController>(a => a.Index());
@@ -99,9 +102,17 @@ namespace Gramps.Controllers
             return View(viewModel);
         }
 
-        //
-        // POST: /Report/Create
-        [AcceptVerbs(HttpVerbs.Post)]
+        /// <summary>
+        /// #4
+        /// POST: /Report/CreateForTemplate
+        /// </summary>
+        /// <param name="report"></param>
+        /// <param name="templateId"></param>
+        /// <param name="callForProposalId"></param>
+        /// <param name="createReportParameters"></param>
+        /// <param name="showSubmitted"></param>
+        /// <returns></returns>
+        [HttpPost]
         public ActionResult CreateForTemplate(Report report, int? templateId, int? callForProposalId, CreateReportParameter[] createReportParameters, string showSubmitted)
         {
             if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
