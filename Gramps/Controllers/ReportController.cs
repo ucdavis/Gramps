@@ -380,7 +380,14 @@ namespace Gramps.Controllers
             }
         }
 
-
+        /// <summary>
+        /// #9
+        /// GET: /Report/EditForCall/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="templateId"></param>
+        /// <param name="callForProposalId"></param>
+        /// <returns></returns>
         public ActionResult EditForCall(int id, int? templateId, int? callForProposalId)
         {
             if (!callForProposalId.HasValue || callForProposalId == 0)

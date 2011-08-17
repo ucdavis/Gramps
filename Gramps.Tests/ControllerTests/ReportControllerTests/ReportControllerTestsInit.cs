@@ -161,7 +161,7 @@ namespace Gramps.Tests.ControllerTests.ReportControllerTests
                 else
                 {
                     reports[i].Template = null;
-                    reports[i].CallForProposal = CallForProposalRepository.GetNullableById(3);
+                    reports[i].CallForProposal = CallForProposalRepository.GetNullableById(2);
                 }
             }
 
