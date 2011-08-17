@@ -154,7 +154,7 @@ namespace Gramps.Tests.ControllerTests.ReportControllerTests
 
             #region Assert
             Assert.Inconclusive("Tests are still being written. When done, remove this line.");
-            Assert.AreEqual(4, result.Count(), "It looks like a method was added or removed from the controller.");
+            Assert.AreEqual(5, result.Count(), "It looks like a method was added or removed from the controller.");
             #endregion Assert
         }
 
@@ -210,12 +210,10 @@ namespace Gramps.Tests.ControllerTests.ReportControllerTests
             #endregion Arrange
 
             #region Act
-            //var expectedAttribute = controllerMethod.ElementAt(0).GetCustomAttributes(true).OfType<UserOnlyAttribute>();
             var allAttributes = controllerMethod.ElementAt(0).GetCustomAttributes(true);
             #endregion Act
 
             #region Assert
-            //Assert.AreEqual(1, expectedAttribute.Count(), "UserOnlyAttribute not found");
             Assert.AreEqual(0, allAttributes.Count());
             #endregion Assert
         }
@@ -241,7 +239,28 @@ namespace Gramps.Tests.ControllerTests.ReportControllerTests
             Assert.AreEqual(1, allAttributes.Count());
             #endregion Assert
         }
-        
+
+        /// <summary>
+        /// #5
+        /// </summary>
+        [TestMethod]
+        public void TestControllerMethodCreateForCallGetContainsExpectedAttributes()
+        {
+            #region Arrange
+            var controllerClass = ControllerClass;
+            var controllerMethod = controllerClass.GetMethods().Where(a => a.Name == "CreateForCall");
+            #endregion Arrange
+
+            #region Act
+            //var expectedAttribute = controllerMethod.ElementAt(0).GetCustomAttributes(true).OfType<UserOnlyAttribute>();
+            var allAttributes = controllerMethod.ElementAt(0).GetCustomAttributes(true);
+            #endregion Act
+
+            #region Assert
+            //Assert.AreEqual(1, expectedAttribute.Count(), "UserOnlyAttribute not found");
+            Assert.AreEqual(0, allAttributes.Count());
+            #endregion Assert
+        }
 
         #endregion Controller Method Tests
 

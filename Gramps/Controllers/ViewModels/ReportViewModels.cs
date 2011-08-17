@@ -51,7 +51,7 @@ namespace Gramps.Controllers.ViewModels
 
             var viewModel = new CallReportViewModel { Report = new Report(), CallForProposal = callForProposal};
 
-            viewModel.Questions = repository.OfType<Question>().Queryable.Where(a => a.CallForProposal.Id == callForProposal.Id && a.QuestionType.Name != "No Answer");
+            viewModel.Questions = repository.OfType<Question>().Queryable.Where(a => a.CallForProposal != null && a.CallForProposal.Id == callForProposal.Id && a.QuestionType.Name != "No Answer");
 
             return viewModel;
         }
