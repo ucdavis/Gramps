@@ -173,9 +173,17 @@ namespace Gramps.Controllers
             return View(viewModel);
         }
 
-        //
-        // POST: /Report/Create
-        [AcceptVerbs(HttpVerbs.Post)]
+        /// <summary>
+        /// #6
+        /// POST: /Report/CreateForCall
+        /// </summary>
+        /// <param name="report"></param>
+        /// <param name="templateId"></param>
+        /// <param name="callForProposalId"></param>
+        /// <param name="createReportParameters"></param>
+        /// <param name="showSubmitted"></param>
+        /// <returns></returns>
+        [HttpPost]
         public ActionResult CreateForCall(Report report, int? templateId, int? callForProposalId, CreateReportParameter[] createReportParameters, string showSubmitted)
         {
 
@@ -197,7 +205,7 @@ namespace Gramps.Controllers
             }
 
 
-            var reportToCreate = _reportService.CommonCreate(ModelState, report, templateId, callForProposalId, createReportParameters, showSubmitted);
+            var reportToCreate = _reportService.CommonCreate(ModelState, report, null, callForProposalId, createReportParameters, showSubmitted);
             reportToCreate.CallForProposal = callforProposal;
 
             if (ModelState.IsValid)
