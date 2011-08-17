@@ -165,6 +165,11 @@ namespace Gramps.Tests.ControllerTests.ReportControllerTests
                 }
             }
 
+            for (int i = 0; i < 2; i++)
+            {
+                reports[1].ReportColumns.Add(CreateValidEntities.ReportColumn(i+1));
+            }
+
             var fakeReports = new FakeReports();
             fakeReports.Records(0, ReportRepository, reports);
         }

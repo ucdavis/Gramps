@@ -75,6 +75,15 @@ namespace Gramps.Tests.ControllerTests.ReportControllerTests
         {
             "~/Report/EditForTemplate/5".ShouldMapTo<ReportController>(a => a.EditForTemplate(5, null, null));
         }
+
+        /// <summary>
+        /// #8
+        /// </summary>
+        [TestMethod]
+        public void TestEditForTemplatePostMapping()
+        {
+            "~/Report/EditForTemplate/5".ShouldMapTo<ReportController>(a => a.EditForTemplate(5, null, null, null, null, null));
+        }
         #endregion Mapping Tests
     }
 }

@@ -322,6 +322,17 @@ namespace Gramps.Controllers
             return View(viewModel);
         }
 
+        /// <summary>
+        /// #8
+        /// POST: /Report/EditForTemplate/5
+        /// </summary>
+        /// <param name="id">Report Id</param>
+        /// <param name="report"></param>
+        /// <param name="templateId"></param>
+        /// <param name="callForProposalId"></param>
+        /// <param name="createReportParameters"></param>
+        /// <param name="showSubmitted"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult EditForTemplate(int id, Report report, int? templateId, int? callForProposalId, CreateReportParameter[] createReportParameters, string showSubmitted)
         {
@@ -331,7 +342,7 @@ namespace Gramps.Controllers
             {
                 return this.RedirectToAction(a => a.TemplateIndex(templateId, callForProposalId));
             }
-            if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
+            if (!_accessService.HasAccess(templateId, null, CurrentUser.Identity.Name))
             {
                 Message = "You do not have access to that.";
                 return this.RedirectToAction<HomeController>(a => a.Index());
@@ -342,7 +353,7 @@ namespace Gramps.Controllers
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
-            var temp = _reportService.CommonCreate(ModelState, report, templateId, callForProposalId, createReportParameters, showSubmitted);
+            var temp = _reportService.CommonCreate(ModelState, report, templateId, null, createReportParameters, showSubmitted);
 
             reportToEdit.ReportColumns.Clear();
             reportToEdit.Name = temp.Name;
