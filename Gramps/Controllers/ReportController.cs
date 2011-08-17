@@ -99,7 +99,7 @@ namespace Gramps.Controllers
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
-            var viewModel = ReportViewModel.Create(Repository, templateId, callForProposalId);
+            var viewModel = ReportViewModel.Create(Repository, templateId, null);
 
             return View(viewModel);
         }
@@ -136,7 +136,7 @@ namespace Gramps.Controllers
             else
             {
                 Message = "Unable to create report";
-                var viewModel = ReportViewModel.Create(Repository, templateId, callForProposalId);
+                var viewModel = ReportViewModel.Create(Repository, templateId, null);
                 viewModel.Report = reportToCreate;
                 return View(viewModel);
             }
@@ -287,8 +287,14 @@ namespace Gramps.Controllers
         #endregion Creates
 
         #region Edits
-        //
-        // GET: /Report/Edit/5
+        /// <summary>
+        /// #7
+        /// GET: /Report/EditForTemplate/5
+        /// </summary>
+        /// <param name="id">Report Id</param>
+        /// <param name="templateId"></param>
+        /// <param name="callForProposalId"></param>
+        /// <returns></returns>
         public ActionResult EditForTemplate(int id, int? templateId, int? callForProposalId)
         {
             var report = _reportRepository.GetNullableById(id);
@@ -298,7 +304,7 @@ namespace Gramps.Controllers
                 return this.RedirectToAction(a => a.TemplateIndex(templateId, callForProposalId));
             }
 
-            if (!_accessService.HasAccess(templateId, callForProposalId, CurrentUser.Identity.Name))
+            if (!_accessService.HasAccess(templateId, null, CurrentUser.Identity.Name))
             {
                 Message = "You do not have access to that.";
                 return this.RedirectToAction<HomeController>(a => a.Index());
@@ -310,7 +316,7 @@ namespace Gramps.Controllers
             }
 
 
-            var viewModel = ReportViewModel.Create(Repository, templateId, callForProposalId);
+            var viewModel = ReportViewModel.Create(Repository, templateId, null);
             viewModel.Report = report;
 
             return View(viewModel);
@@ -357,7 +363,7 @@ namespace Gramps.Controllers
             else
             {
                 Message = "Unable to edit report";
-                var viewModel = ReportViewModel.Create(Repository, templateId, callForProposalId);
+                var viewModel = ReportViewModel.Create(Repository, templateId, null);
                 viewModel.Report = reportToEdit;
                 return View(viewModel);
             }
