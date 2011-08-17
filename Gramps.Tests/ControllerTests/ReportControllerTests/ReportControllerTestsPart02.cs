@@ -151,7 +151,7 @@ namespace Gramps.Tests.ControllerTests.ReportControllerTests
 
 
         [TestMethod]
-        public void TestCreateForTemplateWhenNotValid1()
+        public void TestCreateForTemplatePostWhenNotValid()
         {
             #region Arrange
             Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "tester@testy.com");
@@ -215,7 +215,7 @@ namespace Gramps.Tests.ControllerTests.ReportControllerTests
         }
 
         [TestMethod]
-        public void TestCreateForTemplateWhenValid()
+        public void TestCreateForTemplatePostWhenValid()
         {
             #region Arrange
             Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "tester@testy.com");
