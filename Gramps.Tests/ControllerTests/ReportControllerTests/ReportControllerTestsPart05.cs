@@ -233,6 +233,221 @@ namespace Gramps.Tests.ControllerTests.ReportControllerTests
         #endregion EditForCall Get Tests
 
         #region EditForCall Post Tests
+        [TestMethod]
+        public void TestEditForCallPostRedirectsWhenCallIsNull()
+        {
+            #region Arrange
+            SetupData3();
+            var reportToEdit = CreateValidEntities.Report(9);
+            var reportParms = new CreateReportParameter[2];
+            reportParms[0] = new CreateReportParameter();
+            reportParms[1] = new CreateReportParameter();
+            reportParms[0].QuestionId = 7;
+            reportParms[1].QuestionId = 8; 
+            #endregion Arrange
+
+            #region Act
+            Controller.EditForCall(4, reportToEdit, null, null, reportParms, "Show")
+                .AssertActionRedirect()
+                .ToAction<CallForProposalController>(a => a.Index(null, null, null));
+            #endregion Act
+
+            #region Assert
+
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestEditForCallPostRedirectsWhenCallIsZero()
+        {
+            #region Arrange
+            SetupData3();
+            var reportToEdit = CreateValidEntities.Report(9);
+            var reportParms = new CreateReportParameter[2];
+            reportParms[0] = new CreateReportParameter();
+            reportParms[1] = new CreateReportParameter();
+            reportParms[0].QuestionId = 7;
+            reportParms[1].QuestionId = 8; 
+            #endregion Arrange
+
+            #region Act
+            Controller.EditForCall(4,  reportToEdit, null, 0, reportParms, "show")
+                .AssertActionRedirect()
+                .ToAction<CallForProposalController>(a => a.Index(null, null, null));
+            #endregion Act
+
+            #region Assert
+
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestEditForCallPostRedirectsWhenCallNotFound()
+        {
+            #region Arrange
+            SetupData3();
+            var reportToEdit = CreateValidEntities.Report(9);
+            var reportParms = new CreateReportParameter[2];
+            reportParms[0] = new CreateReportParameter();
+            reportParms[1] = new CreateReportParameter();
+            reportParms[0].QuestionId = 7;
+            reportParms[1].QuestionId = 8; 
+            #endregion Arrange
+
+            #region Act
+            Controller.EditForCall(4,reportToEdit, null, 4, reportParms, "show")
+                .AssertActionRedirect()
+                .ToAction<CallForProposalController>(a => a.Index(null, null, null));
+            #endregion Act
+
+            #region Assert
+
+            #endregion Assert
+        }
+
+
+        [TestMethod]
+        public void TestEditForCallPostRedirectsWhenNoAccess1()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "tester@testy.com");
+            AccessService.Expect(a => a.HasAccess(Arg<int?>.Is.Anything, Arg<int?>.Is.Anything, Arg<string>.Is.Anything)).Return(false);
+            SetupData3();
+            var reportToEdit = CreateValidEntities.Report(9);
+            var reportParms = new CreateReportParameter[2];
+            reportParms[0] = new CreateReportParameter();
+            reportParms[1] = new CreateReportParameter();
+            reportParms[0].QuestionId = 7;
+            reportParms[1].QuestionId = 8; 
+            #endregion Arrange
+
+            #region Act
+            Controller.EditForCall(4, reportToEdit, null, 2, reportParms, "show")
+                .AssertActionRedirect()
+                .ToAction<HomeController>(a => a.Index());
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual("You do not have access to that.", Controller.Message);
+            AccessService.AssertWasCalled(a => a.HasAccess(null, 2, "tester@testy.com"));
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestEditForCallPostRedirectsWhenNoAccess2()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "tester@testy.com");
+            AccessService.Expect(a => a.HasAccess(Arg<int?>.Is.Anything, Arg<int?>.Is.Anything, Arg<string>.Is.Anything)).Return(false);
+            SetupData3();
+            var reportToEdit = CreateValidEntities.Report(9);
+            var reportParms = new CreateReportParameter[2];
+            reportParms[0] = new CreateReportParameter();
+            reportParms[1] = new CreateReportParameter();
+            reportParms[0].QuestionId = 7;
+            reportParms[1].QuestionId = 8; 
+            #endregion Arrange
+
+            #region Act
+            Controller.EditForCall(2, reportToEdit, 99, 2, reportParms, "Show")
+                .AssertActionRedirect()
+                .ToAction<HomeController>(a => a.Index());
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual("You do not have access to that.", Controller.Message);
+            AccessService.AssertWasCalled(a => a.HasAccess(null, 2, "tester@testy.com"));
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestEditForCallPostRedirectsWhenReportNotFound()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "tester@testy.com");
+            AccessService.Expect(a => a.HasAccess(Arg<int?>.Is.Anything, Arg<int?>.Is.Anything, Arg<string>.Is.Anything)).Return(true);
+            SetupData3();
+            var reportToEdit = CreateValidEntities.Report(9);
+            var reportParms = new CreateReportParameter[2];
+            reportParms[0] = new CreateReportParameter();
+            reportParms[1] = new CreateReportParameter();
+            reportParms[0].QuestionId = 7;
+            reportParms[1].QuestionId = 8; 
+            #endregion Arrange
+
+            #region Act
+            var result = Controller.EditForCall(7,reportToEdit ,  null, 3, reportParms, "Show")
+                .AssertActionRedirect()
+                .ToAction<ReportController>(a => a.CallIndex(3));
+            #endregion Act
+
+            #region Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(3, result.RouteValues["id"]);
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestEditForCallPostRedirectsWhenNotSameId1()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "tester@testy.com");
+            AccessService.Expect(a => a.HasAccess(Arg<int?>.Is.Anything, Arg<int?>.Is.Anything, Arg<string>.Is.Anything)).Return(true);
+            AccessService.Expect(a => a.HasSameId(Arg<Template>.Is.Anything, Arg<CallForProposal>.Is.Anything, Arg<int?>.Is.Anything, Arg<int?>.Is.Anything)).Return(false);
+            SetupData3();
+            var reportToEdit = CreateValidEntities.Report(9);
+            var reportParms = new CreateReportParameter[2];
+            reportParms[0] = new CreateReportParameter();
+            reportParms[1] = new CreateReportParameter();
+            reportParms[0].QuestionId = 7;
+            reportParms[1].QuestionId = 8; 
+            #endregion Arrange
+
+            #region Act
+            Controller.EditForCall(4,reportToEdit, null, 2, reportParms, "Show")
+                .AssertActionRedirect()
+                .ToAction<HomeController>(a => a.Index());
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual("You do not have access to that.", Controller.Message);
+            AccessService.AssertWasCalled(a => a.HasAccess(null, 2, "tester@testy.com"));
+            AccessService.AssertWasCalled(a => a.HasSameId(null, CallForProposalRepository.GetNullableById(2), null, 2));
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestEditForCallPostRedirectsWhenNotSameId2()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "tester@testy.com");
+            AccessService.Expect(a => a.HasAccess(Arg<int?>.Is.Anything, Arg<int?>.Is.Anything, Arg<string>.Is.Anything)).Return(true);
+            AccessService.Expect(a => a.HasSameId(Arg<Template>.Is.Anything, Arg<CallForProposal>.Is.Anything, Arg<int?>.Is.Anything, Arg<int?>.Is.Anything)).Return(false);
+            SetupData3();
+            var reportToEdit = CreateValidEntities.Report(9);
+            var reportParms = new CreateReportParameter[2];
+            reportParms[0] = new CreateReportParameter();
+            reportParms[1] = new CreateReportParameter();
+            reportParms[0].QuestionId = 7;
+            reportParms[1].QuestionId = 8; 
+            #endregion Arrange
+
+            #region Act
+            Controller.EditForCall(4,reportToEdit, 9, 2, reportParms, "Show")
+                .AssertActionRedirect()
+                .ToAction<HomeController>(a => a.Index());
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual("You do not have access to that.", Controller.Message);
+            AccessService.AssertWasCalled(a => a.HasAccess(null, 2, "tester@testy.com"));
+            AccessService.AssertWasCalled(a => a.HasSameId(null, CallForProposalRepository.GetNullableById(2), null, 2));
+            #endregion Assert
+        }
+
+
+
+
 
         [TestMethod]
         public void TestDescription()

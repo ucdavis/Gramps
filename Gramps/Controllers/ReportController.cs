@@ -384,7 +384,7 @@ namespace Gramps.Controllers
         /// #9
         /// GET: /Report/EditForCall/5
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">Report Id</param>
         /// <param name="templateId"></param>
         /// <param name="callForProposalId"></param>
         /// <returns></returns>
@@ -427,6 +427,17 @@ namespace Gramps.Controllers
             return View(viewModel);
         }
 
+        /// <summary>
+        /// #10
+        /// POST: /Report/EditForCall/5
+        /// </summary>
+        /// <param name="id">Report Id</param>
+        /// <param name="report"></param>
+        /// <param name="templateId"></param>
+        /// <param name="callForProposalId"></param>
+        /// <param name="createReportParameters"></param>
+        /// <param name="showSubmitted"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult EditForCall(int id, Report report, int? templateId, int? callForProposalId, CreateReportParameter[] createReportParameters, string showSubmitted)
         {
