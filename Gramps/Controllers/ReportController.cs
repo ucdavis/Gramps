@@ -501,7 +501,13 @@ namespace Gramps.Controllers
 
         #endregion Edits
 
-
+        /// <summary>
+        /// #11
+        /// </summary>
+        /// <param name="reportId"></param>
+        /// <param name="templateId"></param>
+        /// <param name="callForProposalId"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult Delete(int reportId, int? templateId, int? callForProposalId)
         {
