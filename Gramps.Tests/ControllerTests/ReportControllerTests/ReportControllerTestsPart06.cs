@@ -229,5 +229,129 @@ namespace Gramps.Tests.ControllerTests.ReportControllerTests
         }
 
         #endregion Delete Tests
+
+        #region Launch Tests
+
+        [TestMethod]
+        public void TestLaunchRedirctsIfCallIdIsNull()
+        {
+            Controller.Launch(1, null)
+                .AssertActionRedirect()
+                .ToAction<CallForProposalController>(a => a.Index(null, null, null));
+        }
+        [TestMethod]
+        public void TestLaunchRedirctsIfCallIdIsZero()
+        {
+            Controller.Launch(1, 0)
+                .AssertActionRedirect()
+                .ToAction<CallForProposalController>(a => a.Index(null, null, null));
+        }
+
+
+        [TestMethod]
+        public void TestLaunchRedirectsWhenCallNotFound()
+        {
+            #region Arrange
+            var fakeCall = new FakeCallForProposals();
+            fakeCall.Records(3, CallForProposalRepository);
+            #endregion Arrange
+
+            #region Act
+            Controller.Launch(1, 4)
+                .AssertActionRedirect()
+                .ToAction<CallForProposalController>(a => a.Index(null, null, null));
+            #endregion Act
+
+            #region Assert
+            #endregion Assert		
+        }
+
+        [TestMethod]
+        public void TestLaunchRedirectsWhenNoAccess()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "tester@testy.com");
+            var fakeCall = new FakeCallForProposals();
+            fakeCall.Records(3, CallForProposalRepository);
+            AccessService.Expect(a => a.HasAccess(Arg<int?>.Is.Anything, Arg<int?>.Is.Anything, Arg<string>.Is.Anything)).Return(false);
+            #endregion Arrange
+
+            #region Act
+            Controller.Launch(1, 3)
+                .AssertActionRedirect()
+                .ToAction<HomeController>(a => a.Index());
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual("You do not have access to that.", Controller.Message);
+            AccessService.AssertWasCalled(a => a.HasAccess(null, 3, "tester@testy.com"));
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestLaunchRedirectsWhenReportNotFound()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "tester@testy.com");
+            AccessService.Expect(a => a.HasAccess(Arg<int?>.Is.Anything, Arg<int?>.Is.Anything, Arg<string>.Is.Anything)).Return(true);
+            SetupData3();
+            #endregion Arrange
+
+            #region Act
+            var result = Controller.Launch(9, 2)
+               .AssertActionRedirect()
+               .ToAction<ReportController>(a => a.CallIndex(2));
+            #endregion Act
+
+            #region Assert
+            AccessService.AssertWasCalled(a => a.HasAccess(null, 2, "tester@testy.com"));
+            Assert.IsNotNull(result);
+            Assert.AreEqual(2, result.RouteValues["id"]);
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestLaunchRedirectsWhenNotSameId()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "tester@testy.com");
+            AccessService.Expect(a => a.HasAccess(Arg<int?>.Is.Anything, Arg<int?>.Is.Anything, Arg<string>.Is.Anything)).Return(true);
+            SetupData3();
+            #endregion Arrange
+
+            #region Act
+            Controller.Launch(6, 3)
+               .AssertActionRedirect()
+               .ToAction<HomeController>(a => a.Index());
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual("You do not have access to that.", Controller.Message);
+            AccessService.AssertWasCalled(a => a.HasAccess(null, 3, "tester@testy.com"));
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestLaunchReturnsView()
+        {
+            #region Arrange
+            Controller.ControllerContext.HttpContext = new MockHttpContext(0, new[] { "" }, "tester@testy.com");
+            AccessService.Expect(a => a.HasAccess(Arg<int?>.Is.Anything, Arg<int?>.Is.Anything, Arg<string>.Is.Anything)).Return(true);
+            SetupData3();
+            #endregion Arrange
+
+            #region Act
+            var result = Controller.Launch(6, 2)
+                .AssertViewRendered()
+                .WithViewData<ReportLaunchViewModel>();
+            #endregion Act
+
+            #region Assert
+            Assert.IsNotNull(result);
+            Assert.IsFalse(result.ForExport);
+            AccessService.AssertWasCalled(a => a.HasAccess(null, 2, "tester@testy.com"));
+            #endregion Assert
+        }
+        #endregion Launch Tests
     }
 }

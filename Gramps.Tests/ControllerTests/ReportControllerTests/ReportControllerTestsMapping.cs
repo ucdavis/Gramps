@@ -111,6 +111,15 @@ namespace Gramps.Tests.ControllerTests.ReportControllerTests
         {
             "~/Report/Delete/5".ShouldMapTo<ReportController>(a => a.Delete(5, null, null), true);
         }
+
+        /// <summary>
+        /// #12
+        /// </summary>
+        [TestMethod]
+        public void TestLaunchMapping()
+        {
+            "~/Report/Launch/5".ShouldMapTo<ReportController>(a => a.Launch(5, null));
+        }
         #endregion Mapping Tests
     }
 }

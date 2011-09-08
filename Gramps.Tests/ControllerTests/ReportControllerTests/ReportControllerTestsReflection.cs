@@ -154,7 +154,7 @@ namespace Gramps.Tests.ControllerTests.ReportControllerTests
 
             #region Assert
             Assert.Inconclusive("Tests are still being written. When done, remove this line.");
-            Assert.AreEqual(11, result.Count(), "It looks like a method was added or removed from the controller.");
+            Assert.AreEqual(12, result.Count(), "It looks like a method was added or removed from the controller.");
             #endregion Assert
         }
 
@@ -387,6 +387,26 @@ namespace Gramps.Tests.ControllerTests.ReportControllerTests
             #region Assert
             Assert.AreEqual(1, expectedAttribute.Count(), "HttpPostAttribute not found");
             Assert.AreEqual(1, allAttributes.Count());
+            #endregion Assert
+        }
+
+        /// <summary>
+        /// #12
+        /// </summary>
+        [TestMethod]
+        public void TestControllerMethodLaunchContainsExpectedAttributes()
+        {
+            #region Arrange
+            var controllerClass = ControllerClass;
+            var controllerMethod = controllerClass.GetMethod("Launch");
+            #endregion Arrange
+
+            #region Act
+            var allAttributes = controllerMethod.GetCustomAttributes(true);
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual(0, allAttributes.Count());
             #endregion Assert
         }
         #endregion Controller Method Tests

@@ -174,34 +174,6 @@ namespace Gramps.Tests.ControllerTests.ReportControllerTests
             fakeReports.Records(0, ReportRepository, reports);
         }
 
-        //public void SetupData4()
-        //{
-        //    var fakeTemplates = new FakeTemplates();
-        //    fakeTemplates.Records(3, TemplateRepository);
-
-        //    var fakeCalls = new FakeCallForProposals();
-        //    fakeCalls.Records(3, CallForProposalRepository);
-
-        //    var reports = new List<Report>();
-        //    for (int i = 0; i < 6; i++)
-        //    {
-        //        reports.Add(CreateValidEntities.Report(i+1));
-        //        if (i < 3)
-        //        {
-        //            reports[i].Template = TemplateRepository.GetNullableById(2);
-        //            reports[i].CallForProposal = null;
-        //        }
-        //        else
-        //        {
-        //            reports[i].Template = null;
-        //            reports[i].CallForProposal = CallForProposalRepository.GetNullableById(3);
-        //        }
-        //    }
-
-        //    var fakeReports = new FakeReports();
-        //    fakeReports.Records(0, ReportRepository, reports);
-
-        //}
         #endregion Helper Methods
 
        

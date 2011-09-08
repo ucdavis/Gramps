@@ -550,7 +550,12 @@ namespace Gramps.Controllers
 
         }
         
-
+        /// <summary>
+        /// #12
+        /// </summary>
+        /// <param name="id">Report Id</param>
+        /// <param name="callForProposalId"></param>
+        /// <returns></returns>
         public ActionResult Launch(int id, int? callForProposalId)
         {
             if (!callForProposalId.HasValue || callForProposalId == 0)
