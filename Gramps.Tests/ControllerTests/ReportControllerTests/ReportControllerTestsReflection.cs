@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using System.Web.Mvc;
 using Gramps.Controllers.Filters;
 using Gramps.Helpers;
@@ -153,8 +150,7 @@ namespace Gramps.Tests.ControllerTests.ReportControllerTests
             #endregion Act
 
             #region Assert
-            Assert.Inconclusive("Tests are still being written. When done, remove this line.");
-            Assert.AreEqual(12, result.Count(), "It looks like a method was added or removed from the controller.");
+            Assert.AreEqual(13, result.Count(), "It looks like a method was added or removed from the controller.");
             #endregion Assert
         }
 
@@ -399,6 +395,26 @@ namespace Gramps.Tests.ControllerTests.ReportControllerTests
             #region Arrange
             var controllerClass = ControllerClass;
             var controllerMethod = controllerClass.GetMethod("Launch");
+            #endregion Arrange
+
+            #region Act
+            var allAttributes = controllerMethod.GetCustomAttributes(true);
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual(0, allAttributes.Count());
+            #endregion Assert
+        }
+
+        /// <summary>
+        /// #13
+        /// </summary>
+        [TestMethod]
+        public void TestControllerMethodExportToExcellContainsExpectedAttributes()
+        {
+            #region Arrange
+            var controllerClass = ControllerClass;
+            var controllerMethod = controllerClass.GetMethod("ExportToExcell");
             #endregion Arrange
 
             #region Act

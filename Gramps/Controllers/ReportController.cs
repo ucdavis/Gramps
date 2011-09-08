@@ -590,6 +590,12 @@ namespace Gramps.Controllers
             return View(viewModel);
         }
 
+        /// <summary>
+        /// #13
+        /// </summary>
+        /// <param name="id">Report Id</param>
+        /// <param name="callForProposalId"></param>
+        /// <returns></returns>
         public ActionResult ExportExcell(int id, int? callForProposalId)
         {
             if (!callForProposalId.HasValue || callForProposalId == 0)

@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Gramps.Controllers;
+﻿using Gramps.Controllers;
 using Gramps.Core.Domain;
+using Gramps.Tests.Core.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MvcContrib.TestHelper;
-using Gramps.Tests.Core.Extensions;
 
 namespace Gramps.Tests.ControllerTests.ReportControllerTests
 {
@@ -119,6 +115,15 @@ namespace Gramps.Tests.ControllerTests.ReportControllerTests
         public void TestLaunchMapping()
         {
             "~/Report/Launch/5".ShouldMapTo<ReportController>(a => a.Launch(5, null));
+        }
+
+        /// <summary>
+        /// #13
+        /// </summary>
+        [TestMethod]
+        public void TestExportExcellMapping()
+        {
+            "~/Report/ExportExcell/5".ShouldMapTo<ReportController>(a => a.ExportExcell(5, null));
         }
         #endregion Mapping Tests
     }
