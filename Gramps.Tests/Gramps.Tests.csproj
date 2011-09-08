@@ -183,6 +183,7 @@
     <Compile Include="ControllerTests\ReportControllerTests\ReportControllerTestsPart03.cs" />
     <Compile Include="ControllerTests\ReportControllerTests\ReportControllerTestsPart04.cs" />
     <Compile Include="ControllerTests\ReportControllerTests\ReportControllerTestsPart05.cs" />
+    <Compile Include="ControllerTests\ReportControllerTests\ReportControllerTestsPart06.cs" />
     <Compile Include="ControllerTests\ReportControllerTests\ReportControllerTestsReflection.cs" />
     <Compile Include="Core\AbstractRepositoryTests.cs" />
     <Compile Include="Core\Extensions\AssertExtensions.cs" />

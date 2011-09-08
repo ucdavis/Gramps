@@ -472,7 +472,7 @@ namespace Gramps.Controllers
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
-            var temp = _reportService.CommonCreate(ModelState, report, templateId, callForProposalId, createReportParameters, showSubmitted);
+            var temp = _reportService.CommonCreate(ModelState, report, null, callForProposalId, createReportParameters, showSubmitted);
 
             reportToEdit.ReportColumns.Clear();
             reportToEdit.Name = temp.Name;
