@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
@@ -10,7 +9,6 @@ using Gramps.Services;
 using MvcContrib;
 using NPOI.HSSF.UserModel;
 using UCDArch.Core.PersistanceSupport;
-using UCDArch.Web.Helpers;
 
 namespace Gramps.Controllers
 {
@@ -527,7 +525,7 @@ namespace Gramps.Controllers
                 }
                 else
                 {
-                    return this.RedirectToAction(a => a.CallIndex(callForProposalId.Value));
+                    return this.RedirectToAction(a => a.CallIndex(callForProposalId.HasValue ? callForProposalId.Value : 0));
                 }
                
             }
@@ -545,7 +543,7 @@ namespace Gramps.Controllers
             }
             else
             {
-                return this.RedirectToAction(a => a.CallIndex(callForProposalId.Value));
+                return this.RedirectToAction(a => a.CallIndex(callForProposalId.HasValue ? callForProposalId.Value : 0));
             }
 
         }

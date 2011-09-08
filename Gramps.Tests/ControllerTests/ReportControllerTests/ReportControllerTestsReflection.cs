@@ -414,7 +414,7 @@ namespace Gramps.Tests.ControllerTests.ReportControllerTests
         {
             #region Arrange
             var controllerClass = ControllerClass;
-            var controllerMethod = controllerClass.GetMethod("ExportToExcell");
+            var controllerMethod = controllerClass.GetMethod("ExportExcell");
             #endregion Arrange
 
             #region Act
