@@ -186,6 +186,10 @@
     <Compile Include="ControllerTests\ReportControllerTests\ReportControllerTestsPart06.cs" />
     <Compile Include="ControllerTests\ReportControllerTests\ReportControllerTestsPart07.cs" />
     <Compile Include="ControllerTests\ReportControllerTests\ReportControllerTestsReflection.cs" />
+    <Compile Include="ControllerTests\TermplateControllerTests\TemplateControllerTestsInit.cs" />
+    <Compile Include="ControllerTests\TermplateControllerTests\TemplateControllerTestsMapping.cs" />
+    <Compile Include="ControllerTests\TermplateControllerTests\TemplateControllerTestsPart01.cs" />
+    <Compile Include="ControllerTests\TermplateControllerTests\TemplateControllerTestsReflection.cs" />
     <Compile Include="Core\AbstractRepositoryTests.cs" />
     <Compile Include="Core\Extensions\AssertExtensions.cs" />
     <Compile Include="Core\Extensions\RouteTestingExtensions.cs" />
