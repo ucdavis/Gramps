@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Web.Mvc;
 using System.Web.Routing;
 using Gramps.Controllers;
 using Gramps.Controllers.Filters;
@@ -160,7 +161,63 @@ namespace Gramps.Tests.ControllerTests.TermplateControllerTests
 
             #region Assert
             Assert.Inconclusive("Tests are still being written. When done, remove this line.");
-            Assert.AreEqual(0, result.Count(), "It looks like a method was added or removed from the controller.");
+            Assert.AreEqual(2, result.Count(), "It looks like a method was added or removed from the controller.");
+            #endregion Assert
+        }
+
+        /// <summary>
+        /// #1
+        /// </summary>
+        [TestMethod]
+        public void TestControllerMethodIndexContainsExpectedAttributes()
+        {
+            #region Arrange
+            var controllerClass = _controllerClass;
+            var controllerMethod = controllerClass.GetMethod("Index");
+            #endregion Arrange
+
+            #region Act
+            var allAttributes = controllerMethod.GetCustomAttributes(true);
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual(0, allAttributes.Count());
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestControllerMethodCreateGetContainsExpectedAttributes()
+        {
+            #region Arrange
+            var controllerClass = _controllerClass;
+            var controllerMethod = controllerClass.GetMethods().Where(a => a.Name == "Create");
+            #endregion Arrange
+
+            #region Act
+            var allAttributes = controllerMethod.ElementAt(0).GetCustomAttributes(true);
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual(0, allAttributes.Count());
+            #endregion Assert
+        }
+
+        [TestMethod]
+        public void TestControllerMethodCreatePostContainsExpectedAttributes()
+        {
+            #region Arrange
+            var controllerClass = _controllerClass;
+            var controllerMethod = controllerClass.GetMethods().Where(a => a.Name == "Create");
+            #endregion Arrange
+
+            #region Act
+            var expectedAttribute = controllerMethod.ElementAt(1).GetCustomAttributes(true).OfType<HttpPostAttribute>();
+            var allAttributes = controllerMethod.ElementAt(1).GetCustomAttributes(true);
+            #endregion Act
+
+            #region Assert
+            Assert.AreEqual(1, expectedAttribute.Count(), "HttpPostAttribute not found");
+            Assert.AreEqual(1, allAttributes.Count());
             #endregion Assert
         }
 

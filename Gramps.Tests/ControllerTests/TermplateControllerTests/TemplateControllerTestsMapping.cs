@@ -17,11 +17,41 @@ namespace Gramps.Tests.ControllerTests.TermplateControllerTests
     public partial class TemplateControllerTests
     {
         #region Mapping Tests
-        //[TestMethod]
-        //public void TestExampleMapping()
-        //{
-        //    "~/Template/YourMethod/".ShouldMapTo<TemplateController>(a => a.YourMethod(null));
-        //}
+        /// <summary>
+        /// #1
+        /// </summary>
+        [TestMethod]
+        public void TestIndexMapping1()
+        {
+            "~/Template/Index/".ShouldMapTo<TemplateController>(a => a.Index());
+        }
+
+        /// <summary>
+        /// #1
+        /// </summary>
+        [TestMethod]
+        public void TestIndexMapping2()
+        {
+            "~/Template/".ShouldMapTo<TemplateController>(a => a.Index());
+        }
+
+        /// <summary>
+        /// #2
+        /// </summary>
+        [TestMethod]
+        public void TestCreateGetMapping()
+        {
+            "~/Template/Create/".ShouldMapTo<TemplateController>(a => a.Create());
+        }
+
+        /// <summary>
+        /// #3
+        /// </summary>
+        [TestMethod]
+        public void TestCreatePostMapping()
+        {
+            "~/Template/Create/".ShouldMapTo<TemplateController>(a => a.Create(null));
+        }
         #endregion Mapping Tests
 
     }

@@ -189,6 +189,7 @@
     <Compile Include="ControllerTests\TermplateControllerTests\TemplateControllerTestsInit.cs" />
     <Compile Include="ControllerTests\TermplateControllerTests\TemplateControllerTestsMapping.cs" />
     <Compile Include="ControllerTests\TermplateControllerTests\TemplateControllerTestsPart01.cs" />
+    <Compile Include="ControllerTests\TermplateControllerTests\TemplateControllerTestsPart02.cs" />
     <Compile Include="ControllerTests\TermplateControllerTests\TemplateControllerTestsReflection.cs" />
     <Compile Include="Core\AbstractRepositoryTests.cs" />
     <Compile Include="Core\Extensions\AssertExtensions.cs" />

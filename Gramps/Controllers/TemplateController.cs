@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 using Gramps.Controllers.Filters;
 using Gramps.Controllers.ViewModels;
 using Gramps.Core.Domain;
 using Gramps.Services;
-using UCDArch.Core.PersistanceSupport;
-using UCDArch.Web.Controller;
-using UCDArch.Web.Helpers;
-using UCDArch.Core.Utils;
 using MvcContrib;
-using System.Linq.Expressions;
-using System.Linq;
+using UCDArch.Core.PersistanceSupport;
+using UCDArch.Web.Helpers;
 
 namespace Gramps.Controllers
 {
@@ -30,32 +26,23 @@ namespace Gramps.Controllers
             _accessService = accessService;
         }
     
-        //
-        // GET: /Template/
+        /// <summary>
+        /// #1
+        /// GET: /Template/
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Index()
         {
-  
-            //var templateList = Repository.OfType<Editor>().Queryable
-            //    .Where(a => a.Template != null && a.User != null && a.User.LoginId == CurrentUser.Identity.Name).Select( x => x.Template).Distinct();
-
             var viewModel = TemplateListViewModel.Create(Repository, CurrentUser.Identity.Name);
 
             return View(viewModel);
         }
 
-        //
-        // GET: /Template/Details/5
-        public ActionResult Details(int id)
-        {
-            var template = _templateRepository.GetNullableById(id);
-
-            if (template == null) return this.RedirectToAction(a => a.Index());
-
-            return View(template);
-        }
-
-        //
-        // GET: /Template/Create
+        /// <summary>
+        /// #2
+        /// GET: /Template/Create
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Create()
         {
             var viewModel = TemplateViewModel.Create(Repository);
@@ -63,9 +50,13 @@ namespace Gramps.Controllers
             return View(viewModel);
         } 
 
-        //
-        // POST: /Template/Create
-        [AcceptVerbs(HttpVerbs.Post)]
+        /// <summary>
+        /// #3
+        /// POST: /Template/Create
+        /// </summary>
+        /// <param name="template"></param>
+        /// <returns></returns>
+        [HttpPost]
         public ActionResult Create(Template template)
         {
             var templateToCreate = new Template();
