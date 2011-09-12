@@ -111,13 +111,20 @@ namespace Gramps.Controllers
             }
         }
 
-        //
-        // GET: /Template/Edit/5
+        /// <summary>
+        /// #4
+        /// GET: /Template/Edit/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public ActionResult Edit(int id)
         {
             var template = _templateRepository.GetNullableById(id);
 
-            if (template == null) return this.RedirectToAction(a => a.Index());
+            if (template == null)
+            {
+                return this.RedirectToAction(a => a.Index());
+            }
 
             if (!_accessService.HasAccess(template.Id, null, CurrentUser.Identity.Name))
             {
@@ -135,12 +142,15 @@ namespace Gramps.Controllers
         
         //
         // POST: /Template/Edit/5
-        [AcceptVerbs(HttpVerbs.Post)]
+        [HttpPost]
         public ActionResult Edit(int id, Template template)
         {
             var templateToEdit = _templateRepository.GetNullableById(id);
 
-            if (templateToEdit == null) return this.RedirectToAction(a => a.Index());
+            if (templateToEdit == null)
+            {
+                return this.RedirectToAction(a => a.Index());
+            }
             if (!_accessService.HasAccess(templateToEdit.Id, null, CurrentUser.Identity.Name))
             {
                 Message = "You do not have access to that.";
@@ -167,38 +177,11 @@ namespace Gramps.Controllers
             {
 				var viewModel = TemplateViewModel.Create(Repository);
                 viewModel.Template = templateToEdit;
-
+                viewModel.TemplateId = id;
+                viewModel.CallForProposalId = null;
                 return View(viewModel);
             }
         }
-
-        
-        ////
-        //// GET: /Template/Delete/5 
-        //public ActionResult Delete(int id)
-        //{
-        //    var template = _templateRepository.GetNullableById(id);
-
-        //    if (template == null) return this.RedirectToAction(a => a.Index());
-
-        //    return View(template);
-        //}
-
-        ////
-        //// POST: /Template/Delete/5
-        //[AcceptVerbs(HttpVerbs.Post)]
-        //public ActionResult Delete(int id, Template template)
-        //{
-        //    var templateToDelete = _templateRepository.GetNullableById(id);
-
-        //    if (templateToDelete == null) return this.RedirectToAction(a => a.Index());
-
-        //    _templateRepository.Remove(templateToDelete);
-
-        //    Message = "Template Removed Successfully";
-
-        //    return this.RedirectToAction(a => a.Index());
-        //}
         
         /// <summary>
         /// Transfer editable values from source to destination

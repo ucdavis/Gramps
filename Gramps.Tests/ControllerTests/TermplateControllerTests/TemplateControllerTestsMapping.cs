@@ -1,16 +1,6 @@
-﻿using System;
-using System.Linq;
-using System.Web.Routing;
-using Gramps.Controllers;
-using Gramps.Controllers.Filters;
-using Gramps.Core.Domain;
-using Gramps.Services;
+﻿using Gramps.Controllers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MvcContrib.TestHelper;
-using Rhino.Mocks;
-using UCDArch.Core.PersistanceSupport;
-using UCDArch.Testing;
-using UCDArch.Web.Attributes;
 
 namespace Gramps.Tests.ControllerTests.TermplateControllerTests
 {
@@ -51,6 +41,24 @@ namespace Gramps.Tests.ControllerTests.TermplateControllerTests
         public void TestCreatePostMapping()
         {
             "~/Template/Create/".ShouldMapTo<TemplateController>(a => a.Create(null));
+        }
+
+        /// <summary>
+        /// #4
+        /// </summary>
+        [TestMethod]
+        public void TestEditGetMapping()
+        {
+            "~/Template/Edit/5".ShouldMapTo<TemplateController>(a => a.Edit(5));
+        }
+
+        /// <summary>
+        /// #5
+        /// </summary>
+        [TestMethod]
+        public void TestEditPostMapping()
+        {
+            "~/Template/Edit/5".ShouldMapTo<TemplateController>(a => a.Edit(5, null));
         }
         #endregion Mapping Tests
 
