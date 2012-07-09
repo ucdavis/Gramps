@@ -1,207 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Report xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2008/01/reportdefinition">
-  <DataSources>
-    <DataSource Name="DataSource">
-      <DataSourceReference>Gramps</DataSourceReference>
-      <rd:DataSourceID>6a66fe5e-e7c0-42c9-9542-0d8b8b0d22dc</rd:DataSourceID>
-      <rd:SecurityType>None</rd:SecurityType>
-    </DataSource>
-  </DataSources>
-  <DataSets>
-    <DataSet Name="Proposal">
-      <Fields>
-        <Field Name="Name">
-          <DataField>Name</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="EndDate">
-          <DataField>EndDate</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
-        </Field>
-        <Field Name="Description">
-          <DataField>Description</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="ProposalMaximum">
-          <DataField>ProposalMaximum</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="Sequence">
-          <DataField>Sequence</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="IsApproved">
-          <DataField>IsApproved</DataField>
-          <rd:TypeName>System.Boolean</rd:TypeName>
-        </Field>
-        <Field Name="IsDenied">
-          <DataField>IsDenied</DataField>
-          <rd:TypeName>System.Boolean</rd:TypeName>
-        </Field>
-        <Field Name="RequestedAmount">
-          <DataField>RequestedAmount</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="ApprovedAmount">
-          <DataField>ApprovedAmount</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="IsSubmitted">
-          <DataField>IsSubmitted</DataField>
-          <rd:TypeName>System.Boolean</rd:TypeName>
-        </Field>
-        <Field Name="CreatedDate">
-          <DataField>CreatedDate</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
-        </Field>
-        <Field Name="SubmittedDate">
-          <DataField>SubmittedDate</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
-        </Field>
-        <Field Name="Email">
-          <DataField>Email</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-      </Fields>
-      <Query>
-        <DataSourceName>DataSource</DataSourceName>
-        <CommandText>SELECT     CallForProposals.Name, CallForProposals.EndDate, CallForProposals.Description, CallForProposals.ProposalMaximum, Proposals.Sequence, Proposals.IsApproved, 
-                      Proposals.IsDenied, Proposals.RequestedAmount, Proposals.ApprovedAmount, Proposals.IsSubmitted, Proposals.CreatedDate, Proposals.SubmittedDate, 
-                      Proposals.Email
-FROM         Proposals INNER JOIN
-                      CallForProposals ON Proposals.CallForProposalId = CallForProposals.id
-WHERE     (Proposals.id = @ProposalId)</CommandText>
-        <QueryParameters>
-          <QueryParameter Name="@ProposalId">
-            <Value>=Parameters!ProposalId.Value</Value>
-          </QueryParameter>
-        </QueryParameters>
-      </Query>
-    </DataSet>
-    <DataSet Name="Investigators">
-      <Fields>
-        <Field Name="IsPrimary">
-          <DataField>IsPrimary</DataField>
-          <rd:TypeName>System.Boolean</rd:TypeName>
-        </Field>
-        <Field Name="Name">
-          <DataField>Name</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Institution">
-          <DataField>Institution</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Position">
-          <DataField>Position</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-      </Fields>
-      <Query>
-        <DataSourceName>DataSource</DataSourceName>
-        <CommandText>SELECT     IsPrimary, Name, Institution, Position
-FROM         Investigators
-WHERE     (ProposalId = @ProposalId)</CommandText>
-        <QueryParameters>
-          <QueryParameter Name="@ProposalId">
-            <Value>=Parameters!ProposalId.Value</Value>
-          </QueryParameter>
-        </QueryParameters>
-      </Query>
-    </DataSet>
-    <DataSet Name="QandA">
-      <Fields>
-        <Field Name="Name">
-          <DataField>Name</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Answer">
-          <DataField>Answer</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-      </Fields>
-      <Query>
-        <DataSourceName>DataSource</DataSourceName>
-        <CommandText>SELECT     Questions.Name, Answers.Answer
-FROM         Questions INNER JOIN
-                      Answers ON Questions.id = Answers.QuestionId INNER JOIN
-                      CallForProposals ON Questions.CallForProposalId = CallForProposals.id INNER JOIN
-                      Proposals ON Answers.ProposalId = Proposals.id AND CallForProposals.id = Proposals.CallForProposalId
-WHERE     (Proposals.id = @ProposalId)
-ORDER BY Questions.[Order]</CommandText>
-        <QueryParameters>
-          <QueryParameter Name="@ProposalId">
-            <Value>=Parameters!ProposalId.Value</Value>
-          </QueryParameter>
-        </QueryParameters>
-      </Query>
-    </DataSet>
-    <DataSet Name="CallDataSet">
-      <Fields>
-        <Field Name="Description">
-          <DataField>Description</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="ProposalMaximum">
-          <DataField>ProposalMaximum</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="CreatedDate">
-          <DataField>CreatedDate</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
-        </Field>
-        <Field Name="Name">
-          <DataField>Name</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="id">
-          <DataField>id</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="Expr1">
-          <DataField>Expr1</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="CallForProposalId">
-          <DataField>CallForProposalId</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-      </Fields>
-      <Query>
-        <DataSourceName>DataSource</DataSourceName>
-        <CommandText>SELECT     CallForProposals.Description, CallForProposals.ProposalMaximum, CallForProposals.CreatedDate, CallForProposals.Name, CallForProposals.id, 
-                      Proposals.id AS Expr1, Proposals.CallForProposalId
-FROM         CallForProposals INNER JOIN
-                      Proposals ON CallForProposals.id = Proposals.CallForProposalId</CommandText>
-      </Query>
-    </DataSet>
-    <DataSet Name="Comments">
-      <Fields>
-        <Field Name="ProposalId">
-          <DataField>ProposalId</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="Text">
-          <DataField>Text</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-      </Fields>
-      <Query>
-        <DataSourceName>DataSource</DataSourceName>
-        <CommandText>SELECT     ProposalId, Text
-FROM         Comments
-WHERE     (ProposalId = @ProposalId) AND (@ShowComments = 'true')</CommandText>
-        <QueryParameters>
-          <QueryParameter Name="@ProposalId">
-            <Value>=Parameters!ProposalId.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@ShowComments">
-            <Value>=Parameters!ShowComments.Value</Value>
-          </QueryParameter>
-        </QueryParameters>
-      </Query>
-    </DataSet>
-  </DataSets>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2008/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
   <Body>
     <ReportItems>
       <Tablix Name="Tablix1">
@@ -265,7 +63,9 @@ WHERE     (ProposalId = @ProposalId) AND (@ShowComments = 'true')</CommandText>
                           <TextRuns>
                             <TextRun>
                               <Value>Name</Value>
-                              <Style />
+                              <Style>
+                                <Color>White</Color>
+                              </Style>
                             </TextRun>
                           </TextRuns>
                           <Style />
@@ -296,7 +96,9 @@ WHERE     (ProposalId = @ProposalId) AND (@ShowComments = 'true')</CommandText>
                           <TextRuns>
                             <TextRun>
                               <Value>Institution</Value>
-                              <Style />
+                              <Style>
+                                <Color>White</Color>
+                              </Style>
                             </TextRun>
                           </TextRuns>
                           <Style />
@@ -327,7 +129,9 @@ WHERE     (ProposalId = @ProposalId) AND (@ShowComments = 'true')</CommandText>
                           <TextRuns>
                             <TextRun>
                               <Value>Position</Value>
-                              <Style />
+                              <Style>
+                                <Color>White</Color>
+                              </Style>
                             </TextRun>
                           </TextRuns>
                           <Style />
@@ -605,6 +409,7 @@ WHERE     (ProposalId = @ProposalId) AND (@ShowComments = 'true')</CommandText>
                                   <Style>
                                     <FontSize>12pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
+                                    <Color>White</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1003,6 +808,217 @@ WHERE     (ProposalId = @ProposalId) AND (@ShowComments = 'true')</CommandText>
     <Height>3.93417in</Height>
     <Style />
   </Body>
+  <Width>6.32292in</Width>
+  <Page>
+    <LeftMargin>1in</LeftMargin>
+    <RightMargin>1in</RightMargin>
+    <TopMargin>1in</TopMargin>
+    <BottomMargin>1in</BottomMargin>
+    <Style />
+  </Page>
+  <AutoRefresh>0</AutoRefresh>
+  <DataSources>
+    <DataSource Name="DataSource">
+      <DataSourceReference>Gramps</DataSourceReference>
+      <rd:SecurityType>None</rd:SecurityType>
+      <rd:DataSourceID>6a66fe5e-e7c0-42c9-9542-0d8b8b0d22dc</rd:DataSourceID>
+    </DataSource>
+  </DataSources>
+  <DataSets>
+    <DataSet Name="Proposal">
+      <Query>
+        <DataSourceName>DataSource</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@ProposalId">
+            <Value>=Parameters!ProposalId.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>SELECT     CallForProposals.Name, CallForProposals.EndDate, CallForProposals.Description, CallForProposals.ProposalMaximum, Proposals.Sequence, Proposals.IsApproved, 
+                      Proposals.IsDenied, Proposals.RequestedAmount, Proposals.ApprovedAmount, Proposals.IsSubmitted, Proposals.CreatedDate, Proposals.SubmittedDate, 
+                      Proposals.Email
+FROM         Proposals INNER JOIN
+                      CallForProposals ON Proposals.CallForProposalId = CallForProposals.id
+WHERE     (Proposals.id = @ProposalId)</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="Name">
+          <DataField>Name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="EndDate">
+          <DataField>EndDate</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="Description">
+          <DataField>Description</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ProposalMaximum">
+          <DataField>ProposalMaximum</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="Sequence">
+          <DataField>Sequence</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="IsApproved">
+          <DataField>IsApproved</DataField>
+          <rd:TypeName>System.Boolean</rd:TypeName>
+        </Field>
+        <Field Name="IsDenied">
+          <DataField>IsDenied</DataField>
+          <rd:TypeName>System.Boolean</rd:TypeName>
+        </Field>
+        <Field Name="RequestedAmount">
+          <DataField>RequestedAmount</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="ApprovedAmount">
+          <DataField>ApprovedAmount</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="IsSubmitted">
+          <DataField>IsSubmitted</DataField>
+          <rd:TypeName>System.Boolean</rd:TypeName>
+        </Field>
+        <Field Name="CreatedDate">
+          <DataField>CreatedDate</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="SubmittedDate">
+          <DataField>SubmittedDate</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="Email">
+          <DataField>Email</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="Investigators">
+      <Query>
+        <DataSourceName>DataSource</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@ProposalId">
+            <Value>=Parameters!ProposalId.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>SELECT     IsPrimary, Name, Institution, Position
+FROM         Investigators
+WHERE     (ProposalId = @ProposalId)</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="IsPrimary">
+          <DataField>IsPrimary</DataField>
+          <rd:TypeName>System.Boolean</rd:TypeName>
+        </Field>
+        <Field Name="Name">
+          <DataField>Name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Institution">
+          <DataField>Institution</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Position">
+          <DataField>Position</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="QandA">
+      <Query>
+        <DataSourceName>DataSource</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@ProposalId">
+            <Value>=Parameters!ProposalId.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>SELECT     Questions.Name, Answers.Answer
+FROM         Questions INNER JOIN
+                      Answers ON Questions.id = Answers.QuestionId INNER JOIN
+                      CallForProposals ON Questions.CallForProposalId = CallForProposals.id INNER JOIN
+                      Proposals ON Answers.ProposalId = Proposals.id AND CallForProposals.id = Proposals.CallForProposalId
+WHERE     (Proposals.id = @ProposalId)
+ORDER BY Questions.[Order]</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="Name">
+          <DataField>Name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Answer">
+          <DataField>Answer</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="CallDataSet">
+      <Query>
+        <DataSourceName>DataSource</DataSourceName>
+        <CommandText>SELECT     CallForProposals.Description, CallForProposals.ProposalMaximum, CallForProposals.CreatedDate, CallForProposals.Name, CallForProposals.id, 
+                      Proposals.id AS Expr1, Proposals.CallForProposalId
+FROM         CallForProposals INNER JOIN
+                      Proposals ON CallForProposals.id = Proposals.CallForProposalId</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="Description">
+          <DataField>Description</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ProposalMaximum">
+          <DataField>ProposalMaximum</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="CreatedDate">
+          <DataField>CreatedDate</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="Name">
+          <DataField>Name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="id">
+          <DataField>id</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Expr1">
+          <DataField>Expr1</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="CallForProposalId">
+          <DataField>CallForProposalId</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="Comments">
+      <Query>
+        <DataSourceName>DataSource</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@ProposalId">
+            <Value>=Parameters!ProposalId.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@ShowComments">
+            <Value>=Parameters!ShowComments.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>SELECT     ProposalId, Text
+FROM         Comments
+WHERE     (ProposalId = @ProposalId) AND (@ShowComments = 'true')</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="ProposalId">
+          <DataField>ProposalId</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Text">
+          <DataField>Text</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+  </DataSets>
   <ReportParameters>
     <ReportParameter Name="ProposalId">
       <DataType>String</DataType>
@@ -1014,14 +1030,6 @@ WHERE     (ProposalId = @ProposalId) AND (@ShowComments = 'true')</CommandText>
       <Prompt>ShowComments</Prompt>
     </ReportParameter>
   </ReportParameters>
-  <Width>6.32292in</Width>
-  <Page>
-    <LeftMargin>1in</LeftMargin>
-    <RightMargin>1in</RightMargin>
-    <TopMargin>1in</TopMargin>
-    <BottomMargin>1in</BottomMargin>
-    <Style />
-  </Page>
-  <rd:ReportID>97bed7f4-6f5c-422d-b070-d4124a72163e</rd:ReportID>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
+  <rd:ReportID>97bed7f4-6f5c-422d-b070-d4124a72163e</rd:ReportID>
 </Report>

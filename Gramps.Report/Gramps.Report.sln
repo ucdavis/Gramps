@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{F14B399A-7131-4C87-9E4B-1186C45EF12D}") = "Gramps.Report", "Gramps.Report\Gramps.Report.rptproj", "{2532B7BA-0667-46AE-9129-F929CFBF41F5}"
 EndProject
 Global
