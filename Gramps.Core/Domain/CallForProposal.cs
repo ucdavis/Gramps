@@ -29,6 +29,7 @@ namespace Gramps.Core.Domain
             {
                 if (editor.User == null || editor.User.LoginId != user.LoginId)
                 {
+                    editor.IsOwner = false;
                     AddEditor(editor);
                 }
             }
