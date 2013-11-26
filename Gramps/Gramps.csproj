@@ -750,6 +750,9 @@
     </Content>
     <Content Include="Content\NPOITemplate.xls" />
     <Compile Include="Services\IPrintService.cs" />
+    <None Include="Properties\PublishProfiles\Test No Delete.pubxml" />
+    <None Include="Properties\PublishProfiles\Release.pubxml" />
+    <None Include="Properties\PublishProfiles\Test.pubxml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
