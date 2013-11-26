@@ -261,7 +261,7 @@ namespace Gramps.Controllers
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
-            if (!callforproposal.IsActive || callforproposal.EndDate.Date >= DateTime.Now.Date)
+            if (!callforproposal.IsActive || callforproposal.EndDate.Date > DateTime.Now.Date)
             {
                 Message = "Is not active or end date is not passed";
                 return this.RedirectToAction(a => a.AdminIndex(id, null, null, null, null, null));
@@ -643,7 +643,7 @@ namespace Gramps.Controllers
         {
             var callforproposal = Repository.OfType<CallForProposal>().GetNullableById(id);
 
-            if (callforproposal == null || !callforproposal.IsActive || callforproposal.EndDate.Date <= DateTime.Now.Date)
+            if (callforproposal == null || !callforproposal.IsActive || callforproposal.EndDate.Date < DateTime.Now.Date)
             {
                 Message = "Grant No longer Available";
                 return this.RedirectToAction<HomeController>(a => a.About());
@@ -670,7 +670,7 @@ namespace Gramps.Controllers
 
             var callforproposal = Repository.OfType<CallForProposal>().GetNullableById(id);
 
-            if (callforproposal == null || !callforproposal.IsActive || callforproposal.EndDate.Date <= DateTime.Now.Date)
+            if (callforproposal == null || !callforproposal.IsActive || callforproposal.EndDate.Date < DateTime.Now.Date)
             {
                 Message = "Grant No longer Available";
                 return this.RedirectToAction<HomeController>(a => a.About());
