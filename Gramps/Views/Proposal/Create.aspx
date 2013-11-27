@@ -17,7 +17,7 @@
 	<%= Html.ClientSideValidation<Proposal>() %>
 
     <fieldset>
-    <legend><%: Html.Encode(Model.CallForProposal.Name) %> </legend>
+    <legend><%: Html.HtmlEncode(Model.CallForProposal.Name)%> </legend>
         <%: Html.HtmlEncode(Model.CallForProposal.Description) %>
     </fieldset>
     <br />

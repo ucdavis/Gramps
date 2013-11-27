@@ -14,7 +14,7 @@
     
         
         <fieldset>        
-        <legend><strong><%: Html.Encode(Model.CallForProposal.Name) %> </strong></legend>
+        <legend><strong><%: Html.HtmlEncode(Model.CallForProposal.Name) %> </strong></legend>
         <ul>
         <li>
             <%: Html.HtmlEncode(Model.CallForProposal.Description) %>
