@@ -15,10 +15,12 @@
 }%>
 
 	<%= Html.ClientSideValidation<Proposal>() %>
-
     <fieldset>
-    <legend><%: Html.HtmlEncode(Model.CallForProposal.Name)%> </legend>
-        <%: Html.HtmlEncode(Model.CallForProposal.Description) %>
+        <legend><strong><%: Html.HtmlEncode(Model.CallForProposal.Name)%></strong></legend>
+
+        <div style="margin-top: 5px">
+            <%: Html.HtmlEncode(Model.CallForProposal.Description) %>
+        </div>
     </fieldset>
     <br />
 
@@ -28,7 +30,7 @@
         <%: Html.HiddenFor(a => a.CallForProposal.Id) %>
 
         <fieldset>
-            <legend>Create your proposal</legend>
+            <legend><strong>Create your proposal</strong></legend>
             <br/>
             <p>To start your proposal, enter your email and the "re CAPTCHA" text shown. Then click the Create button.</p>
             <p>You will receive an email within about 5 minutes with further instructions and a link to edit your proposal.</p>
