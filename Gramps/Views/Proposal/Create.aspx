@@ -28,7 +28,10 @@
         <%: Html.HiddenFor(a => a.CallForProposal.Id) %>
 
         <fieldset>
-            <legend>Fields</legend>
+            <legend>Create your proposal</legend>
+            <br/>
+            <p>To start your proposal, enter your email and the "re CAPTCHA" text shown. Then click the Create button.</p>
+            <p>You will receive an email within about 5 minutes with further instructions and a link to edit your proposal.</p>
             <br />
             <ul>
             <li>
