@@ -212,6 +212,7 @@ namespace Gramps.Controllers
             destination.IsActive = source.IsActive;
             destination.ProposalMaximum = source.ProposalMaximum;
             destination.Description = source.Description;
+            destination.HideInvestigators = source.HideInvestigators;
         }
 
     }

@@ -190,9 +190,11 @@ namespace Gramps.Controllers
         {
             destination.Name = source.Name;
             destination.IsActive = false;
+            
             if (forEdit)
             {
                 destination.IsActive = source.IsActive;
+                destination.HideInvestigators = source.HideInvestigators;
                 //throw new NotImplementedException("Need to write the copy for edit");
             }
         }

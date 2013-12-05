@@ -60,7 +60,7 @@
     </fieldset>
    <br />
     
-
+    <%if (!Model.CallForProposal.HideInvestigators) {%> 
     <fieldset>
     <legend><strong>Investigators</strong></legend>
     <br /><br />
@@ -94,6 +94,7 @@
         %>
     </fieldset>
     <br />
+    <% } %>
 
     <% using (Html.BeginForm("Edit", "Proposal", FormMethod.Post, new { @enctype = "multipart/form-data"})) {%>
         <%= Html.AntiForgeryToken() %>

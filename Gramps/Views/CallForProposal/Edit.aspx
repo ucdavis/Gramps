@@ -30,6 +30,10 @@
                 <%: Html.ValidationMessageFor(model => model.CallForProposal.IsActive)%>          
             </li>
             <li>
+                <%: Html.CheckBoxFor(model => model.CallForProposal.HideInvestigators)%> <%: Html.Label("Hide Investigators (do not allow them to be entered on the proposal)") %>
+                <%: Html.ValidationMessageFor(model => model.CallForProposal.HideInvestigators)%>          
+            </li>
+            <li>
                 <%: Html.Label("End Date:") %>
                 <%: Html.EditorFor(model => model.CallForProposal.EndDate, Model.CallForProposal.EndDate.Date) %>
                  <%--<%: Html.TextBoxFor(model => model.CallForProposal.EndDate, Model.CallForProposal.EndDate.Date)%> --%>               

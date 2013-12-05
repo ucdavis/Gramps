@@ -877,9 +877,16 @@ namespace Gramps.Controllers
             proposalToEdit.TransferValidationMessagesTo(ModelState);
             if (proposalToEdit.IsSubmitted || saveWithValidate)
             {
-                if (Repository.OfType<Investigator>().Queryable.Where(a => a.Proposal == proposalToEdit && a.IsPrimary).Count() != 1)
+                if (proposalToEdit.CallForProposal.HideInvestigators)
                 {
-                    ModelState.AddModelError("Investigators", "Must have one primary investigator");
+                    //Don't check
+                }
+                else
+                {
+                    if (Repository.OfType<Investigator>().Queryable.Where(a => a.Proposal == proposalToEdit && a.IsPrimary).Count() != 1)
+                    {
+                        ModelState.AddModelError("Investigators", "Must have one primary investigator");
+                    }
                 }
                 if (proposalToEdit.CallForProposal.ProposalMaximum > 0)
                 {

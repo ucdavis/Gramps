@@ -19,6 +19,7 @@ namespace Gramps.Core.Domain
             SetDefaults();
             TemplateGeneratedFrom = template;
             Name = template.Name;
+            HideInvestigators = template.HideInvestigators;
 
             #region Copy/Add Editors
             var owner = new Editor();
@@ -115,6 +116,8 @@ namespace Gramps.Core.Domain
         public virtual string Name { get; set; }
         public virtual bool IsActive { get; set; }
 
+        public virtual bool HideInvestigators { get; set; }
+        
         [NotNull]
         public virtual DateTime CreatedDate { get; set; }
         
@@ -379,6 +382,7 @@ namespace Gramps.Core.Domain
             Map(x => x.Name);
             Map(x => x.Description);
             Map(x => x.IsActive);
+            Map(x => x.HideInvestigators);
             Map(x => x.CreatedDate);
             Map(x => x.EndDate);
             Map(x => x.CallsSentDate);

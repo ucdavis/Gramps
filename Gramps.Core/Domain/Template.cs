@@ -28,6 +28,7 @@ namespace Gramps.Core.Domain
             Questions = new List<Question>();
             CallForProposals = new List<CallForProposal>();
             Reports = new List<Report>();
+            HideInvestigators = false;
         }
         #endregion Constructor
 
@@ -36,6 +37,8 @@ namespace Gramps.Core.Domain
         [Length(100)]
         public virtual string Name { get; set; }
         public virtual bool IsActive { get; set; }
+
+        public virtual bool HideInvestigators { get; set; }
 
         [NotNull]
         public virtual IList<EmailsForCall> Emails { get; set; }
@@ -70,6 +73,7 @@ namespace Gramps.Core.Domain
             Id(x => x.Id);
             Map(x => x.Name);
             Map(x => x.IsActive);
+            Map(x => x.HideInvestigators);
 
             HasMany(x => x.Emails).Cascade.DeleteOrphan();
             HasMany(x => x.EmailTemplates).Cascade.DeleteOrphan();
