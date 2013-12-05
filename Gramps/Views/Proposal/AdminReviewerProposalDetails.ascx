@@ -29,11 +29,11 @@
         </li>
         <li>
             <%: Html.Label("Requested Amount:")%>
-            <%: String.Format("{0:F}", Model.Proposal.RequestedAmount)%>
+            <%: String.Format("{0:C}", Model.Proposal.RequestedAmount)%>
         </li>
         <li>
             <%: Html.Label("Approved Amount:")%>
-            <%: String.Format("{0:F}", Model.Proposal.ApprovedAmount)%>
+            <%: String.Format("{0:C}", Model.Proposal.ApprovedAmount)%>
         </li>
         <li>
             <%: Html.Label("Created Date:")%>

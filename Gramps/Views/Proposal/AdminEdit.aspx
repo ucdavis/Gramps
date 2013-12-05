@@ -80,7 +80,7 @@
         <ul>
         <li>
             <%: Html.Label("Requested Amount:")%>
-            <%: String.Format("{0:F}", Model.Proposal.RequestedAmount)%>
+            <%: String.Format("{0:C}", Model.Proposal.RequestedAmount)%>
         </li>            
         <%Html.RenderPartial("ProposalAnswerDetails"); %>
         </ul>

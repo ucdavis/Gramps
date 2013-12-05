@@ -1,7 +1,8 @@
 ﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<Gramps.Controllers.ViewModels.ProposalAdminViewModel>" %>
 <%@ Import Namespace="Gramps.Core.Resources" %>
 <%@ Import Namespace="Gramps.Helpers" %>
-        <li>
+        <%if(!Model.CallForProposal.HideInvestigators) {%> 
+        <li>            
         <fieldset>        
         <legend>Investigators</legend>
         <%foreach (var investigator in Model.Proposal.Investigators.Where(a => a.IsPrimary)){%>
@@ -44,6 +45,7 @@
         <%}%>
         </fieldset>
         </li>
+        <%}%>
 
         <% var index = 0;%>
         <%foreach (var question in Model.Proposal.CallForProposal.Questions.OrderBy(a => a.Order)){%>

@@ -4,6 +4,7 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.UI;
@@ -91,8 +92,28 @@ namespace Gramps.Helpers
             // encode the string
             string encodedText = HttpUtility.HtmlEncode(text);
 
+
+
             // put the text in a string builder
-            StringBuilder formattedEncodedText = new StringBuilder(encodedText);
+            //StringBuilder formattedEncodedText = new StringBuilder(encodedText);
+            StringBuilder formattedEncodedText = new StringBuilder();
+
+            var firstTime = true;
+            foreach (var textValue in Regex.Split(encodedText, "\r\n"))
+            {
+                if (firstTime)
+                {
+                    firstTime = false;
+                    formattedEncodedText.AppendFormat(textValue);
+                }
+                else
+                {
+                    formattedEncodedText.AppendFormat("<br/>" + textValue);
+                }
+
+            }
+
+
 
             // replace the escaped characters with the correct strings to allow formatting
             ReplaceTagContents(formattedEncodedText, "p");
