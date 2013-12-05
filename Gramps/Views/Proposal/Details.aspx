@@ -56,50 +56,52 @@
         </ul>
     </fieldset>
 
-    <ul>
-    <li>
-    <fieldset>       
-        <legend><strong>Investigators</strong></legend>
-        <ul>
-        <%foreach (var investigator in Model.Proposal.Investigators.Where(a => a.IsPrimary)){%>
-            <li>
-            <fieldset>
-            <legend><strong>Primary Investigator</strong></legend>
-                <%: Html.Encode(investigator.Name) %> <br />
-                <%: Html.Encode(investigator.Institution) %> <br />
-                <%: Html.Encode(investigator.Address1) %> <br />
-                <%if (!string.IsNullOrWhiteSpace(investigator.Address2)) {%>
-                    <%: Html.Encode(investigator.Address2) %> <br />
-                <%}%>
-                <%if (!string.IsNullOrWhiteSpace(investigator.Address3)) {%>
-                    <%: Html.Encode(investigator.Address3) %> <br />
-                <%}%>
-                <%: Html.Encode(string.Format("{0} {1} {2}", investigator.City, investigator.State, investigator.Zip)) %> <br />
-                <%: Html.Encode(investigator.Phone) %> <br />
-                <%: Html.Encode(investigator.Email) %> <br />
-            </fieldset>
-            </li>
+    <%if(!Model.CallForProposal.HideInvestigators) {%> 
+        <ul>        
+        <li>
+        <fieldset>       
+            <legend><strong>Investigators</strong></legend>
+            <ul>
+            <%foreach (var investigator in Model.Proposal.Investigators.Where(a => a.IsPrimary)){%>
+                <li>
+                <fieldset>
+                <legend><strong>Primary Investigator</strong></legend>
+                    <%: Html.Encode(investigator.Name) %> <br />
+                    <%: Html.Encode(investigator.Institution) %> <br />
+                    <%: Html.Encode(investigator.Address1) %> <br />
+                    <%if (!string.IsNullOrWhiteSpace(investigator.Address2)) {%>
+                        <%: Html.Encode(investigator.Address2) %> <br />
+                    <%}%>
+                    <%if (!string.IsNullOrWhiteSpace(investigator.Address3)) {%>
+                        <%: Html.Encode(investigator.Address3) %> <br />
+                    <%}%>
+                    <%: Html.Encode(string.Format("{0} {1} {2}", investigator.City, investigator.State, investigator.Zip)) %> <br />
+                    <%: Html.Encode(investigator.Phone) %> <br />
+                    <%: Html.Encode(investigator.Email) %> <br />
+                </fieldset>
+                </li>
+            <%}%>
+            <%foreach (var investigator in Model.Proposal.Investigators.Where(a => !a.IsPrimary)){%>
+                <li>
+                <fieldset>
+                <legend>Investigator</legend>
+                    <%: Html.Encode(investigator.Name) %> <br />
+                    <%: Html.Encode(investigator.Institution) %> <br />
+                    <%: Html.Encode(investigator.Address1) %> <br />
+                    <%if (!string.IsNullOrWhiteSpace(investigator.Address2)) {%>
+                        <%: Html.Encode(investigator.Address2) %> <br />
+                    <%}%>
+                    <%if (!string.IsNullOrWhiteSpace(investigator.Address3)) {%>
+                        <%: Html.Encode(investigator.Address3) %> <br />
+                    <%}%>
+                    <%: Html.Encode(string.Format("{0} {1} {2}", investigator.City, investigator.State, investigator.Zip)) %> <br />
+                    <%: Html.Encode(investigator.Phone) %> <br />
+                    <%: Html.Encode(investigator.Email) %> <br />
+                </fieldset>
+                </li>
+            <%}%>
+            </ul>
         <%}%>
-        <%foreach (var investigator in Model.Proposal.Investigators.Where(a => !a.IsPrimary)){%>
-            <li>
-            <fieldset>
-            <legend>Investigator</legend>
-                <%: Html.Encode(investigator.Name) %> <br />
-                <%: Html.Encode(investigator.Institution) %> <br />
-                <%: Html.Encode(investigator.Address1) %> <br />
-                <%if (!string.IsNullOrWhiteSpace(investigator.Address2)) {%>
-                    <%: Html.Encode(investigator.Address2) %> <br />
-                <%}%>
-                <%if (!string.IsNullOrWhiteSpace(investigator.Address3)) {%>
-                    <%: Html.Encode(investigator.Address3) %> <br />
-                <%}%>
-                <%: Html.Encode(string.Format("{0} {1} {2}", investigator.City, investigator.State, investigator.Zip)) %> <br />
-                <%: Html.Encode(investigator.Phone) %> <br />
-                <%: Html.Encode(investigator.Email) %> <br />
-            </fieldset>
-            </li>
-        <%}%>
-        </ul>
     </fieldset>
     </li>
     </ul>
