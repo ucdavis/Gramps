@@ -6,7 +6,7 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
-    <h2>An Error occured processing your request.</h2>
+    <h2>An Error occurred processing your request. If this continues to happen, please contact jsylvestre@ucdavis.edu </h2>
 
 </asp:Content>
 

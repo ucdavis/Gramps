@@ -207,6 +207,7 @@
             <%} %>
             
             <%: Html.ValidationMessageFor(model => model.Proposal.File)%>
+            <strong>Max file upload size 20MB</strong>
         </li>
         </ul>
         </fieldset>
