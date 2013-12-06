@@ -45,7 +45,11 @@ namespace Gramps.Services
                         {
                             if (answer.Trim().Length > question.MaxCharacters)
                             {
-                                modelState.AddModelError(question.Name, string.Format("{0} must be less than {1} characters long.", question.Name, question.MaxCharacters));
+                                var stripped = answer.Trim().Replace("\r\n", "-");
+                                if (stripped.Length > question.MaxCharacters)
+                                {
+                                    modelState.AddModelError(question.Name, string.Format("{0} must be less than {1} characters long.", question.Name, question.MaxCharacters));
+                                }
                             }
                         }
                     }
