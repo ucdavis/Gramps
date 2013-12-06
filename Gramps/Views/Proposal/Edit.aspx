@@ -113,7 +113,7 @@
             <%}%>
             <li>
                 <strong> <%: Html.Label("Requested Amount:")%> </strong> 
-                <%: Html.TextBoxFor(model => model.Proposal.RequestedAmount, String.Format("{0:F}", Model.Proposal.RequestedAmount))%>
+                <%: Html.TextBoxFor(model => model.Proposal.RequestedAmount, String.Format("{0:F}", Model.Proposal.RequestedAmount))%> <span>Note, only enter numbers. No $ or commas</span>
                 <%: Html.ValidationMessageFor(model => model.Proposal.RequestedAmount)%>
             </li>
 
