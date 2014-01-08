@@ -86,6 +86,7 @@
     <Compile Include="Domain\File.cs" />
     <Compile Include="Domain\Investigator.cs" />
     <Compile Include="Domain\Proposal.cs" />
+    <Compile Include="Domain\ProposalPermission.cs" />
     <Compile Include="Domain\Question.cs" />
     <Compile Include="Domain\QuestionAnswer.cs" />
     <Compile Include="Domain\QuestionOption.cs" />
