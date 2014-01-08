@@ -967,6 +967,41 @@ namespace Gramps.Controllers
 
             return View(viewModel);
         }
+
+        [PublicAuthorize]
+        public ActionResult ProposalPermissionsIndex(Guid id)
+        {
+            var proposal = _proposalRepository.Queryable.Where(a => a.Guid == id).SingleOrDefault();
+            if (proposal == null)
+            {
+                Message = "Your proposal was not found.";
+                return this.RedirectToAction<ErrorController>(a => a.Index());
+            }
+            if (proposal.Email != CurrentUser.Identity.Name)
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<ErrorController>(a => a.Index());
+            }
+
+            var viewModel = ProposalPermissionsViewModel.Create(proposal);
+            viewModel.Permissions = proposal.ProposalPermissions.ToList();
+
+            return View(viewModel);
+        }
+
+        [PublicAuthorize]
+        public ActionResult AddPermission(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
+        [PublicAuthorize]
+        public ActionResult EditPermission(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+
         #endregion Public Methods (Proposer)
 
         

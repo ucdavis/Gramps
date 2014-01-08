@@ -308,4 +308,18 @@ namespace Gramps.Controllers.ViewModels
         //        LastViewedDate);
 
     }
+
+    public class ProposalPermissionsViewModel
+    {
+        public Proposal Proposal { get; set; }
+        public List<ProposalPermission> Permissions { get; set; }
+ 
+        public static ProposalPermissionsViewModel Create(Proposal proposal)
+        {
+            var viewModel = new ProposalPermissionsViewModel();
+            viewModel.Proposal = proposal;
+            return viewModel;
+        }
+        
+    }
 }

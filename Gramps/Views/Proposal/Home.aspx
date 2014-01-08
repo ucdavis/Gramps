@@ -54,7 +54,7 @@
                                 col.Bound(x => x.CallForProposal.Name);
                                 col.Bound(x => x.FirstProposalPermission).Title("First Permission");
                         col.Template(x => {%>
-				<%: Html.ActionLink<ProposalController>(a => a.ReviewerIndex(x.Id, null, null), " ", new { @class = "lock_button" })%>           
+				<%: Html.ActionLink<ProposalController>(a => a.ProposalPermissionsIndex(x.Guid), " ", new { @class = "lock_button" })%>           
 				<%}).Title("Perm");
             })
             //.Pageable()
