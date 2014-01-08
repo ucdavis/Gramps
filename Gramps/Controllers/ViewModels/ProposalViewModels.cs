@@ -14,6 +14,8 @@ namespace Gramps.Controllers.ViewModels
         public bool IsReviewer = false;
         public IList<CallForProposal> CallForProposals { get; set; } //Will only be populated if user is a reviewer
         public IList<Proposal> UsersProposals { get; set; }
+        public IList<Proposal> AssignedProposals { get; set; }
+        public string Login { get; set; }
 
         public static ProposalPublicListViewModel Create(IRepository repository, string login)
         {
@@ -33,6 +35,9 @@ namespace Gramps.Controllers.ViewModels
                     repository.OfType<CallForProposal>().Queryable.Where(a => callForProposalIds.Contains(a.Id)).ToList();
             }
             viewModel.UsersProposals = repository.OfType<Proposal>().Queryable.Where(a => a.Email == login).OrderByDescending(a => a.CreatedDate).ToList();
+            var proposalIds = repository.OfType<ProposalPermission>().Queryable.Where(a => a.Email == login).Select(s => s.Proposal.Id).Distinct().ToArray();
+            viewModel.AssignedProposals = repository.OfType<Proposal>().Queryable.Where(a => proposalIds.Contains(a.Id)).ToList();
+            viewModel.Login = login;
 
             return viewModel;
         }

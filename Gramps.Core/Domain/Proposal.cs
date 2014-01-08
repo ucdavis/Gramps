@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using FluentNHibernate.Mapping;
 using NHibernate.Validator.Constraints;
 using UCDArch.Core.DomainModel;
@@ -94,6 +95,45 @@ namespace Gramps.Core.Domain
         {
             investigator.Proposal = this;
             Investigators.Add(investigator);
+        }
+
+        public virtual string FirstProposalPermission 
+        {
+            get
+            {
+                var temp = ProposalPermissions.FirstOrDefault(a => a.AllowReview || a.AllowEdit || a.AllowSubmit);
+                return temp != null ? temp.Email : "N/A";
+            }
+        }
+
+        public virtual bool CanAssigneeReview(string login)
+        {
+            var permission = ProposalPermissions.FirstOrDefault(a => a.Email == login);
+            if (permission == null)
+            {
+                return false;
+            }
+            return permission.AllowReview;
+        }
+
+        public virtual bool CanAssigneeEdit(string login)
+        {
+            var permission = ProposalPermissions.FirstOrDefault(a => a.Email == login);
+            if (permission == null || IsSubmitted == true)
+            {
+                return false;
+            }
+            return permission.AllowEdit;
+        }
+
+        public virtual bool CanAssigneeSubmit(string login)
+        {
+            var permission = ProposalPermissions.FirstOrDefault(a => a.Email == login);
+            if (permission == null || IsSubmitted == true)
+            {
+                return false;
+            }
+            return permission.AllowSubmit;
         }
 
         #endregion Methods

@@ -327,6 +327,7 @@
     <Content Include="Images\CheckMark.png" />
     <Content Include="Images\Details.png" />
     <Content Include="Images\loading.gif" />
+    <Content Include="Images\lock-open.png" />
     <Content Include="Images\logo-caes.png" />
     <Content Include="Images\logo-ucdavis.png" />
     <Content Include="Images\logo.jpg" />

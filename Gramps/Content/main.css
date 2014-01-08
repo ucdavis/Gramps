@@ -329,6 +329,20 @@ div.t-grid {}
     color:#0D548A;
 }
 
+.lock_button
+{
+    background: url("../Images/lock-open.png") no-repeat scroll 0 0 transparent;
+    border:0;
+    float: left;
+    cursor:pointer;
+    width: 22px;
+    height: 22px;
+}
+.lock_button:hover
+{
+    color:#0D548A;
+}
+
 .small_print_button
 {
     background: url("../Images/small_print.png") no-repeat scroll 0 0 transparent;
