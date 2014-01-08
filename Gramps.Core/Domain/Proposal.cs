@@ -31,7 +31,7 @@ namespace Gramps.Core.Domain
             IsDenied = false;
             IsNotified = false;
             IsSubmitted = false;
-
+            ProposalPermissions = new List<ProposalPermission>();
         }
 
         #endregion Constructor
@@ -71,6 +71,9 @@ namespace Gramps.Core.Domain
 
         [NotNull]
         public virtual IList<Investigator> Investigators { get; set; }
+
+        [NotNull]
+        public virtual IList<ProposalPermission> ProposalPermissions { get; set; }
 
         public virtual int Sequence { get; set; }
 
@@ -122,6 +125,8 @@ namespace Gramps.Core.Domain
             HasMany(x => x.Answers).Cascade.AllDeleteOrphan();
             HasMany(x => x.Investigators).Cascade.AllDeleteOrphan();
             HasMany(x => x.ReviewedByEditors);//.Table("ReviewedProposals");
+
+            HasMany(x => x.ProposalPermissions);
         }
     }
 }
