@@ -54,16 +54,18 @@ namespace Gramps.Services
 
             emailQueue.Body = emailQueue.Body + "<br />" + StaticValues.EmailAutomatedDisclaimer;
 
-            emailQueue.Body = string.Format("{0}<p>{1} has granted you access to a proposal.</p><p>You may access the proposal to review/Edit/Submit depending on the access given. It may be found here: {2}</p>", emailQueue.Body, proposal.Email, GetAbsoluteUrl(request, url, "~/Proposal/Home"));
+            emailQueue.Body = string.Format("{0}<br /><p>{1} has granted you access to a proposal.</p><p>You may access the proposal to Review/Edit/Submit depending on the access given. It may be found here: {2} </p>", emailQueue.Body, proposal.Email, GetAbsoluteUrl(request, url, "~/Proposal/Home"));
 
             if (string.IsNullOrEmpty(tempPass))
             {
-                emailQueue.Body = string.Format("{0}<p>{1}</p>", emailQueue.Body, "You have an existing account. Use your email as the userName to login");
+                emailQueue.Body = string.Format("{0}<br /><p>{1}</p>", emailQueue.Body, "You have an existing account. Use your email as the userName to login");
             }
             else
             {
-                emailQueue.Body = string.Format("{0}<p>An account has been created for you.</p><p>UserName {1}</p><p>Password {2}</p><p>You may change your password (recommended) after logging in.</p>", emailQueue.Body, email, tempPass);
+                emailQueue.Body = string.Format("{0}<br /><p>An account has been created for you.</p><p>UserName {1}</p><p>Password {2}</p><p>You may change your password (recommended) after logging in.</p>", emailQueue.Body, email, tempPass);
             }
+
+            _repository.OfType<EmailQueue>().EnsurePersistent(emailQueue);
         }
 
         public virtual void SendPasswordReset(CallForProposal callForProposal, string email, string tempPassword)

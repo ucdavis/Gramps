@@ -1025,6 +1025,27 @@ namespace Gramps.Controllers
                 return this.RedirectToAction<ErrorController>(a => a.Index());
             }
             model.ProposalPermission.Email = model.ProposalPermission.Email.ToLower().Trim();
+
+            var proposalPermission = new ProposalPermission(proposal);
+            proposalPermission.Email = model.ProposalPermission.Email;
+            if (model.ProposalPermission.AllowSubmit)
+            {
+                proposalPermission.AllowSubmit = true;
+                proposalPermission.AllowEdit = true;
+                proposalPermission.AllowReview = true;
+            }
+            else if (model.ProposalPermission.AllowEdit)
+            {
+                proposalPermission.AllowEdit = true;
+                proposalPermission.AllowReview = true;
+            }
+            else if (model.ProposalPermission.AllowReview)
+            {
+                proposalPermission.AllowReview = true;
+            }
+
+            proposalPermission.TransferValidationMessagesTo(ModelState);
+
             if (proposal.ProposalPermissions.Any(a => a.Email == model.ProposalPermission.Email))
             {
                ModelState.AddModelError("ProposalPermission.Email", "Email Already exists. Use Edit to change permissions if required.");
@@ -1036,22 +1057,6 @@ namespace Gramps.Controllers
 
             if (ModelState.IsValid)
             {
-                var proposalPermission = new ProposalPermission(proposal);
-                proposalPermission.Email = model.ProposalPermission.Email;
-                if (model.ProposalPermission.AllowSubmit)
-                {
-                    proposalPermission.AllowSubmit = true;
-                    proposalPermission.AllowEdit = true;
-                    proposalPermission.AllowReview = true;
-                }
-                else if (model.ProposalPermission.AllowEdit)
-                {
-                    proposalPermission.AllowEdit = true;
-                    proposalPermission.AllowReview = true;
-                } else if (model.ProposalPermission.AllowReview)
-                {
-                    proposalPermission.AllowReview = true;
-                }
                 
                 Repository.OfType<ProposalPermission>().EnsurePersistent(proposalPermission);
 
@@ -1064,6 +1069,9 @@ namespace Gramps.Controllers
                     tempPass = _membershipService.ResetPassword(proposalPermission.Email.Trim().ToLower());
                 }
                 _emailService.SendAccessGranted(Request, Url, proposal, proposalPermission.Email, tempPass);
+
+                Message = string.Format("Access Granted. Email should be sent to {0} within 5 minutes.", proposalPermission.Email);
+                return this.RedirectToAction(a => a.ProposalPermissionsIndex(id));
             }
 
             model.Proposal = proposal;
