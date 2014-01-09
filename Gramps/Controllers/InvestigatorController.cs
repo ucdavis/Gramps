@@ -34,7 +34,7 @@ namespace Gramps.Controllers
         /// <returns></returns>        
         public ActionResult Create(Guid id) //Proposal ID
         {
-            var proposal = _proposalRepository.Queryable.Where(a => a.Guid == id).SingleOrDefault();
+            var proposal = _proposalRepository.Queryable.SingleOrDefault(a => a.Guid == id);
 
             var redirectCheck = RedirectCheck(this, proposal, null, id, "add", false, "to");
             if (redirectCheck != null)
@@ -226,10 +226,18 @@ namespace Gramps.Controllers
                 investigatorController.Message = string.Format(StaticValues.Message_NotFound, "Your proposal was");
                 return investigatorController.RedirectToAction<ErrorController>(a => a.Index());
             }
+            var permissions = Repository.OfType<ProposalPermission>().Queryable.FirstOrDefault(a => a.Email == CurrentUser.Identity.Name);
             if (proposal.Email != CurrentUser.Identity.Name)
             {
-                investigatorController.Message = string.Format(StaticValues.Message_NoAccess, "that");
-                return investigatorController.RedirectToAction<ErrorController>(a => a.Index());
+                if (permissions != null && permissions.AllowEdit)
+                {
+                    // ok to edit
+                }
+                else
+                {
+                    investigatorController.Message = string.Format(StaticValues.Message_NoAccess, "that");
+                    return investigatorController.RedirectToAction<ErrorController>(a => a.Index());
+                }
             }
             if (proposal.IsSubmitted)
             {
