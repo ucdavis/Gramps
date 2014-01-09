@@ -831,6 +831,8 @@ namespace Gramps.Controllers
         [PublicAuthorize]
         public ActionResult Edit(Guid id, Proposal proposal, QuestionAnswerParameter[] proposalAnswers, HttpPostedFileBase uploadAttachment, string saveOptions)
         {
+            var canSubmit = true;
+
             var proposalToEdit = _proposalRepository.Queryable.Where(a => a.Guid == id).SingleOrDefault();
             if (proposalToEdit == null)
             {
@@ -839,8 +841,20 @@ namespace Gramps.Controllers
             }
             if (proposalToEdit.Email.Trim().ToLower() != CurrentUser.Identity.Name.Trim().ToLower())
             {
-                Message = "You do not have access to that.";
-                return this.RedirectToAction<ErrorController>(a => a.Index());
+                var permission = proposalToEdit.ProposalPermissions.FirstOrDefault(a => a.Email == CurrentUser.Identity.Name);
+                if (permission != null && permission.AllowEdit)
+                {
+                    if (!permission.AllowSubmit)
+                    {
+                        canSubmit = false;
+                    }
+                    //Ok, has permission to edit
+                }
+                else
+                {
+                    Message = "You do not have access to that.";
+                    return this.RedirectToAction<ErrorController>(a => a.Index());
+                }
             }
             if(proposalToEdit.IsSubmitted)
             {
@@ -886,7 +900,14 @@ namespace Gramps.Controllers
             var saveWithValidate = false;
             if (saveOptions == StaticValues.RB_SaveOptions_SubmitFinal)
             {
-                proposal.IsSubmitted = true;
+                if (canSubmit == false)
+                {
+                    ModelState.AddModelError("Permissions", "You don't have access to submit the final proposal");
+                }
+                else
+                {
+                    proposal.IsSubmitted = true;
+                }
             }
             else if(saveOptions == StaticValues.RB_SaveOptions_SaveWithValidation)
             {
@@ -948,6 +969,41 @@ namespace Gramps.Controllers
                     viewModel.Proposal = proposalToEdit;
                     viewModel.SaveOptionChoice = saveOptions;
 
+                    viewModel.CanSubmit = true;
+                    viewModel.CanEdit = true;
+                    if (proposalToEdit.IsSubmitted)
+                    {
+                        viewModel.CanSubmit = false;
+                        viewModel.CanEdit = false;
+                        Message = "Cannot edit proposal once submitted.";
+                        return this.RedirectToAction(a => a.Details(id));
+                    }
+                    if (proposalToEdit.CallForProposal.EndDate.Date < DateTime.Now.Date)
+                    {
+                        viewModel.CanSubmit = false;
+                        viewModel.CanEdit = false;
+                        Message = "Call for proposal has closed, you will not be able to save changes.";
+                    }
+                    else if (!proposalToEdit.CallForProposal.IsActive)
+                    {
+                        viewModel.CanSubmit = false;
+                        viewModel.CanEdit = false;
+                        Message = "Call for proposal has been deactivated, you will not be able to save changes.";
+                    }
+                    if (proposalToEdit.Email.Trim().ToLower() != CurrentUser.Identity.Name.Trim().ToLower())
+                    {
+                        //So now check permissions
+                        var permission = proposalToEdit.ProposalPermissions.First(a => a.Email == CurrentUser.Identity.Name);
+                        if (!permission.AllowEdit)
+                        {
+                            viewModel.CanEdit = false;
+                        }
+                        if (!permission.AllowSubmit)
+                        {
+                            viewModel.CanSubmit = false;
+                        }
+                    }
+
                     return View(viewModel);
                 }
                 Message = "Proposal Submitted Successfully";
@@ -962,7 +1018,45 @@ namespace Gramps.Controllers
                 var viewModel = ProposalViewModel.Create(Repository, proposalToEdit.CallForProposal);
                 viewModel.Proposal = proposalToEdit;
                 viewModel.SaveOptionChoice = saveOptions;
+
+                viewModel.CanSubmit = true;
+                viewModel.CanEdit = true;
+                if (proposalToEdit.IsSubmitted)
+                {
+                    viewModel.CanSubmit = false;
+                    viewModel.CanEdit = false;
+                    Message = "Cannot edit proposal once submitted.";
+                    return this.RedirectToAction(a => a.Details(id));
+                }
+                if (proposalToEdit.CallForProposal.EndDate.Date < DateTime.Now.Date)
+                {
+                    viewModel.CanSubmit = false;
+                    viewModel.CanEdit = false;
+                    Message = "Call for proposal has closed, you will not be able to save changes.";
+                }
+                else if (!proposalToEdit.CallForProposal.IsActive)
+                {
+                    viewModel.CanSubmit = false;
+                    viewModel.CanEdit = false;
+                    Message = "Call for proposal has been deactivated, you will not be able to save changes.";
+                }
+                if (proposalToEdit.Email.Trim().ToLower() != CurrentUser.Identity.Name.Trim().ToLower())
+                {
+                    //So now check permissions
+                    var permission = proposalToEdit.ProposalPermissions.First(a => a.Email == CurrentUser.Identity.Name);
+                    if (!permission.AllowEdit)
+                    {
+                        viewModel.CanEdit = false;
+                    }
+                    if (!permission.AllowSubmit)
+                    {
+                        viewModel.CanSubmit = false;
+                    }
+                }
+
                 return View(viewModel);
+
+
             }
         }
       
