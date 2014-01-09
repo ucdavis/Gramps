@@ -992,7 +992,82 @@ namespace Gramps.Controllers
         [PublicAuthorize]
         public ActionResult AddPermission(Guid id)
         {
-            throw new NotImplementedException();
+            var proposal = _proposalRepository.Queryable.Where(a => a.Guid == id).SingleOrDefault();
+            if (proposal == null)
+            {
+                Message = "Your proposal was not found.";
+                return this.RedirectToAction<ErrorController>(a => a.Index());
+            }
+            if (proposal.Email != CurrentUser.Identity.Name)
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<ErrorController>(a => a.Index());
+            }
+
+            var viewModel = ProposalPermissionEditViewModel.Create(proposal);
+            viewModel.ProposalPermission.AllowReview = true; //testing
+            return View(viewModel);
+        }
+
+        [PublicAuthorize]
+        [HttpPost]
+        public ActionResult AddPermission(Guid id, ProposalPermissionEditViewModel model)
+        {
+            var proposal = _proposalRepository.Queryable.Where(a => a.Guid == id).SingleOrDefault();
+            if (proposal == null)
+            {
+                Message = "Your proposal was not found.";
+                return this.RedirectToAction<ErrorController>(a => a.Index());
+            }
+            if (proposal.Email != CurrentUser.Identity.Name)
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<ErrorController>(a => a.Index());
+            }
+            model.ProposalPermission.Email = model.ProposalPermission.Email.ToLower().Trim();
+            if (proposal.ProposalPermissions.Any(a => a.Email == model.ProposalPermission.Email))
+            {
+               ModelState.AddModelError("ProposalPermission.Email", "Email Already exists. Use Edit to change permissions if required.");
+            }
+            if (!model.ProposalPermission.AllowReview && !model.ProposalPermission.AllowEdit && !model.ProposalPermission.AllowSubmit)
+            {
+                ModelState.AddModelError("ProposalPermission.AllowReview", "Must grant at least one permission when creating.");
+            }
+
+            if (ModelState.IsValid)
+            {
+                var proposalPermission = new ProposalPermission(proposal);
+                proposalPermission.Email = model.ProposalPermission.Email;
+                if (model.ProposalPermission.AllowSubmit)
+                {
+                    proposalPermission.AllowSubmit = true;
+                    proposalPermission.AllowEdit = true;
+                    proposalPermission.AllowReview = true;
+                }
+                else if (model.ProposalPermission.AllowEdit)
+                {
+                    proposalPermission.AllowEdit = true;
+                    proposalPermission.AllowReview = true;
+                } else if (model.ProposalPermission.AllowReview)
+                {
+                    proposalPermission.AllowReview = true;
+                }
+                
+                Repository.OfType<ProposalPermission>().EnsurePersistent(proposalPermission);
+
+                string tempPass = null;
+                if (!_membershipService.DoesUserExist(proposalPermission.Email))
+                {
+                    _membershipService.CreateUser(proposalPermission.Email.Trim().ToLower(),
+                                                 "Ht548*%KjjY2#",
+                                                 proposalPermission.Email.Trim().ToLower());
+                    tempPass = _membershipService.ResetPassword(proposalPermission.Email.Trim().ToLower());
+                }
+                _emailService.SendAccessGranted(Request, Url, proposal, proposalPermission.Email, tempPass);
+            }
+
+            model.Proposal = proposal;
+            return View(model);
         }
 
         [PublicAuthorize]

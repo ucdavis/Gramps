@@ -319,7 +319,20 @@ namespace Gramps.Controllers.ViewModels
             var viewModel = new ProposalPermissionsViewModel();
             viewModel.Proposal = proposal;
             return viewModel;
+        }        
+    }
+
+    public class ProposalPermissionEditViewModel
+    {
+        public Proposal Proposal { get; set; }
+        public ProposalPermission ProposalPermission { get; set; }
+
+        public static ProposalPermissionEditViewModel Create(Proposal proposal)
+        {
+            var viewModel = new ProposalPermissionEditViewModel();
+            viewModel.Proposal = proposal;
+            viewModel.ProposalPermission = new ProposalPermission(proposal);
+            return viewModel;
         }
-        
     }
 }
