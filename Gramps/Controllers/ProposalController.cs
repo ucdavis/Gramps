@@ -971,25 +971,7 @@ namespace Gramps.Controllers
 
                     viewModel.CanSubmit = true;
                     viewModel.CanEdit = true;
-                    if (proposalToEdit.IsSubmitted)
-                    {
-                        viewModel.CanSubmit = false;
-                        viewModel.CanEdit = false;
-                        Message = "Cannot edit proposal once submitted.";
-                        return this.RedirectToAction(a => a.Details(id));
-                    }
-                    if (proposalToEdit.CallForProposal.EndDate.Date < DateTime.Now.Date)
-                    {
-                        viewModel.CanSubmit = false;
-                        viewModel.CanEdit = false;
-                        Message = "Call for proposal has closed, you will not be able to save changes.";
-                    }
-                    else if (!proposalToEdit.CallForProposal.IsActive)
-                    {
-                        viewModel.CanSubmit = false;
-                        viewModel.CanEdit = false;
-                        Message = "Call for proposal has been deactivated, you will not be able to save changes.";
-                    }
+
                     if (proposalToEdit.Email.Trim().ToLower() != CurrentUser.Identity.Name.Trim().ToLower())
                     {
                         //So now check permissions
