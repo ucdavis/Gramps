@@ -2,28 +2,28 @@
 <%@ Import Namespace="Gramps.Controllers" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
-	Grant Access
+	Edit Access
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
-    <h2>Grant Access</h2>
+    <h2>Edit Access</h2>
 
     <% using (Html.BeginForm()) {%>
         <%: Html.ValidationSummary(true) %>
-        <%: Html.Hidden("id", Model.Proposal.Guid) %>
+        <%: Html.Hidden("id", Model.ProposalPermission.Id) %>
         <%= Html.AntiForgeryToken() %>
 
         <fieldset>
-            <p>Note! The person you add will be sent an email with login instruction.</p>
+            <legend><strong>For <%: Model.ProposalPermission.Email  %></strong></legend>
+            <p>Note! No Emails will be generated when editing access. You will have to contact them directly.</p>
+            <br/>
             <p>Allow Submit grants access to Allow Edit and Allow Review. Allow Edit grants access to Allow Review.</p>
+            <p>You may remove all their access. It will still show up in their list, but the will not be able to review it.</p>
             <br/>
             <ul>
-                <li>
-                    <%: Html.LabelFor(model => model.ProposalPermission.Email) %>
-                    <%: Html.TextBoxFor(model => model.ProposalPermission.Email)%>
-                    <%: Html.ValidationMessageFor(model => model.ProposalPermission.Email)%>
-                </li>
+
+               
                 <li>
                     <%= Html.CheckBox("ProposalPermission.AllowReview", Model.ProposalPermission.AllowReview)%> <%: Html.Encode("Allow Review") %>
                 </li>

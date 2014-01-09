@@ -620,6 +620,7 @@
     <Content Include="Views\Proposal\AdminDetails.aspx" />
     <Content Include="Views\Proposal\Details.aspx" />
     <Content Include="Views\Proposal\Edit.aspx" />
+    <Content Include="Views\Proposal\EditPermission.aspx" />
     <Content Include="Views\Proposal\Home.aspx" />
     <Content Include="Views\Proposal\ProposalAnswerDetails.ascx" />
     <Content Include="Views\Proposal\ProposalPermissionsIndex.aspx" />

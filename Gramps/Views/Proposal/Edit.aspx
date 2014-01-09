@@ -213,25 +213,27 @@
         </ul>
         </fieldset>
         <br />
-
+        <%if (Model.CanEdit) {%>
         <fieldset>
         <legend><strong>Save Options</strong></legend>
             <span id = "SaveOptions">
+                <%if (Model.CanSubmit) {%>
                 <span id = "SFWithV">
-                <input type="radio" id="SubmitFinalWithValidation" name="SaveOptions" value="<%:StaticValues.RB_SaveOptions_SubmitFinal%>" <%= Model.SaveOptionChoice == StaticValues.RB_SaveOptions_SubmitFinal ? "checked" : string.Empty%> /><label for="SubmitFinalWithValidation">Submit Final With Validation</label><br />
+                <input type="radio" id="SubmitFinalWithValidation" name="SaveOptions" value="<%: StaticValues.RB_SaveOptions_SubmitFinal %>" <%= Model.SaveOptionChoice == StaticValues.RB_SaveOptions_SubmitFinal ? "checked" : string.Empty %> /><label for="SubmitFinalWithValidation">Submit Final With Validation</label><br />
                 </span>     
+                <% } %>
                 <span id="SWithV">        
-                <input type="radio" id="SaveWithValidation" name="SaveOptions" value="<%:StaticValues.RB_SaveOptions_SaveWithValidation%>" <%= Model.SaveOptionChoice == StaticValues.RB_SaveOptions_SaveWithValidation ? "checked" : string.Empty %> /><label for="SaveWithValidation">Save Draft With Validation</label><br />
+                <input type="radio" id="SaveWithValidation" name="SaveOptions" value="<%: StaticValues.RB_SaveOptions_SaveWithValidation %>" <%= Model.SaveOptionChoice == StaticValues.RB_SaveOptions_SaveWithValidation ? "checked" : string.Empty %> /><label for="SaveWithValidation">Save Draft With Validation</label><br />
                 </span>  
                 <span id ="SWithoutV">
-                <input type="radio" id="SaveWithoutValidation" name="SaveOptions" value="<%:StaticValues.RB_SaveOptions_SaveNoValidate%>" <%= Model.SaveOptionChoice == StaticValues.RB_SaveOptions_SaveNoValidate ? "checked" : string.Empty %> /><label for="SaveWithoutValidation">Save Draft Without Validation</label><br />
+                <input type="radio" id="SaveWithoutValidation" name="SaveOptions" value="<%: StaticValues.RB_SaveOptions_SaveNoValidate %>" <%= Model.SaveOptionChoice == StaticValues.RB_SaveOptions_SaveNoValidate ? "checked" : string.Empty %> /><label for="SaveWithoutValidation">Save Draft Without Validation</label><br />
                 </span>
             </span> 
             <p>
                 <input type="submit" value="Save" />
             </p>
         </fieldset>
-
+        <% } %>
     <% } %>
 
 

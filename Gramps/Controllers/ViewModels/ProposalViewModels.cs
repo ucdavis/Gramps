@@ -52,6 +52,8 @@ namespace Gramps.Controllers.ViewModels
         public CallForProposal CallForProposal { get; set; }
         public string ContactEmail { get; set; }
         public string SaveOptionChoice { get; set; }
+        public bool CanEdit { get; set; }
+        public bool CanSubmit { get; set; }
 
         public static ProposalViewModel Create(IRepository repository, CallForProposal callForProposal)
         {
@@ -59,7 +61,8 @@ namespace Gramps.Controllers.ViewModels
 
             var viewModel = new ProposalViewModel { Proposal = new Proposal(), CallForProposal = callForProposal};
             viewModel.ContactEmail = callForProposal.Editors.Where(a => a.IsOwner).Single().User.Email;
-
+            viewModel.CanEdit = false;
+            viewModel.CanSubmit = false;
             return viewModel;
         }
     }
