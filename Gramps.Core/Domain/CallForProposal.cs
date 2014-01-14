@@ -123,6 +123,8 @@ namespace Gramps.Core.Domain
         
         [NotNull]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+
+        //The end date is now the last day they can do stuff.
         public virtual DateTime EndDate { get; set; }
         public virtual DateTime? CallsSentDate { get; set; }
         public virtual Template TemplateGeneratedFrom { get; set; }

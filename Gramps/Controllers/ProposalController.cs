@@ -214,7 +214,7 @@ namespace Gramps.Controllers
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
-            if (!callforproposal.IsActive || callforproposal.EndDate.Date <= DateTime.Now.Date)
+            if (!callforproposal.IsActive || callforproposal.EndDate.Date < DateTime.Now.Date)
             {
                 Message = "Is not active or end date is passed";
                 return this.RedirectToAction(a => a.AdminIndex(id, null, null, null, null, null));
@@ -261,7 +261,7 @@ namespace Gramps.Controllers
                 return this.RedirectToAction<HomeController>(a => a.Index());
             }
 
-            if (!callforproposal.IsActive || callforproposal.EndDate.Date > DateTime.Now.Date)
+            if (!callforproposal.IsActive || callforproposal.EndDate.Date >= DateTime.Now.Date)
             {
                 Message = "Is not active or end date is not passed";
                 return this.RedirectToAction(a => a.AdminIndex(id, null, null, null, null, null));

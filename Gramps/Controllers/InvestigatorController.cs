@@ -236,7 +236,7 @@ namespace Gramps.Controllers
                 investigatorController.Message = string.Format(StaticValues.Message_ProposalSubmitted, string.Format("{0} investigator {1}", action, discriptor), "proposal");
                 return investigatorController.RedirectToAction<ProposalController>(a => a.Details(proposalId));
             }
-            if (!proposal.CallForProposal.IsActive || proposal.CallForProposal.EndDate < DateTime.Now.Date)
+            if (!proposal.CallForProposal.IsActive || proposal.CallForProposal.EndDate.Date < DateTime.Now.Date)
             {
                 investigatorController.Message = string.Format(StaticValues.Message_ProposalNotActive, string.Format("Cannot {0} investigator", action));
                 return investigatorController.RedirectToAction<ProposalController>(a => a.Edit(proposalId));

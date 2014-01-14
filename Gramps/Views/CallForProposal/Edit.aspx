@@ -35,7 +35,7 @@
             </li>
             <li>
                 <%: Html.Label("End Date:") %>
-                <%: Html.EditorFor(model => model.CallForProposal.EndDate, Model.CallForProposal.EndDate.Date) %>
+                <%: Html.EditorFor(model => model.CallForProposal.EndDate, Model.CallForProposal.EndDate.Date) %> (Note: This is the last day proposals can be created and edited)
                  <%--<%: Html.TextBoxFor(model => model.CallForProposal.EndDate, Model.CallForProposal.EndDate.Date)%> --%>               
                 <%--<%: Html.TextBox("CallForProposal.EndDate", Model.CallForProposal.EndDate.ToString("d")) %>--%>
                 <%: Html.ValidationMessageFor(model => model.CallForProposal.EndDate)%>      

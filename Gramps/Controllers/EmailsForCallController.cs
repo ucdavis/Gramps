@@ -478,7 +478,7 @@ namespace Gramps.Controllers
 
 
             var viewModel = EmailsForCallSendViewModel.Create(Repository, callforproposal);
-            if (!callforproposal.IsActive || callforproposal.EndDate.Date <= DateTime.Now.Date)
+            if (!callforproposal.IsActive || callforproposal.EndDate.Date < DateTime.Now.Date) // if end date is today, allow in through
             {
                 Message = "Is not active or end date is passed";
                 return View(viewModel);
