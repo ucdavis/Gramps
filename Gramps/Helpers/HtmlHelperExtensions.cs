@@ -115,7 +115,7 @@ namespace Gramps.Helpers
                     }
                     else
                     {
-                        formattedEncodedText.AppendFormat("br /" + yyy);
+                        formattedEncodedText.AppendFormat("br /" + textValue);
                     }
 
                 }
