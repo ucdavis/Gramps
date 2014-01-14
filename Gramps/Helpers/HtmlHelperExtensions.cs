@@ -87,7 +87,7 @@ namespace Gramps.Helpers
         /// <param name="helper"></param>
         /// <param name="text"></param>
         /// <returns></returns>
-        public static FormattedString HtmlEncode(this HtmlHelper helper, string text)
+        public static FormattedString HtmlEncode(this HtmlHelper helper, string text, bool bypassNewLines = false)
         {
             // encode the string
             string encodedText = HttpUtility.HtmlEncode(text);
@@ -98,19 +98,27 @@ namespace Gramps.Helpers
             //StringBuilder formattedEncodedText = new StringBuilder(encodedText);
             StringBuilder formattedEncodedText = new StringBuilder();
 
-            var firstTime = true;
-            foreach (var textValue in Regex.Split(encodedText, "\r\n"))
+            if (bypassNewLines)
             {
-                if (firstTime)
-                {
-                    firstTime = false;
-                    formattedEncodedText.AppendFormat(textValue);
-                }
-                else
-                {
-                    formattedEncodedText.AppendFormat("<br/>" + textValue);
-                }
+                formattedEncodedText = new StringBuilder(encodedText);
+            }
+            else
+            {
 
+                var firstTime = true;
+                foreach (var textValue in Regex.Split(encodedText, "\r\n"))
+                {
+                    if (firstTime)
+                    {
+                        firstTime = false;
+                        formattedEncodedText.AppendFormat(textValue);
+                    }
+                    else
+                    {
+                        formattedEncodedText.AppendFormat("br /" + yyy);
+                    }
+
+                }
             }
 
 
