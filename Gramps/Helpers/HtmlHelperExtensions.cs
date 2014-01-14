@@ -87,9 +87,19 @@ namespace Gramps.Helpers
         /// <param name="helper"></param>
         /// <param name="text"></param>
         /// <returns></returns>
-        public static FormattedString HtmlEncode(this HtmlHelper helper, string text, bool bypassNewLines = false)
+        public static FormattedString HtmlEncode(this HtmlHelper helper, string text)
         {
+            var bypassNewLines = false;
             // encode the string
+            if (!string.IsNullOrWhiteSpace(text))
+            {
+                text = text.Replace("{", "{{");
+                text = text.Replace("}", "}}");
+            }
+            else
+            {
+                bypassNewLines = true;
+            }
             string encodedText = HttpUtility.HtmlEncode(text);
 
 
@@ -97,7 +107,7 @@ namespace Gramps.Helpers
             // put the text in a string builder
             //StringBuilder formattedEncodedText = new StringBuilder(encodedText);
             StringBuilder formattedEncodedText = new StringBuilder();
-
+            
             if (bypassNewLines)
             {
                 formattedEncodedText = new StringBuilder(encodedText);
@@ -115,7 +125,7 @@ namespace Gramps.Helpers
                     }
                     else
                     {
-                        formattedEncodedText.AppendFormat("br /" + textValue);
+                        formattedEncodedText.AppendFormat("<br/>" + textValue);
                     }
 
                 }

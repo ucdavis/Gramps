@@ -33,7 +33,7 @@
                 </div>
                 <div>Body:</div>
                 <div class="template_body" style="background-color:#f4f4f4; border:1px solid #666; margin:10px 20px 10px 20px; padding:10px; line-height:1.5em;">
-                    <%: Html.HtmlEncode(t.Text, true) %>
+                    <%: Html.HtmlEncode(t.Text) %>
                 </div>
 
                 <div>Email Footer Text:</div>
