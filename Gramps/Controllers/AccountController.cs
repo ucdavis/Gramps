@@ -1,6 +1,6 @@
 ﻿using System.Web.Mvc;
 using System.Web.Security;
-using UCDArch.Web.Authentication;
+using Gramps.Helpers;
 
 namespace Gramps.Controllers
 {
