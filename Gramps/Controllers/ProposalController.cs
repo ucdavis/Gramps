@@ -754,7 +754,7 @@ namespace Gramps.Controllers
         [PublicAuthorize]
         public ActionResult Edit(Guid id)
         {
-            var proposal = _proposalRepository.Queryable.Where(a => a.Guid == id).SingleOrDefault();
+            var proposal = _proposalRepository.Queryable.SingleOrDefault(a => a.Guid == id);
             if (proposal == null)
             {
                 Message = "Your proposal was not found.";
@@ -762,27 +762,56 @@ namespace Gramps.Controllers
             }
             if (proposal.Email.Trim().ToLower() != CurrentUser.Identity.Name.Trim().ToLower())
             {
-                Message = "You do not have access to that.";
-                return this.RedirectToAction<ErrorController>(a => a.Index());
-            }
+                if (proposal.ProposalPermissions.Any(a => a.Email == CurrentUser.Identity.Name && a.AllowEdit))
+                {
+                    //Ok, has permission to edit
+                }
+                else
+                {
+                    Message = "You do not have access to that.";
+                    return this.RedirectToAction<ErrorController>(a => a.Index());
+                }
+            }          
+
+			var viewModel = ProposalViewModel.Create(Repository, proposal.CallForProposal);
+			viewModel.Proposal = proposal;
+            viewModel.SaveOptionChoice = StaticValues.RB_SaveOptions_SaveWithValidation;
+
+            viewModel.CanSubmit = true;
+            viewModel.CanEdit = true;
             if (proposal.IsSubmitted)
             {
+                viewModel.CanSubmit = false;
+                viewModel.CanEdit = false;
                 Message = "Cannot edit proposal once submitted.";
                 return this.RedirectToAction(a => a.Details(id));
             }
             if (proposal.CallForProposal.EndDate.Date < DateTime.Now.Date)
             {
+                viewModel.CanSubmit = false;
+                viewModel.CanEdit = false;
                 Message = "Call for proposal has closed, you will not be able to save changes.";
             }
-            else if(!proposal.CallForProposal.IsActive)
+            else if (!proposal.CallForProposal.IsActive)
             {
+                viewModel.CanSubmit = false;
+                viewModel.CanEdit = false;
                 Message = "Call for proposal has been deactivated, you will not be able to save changes.";
             }
-            
+            if (proposal.Email.Trim().ToLower() != CurrentUser.Identity.Name.Trim().ToLower())
+            {
+                //So now check permissions
+                var permission = proposal.ProposalPermissions.First(a => a.Email == CurrentUser.Identity.Name);
+                if (!permission.AllowEdit)
+                {
+                    viewModel.CanEdit = false;
+                }
+                if (!permission.AllowSubmit)
+                {
+                    viewModel.CanSubmit = false;
+                }
+            }
 
-			var viewModel = ProposalViewModel.Create(Repository, proposal.CallForProposal);
-			viewModel.Proposal = proposal;
-            viewModel.SaveOptionChoice = StaticValues.RB_SaveOptions_SaveWithValidation;
 
 			return View(viewModel);
         }
@@ -802,6 +831,8 @@ namespace Gramps.Controllers
         [PublicAuthorize]
         public ActionResult Edit(Guid id, Proposal proposal, QuestionAnswerParameter[] proposalAnswers, HttpPostedFileBase uploadAttachment, string saveOptions)
         {
+            var canSubmit = true;
+
             var proposalToEdit = _proposalRepository.Queryable.Where(a => a.Guid == id).SingleOrDefault();
             if (proposalToEdit == null)
             {
@@ -810,8 +841,20 @@ namespace Gramps.Controllers
             }
             if (proposalToEdit.Email.Trim().ToLower() != CurrentUser.Identity.Name.Trim().ToLower())
             {
-                Message = "You do not have access to that.";
-                return this.RedirectToAction<ErrorController>(a => a.Index());
+                var permission = proposalToEdit.ProposalPermissions.FirstOrDefault(a => a.Email == CurrentUser.Identity.Name);
+                if (permission != null && permission.AllowEdit)
+                {
+                    if (!permission.AllowSubmit)
+                    {
+                        canSubmit = false;
+                    }
+                    //Ok, has permission to edit
+                }
+                else
+                {
+                    Message = "You do not have access to that.";
+                    return this.RedirectToAction<ErrorController>(a => a.Index());
+                }
             }
             if(proposalToEdit.IsSubmitted)
             {
@@ -857,7 +900,14 @@ namespace Gramps.Controllers
             var saveWithValidate = false;
             if (saveOptions == StaticValues.RB_SaveOptions_SubmitFinal)
             {
-                proposal.IsSubmitted = true;
+                if (canSubmit == false)
+                {
+                    ModelState.AddModelError("Permissions", "You don't have access to submit the final proposal");
+                }
+                else
+                {
+                    proposal.IsSubmitted = true;
+                }
             }
             else if(saveOptions == StaticValues.RB_SaveOptions_SaveWithValidation)
             {
@@ -919,6 +969,23 @@ namespace Gramps.Controllers
                     viewModel.Proposal = proposalToEdit;
                     viewModel.SaveOptionChoice = saveOptions;
 
+                    viewModel.CanSubmit = true;
+                    viewModel.CanEdit = true;
+
+                    if (proposalToEdit.Email.Trim().ToLower() != CurrentUser.Identity.Name.Trim().ToLower())
+                    {
+                        //So now check permissions
+                        var permission = proposalToEdit.ProposalPermissions.First(a => a.Email == CurrentUser.Identity.Name);
+                        if (!permission.AllowEdit)
+                        {
+                            viewModel.CanEdit = false;
+                        }
+                        if (!permission.AllowSubmit)
+                        {
+                            viewModel.CanSubmit = false;
+                        }
+                    }
+
                     return View(viewModel);
                 }
                 Message = "Proposal Submitted Successfully";
@@ -933,7 +1000,45 @@ namespace Gramps.Controllers
                 var viewModel = ProposalViewModel.Create(Repository, proposalToEdit.CallForProposal);
                 viewModel.Proposal = proposalToEdit;
                 viewModel.SaveOptionChoice = saveOptions;
+
+                viewModel.CanSubmit = true;
+                viewModel.CanEdit = true;
+                if (proposalToEdit.IsSubmitted)
+                {
+                    viewModel.CanSubmit = false;
+                    viewModel.CanEdit = false;
+                    Message = "Cannot edit proposal once submitted.";
+                    return this.RedirectToAction(a => a.Details(id));
+                }
+                if (proposalToEdit.CallForProposal.EndDate.Date < DateTime.Now.Date)
+                {
+                    viewModel.CanSubmit = false;
+                    viewModel.CanEdit = false;
+                    Message = "Call for proposal has closed, you will not be able to save changes.";
+                }
+                else if (!proposalToEdit.CallForProposal.IsActive)
+                {
+                    viewModel.CanSubmit = false;
+                    viewModel.CanEdit = false;
+                    Message = "Call for proposal has been deactivated, you will not be able to save changes.";
+                }
+                if (proposalToEdit.Email.Trim().ToLower() != CurrentUser.Identity.Name.Trim().ToLower())
+                {
+                    //So now check permissions
+                    var permission = proposalToEdit.ProposalPermissions.First(a => a.Email == CurrentUser.Identity.Name);
+                    if (!permission.AllowEdit)
+                    {
+                        viewModel.CanEdit = false;
+                    }
+                    if (!permission.AllowSubmit)
+                    {
+                        viewModel.CanSubmit = false;
+                    }
+                }
+
                 return View(viewModel);
+
+
             }
         }
       
@@ -954,8 +1059,15 @@ namespace Gramps.Controllers
             }
             if (proposal.Email != CurrentUser.Identity.Name)
             {
-                Message = "You do not have access to that.";
-                return this.RedirectToAction<ErrorController>(a => a.Index());
+                if (proposal.ProposalPermissions.Any(a => a.Email == CurrentUser.Identity.Name && a.AllowReview))
+                {
+                    //Ok, has permission to review
+                }
+                else
+                {
+                    Message = "You do not have access to that.";
+                    return this.RedirectToAction<ErrorController>(a => a.Index());
+                }
             }
             if (!proposal.IsSubmitted)
             {
@@ -965,7 +1077,208 @@ namespace Gramps.Controllers
             var viewModel = ProposalViewModel.Create(Repository, proposal.CallForProposal);
             viewModel.Proposal = proposal;
 
+            if (proposal.IsSubmitted)
+            {
+                viewModel.CanEdit = false;
+            }
+            else
+            {
+                if (proposal.Email == CurrentUser.Identity.Name || proposal.ProposalPermissions.Any(a => a.Email == CurrentUser.Identity.Name && a.AllowEdit))
+                {
+                    viewModel.CanEdit = true;
+                }
+            }
+
             return View(viewModel);
+        }
+
+        [PublicAuthorize]
+        public ActionResult ProposalPermissionsIndex(Guid id)
+        {
+            var proposal = _proposalRepository.Queryable.Where(a => a.Guid == id).SingleOrDefault();
+            if (proposal == null)
+            {
+                Message = "Your proposal was not found.";
+                return this.RedirectToAction<ErrorController>(a => a.Index());
+            }
+            if (proposal.Email != CurrentUser.Identity.Name)
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<ErrorController>(a => a.Index());
+            }
+
+            var viewModel = ProposalPermissionsViewModel.Create(proposal);
+            viewModel.Permissions = proposal.ProposalPermissions.ToList();
+
+            return View(viewModel);
+        }
+
+        [PublicAuthorize]
+        public ActionResult AddPermission(Guid id)
+        {
+            var proposal = _proposalRepository.Queryable.Where(a => a.Guid == id).SingleOrDefault();
+            if (proposal == null)
+            {
+                Message = "Your proposal was not found.";
+                return this.RedirectToAction<ErrorController>(a => a.Index());
+            }
+            if (proposal.Email != CurrentUser.Identity.Name)
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<ErrorController>(a => a.Index());
+            }
+
+            var viewModel = ProposalPermissionEditViewModel.Create(proposal);
+            viewModel.ProposalPermission.AllowReview = true; //testing
+            return View(viewModel);
+        }
+
+        [PublicAuthorize]
+        [HttpPost]
+        public ActionResult AddPermission(Guid id, ProposalPermissionEditViewModel model)
+        {
+            var proposal = _proposalRepository.Queryable.Where(a => a.Guid == id).SingleOrDefault();
+            if (proposal == null)
+            {
+                Message = "Your proposal was not found.";
+                return this.RedirectToAction<ErrorController>(a => a.Index());
+            }
+            if (proposal.Email != CurrentUser.Identity.Name)
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<ErrorController>(a => a.Index());
+            }
+            model.ProposalPermission.Email = model.ProposalPermission.Email.ToLower().Trim();
+
+            var proposalPermission = new ProposalPermission(proposal);
+            proposalPermission.Email = model.ProposalPermission.Email;
+            if (model.ProposalPermission.AllowSubmit)
+            {
+                proposalPermission.AllowSubmit = true;
+                proposalPermission.AllowEdit = true;
+                proposalPermission.AllowReview = true;
+            }
+            else if (model.ProposalPermission.AllowEdit)
+            {
+                proposalPermission.AllowEdit = true;
+                proposalPermission.AllowReview = true;
+            }
+            else if (model.ProposalPermission.AllowReview)
+            {
+                proposalPermission.AllowReview = true;
+            }
+
+            proposalPermission.TransferValidationMessagesTo(ModelState);
+
+            if (proposal.ProposalPermissions.Any(a => a.Email == model.ProposalPermission.Email))
+            {
+               ModelState.AddModelError("ProposalPermission.Email", "Email Already exists. Use Edit to change permissions if required.");
+            }
+            if (!model.ProposalPermission.AllowReview && !model.ProposalPermission.AllowEdit && !model.ProposalPermission.AllowSubmit)
+            {
+                ModelState.AddModelError("ProposalPermission.AllowReview", "Must grant at least one permission when creating.");
+            }
+
+            if (ModelState.IsValid)
+            {
+                
+                Repository.OfType<ProposalPermission>().EnsurePersistent(proposalPermission);
+
+                string tempPass = null;
+                if (!_membershipService.DoesUserExist(proposalPermission.Email))
+                {
+                    _membershipService.CreateUser(proposalPermission.Email.Trim().ToLower(),
+                                                 "Ht548*%KjjY2#",
+                                                 proposalPermission.Email.Trim().ToLower());
+                    tempPass = _membershipService.ResetPassword(proposalPermission.Email.Trim().ToLower());
+                }
+                _emailService.SendAccessGranted(Request, Url, proposal, proposalPermission.Email, tempPass);
+
+                Message = string.Format("Access Granted. Email should be sent to {0} within 5 minutes.", proposalPermission.Email);
+                return this.RedirectToAction(a => a.ProposalPermissionsIndex(id));
+            }
+
+            model.Proposal = proposal;
+            return View(model);
+        }
+
+
+        [PublicAuthorize]
+        public ActionResult EditPermission(int id)
+        {
+            var proposalPermission = Repository.OfType<ProposalPermission>().Queryable.Single(a => a.Id == id);
+
+            var proposal = _proposalRepository.Queryable.SingleOrDefault(a => a.Guid == proposalPermission.Proposal.Guid);
+            if (proposal == null)
+            {
+                Message = "Your proposal was not found.";
+                return this.RedirectToAction<ErrorController>(a => a.Index());
+            }
+            if (proposal.Email != CurrentUser.Identity.Name)
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<ErrorController>(a => a.Index());
+            }
+
+            var viewModel = ProposalPermissionEditViewModel.Create(proposal);
+            viewModel.ProposalPermission = proposalPermission;
+
+            return View(viewModel);
+        }
+
+        [PublicAuthorize]
+        [HttpPost]
+        public ActionResult EditPermission(int id, ProposalPermissionEditViewModel model)
+        {
+            var proposalPermission = Repository.OfType<ProposalPermission>().Queryable.Single(a => a.Id == id);
+
+            var proposal = _proposalRepository.Queryable.SingleOrDefault(a => a.Guid == proposalPermission.Proposal.Guid);
+            if (proposal == null)
+            {
+                Message = "Your proposal was not found.";
+                return this.RedirectToAction<ErrorController>(a => a.Index());
+            }
+            if (proposal.Email != CurrentUser.Identity.Name)
+            {
+                Message = "You do not have access to that.";
+                return this.RedirectToAction<ErrorController>(a => a.Index());
+            }
+            proposalPermission.AllowSubmit = false;
+            proposalPermission.AllowEdit = false;
+            proposalPermission.AllowReview = false;
+
+            if (model.ProposalPermission.AllowSubmit)
+            {
+                proposalPermission.AllowSubmit = true;
+                proposalPermission.AllowEdit = true;
+                proposalPermission.AllowReview = true;
+            }
+            else if (model.ProposalPermission.AllowEdit)
+            {                
+                proposalPermission.AllowEdit = true;
+                proposalPermission.AllowReview = true;
+            }
+            else if (model.ProposalPermission.AllowReview)
+            {
+                proposalPermission.AllowReview = true;
+            }
+
+            proposalPermission.TransferValidationMessagesTo(ModelState);
+
+            if (ModelState.IsValid)
+            {
+
+                Repository.OfType<ProposalPermission>().EnsurePersistent(proposalPermission);
+
+
+                Message = "Access Edited. No Email notification sent.";
+                return this.RedirectToAction(a => a.ProposalPermissionsIndex(proposalPermission.Proposal.Guid));
+            }
+
+            model.Proposal = proposal;
+            return View(model);
+
+
         }
         #endregion Public Methods (Proposer)
 

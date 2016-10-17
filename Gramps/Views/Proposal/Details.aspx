@@ -184,7 +184,7 @@
     <%}%>
     </ul>     
     </fieldset>
-    <%if (!Model.Proposal.IsSubmitted){%>
+    <%if (Model.CanEdit){%>
     <p>
         <%:Html.ActionLink<ProposalController>(a => a.Edit(Model.Proposal.Guid), "Edit")%>
     </p>

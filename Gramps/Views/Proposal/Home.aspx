@@ -48,17 +48,54 @@
                 <%: Html.ActionLink<ProposalController>(a => a.Details(x.Guid), " ", new { @class = "details_button" })%>
                 <%}%>
                 <%}).Title("Details");
-                col.Bound(x => x.CreatedDate).Format("{0:d/M/yyyy hh:mm tt}");
-                                col.Bound(x => x.IsSubmitted);
-                                col.Bound(x => x.Guid).Title("Proposal Id");
+            col.Bound(x => x.CreatedDate).Format("{0:d/M/yyyy hh:mm tt}");
+                                col.Bound(x => x.IsSubmitted).Title("Submitted");
                                 col.Bound(x => x.CallForProposal.EndDate);
                                 col.Bound(x => x.CallForProposal.Name);
+                                col.Bound(x => x.FirstProposalPermission).Title("First Permission");
+                        col.Template(x => {%>
+				<%: Html.ActionLink<ProposalController>(a => a.ProposalPermissionsIndex(x.Guid), " ", new { @class = "lock_button" })%>           
+				<%}).Title("Perm");
             })
             //.Pageable()
             //.Sortable()
             .Render(); 
         %>
         </fieldset>
+        
+        <%if (Model.AssignedProposals.Any()){%>
+            <fieldset>
+            <legend><strong>Proposals Assigned To You</strong></legend>
+            <% Html.Grid(Model.AssignedProposals) 
+            .Name("List")
+            .PrefixUrlParameters(false) //True if >0 sortable/pageable grids
+            .Columns(col => {
+            col.Template(x => {%>
+                <%if(x.CanAssigneeEdit(Model.Login)) {%>
+				<%: Html.ActionLink<ProposalController>(a => a.Edit(x.Guid), " ", new { @class = "edit_button" })%>   
+                <%}%>        
+				<%}).Title("Edit");
+            col.Template(x =>{%>
+                <%if (x.CanAssigneeReview(Model.Login))
+                  {%>
+                <%: Html.ActionLink<ProposalController>(a => a.Details(x.Guid), " ", new { @class = "details_button" })%>
+                <%}%>
+                <%}).Title("Details");
+
+                col.Bound(x => x.CreatedDate).Format("{0:d/M/yyyy hh:mm tt}");
+                col.Bound(x => x.IsSubmitted).Title("Submitted");
+                col.Bound(x => x.CallForProposal.EndDate); 
+                col.Bound(x => x.CallForProposal.Name);                
+                col.Bound(x => x.CallForProposal.EndDate);
+                col.Bound(x => x.Email).Title("Assigned By");
+            })
+            .Pageable()
+            .Sortable()
+            .Render(); 
+        %>
+        </fieldset>
+
+        <% } %>
 
 </asp:Content>
 

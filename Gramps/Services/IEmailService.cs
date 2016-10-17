@@ -19,6 +19,7 @@ namespace Gramps.Services
         void SendPasswordReset(CallForProposal callForProposal, string email, string tempPassword);
         void SendProposalEmail(HttpRequestBase request, UrlHelper url, Proposal proposal, EmailTemplate emailTemplate, bool immediate);
         void SendErrorReport(List<string> errorList, string email);
+        void SendAccessGranted(HttpRequestBase request, UrlHelper url,Proposal proposal, string email, string tempPass);
     }
 
     public class EmailService : IEmailService
@@ -44,6 +45,27 @@ namespace Gramps.Services
 
             var client = new SmtpClient();
             client.Send(mail);
+        }
+
+        public void SendAccessGranted(HttpRequestBase request, UrlHelper url,Proposal proposal, string email, string tempPass)
+        {
+            var emailQueue = new EmailQueue(proposal.CallForProposal, email, "Access Granted to Proposal", "");
+            emailQueue.Immediate = true;
+
+            emailQueue.Body = emailQueue.Body + "<br />" + StaticValues.EmailAutomatedDisclaimer;
+
+            emailQueue.Body = string.Format("{0}<br /><p>{1} has granted you access to a proposal.</p><p>You may access the proposal to Review/Edit/Submit depending on the access given. It may be found here: {2} </p>", emailQueue.Body, proposal.Email, GetAbsoluteUrl(request, url, "~/Proposal/Home"));
+
+            if (string.IsNullOrEmpty(tempPass))
+            {
+                emailQueue.Body = string.Format("{0}<br /><p>{1}</p>", emailQueue.Body, "You have an existing account. Use your email as the userName to login");
+            }
+            else
+            {
+                emailQueue.Body = string.Format("{0}<br /><p>An account has been created for you.</p><p>UserName {1}</p><p>Password {2}</p><p>You may change your password (recommended) after logging in.</p>", emailQueue.Body, email, tempPass);
+            }
+
+            _repository.OfType<EmailQueue>().EnsurePersistent(emailQueue);
         }
 
         public virtual void SendPasswordReset(CallForProposal callForProposal, string email, string tempPassword)

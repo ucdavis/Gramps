@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using FluentNHibernate.Mapping;
 using NHibernate.Validator.Constraints;
 using UCDArch.Core.DomainModel;
@@ -31,7 +32,7 @@ namespace Gramps.Core.Domain
             IsDenied = false;
             IsNotified = false;
             IsSubmitted = false;
-
+            ProposalPermissions = new List<ProposalPermission>();
         }
 
         #endregion Constructor
@@ -72,6 +73,9 @@ namespace Gramps.Core.Domain
         [NotNull]
         public virtual IList<Investigator> Investigators { get; set; }
 
+        [NotNull]
+        public virtual IList<ProposalPermission> ProposalPermissions { get; set; }
+
         public virtual int Sequence { get; set; }
 
         #endregion Mapped Fields
@@ -91,6 +95,45 @@ namespace Gramps.Core.Domain
         {
             investigator.Proposal = this;
             Investigators.Add(investigator);
+        }
+
+        public virtual string FirstProposalPermission 
+        {
+            get
+            {
+                var temp = ProposalPermissions.FirstOrDefault(a => a.AllowReview || a.AllowEdit || a.AllowSubmit);
+                return temp != null ? temp.Email : "N/A";
+            }
+        }
+
+        public virtual bool CanAssigneeReview(string login)
+        {
+            var permission = ProposalPermissions.FirstOrDefault(a => a.Email == login);
+            if (permission == null)
+            {
+                return false;
+            }
+            return permission.AllowReview;
+        }
+
+        public virtual bool CanAssigneeEdit(string login)
+        {
+            var permission = ProposalPermissions.FirstOrDefault(a => a.Email == login);
+            if (permission == null || IsSubmitted == true)
+            {
+                return false;
+            }
+            return permission.AllowEdit;
+        }
+
+        public virtual bool CanAssigneeSubmit(string login)
+        {
+            var permission = ProposalPermissions.FirstOrDefault(a => a.Email == login);
+            if (permission == null || IsSubmitted == true)
+            {
+                return false;
+            }
+            return permission.AllowSubmit;
         }
 
         #endregion Methods
@@ -122,6 +165,8 @@ namespace Gramps.Core.Domain
             HasMany(x => x.Answers).Cascade.AllDeleteOrphan();
             HasMany(x => x.Investigators).Cascade.AllDeleteOrphan();
             HasMany(x => x.ReviewedByEditors);//.Table("ReviewedProposals");
+
+            HasMany(x => x.ProposalPermissions);
         }
     }
 }

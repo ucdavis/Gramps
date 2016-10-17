@@ -14,6 +14,8 @@ namespace Gramps.Controllers.ViewModels
         public bool IsReviewer = false;
         public IList<CallForProposal> CallForProposals { get; set; } //Will only be populated if user is a reviewer
         public IList<Proposal> UsersProposals { get; set; }
+        public IList<Proposal> AssignedProposals { get; set; }
+        public string Login { get; set; }
 
         public static ProposalPublicListViewModel Create(IRepository repository, string login)
         {
@@ -33,6 +35,9 @@ namespace Gramps.Controllers.ViewModels
                     repository.OfType<CallForProposal>().Queryable.Where(a => callForProposalIds.Contains(a.Id)).ToList();
             }
             viewModel.UsersProposals = repository.OfType<Proposal>().Queryable.Where(a => a.Email == login).OrderByDescending(a => a.CreatedDate).ToList();
+            var proposalIds = repository.OfType<ProposalPermission>().Queryable.Where(a => a.Email == login).Select(s => s.Proposal.Id).Distinct().ToArray();
+            viewModel.AssignedProposals = repository.OfType<Proposal>().Queryable.Where(a => proposalIds.Contains(a.Id)).ToList();
+            viewModel.Login = login;
 
             return viewModel;
         }
@@ -47,6 +52,8 @@ namespace Gramps.Controllers.ViewModels
         public CallForProposal CallForProposal { get; set; }
         public string ContactEmail { get; set; }
         public string SaveOptionChoice { get; set; }
+        public bool CanEdit { get; set; }
+        public bool CanSubmit { get; set; }
 
         public static ProposalViewModel Create(IRepository repository, CallForProposal callForProposal)
         {
@@ -54,7 +61,8 @@ namespace Gramps.Controllers.ViewModels
 
             var viewModel = new ProposalViewModel { Proposal = new Proposal(), CallForProposal = callForProposal};
             viewModel.ContactEmail = callForProposal.Editors.Where(a => a.IsOwner).Single().User.Email;
-
+            viewModel.CanEdit = false;
+            viewModel.CanSubmit = false;
             return viewModel;
         }
     }
@@ -302,5 +310,32 @@ namespace Gramps.Controllers.ViewModels
         //    x.ReviewedByEditors.Where(a => a.Editor == Model.Editor).FirstOrDefault().
         //        LastViewedDate);
 
+    }
+
+    public class ProposalPermissionsViewModel
+    {
+        public Proposal Proposal { get; set; }
+        public List<ProposalPermission> Permissions { get; set; }
+ 
+        public static ProposalPermissionsViewModel Create(Proposal proposal)
+        {
+            var viewModel = new ProposalPermissionsViewModel();
+            viewModel.Proposal = proposal;
+            return viewModel;
+        }        
+    }
+
+    public class ProposalPermissionEditViewModel
+    {
+        public Proposal Proposal { get; set; }
+        public ProposalPermission ProposalPermission { get; set; }
+
+        public static ProposalPermissionEditViewModel Create(Proposal proposal)
+        {
+            var viewModel = new ProposalPermissionEditViewModel();
+            viewModel.Proposal = proposal;
+            viewModel.ProposalPermission = new ProposalPermission(proposal);
+            return viewModel;
+        }
     }
 }

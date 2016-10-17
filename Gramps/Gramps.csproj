@@ -328,6 +328,7 @@
     <Content Include="Images\CheckMark.png" />
     <Content Include="Images\Details.png" />
     <Content Include="Images\loading.gif" />
+    <Content Include="Images\lock-open.png" />
     <Content Include="Images\logo-caes.png" />
     <Content Include="Images\logo-ucdavis.png" />
     <Content Include="Images\logo.jpg" />
@@ -611,6 +612,7 @@
     <Content Include="Views\Investigator\Create.aspx" />
     <Content Include="Views\Investigator\Edit.aspx" />
     <Content Include="Views\Investigator\InvestigatorForm.ascx" />
+    <Content Include="Views\Proposal\AddPermission.aspx" />
     <Content Include="Views\Proposal\AdminEdit.aspx" />
     <Content Include="Views\Proposal\AdminIndex.aspx" />
     <Content Include="Views\Proposal\AdminReviewerProposalDetails.ascx" />
@@ -619,8 +621,10 @@
     <Content Include="Views\Proposal\AdminDetails.aspx" />
     <Content Include="Views\Proposal\Details.aspx" />
     <Content Include="Views\Proposal\Edit.aspx" />
+    <Content Include="Views\Proposal\EditPermission.aspx" />
     <Content Include="Views\Proposal\Home.aspx" />
     <Content Include="Views\Proposal\ProposalAnswerDetails.ascx" />
+    <Content Include="Views\Proposal\ProposalPermissionsIndex.aspx" />
     <Content Include="Views\Proposal\ReviewerDetails.aspx" />
     <Content Include="Views\Proposal\ReviewerIndex.aspx" />
     <Content Include="Views\Public\ChangePassword.aspx" />
